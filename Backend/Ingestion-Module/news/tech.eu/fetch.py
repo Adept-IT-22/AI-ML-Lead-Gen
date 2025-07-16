@@ -3,14 +3,18 @@
 #========IMPORTS==========
 import re
 import requests
+import logging
 from lxml import etree
 from bs4 import BeautifulSoup
+
+logger = logging.getLogger()
 
 #=======DATA STRUCTURE========
 data = {
     "article_title": [],
     "article_link": [],
     "article_date": [],
+    "article_time": [],
     "company_name": [],
     "amount_raised": [],
     "currency": [],
@@ -22,6 +26,11 @@ def fetch_tech_eu_data()->dict:
     #=======FETCH AND PARSE==========
     URL = "https://tech.eu/sitemap/news.xml"
     response = requests.get(URL)
+    if(response.status_code != 200):
+       logger.error("Couldn't fetch data")
+       raise Exception(f"Couldn't fetch data. {response.status_code}")
+       return
+
     root = etree.fromstring(response.content)
 
     #=========NAMESPACES=============
@@ -38,7 +47,9 @@ def fetch_tech_eu_data()->dict:
     with open("results.txt", "a") as file:
         for url in root.findall('ns:url', namespaces):
             article_link = url.find('ns:loc', namespaces).text
-            article_date = url.find('n:news/n:publication_date', namespaces).text
+            unclean_article_date = url.find('n:news/n:publication_date', namespaces).text
+            article_date = unclean_article_date.split("T")[0]
+            article_time = unclean_article_date.split("T")[1]
             article_title = url.find('n:news/n:title', namespaces).text
             article_keywords = [url.find('n:news/n:keywords', namespaces).text]
             company_name = article_keywords[0].split(",")[0]
@@ -65,6 +76,7 @@ def fetch_tech_eu_data()->dict:
             file.writelines([f"Title: {article_title}\n",
                             f"Link: {article_link}\n", 
                             f"Date: {article_date}\n", 
+                            f"Time: {article_time}"
                             f"Company Name: {company_name}\n", 
                             f"Amount Raised: {amount_raised}\n", 
                             f"Currency: {amount_currency}\n", 
@@ -76,11 +88,13 @@ def fetch_tech_eu_data()->dict:
             data["article_title"].append(article_title)
             data["article_link"].append(article_link)
             data["article_date"].append(article_date)
+            data["article_time"].append(article_time)
             data["company_name"].append(company_name)
             data["amount_raised"].append(amount_raised)
             data["currency"].append(currency)
             data["keywords"].append(article_keywords)
 
+    print(data)
     return data
     
 if __name__ == "__main__":

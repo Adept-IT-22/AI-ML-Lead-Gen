@@ -52,3 +52,345 @@ Amount Raised: 0
 Currency: N/A
 Keywords ['Opper, swedish']
 
+==============NEW DATA==================
+Title: Wagestream acquires pension technology provider Zippen
+Link: https://tech.eu/2025/07/16/wagestream-acquires-pension-technology-provider-zippen//
+Date: 2025-07-16T10:18:53+00:00
+Time: Wagestream acquires pension technology provider ZippenCompany Name: Wagestream
+Amount Raised: 0
+Currency: N/A
+Keywords ['Wagestream, Zippen']
+
+==============NEW DATA==================
+Title: Altura acquires Tendara to accelerate European expansion in bid management
+Link: https://tech.eu/2025/07/16/altura-acquires-tendara-to-accelerate-european-expansion-in-bid-management//
+Date: 2025-07-16T09:15:11+00:00
+Time: Altura acquires Company Name: Altura
+Amount Raised: 0
+Currency: N/A
+Keywords ['Altura, Tendara']
+
+==============NEW DATA==================
+Title: Kiku raises €4M seed round to redefine frontline hiring with AI
+Link: https://tech.eu/2025/07/16/kiku-raises-eur4m-seed-round-to-redefine-frontline-hiring-with-ai//
+Date: 2025-07-16T09:30:00+00:00
+Time: Kiku raises €4M seed round to redefine frontline hiring with AICompany Name: Kiku
+Amount Raised: 4000000.0
+Currency: €
+Keywords ['Kiku, Cherry Ventures, Yellow']
+
+==============NEW DATA==================
+Title: Jälle Technologies raises €2M to turn battery waste into high-value materials
+Link: https://tech.eu/2025/07/16/jalle-technologies-raises-eur2m-to-turn-battery-waste-into-high-value-materials//
+Date: 2025-07-16T09:14:36+00:00
+Time: Jälle Company Name: Jälle Technologies
+Amount Raised: 2000000.0
+Currency: €
+Keywords ['Jälle Technologies, recycling, circular economy, graphene, battery tech, Kiilto Ventures, 2C Ventures']
+
+==============NEW DATA==================
+Title: Exein raises €70M to protect critical infrastructure from back door attacks
+Link: https://tech.eu/2025/07/16/exein-raises-eur70m-to-protect-critical-infrastructure-from-back-door-attacks//
+Date: 2025-07-16T07:51:05+00:00
+Time: Exein raises €70M to protect critical infrastructure from back door attacksCompany Name: EXEIN
+Amount Raised: 70000000.0
+Currency: €
+Keywords ['EXEIN, Balderton, Supernova, lakestar, United Ventures, partech']
+
+==============NEW DATA==================
+Title: Numan secures $60M to scale preventive digital health platform
+Link: https://tech.eu/2025/07/16/numan-secures-60m-to-scale-preventive-digital-health-platform//
+Date: 2025-07-16T07:35:00+00:00
+Time: Numan secures $60M to scale preventive digital health platformCompany Name: Numan
+Amount Raised: 60000000.0
+Currency: $
+Keywords ['Numan, Healthtech, Big Pi Ventures']
+
+==============NEW DATA==================
+Title: Wagestream acquires pension technology provider Zippen
+Link: https://tech.eu/2025/07/16/wagestream-acquires-pension-technology-provider-zippen//
+Date: 2025-07-16T10:18:53+00:00
+Time: Wagestream acquires pension technology provider ZippenCompany Name: Wagestream
+Amount Raised: 0
+Currency: N/A
+Keywords ['Wagestream, Zippen']
+
+==============NEW DATA==================
+Title: Altura acquires Tendara to accelerate European expansion in bid management
+Link: https://tech.eu/2025/07/16/altura-acquires-tendara-to-accelerate-european-expansion-in-bid-management//
+Date: 2025-07-16T09:15:11+00:00
+Time: Altura acquires Company Name: Altura
+Amount Raised: 0
+Currency: N/A
+Keywords ['Altura, Tendara']
+
+==============NEW DATA==================
+Title: Kiku raises €4M seed round to redefine frontline hiring with AI
+Link: https://tech.eu/2025/07/16/kiku-raises-eur4m-seed-round-to-redefine-frontline-hiring-with-ai//
+Date: 2025-07-16T09:30:00+00:00
+Time: Kiku raises €4M seed round to redefine frontline hiring with AICompany Name: Kiku
+Amount Raised: 4000000.0
+Currency: €
+Keywords ['Kiku, Cherry Ventures, Yellow']
+
+==============NEW DATA==================
+Title: Jälle Technologies raises €2M to turn battery waste into high-value materials
+Link: https://tech.eu/2025/07/16/jalle-technologies-raises-eur2m-to-turn-battery-waste-into-high-value-materials//
+Date: 2025-07-16T09:14:36+00:00
+Time: Jälle Company Name: Jälle Technologies
+Amount Raised: 2000000.0
+Currency: €
+Keywords ['Jälle Technologies, recycling, circular economy, graphene, battery tech, Kiilto Ventures, 2C Ventures']
+
+==============NEW DATA==================
+Title: Exein raises €70M to protect critical infrastructure from back door attacks
+Link: https://tech.eu/2025/07/16/exein-raises-eur70m-to-protect-critical-infrastructure-from-back-door-attacks//
+Date: 2025-07-16T07:51:05+00:00
+Time: Exein raises €70M to protect critical infrastructure from back door attacksCompany Name: EXEIN
+Amount Raised: 70000000.0
+Currency: €
+Keywords ['EXEIN, Balderton, Supernova, lakestar, United Ventures, partech']
+
+==============NEW DATA==================
+Title: Numan secures $60M to scale preventive digital health platform
+Link: https://tech.eu/2025/07/16/numan-secures-60m-to-scale-preventive-digital-health-platform//
+Date: 2025-07-16T07:35:00+00:00
+Time: Numan secures $60M to scale preventive digital health platformCompany Name: Numan
+Amount Raised: 60000000.0
+Currency: $
+Keywords ['Numan, Healthtech, Big Pi Ventures']
+
+==============NEW DATA==================
+Title: Wagestream acquires pension technology provider Zippen
+Link: https://tech.eu/2025/07/16/wagestream-acquires-pension-technology-provider-zippen//
+Date: 2025-07-16T10:18:53+00:00
+Time: 10:18:53+00:00Company Name: Wagestream
+Amount Raised: 0
+Currency: N/A
+Keywords ['Wagestream, Zippen']
+
+==============NEW DATA==================
+Title: Altura acquires Tendara to accelerate European expansion in bid management
+Link: https://tech.eu/2025/07/16/altura-acquires-tendara-to-accelerate-european-expansion-in-bid-management//
+Date: 2025-07-16T09:15:11+00:00
+Time: 09:15:11+00:00Company Name: Altura
+Amount Raised: 0
+Currency: N/A
+Keywords ['Altura, Tendara']
+
+==============NEW DATA==================
+Title: Kiku raises €4M seed round to redefine frontline hiring with AI
+Link: https://tech.eu/2025/07/16/kiku-raises-eur4m-seed-round-to-redefine-frontline-hiring-with-ai//
+Date: 2025-07-16T09:30:00+00:00
+Time: 09:30:00+00:00Company Name: Kiku
+Amount Raised: 4000000.0
+Currency: €
+Keywords ['Kiku, Cherry Ventures, Yellow']
+
+==============NEW DATA==================
+Title: Jälle Technologies raises €2M to turn battery waste into high-value materials
+Link: https://tech.eu/2025/07/16/jalle-technologies-raises-eur2m-to-turn-battery-waste-into-high-value-materials//
+Date: 2025-07-16T09:14:36+00:00
+Time: 09:14:36+00:00Company Name: Jälle Technologies
+Amount Raised: 2000000.0
+Currency: €
+Keywords ['Jälle Technologies, recycling, circular economy, graphene, battery tech, Kiilto Ventures, 2C Ventures']
+
+==============NEW DATA==================
+Title: Exein raises €70M to protect critical infrastructure from back door attacks
+Link: https://tech.eu/2025/07/16/exein-raises-eur70m-to-protect-critical-infrastructure-from-back-door-attacks//
+Date: 2025-07-16T07:51:05+00:00
+Time: 07:51:05+00:00Company Name: EXEIN
+Amount Raised: 70000000.0
+Currency: €
+Keywords ['EXEIN, Balderton, Supernova, lakestar, United Ventures, partech']
+
+==============NEW DATA==================
+Title: Numan secures $60M to scale preventive digital health platform
+Link: https://tech.eu/2025/07/16/numan-secures-60m-to-scale-preventive-digital-health-platform//
+Date: 2025-07-16T07:35:00+00:00
+Time: 07:35:00+00:00Company Name: Numan
+Amount Raised: 60000000.0
+Currency: $
+Keywords ['Numan, Healthtech, Big Pi Ventures']
+
+==============NEW DATA==================
+Title: Wagestream acquires pension technology provider Zippen
+Link: https://tech.eu/2025/07/16/wagestream-acquires-pension-technology-provider-zippen//
+Date: 2025-07-16T10:18:53+00:00
+Time: 10:18:53+00:00Company Name: Wagestream
+Amount Raised: 0
+Currency: N/A
+Keywords ['Wagestream, Zippen']
+
+==============NEW DATA==================
+Title: Altura acquires Tendara to accelerate European expansion in bid management
+Link: https://tech.eu/2025/07/16/altura-acquires-tendara-to-accelerate-european-expansion-in-bid-management//
+Date: 2025-07-16T09:15:11+00:00
+Time: 09:15:11+00:00Company Name: Altura
+Amount Raised: 0
+Currency: N/A
+Keywords ['Altura, Tendara']
+
+==============NEW DATA==================
+Title: Kiku raises €4M seed round to redefine frontline hiring with AI
+Link: https://tech.eu/2025/07/16/kiku-raises-eur4m-seed-round-to-redefine-frontline-hiring-with-ai//
+Date: 2025-07-16T09:30:00+00:00
+Time: 09:30:00+00:00Company Name: Kiku
+Amount Raised: 4000000.0
+Currency: €
+Keywords ['Kiku, Cherry Ventures, Yellow']
+
+==============NEW DATA==================
+Title: Jälle Technologies raises €2M to turn battery waste into high-value materials
+Link: https://tech.eu/2025/07/16/jalle-technologies-raises-eur2m-to-turn-battery-waste-into-high-value-materials//
+Date: 2025-07-16T09:14:36+00:00
+Time: 09:14:36+00:00Company Name: Jälle Technologies
+Amount Raised: 2000000.0
+Currency: €
+Keywords ['Jälle Technologies, recycling, circular economy, graphene, battery tech, Kiilto Ventures, 2C Ventures']
+
+==============NEW DATA==================
+Title: Exein raises €70M to protect critical infrastructure from back door attacks
+Link: https://tech.eu/2025/07/16/exein-raises-eur70m-to-protect-critical-infrastructure-from-back-door-attacks//
+Date: 2025-07-16T07:51:05+00:00
+Time: 07:51:05+00:00Company Name: EXEIN
+Amount Raised: 70000000.0
+Currency: €
+Keywords ['EXEIN, Balderton, Supernova, lakestar, United Ventures, partech']
+
+==============NEW DATA==================
+Title: Numan secures $60M to scale preventive digital health platform
+Link: https://tech.eu/2025/07/16/numan-secures-60m-to-scale-preventive-digital-health-platform//
+Date: 2025-07-16T07:35:00+00:00
+Time: 07:35:00+00:00Company Name: Numan
+Amount Raised: 60000000.0
+Currency: $
+Keywords ['Numan, Healthtech, Big Pi Ventures']
+
+==============NEW DATA==================
+Title: Wagestream acquires pension technology provider Zippen
+Link: https://tech.eu/2025/07/16/wagestream-acquires-pension-technology-provider-zippen//
+Date: 2025-07-16
+Time: 10:18:53+00:00Company Name: Wagestream
+Amount Raised: 0
+Currency: N/A
+Keywords ['Wagestream, Zippen']
+
+==============NEW DATA==================
+Title: Altura acquires Tendara to accelerate European expansion in bid management
+Link: https://tech.eu/2025/07/16/altura-acquires-tendara-to-accelerate-european-expansion-in-bid-management//
+Date: 2025-07-16
+Time: 09:15:11+00:00Company Name: Altura
+Amount Raised: 0
+Currency: N/A
+Keywords ['Altura, Tendara']
+
+==============NEW DATA==================
+Title: Kiku raises €4M seed round to redefine frontline hiring with AI
+Link: https://tech.eu/2025/07/16/kiku-raises-eur4m-seed-round-to-redefine-frontline-hiring-with-ai//
+Date: 2025-07-16
+Time: 09:30:00+00:00Company Name: Kiku
+Amount Raised: 4000000.0
+Currency: €
+Keywords ['Kiku, Cherry Ventures, Yellow']
+
+==============NEW DATA==================
+Title: Jälle Technologies raises €2M to turn battery waste into high-value materials
+Link: https://tech.eu/2025/07/16/jalle-technologies-raises-eur2m-to-turn-battery-waste-into-high-value-materials//
+Date: 2025-07-16
+Time: 09:14:36+00:00Company Name: Jälle Technologies
+Amount Raised: 2000000.0
+Currency: €
+Keywords ['Jälle Technologies, recycling, circular economy, graphene, battery tech, Kiilto Ventures, 2C Ventures']
+
+==============NEW DATA==================
+Title: Exein raises €70M to protect critical infrastructure from back door attacks
+Link: https://tech.eu/2025/07/16/exein-raises-eur70m-to-protect-critical-infrastructure-from-back-door-attacks//
+Date: 2025-07-16
+Time: 07:51:05+00:00Company Name: EXEIN
+Amount Raised: 70000000.0
+Currency: €
+Keywords ['EXEIN, Balderton, Supernova, lakestar, United Ventures, partech']
+
+==============NEW DATA==================
+Title: Numan secures $60M to scale preventive digital health platform
+Link: https://tech.eu/2025/07/16/numan-secures-60m-to-scale-preventive-digital-health-platform//
+Date: 2025-07-16
+Time: 07:35:00+00:00Company Name: Numan
+Amount Raised: 60000000.0
+Currency: $
+Keywords ['Numan, Healthtech, Big Pi Ventures']
+
+==============NEW DATA==================
+Title: $5M Funding for AI Startup
+Link: https://tech.eu/article
+Date: 2025-07-16
+Time: 00:00:00+00:00Company Name: OpenAI
+Amount Raised: 5000000.0
+Currency: $
+Keywords ['OpenAI, Sam Altman']
+
+==============NEW DATA==================
+Title: $5M Funding for AI Startup
+Link: https://tech.eu/article
+Date: 2025-07-16
+Time: 00:00:00+00:00Company Name: OpenAI
+Amount Raised: 5000000.0
+Currency: $
+Keywords ['OpenAI, Sam Altman']
+
+==============NEW DATA==================
+Title: $5M Funding for AI Startup
+Link: https://tech.eu/article
+Date: 2025-07-16
+Time: 00:00:00+00:00Company Name: OpenAI
+Amount Raised: 5000000.0
+Currency: $
+Keywords ['OpenAI, Sam Altman']
+
+==============NEW DATA==================
+Title: $5M Funding for AI Startup
+Link: https://tech.eu/article
+Date: 2025-07-16
+Time: 00:00:00+00:00Company Name: OpenAI
+Amount Raised: 5000000.0
+Currency: $
+Keywords ['OpenAI, Sam Altman']
+
+==============NEW DATA==================
+Title: $5M Funding for AI Startup
+Link: https://tech.eu/article
+Date: 2025-07-16
+Time: 00:00:00+00:00Company Name: OpenAI
+Amount Raised: 5000000.0
+Currency: $
+Keywords ['OpenAI, Sam Altman']
+
+==============NEW DATA==================
+Title: $5M Funding for AI Startup
+Link: https://tech.eu/article
+Date: 2025-07-16
+Time: 00:00:00+00:00Company Name: OpenAI
+Amount Raised: 5000000.0
+Currency: $
+Keywords ['OpenAI, Sam Altman']
+
+==============NEW DATA==================
+Title: $5M Funding for AI Startup
+Link: https://tech.eu/article
+Date: 2025-07-16
+Time: 00:00:00+00:00Company Name: OpenAI
+Amount Raised: 5000000.0
+Currency: $
+Keywords ['OpenAI, Sam Altman']
+
+==============NEW DATA==================
+Title: $5M Funding for AI Startup
+Link: https://tech.eu/article
+Date: 2025-07-16
+Time: 00:00:00+00:00Company Name: OpenAI
+Amount Raised: 5000000.0
+Currency: $
+Keywords ['OpenAI, Sam Altman']
+
