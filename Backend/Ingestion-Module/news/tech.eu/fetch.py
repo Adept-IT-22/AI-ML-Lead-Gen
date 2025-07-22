@@ -2,6 +2,7 @@
 
 #========IMPORTS==========
 import re
+import time
 import json
 import httpx
 import aiofiles
@@ -32,7 +33,7 @@ async def fetch_tech_eu_data()->dict:
     #=======FETCH DATA==========
     async with httpx.AsyncClient() as client:
         try:
-            response = await client.get(URL)
+            response = await client.get(URL, timeout=5.0)
             if response.status_code != 200:
                 logging.error(f"Failed to fetch URL: {URL} - Status code: {response.status_code}")
                 return {}
@@ -98,5 +99,8 @@ async def fetch_tech_eu_data()->dict:
     return data
     
 if __name__ == "__main__":
+    start_time = time.perf_counter()
     result = asyncio.run(fetch_tech_eu_data())
     print(json.dumps(result, indent=2))
+    duration = time.perf_counter() - start_time
+    print(f"This task took {duration} seconds")
