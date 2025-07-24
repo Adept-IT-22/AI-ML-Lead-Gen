@@ -18,6 +18,9 @@ _Insert design choices here_
 ### Technologies Used
 
 + **Message Queues** - For their ability to decouple modules, allowing asynchronous operations.
++ **Async/Await** - To prevent network requests blocking the program as this code is network intensive
++ **XML Parsing** - As sitemaps are done in XML. Done using lxml as it's faster than BeautifulSoup due to its dependencies on C library's under the hood.
++ 
 
 ### Databases Used
 
