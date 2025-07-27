@@ -3,10 +3,14 @@ fetched_data = {
     "article_title": [],
     "article_link": [],
     "article_date": [],
-    "article_time": [],
     "company_name": [],
+    "company_city": [],
+    "company_country": [],
+    "company_decision_makers": [],
+    "funding_round": [],
     "amount_raised": [],
-    "investors": [],
     "currency": [],
+    "investor companies": [],
+    "investor people": [],
     "keywords": []
 }

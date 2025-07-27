@@ -4,25 +4,72 @@ This document is an ever growing embodiment of the project. It contains details 
 
 ## Design Choices
 
-_Insert design choices here_
+### Frontend
+
+### Backend
+
++ **Event-Driven Architecure** - A signal from funding, events or hiring sites is the trigger for everything else. Queues will be placed in between modules for decoupling purposes, allowing the CPU dependent modules to keep executing even when the slower I/O dependent modules are stil running.
+
++ **Data Oriented Design** - Of key importance is the data and the transformations being made on said data. Everything else is secondary to that. An example of how that is made manifest in this project is through the use of **Structure of Arrays** over **Array of Structures** i.e.
+
+```
+founder_data = {
+    "urls": ["www.google.com", "www.facebook.com", "www.twitter.com"],
+    "founders": ["sergey brin", "mark zuckerberg", "jack dorsey"]
+}
+```
+
+over:
+
+```
+founder_data = [
+    {
+        "url": "www.google.com",
+        "founder": "sergey brin"
+    },
+    {
+        "url": "www.facebook.com",
+        "founder": "mark zuckerberg"
+    },
+    {
+        "url": "www.twitter.com",
+        "founder": "jack dorsey"
+    }
+]
+```
+
+That is because:
+
++ We rarely ,if ever, only need one of anything e.g. just one url or just one founder. Normally we need all of them so we can iterate over them and perform some operation. It therefore makes sense to group them together in the former rather than the latter manner.
+
++ More importantly, the CPU loves sequential data. Iterating over data that's been linearly arranged is what the CPU's dreams are made of. This is due to the cache system in modern computers. Linearly arranged data, e.g. all founders being placed together in one array, can be fetched from memory and fixed in the cache making the CPU's work much easier as opposed to all founders being in different dictionaries and thus non-linear memory locations.
 
 ## Technical Decisions
 
 ### Languages Used
 
-+ **Backend** - Python for its wealth of useful libraries and lack of learning curve due to developer knowledge. Flask for how lightweight it is.
-+ **Frontend** - Angular.
++ **Backend** - Python for its wealth of useful libraries and lack of learning curve due to developer knowledge. Flask specifically for how lightweight it is. As it's not a compiled language, Python sacrifices speed but the pros in this scenario outweigh the cons.
+
++ **Frontend** - Angular. This one was purely down to individual taste.
 
 ### Packages Used
+
++ **asyncio** - This package is the lifeblood of this project. Due to the project's I/O heavy nature, coroutines are of the utmost importance, allowing the program to avoid blocking any and everywhere. Everything must be asynchronous.
++ **lxml** - For parsing of xml and html documents. Preferred over BeautifulSoup due to it's superior performance as it depends on C libraries under the hood as opposed to BeautifulSoup which deals solely with Python.
++ **httpx** - For making network requests. Preferred over the more common requests package due to its support for asynchronous calls.
++ **Tenacity** - Ensuring calls to Gemini's API retry if encountered with a ResourceExhaustedException 
 
 ### Technologies Used
 
 + **Message Queues** - For their ability to decouple modules, allowing asynchronous operations.
 + **Async/Await** - To prevent network requests blocking the program as this code is network intensive
 + **XML Parsing** - As sitemaps are done in XML. Done using lxml as it's faster than BeautifulSoup due to its dependencies on C library's under the hood.
-+ 
++ **Gemini 2.5 Flash** - AI model used to go through paragraphs and extract meaningful based on the data structures in the utils folder.
++ **Semaphores** - Used while making API calls to Gemini to ensure only 4 concurrent request can be made in an attempt to avoid the ResourceExhaustedException.
 
 ### Databases Used
+
+_Insert database used here_
 
 ### Commit Message Format
 

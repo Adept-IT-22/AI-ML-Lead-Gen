@@ -4,13 +4,21 @@ import time
 import httpx
 import asyncio
 import logging
+import aiofiles
 from lxml import etree, html
 from typing import Dict, List
+from ingestion_module.ai_extraction.extract_content import regroup_batches
+from utils.data_structures.news_data_structure import fetched_data as news_fetched_data
 
-#====================FIND URL====================
+logger = logging.getLogger()
+
 """
-This website's sitemap is a list of numbered sitemaps.
+This website's sitemap is a list of nested sitemaps.
 We therefore have to parse them until we find the latest one.
+Once we find the latest one, we must open it and parse all the
+urls inside it searching for ai-related urls. We then open those
+urls and fetch all important data-filled paragraphs. That's what
+we eventually return: each url and its paragraphs.
 """
 #===============PARENT SITEMAP================
 URL = "https://www.finsmes.com/wp-sitemap.xml"
@@ -26,7 +34,7 @@ Since the sitemaps are organized from 1 to the latest, we only
 need the latest one. The method below finds the latest sidemap.
 """
 async def find_newest_sitemap(url: str)->str:
-    logging.info("Fetching latest sitemap...")
+    logger.info("Fetching latest sitemap...")
 
     #Regex to search for posts only
     pattern = re.compile(r'-post-(\d+)\.xml')
@@ -55,16 +63,16 @@ async def find_newest_sitemap(url: str)->str:
                         latest_sitemap = url
 
             print(f"Latest sitemap: {latest_sitemap}")
-            logging.info("Fetching latest sitemap done")
+            logger.info("Fetching latest sitemap done")
             return latest_sitemap
 
         except Exception as e:
-            logging.error(f"Error fetching/parsing {url}: {str(e)}")
+            logger.error(f"Error fetching/parsing {url}: {str(e)}")
             return
 
 #Extract all ai funding article links from the latest sitemap
 async def fetch_ai_funding_article_links(url: str)->list:
-    logging.info(f"Fetching AI specific urls...")
+    logger.info(f"Fetching AI specific urls...")
     try:
         #=======FETCH DATA==========
         async with httpx.AsyncClient() as client:
@@ -82,19 +90,19 @@ async def fetch_ai_funding_article_links(url: str)->list:
                 ai_funding_articles.append(article_link)
 
         print(json.dumps(ai_funding_articles, indent=2))
-        logging.info("Feching AI specific urls done")
+        logger.info("Feching AI specific urls done")
         return list(set(ai_funding_articles))
 
     except Exception as e:
-        logging.error(f"Error fetching/parsing {URL}: {str(e)}")
+        logger.error(f"Error fetching/parsing {URL}: {str(e)}")
 
 """
 Now we open the links and extract the necessary paragraphs before feeding it to the LLM
 """
 async def get_paragraphs(urls: list) -> Dict[str, List[str]]:
-    logging.info("Getting paragraphs from urls...")
+    logger.info("Getting paragraphs from urls...")
     if not urls:
-        logging.error("List of AI specific Urls Not Found")
+        logger.error("List of AI specific Urls Not Found")
         return {"urls": [], "paragraphs": []}
     
     try:
@@ -110,19 +118,19 @@ async def get_paragraphs(urls: list) -> Dict[str, List[str]]:
             for coroutine in asyncio.as_completed(tasks):
                 url, paragraphs = await coroutine 
                 results["urls"].append(url)
-                results["paragraphs"].append(paragraphs)
+                results["paragraphs"].append('\n'.join(paragraphs))
 
-        logging.info("Done getting paragraphs from urls")
+        logger.info("Done getting paragraphs from urls")
         return results
 
     except Exception as e:
-        logging.error("Failed getting paragraphs from urls")
+        logger.error("Failed getting paragraphs from urls")
     
     return {"": [""]}
             
 #Function that does the actual extraction
 async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, list[str]]:
-    logging.info(f"Fetching paragraphs from {url}...")
+    logger.info(f"Fetching paragraphs from {url}...")
     try:
         response = await client.get(url)
         response.raise_for_status()
@@ -133,29 +141,50 @@ async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, li
         paragraph_nodes = root.xpath("//div[contains(@class, 'tdb-block-inner') and contains(@class, 'td-fix-index')]//p")
         paragraphs = [node.text_content().strip() for node in paragraph_nodes if node.text_content().strip()]
 
-        logging.info(f"Done fetching paragraphs")
+        logger.info(f"Done fetching paragraphs")
         return url, paragraphs
 
     except httpx.HTTPStatusError as e:
-        logging.error(f"Failed to fetch paragraphs from {url}")
+        logger.error(f"Failed to fetch paragraphs from {url}")
     except Exception as e:
-        logging.error(f"Error processing {url}: {str(e)}")
+        logger.error(f"Error processing {url}: {str(e)}")
         
     return url, []
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-    async def main(): #Allows us to run the code asynchronously to avoid blocking
-        logging.info("Fetching from FinSMEs...")
+    async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronously to avoid blocking
+        logger.info("Fetching from FinSMEs...")
         current_time = time.perf_counter()
         newest_sitemap = await find_newest_sitemap(URL)
         if newest_sitemap:
             ai_urls = await fetch_ai_funding_article_links(newest_sitemap)
             if ai_urls:
                 results = await get_paragraphs(ai_urls)
-                print(json.dumps(results, indent=2))
-        logging.info("Done fetching from FinSMEs.Time for AI information extraction")
-        running_time = time.perf_counter() - current_time
-        print(f"Program ran for {running_time}")
+
+        llm_results = news_fetched_data
+
+        #Check if results has urls in the first place
+        if results["urls"]:
+
+            #Feed the results to the llm
+            extracted_data = await regroup_batches(results)
+
+            #Append extracted_data to llm_results
+            for key, value_list in extracted_data.items():
+                if key in llm_results and isinstance(llm_results[key], list) and isinstance(value_list, list):
+                    llm_results[key].extend(value_list)
+                elif key in llm_results:
+                    llm_results[key] = value_list
+
+        #Write results to file
+        logger.info("logger results to file....")
+        async with aiofiles.open("finSMEs_data.txt", "a") as file:
+            await file.writelines(json.dumps(llm_results, indent=2))
+        logger.info("Done logger results to file")
+
+        logger.info("Done fetching from FinSMEs.Time for AI information extraction")
+        duration = time.perf_counter() - current_time
+        print(f"Program ran for {duration:.2f} seconds")
     
     asyncio.run(main())
