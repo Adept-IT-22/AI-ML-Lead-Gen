@@ -1,0 +1,441 @@
+============NEW PARAGRAPH==========={
+  "urls": [
+    "https://www.finsmes.com/2025/06/synthflow-ai-raises-20m-in-series-a-funding.html",
+    "https://www.finsmes.com/2025/06/manex-ai-raises-e8m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/06/nexchain-secures-strategic-funding-to-lead-the-ai-crypto-market.html",
+    "https://www.finsmes.com/2025/07/castellum-ai-raises-8-5m-in-series-a-funding.html",
+    "https://www.finsmes.com/2025/07/opper-ai-raises-3m-in-pre-seed-funding.html",
+    "https://www.finsmes.com/2025/06/wordsmith-ai-raises-25m-in-series-a-funding.html",
+    "https://www.finsmes.com/2025/06/prop-ai-raises-1-5m-in-pre-seed-funding.html",
+    "https://www.finsmes.com/2025/06/horizon3-ai-raises-100m-in-series-d-funding.html",
+    "https://www.finsmes.com/2025/07/radical-ai-raises-55m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/scrunch-ai-raises-15m-in-series-a-funding.html",
+    "https://www.finsmes.com/2025/06/backops-ai-raises-6m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/motor-ai-raises-20m-in-funding.html",
+    "https://www.finsmes.com/2025/07/emerald-ai-raises-24-5m-in-funding.html",
+    "https://www.finsmes.com/2025/07/litero-ai-raises-800k-in-pre-seed-funding.html",
+    "https://www.finsmes.com/2025/06/voda-ai-raises-series-a-funding.html",
+    "https://www.finsmes.com/2025/06/sema4-ai-raises-25m-in-series-a-extension.html",
+    "https://www.finsmes.com/2025/06/reveng-ai-raises-4-15m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/06/pano-ai-raises-44m-in-series-b-funding.html",
+    "https://www.finsmes.com/2025/07/warden-ai-raises-funding.html",
+    "https://www.finsmes.com/2025/06/gridfree-ai-raises-5m-in-funding.html",
+    "https://www.finsmes.com/2025/06/pwin-ai-raises-10m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/06/databahn-ai-raises-17m-in-series-a-funding.html",
+    "https://www.finsmes.com/2025/06/interactly-ai-raises-pre-seed-funding.html",
+    "https://www.finsmes.com/2025/07/argon-ai-raises-5-5m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/06/ryght-ai-raises-3m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/trupeer-ai-raises-3m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/chai-ai-raises-additional-funding-total-to-over-55m.html",
+    "https://www.finsmes.com/2025/07/memories-ai-raises-8m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/06/autonomize-ai-raises-28m-in-series-a-funding.html",
+    "https://www.finsmes.com/2025/07/spacely-ai-raises-us-1m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/inntelo-ai-raises-over-500k-in-pre-seed-funding.html",
+    "https://www.finsmes.com/2025/06/kosmc-ai-raises-200k-in-pre-seed-funding-round.html",
+    "https://www.finsmes.com/2025/06/iterate-ai-raises-6-4m-in-funding.html",
+    "https://www.finsmes.com/2025/07/nexxa-ai-raises-4-4m-in-pre-seed-funding.html",
+    "https://www.finsmes.com/2025/07/mozart-ai-raises-530k-in-pre-seed-funding.html",
+    "https://www.finsmes.com/2025/07/callidus-legal-ai-raises-10m-in-funding.html",
+    "https://www.finsmes.com/2025/06/bolo-ai-raises-8-1m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/genesis-ai-raises-105m-in-funding.html",
+    "https://www.finsmes.com/2025/06/veris-ai-raises-8-5m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/sciencia-ai-raises-funding-round.html",
+    "https://www.finsmes.com/2025/06/klutch-ai-raises-8m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/06/voicecare-ai-raises-4-54m-in-funding.html",
+    "https://www.finsmes.com/2025/06/thread-ai-raises-20m-in-series-a-funding.html"
+  ],
+  "paragraphs": [
+    [
+      "Synthflow AI, a Berlin, Germany-based voice AI platform for automated phone calls, raised $20M Series A funding.",
+      "The round was led by\u00a0Accel, with participation from existing investors\u00a0Atlantic Labs\u00a0and\u00a0Singular.",
+      "The company intends to use the funds to support global expansion, including the opening of a new office in the US, and accelerate development of its voice AI agent platform.",
+      "Founded in 2023 by Hakob and Albert Astabatsyans and Sassun Mirzakhan-Saky, Synthflow AI offers small and medium-sized companies a no code, end-to-end solution, to create AI voice assistants, customise them, and set up workflow automations. By using the platform, users can deploy voice assistants that schedule appointments, collect and share real-time information, or provide customer support.",
+      "The news followed the company\u2019s\u00a0seed round\u00a0last year, bringing the total funding to $30M.",
+      "FinSMEs",
+      "25/06/2025"
+    ],
+    [
+      "Manex AI, a Munich, Germany-based provider of an AI-driven software platform for industrial quality management and process steering, raised $8M in Seed funding.",
+      "The round was led by Lightspeed Venture Partners and BlueYard Capital, with participation from Capmont Technology and the CDTM Venture Fund.",
+      "The companyi intends to use the funds to expand operations and its development efforts.",
+      "Led by CEO Nathan Gruber, Manex AI\u00a0is an AI-driven software platform for industrial quality management and process steering.",
+      "Its first product platform, Qualitatio, integrates into every aspect of the manufacturing process, from order to production to getting the product in the customer\u2019s hands. This view of product data from start to finish enables Manex AI to help companies optimize for efficiency and quality across manufacturing operations.",
+      "In just 18 months since its founding, its solutions support brands like\u00a0BMW, Stellantis, Audi, Resrg Automotive, TDK Electronics, Still, BSH, and Henkel.",
+      "FinSMEs",
+      "04/06/2025"
+    ],
+    [
+      "The Nexchain platform, representing a new generation blockchain infrastructure with deep integration of artificial intelligence, is undergoing a strategic investment round.",
+      "According to insiders, venture funds focused on Web3 and AI, as well as several specialized crypto studios, took part in the round. The total amount of capital raised has not yet been disclosed, but according to preliminary information, we are talking about multimillion-dollar investments.",
+      "By the way, the project is currently at the\u00a0presale crypto\u00a0stage, when anyone can buy NEX tokens. Therefore, if you want to enter the project with minimal investment, today is the best time.",
+      "Who Invested: Focus on the Synergy of AI and Blockchain",
+      "According to a Nexchain representative, investors allocate their funds to develop thee existing AI infrastructure and ensure product scalability. Among them are Shima Capital, Animoca Brands, Outlier Ventures, and Dream Ventures. The project also turned out to be interesting for a number of crypto-specialized studios actively developing dApps, DePIN solutions, and DAO tools.",
+      "The CEO of the project, Logan Reynolds, said in his interview that thus AI crypto venture capital became more than just a resource for the project \u2013 it defined a strategic partnership. Investors who joined the project opened up access to technical accelerators, marketing channels, and a global network of blockchain ecosystems, which, as a result, allowed the project team to form an outstanding technical architecture available to developers already in the early stages.",
+      "How the Capital Will Be Used",
+      "The capital raised during the Nexchain fundraising round will be used to implement the next stage of Nexchain development, which consists of launching the Nexpolia ecosystem upgrade, designed to expand AI functionality and optimize the development environment.",
+      "In particular, the lion\u2019s share of investments will be spent on customizing the blockchain indexer for Nexchain EVM extensions and the specifics of AI data processing. The team is also going to implement architectural patterns for AI extensibility and integrate AI into the EVM core.",
+      "Finally, these guys will adapt the existing infrastructure to launch Nexpolia, deploying Blockchain Explorer and UI interfaces for issuing tokens and deploying smart contracts, as well as implementing Nexchain Native Bridge with support for major testnets. Additionally, an SDK for AION and a comprehensive DevKit for accelerated deployment of dApps will be presented.",
+      "This leads to the conclusion that by the end of Q3 2025, thanks to AI blockchain funding, Nexchain will reach a new level of maturity as an AI-oriented blockchain platform with support for adaptive smart contracts and cross-chain functionality \u2013 everything developers need to create a new generation of dApps.",
+      "Why Investors Are Betting on Projects Combining AI and Blockchain",
+      "The integration of artificial intelligence and blockchain technologies has become one of the most promising areas for venture capital. This is explained by the fact that AI makes blockchain networks more adaptive and economical, allowing dynamic scaling of network resources depending on the load. If we add to this real-time transaction analysis and the implementation of self-learning logic, it becomes clear that the infrastructure of such solutions can become the basis for advanced DeFi and DAO.",
+      "It is also worth noting that investors are analyzing real demand, and it already exists. Confirmation of this is AI assistants on the blockchain, AI oracles for dynamic data in DeFi and supply chain, AI-driven DAOs with automatic budget allocation, as well as generative AI in tokenized media, games and marketing.",
+      "Projects that can combine this in one technology stack like Nexchain are perceived as blockchain market leaders and perspective crypto startup investments of 2025.",
+      "Market Prospects and Nexchain in It",
+      "Given the current speed of development, Nexchain promises to become the basis for hundreds of AI-dApps in the areas of DeFi, DAO, and digitalization of physical assets as early as 2025. In addition, the project will provide developers with a user-friendly SDK.",
+      "All these aspects make us not only believe in advanced technologies but also realize that VC-backed crypto projects like Nexchain will definitely find practical application in real life.",
+      "Conclusion",
+      "The fact that the presale of NEX tokens will soon end suggests that Nexchain should definitely not be perceived just as AI hype. First of all, it is a high-tech platform with long-term architecture and real market demand. Therefore, if you want to be among the first, be sure to follow Nexchain updates. And, of course, have time to buy NEX tokens at the best price."
+    ],
+    [
+      "Castellum.AI, a NYC-based financial crime compliance platform provider, closed an $8.5m Series A funding round.",
+      "The round was led by Curql, with participation from BTech Consortium, and Framework Venture Partners, as well as existing investors from Spider Capital, Remarkable Ventures and Cameron Ventures.",
+      "Led by Peter Piatetsky, Co-Founder and CEO, Castellum.AI provides a financial crimes compliance platform with in-house risk data, AML/KYC screening and AI agents. Used by community banks, sponsor banks, leading crypto exchanges and financial services firms, Castellum.AI enables compliance teams to scale their operations while maintaining precision, accountability and oversight.",
+      "The solution has an integrated approach to compliance, combining risk data (sanctions, PEPs, adverse media and more), AML/KYC screening and AI agents in a single, audit-ready system built entirely in-house. The company\u2019s patented data collection and machine learning enrichment process collects sanctions, PEPs, adverse media and other risk data from original sources. This data feeds Castellum.AI\u2019s screening and monitoring system to notify clients of their risk exposure in real time.",
+      "FinSMEs",
+      "08/07/2025"
+    ],
+    [
+      "Opper AI, a Stockholm, Sweden-based company behind Unomaly, the machine learning-based observability platform acquired by LogicMonitor in 2020, raised $3M in Pre-Seed funding.",
+      "Backers included Luminar Ventures, Emblem Venture Capital, Greens Capital, and angel investors.",
+      "The company intends to use the funds to launch its Task Completion API.",
+      "Led by CEO G\u00f6ran Sandahl, Opper AI builds infrastructure that helps developers turn large language models into dependable systems. The Opper API introduces a new abstraction: task contracts. Instead of manually writing and editing prompts, developers define tasks in JSON, specifying inputs, expected outputs, and success criteria. From there, Opper takes control, using intelligent prompt generation, built-in feedback loops, and model interoperability to deliver accurate and repeatable results.",
+      "FinSMEs",
+      "14/07/2025"
+    ],
+    [
+      "Wordsmith AI, an Edinburgh, Scotland, UK-based legal intelligence company, raised $25M in Series A funding.",
+      "The round was led by Index Ventures.",
+      "The company intends to use the funds to expand operations and its development efforts.",
+      "Led by CEO Ross McNairn, Wordsmith empowers GCs and in-house teams with infrastructure that deploys agents bringing legal intelligence across organisations. Customers include Trustpilot, Remote.com, Deliveroo, Multiverse, Docplanner, and others.",
+      "FinSMEs",
+      "04/06/2025"
+    ],
+    [
+      "Prop-AI, a Dubai, UAE-based provider of an AI-powered platform to discover, evaluate, and purchase real estate, raised $1.5M in Pre-Seed funding.",
+      "The round was led by Plus VC, with participation from Joa Capital, Select Ventures, Oraseya Capital, and Plug and Play, alongside angel investors and family offices from Saudi Arabia and Bahrain.",
+      "The company intends to use the funds to accelerate its regional data integration, advance its AI and machine learning capabilities, forge key partnerships and the launch of new tools for real estate professionals across the MENA region and beyond.",
+      "Led by CEO Ranime El-Skaff, Prop-AI is an AI-powered platform to discover, evaluate, and invest in real estate. Built for both individuals and professionals, it leverages real-time data, predictive analytics, and conversational AI to deliver actionable insights and investment-grade tools for the modern property market.",
+      "FinsMEs",
+      "17/06/2025"
+    ],
+    [
+      "Horizon3.ai, a San Francisco, CA-based NodeZero autonomous security platform provider, raised $100M in Series D funding.",
+      "The round was led by NEA, with participation from SignalFire, Craft Ventures and 9Yards Capital. As part of the investment, Lila Tretikov, Partner and Head of AI Strategy at NEA and former Deputy CTO of Microsoft, will join the Horizon3.ai Board of Directors.",
+      "The company intends to use the funds to:",
+      "Led by CEO Snehal Antani, Horizon3.ai specializes in autonomous security. Its platform, NodeZero, finds and exploits real-world attack paths so defenders can fix what matters and prove they\u2019re secure. It is used by over 3,000 organizations worldwide, from Fortune 500 companies to national defense partners.",
+      "FinSMEs",
+      "11/06/2025"
+    ],
+    [
+      "Radical AI,\u00a0a NYC-based company building autonomous labs for materials R&D,\u00a0raised\u00a0$55M in Seed funding.",
+      "Backers included RTX Ventures, Nvidia, noa, Eni Next, Infinite, Alleycorp, etc.",
+      "The company intends to use the funds to expand operations and its development efforts.",
+      "Led by CEO Joseph F. Krause and Jorge Colindres, Radical AI is building scientific intelligence which will autonomously discover, create, and manufacture next-generation materials to unlock the technologies of the future. The focus is to build an integrated system that removes the inherent fragmentation in human-driven research and development.",
+      "FinSMEs",
+      "20/07/2025"
+    ],
+    [
+      "Scrunch AI, a Salt Lake City, UT-based company helping brands understand and improve how they appear in AI search, raised $15M in Series A funding.",
+      "The round was led by Decibel, with participation from\u00a0Mayfield, Homebrew, and other strategic investors.",
+      "The company intends to use the funds to accelerate the development and deployment of the\u00a0scrunch agent experience platform (AXP), a new infrastructure layer that helps brands serve optimized content directly to AI crawlers and agents.",
+      "Led by CEO Chris Andrew, Scrunch AI is a provider of an enterprise-grade platform that empowers businesses to understand and optimize their presence in AI search. Its suite of tools assesses competitive positioning, pinpoints content gaps, and optimizes websites for AI search and retrieval, ensuring brands remain relevant in the evolving AI landscape.",
+      "In addition to its enterprise-grade solutions, Scrunch has also launched a dedicated offering for agencies, designed to help them guide their clients through the transition to AI search. This program provides access, insights, and tools specifically built for managing multiple brands and implementing at scale.",
+      "FinSMEs",
+      "23/07/2025"
+    ],
+    [
+      "BackOps\u00a0AI, a San Francisco, CA-based provider of an AI operations platform for supply chain workflows, raised\u00a0$6M in\u00a0Seed funding.",
+      "The round was led by Construct Capital, with continued support from existing investors Gradient, and 10VC.",
+      "The company intends to use the funds to expand operations and its development efforts.",
+      "Led by CEO Sean McCarthy, BackOps AI provides logistics teams with Relay, which automates customer service, order management, and system updates across WMS, ERP, CRM, and communication platforms. By eliminating manual work and reducing error-prone processes, it aims to enable warehouse and supply chain operators to move faster, operate more efficiently, and stay focused on delivering for their customers.",
+      "FinSMEs",
+      "25/06/2025"
+    ],
+    [
+      "MOTOR Ai, a Berlin, Germany-based provider of AI systems for autonomous driving, raised $20M in funding.",
+      "The round was led by Segenia Capital and eCAPITAL, with participation of German HNWI\u2019s.",
+      "The company intends to use the capital for the final steps towards type approval for public roads and the subsequent deployment of autonomous vehicles.",
+      "Founded by Roy Uhlmann and Adam Bahlke, MOTOR Ai develops cognitive AI systems for autonomous driving with a focus on explainable decisions, safety and regulatory compliance. Its Level 4 intelligence sysytem for autonomous driving, which is based on cognitive intelligence, is able to make decisions in complex traffic situations.",
+      "The company plans to develop the first certified autonomous vehicle fleet for Europe.",
+      "FinSMEs",
+      "14/07/2025"
+    ],
+    [
+      "Emerald AI, a Washington, DC-based AI-driven compute orchestration company, raised $24.5M\u00a0in seed funding.",
+      "The round was led by Radical Ventures, with participation from NVentures (NVIDIA\u2019s venture capital arm), AMPLO, CRV, and Neotribe.",
+      "The company intends to use the funds to expand operations and its development efforts.",
+      "Led by CEO and Founder Dr.\u00a0Varun Sivaram, Emerald AI is a company which specializes in AI-driven compute orchestration, turning energy-intensive data centers into intelligent grid assets. Its AI-powered Conductor platform enables data centers to dynamically adjust power consumption by orchestrating AI workloads, such as training, fine-tuning, and inference, across networks of data centers in real-time.",
+      "By intelligently managing energy consumption through software, AI data centers can bypass grid interconnection queues that can stretch 7-10 years or more.",
+      "FinSMEs",
+      "01/07/2025"
+    ],
+    [
+      "Litero AI, a NYC-based provider of an EdTech platform, raised $800K in Pre-Seed funding.",
+      "The round was led by Pre-Seed to Succeed\u00a0(P2S) with participation from angel investors.",
+      "The company intends to use the funds to expand operations and its development efforts.",
+      "Litero AI is a US-based EdTech platform that uses advanced AI to help students improve academic writing. It guides students through the writing process, offers access to a vast database of scholarly sources, detects plagiarism and AI-generated content, and provides personalized feedback and grade predictions.",
+      "The platform currently supports English and aims to become a full-fledged academic writing mentor.",
+      "FinSMEs",
+      "21/07/2025"
+    ],
+    [
+      "VODA.ai, a Boston, MA-based provider of a platform that helps utilities to manage aging water infrastructure, raised an undisclosed amount in Series A funding.",
+      "The round was led by CRH Ventures with participation from L-Stone Capital.",
+      "The company intends to use the funds to support its growth, expand its R&D capabilities, and accelerate innovation to better serve municipal utilities and private water operators worldwide.",
+      "Founded in 2017 and led by CEO George Demosthenous, VODA.ai is a SaaS company that uses artificial intelligence to enhance decision-making for water utilities. Its platform provides detailed insights into the condition and risk of water and wastewater systems, enabling utilities to support repairs and investments with confidence.",
+      "To date, the platform has analyzed over one million miles of pipe across 26 U.S. states and six countries, enabling utilities to prioritize the protection of critical infrastructure and efficiently allocate resources.",
+      "FinSMEs",
+      "10/06/2025"
+    ],
+    [
+      "Sema4.ai, an Atlanta, GA-based enterprise AI agent company, raised $25m in Series A extension round, bringing its total Series A funding to $55.5m.",
+      "Backers included Snowflake Ventures, Rocketship VC, MVP Ventures and COX Enterprises, alongside returning investors Mayfield and Benchmark.",
+      "This capital will support the company\u2019s growth and continued innovation in enterprise AI agents.",
+      "Led by Rob Bearden, CEO, Sema4.ai provides a full lifecycle enterprise AI platform that enables businesses to build, run, and manage AI agents at scale. The company announced the general availability of its Sema4.ai Team Edition on\u00a0Snowflake Marketplace.",
+      "Team Edition allows Snowflake data app developers and business analysts to deploy agents directly from Sema4 Studio to Snowflake with one click, automating forecasting, insight extraction, and data workflows using their own enterprise context and secure data. Sema4.ai integrates with Cortex AI and enables customers to take on enterprise applications, connect to non-Snowflake data sources, and orchestrate Cortex AI services like Cortex Search, Cortex Analyst, Document AI, and more.",
+      "FinSMEs",
+      "04/06/2025"
+    ],
+    [
+      "RevEng.ai, a San Francisco, CA-based artificial intelligence and cybersecurity company, raised $4.1M in Seed funding.",
+      "The round was led by Sands Capital, with participation from In-Q-Tel Capital, IQ Capital, and Episode 1.",
+      "The company intends to use the funds to accelerate its growth, enhance its proprietary AI models, and expand its team to meet the growing demand for proactive cybersecurity solutions, and increase its offering in the U.S.",
+      "Led by James Patrick-Evans, CEO and Founder, RevEng.ai is an artificial intelligence and cybersecurity company building foundational AI for detecting threats and weaknesses in software. The AI model, named BinNet, can identify fragments of computer code found anywhere within organizations\u2019 software supply chain.",
+      "FinSMEs",
+      "30/06/2025"
+    ],
+    [
+      "Pano AI, a San Francisco, CA-based developer of AI-powered wildfire detection, $44M in Series B funding round, bringing its total amount raised to $89M.",
+      "The round was led by Giant Ventures, with participation from Liberty Mutual Strategic Ventures and Tokio Marine Future Fund, Congruent Ventures, Initialized Capital and Salesforce Ventures.",
+      "The company intends to use the funds to accelerate adoption and deployment of its AI-powered wildfire detection and intelligence solution at scale.",
+      "Led by Sonia Kastner, Pano AI is a company which specializes in AI-powered wildfire detection. Launched in 2020, the company provides advanced early detection and situational awareness solutions to fire agencies, utilities, governments, and private landholders to help protect people, property, and infrastructure from catastrophic wildfires. With deployments across the U.S., Canada, and Australia, Pano AI offers new solutions for real-time wildfire intelligence.",
+      "The company is used by 15 U.S. electric utilities including providers such as Arizona Public Service, Portland General Electric and Xcel Energy, and partners with nearly 40 organizations across sectors including government, renewable energy, forestry, ski resorts and community associations.",
+      "FinSMEs"
+    ],
+    [
+      "Warden AI, an Austin, TX-based provider of an AI auditing platform, raised an undisclosed amount in funding.",
+      "The round was led by founders of Onfido, and included participation from Playfair.",
+      "The company intends to use the funds to continue expanding across North America and Europe.",
+      "Founded in 2023 by Jeffrey Pole (CEO) and Eduard Schikurski (CTO), Warden AI provides a platform enabling HR to adopt AI through its audit systems for fairness and compliance, helping vendors and enterprises as they develop, deploy, and defend AI solutions in HR.",
+      "This empowers vendors and employers to comply with regulations like the EU AI Act and NYC Local Law 144, and to build trust with customers, users, and regulators.",
+      "HR tech platforms, including Greenhouse, Sense, and Beamery, are already using Warden.",
+      "FinSMEs",
+      "16/07/2025"
+    ],
+    [
+      "GridFree AI, a Houston, TX-based provider of an end-to-end data center infrastructure solution, raised $5M in funding.",
+      "The round was led by Giant Ventures, with participation from Amplo.",
+      "The company intends to use the funds to expand operations and its development efforts.",
+      "Founded by Patrick Yantz and Ralph Alexander, GridFree AI specializes in infrastructure with its Power Foundry technology that eliminates dependence on established electrical grids and accelerates deployment through optimized data center architecture, enhancing operational efficiency.",
+      "The company serves computing enterprises, colocation facilities, and organizations focused on artificial intelligence, enabling swift infrastructure establishment in previously unviable locations.",
+      "FinSMEs",
+      "03/06/2025"
+    ],
+    [
+      "pWin.ai, a Tysons, WA-based provider of an AI proposal-writing copilot service built with Shipley practices inside, raised $120M in Seed funding.",
+      "The round was led by Sanju Bansal, and other Government Contracting (GovCon) industry investors.",
+      "The company intends to use the funds to accelerate its product innovation, customer growth, and market expansion.",
+      "Led by CEO Vishwas Lele, pWin.ai provides businesses with an AI proposal-writing copilot service to win contracts while remaining committed to responsible AI principles. The company operates within both Azure Commercial and Azure Government (CMMC Level 2) environments, ensuring businesses meet the necessary compliance requirements while bidding on government and commercial contracts.",
+      "Built in partnership with\u00a0Shipley Associates, pWin.ai\u2019s RFP product integrates new methodologies into every draft, aligning structure and strategy with evaluator expectations.",
+      "Founded in 2024, pWin.ai is already streamlining the proposal processes at leading enterprises, Parsons and Astrion, as well as small and mid-sized companies such as CRL Technologies and Applied Information Services (AIS).",
+      "FinSMEs",
+      "03/06/2025"
+    ],
+    [
+      "DataBahn.ai, a Dallas, TX-based creator of a security-native data pipeline platform built for modern enterprise workloads, raised\u00a0$17m\u00a0in Series A funding.",
+      "The round was led by Forgepoint Capital, with participation from S3 Ventures and returning investor GTM Capital, bringing total capital raised to\u00a0$19m. As part of the Series A round,\u00a0Ernie Bio, managing director at Forgepoint Capital, has joined the DataBahn.ai board of directors.",
+      "The company intends to use the funds to accelerate the development of the platform roadmap for agentic AI \u2014autonomous agents that learn from enterprise data flows to automate data engineering tasks\u2014and support global expansion.",
+      "Led by Nanda Santhana, co-founder and CEO, DataBahn.ai provides a data pipeline platform enabling modern enterprises to manage and operationalize telemetry across security, observability, IOT/OT and AI ecosystems. The system delivers a dynamic, AI-native data fabric that allows organizations to integrate, govern and optimize data pipelines from any source to any destination\u2014with enterprise-grade control. Its new Phantom agents collect telemetry without deploying traditional agents, avoiding footprint bloat and preserving compute resources.",
+      "In under two years, the platform has enabled Fortune 50 and Global 2000 organizations to reduce telemetry processing costs by over 50%, automate the majority of their data engineering workloads and eliminate blind spots across SIEM, observability and AI pipelines.",
+      "FinSMEs",
+      "26/06/2025"
+    ],
+    [
+      "Interactly AI, a San Francisco, CA-based provider of a multimodal AI platform for healthcare administration, closed a pre-seed funding round of undisclosed amount.",
+      "Backers included Afore Capital, SeedtoB, Krishna Yarlagadda,\u00a0Dheeraj Pandey\u00a0(Nutanix, Devrev), Chocko Valliappa (Vee Technologies), and\u00a0Sudhakar Ramakrishna\u00a0(SolarWinds).",
+      "The company intends to use the funds to accelerate the development and launch of its solution.",
+      "Led by Nava Davuluri\u00a0(CEO) and\u00a0Shiva Chaitanya\u00a0(CTO), Interactly AI is a platform dedicated to addressing the critical challenges associated with healthcare administration, allowing providers to focus their energy on delivering high-quality patient care. Its solution delivers AI teammates for every patient touch-point\u2014 voice, text, email, fax, and beyond \u2014 to better empower providers and engage patients.",
+      "The platform uses agentic AI to support multimodal interactions and automate a comprehensive range of administrative tasks. This includes front-office functions like appointment scheduling and patient communication, alongside back-office operations such as insurance pre-authorization and medical record management. By unifying these critical areas, the team aims to eliminate silos, reduce administrative burdens, and empower healthcare professionals to focus on delivering high-quality care.",
+      "FinSMEs",
+      "04/06/2025"
+    ],
+    [
+      "Argon AI, a NYC-based provider of an AI-native workspace purpose-built for life sciences, raised $5.5M in Seed funding.",
+      "The round was led by Crosslink Capital and Wireframe Ventures with participation from Y Combinator, Pioneer Fund, and other investors in AI and digital health.",
+      "The company intends to use the funds to expand its team, deepen product capabilities, and scale adoption across enterprise biopharma.",
+      "Led by CEO Samy Danesh, Argon is the AI workspace for life sciences. From competitive intelligence and knowledge management to clinical strategy and primary research, it helps pharma teams turn mountains of data into living dashboards and intelligent workflows. Empowered by customized AI agents and designed for comprehensiveness and thoroughness, it generates accuracy, transparency, and proactive insights for high-performing biopharma teams.",
+      "FinSMEs",
+      "02/07/2025"
+    ],
+    [
+      "Ryght AI, a Laguna Beach, CA based provider of real-time generative AI solutions for the clinical research industry, raised $3m in seed funding.",
+      "The round was led by Foothill Ventures with participation from existing investors\u00a0AIX Ventures, Virtue Ventures, IASO Ventures, Top Harvest Capital, and Page One Ventures.",
+      "Founded in 2024 by Simon Arkell, CEO, Ryght AI provides an agentic-AI platform designed to automate every step of clinical trial site selection, activation, and enrollment. By combining generative-AI agents with a secure digital-twin network of over 100,000 trial sites, SOC 2 compliance, and integrated applications for sponsors, CROs, and research sites, Ryght delivers \u201cservice as software\u201d that accelerates trials, reduces costs, and improves patient access to new therapies. Behind the scenes, its agent-driven apps tap into a live global network of over 100,000 \u201cdigital twin\u201d site profiles to automatically understand and analyze complex trial protocols, connect them to the sites that will succeed, then\u00a0 speed contract completion and patient enrollment. The AI technology then allows research sites to rapidly identify eligible patients for available studies, thereby facilitating rapid and timely enrollment.",
+      "The company has closed 6 partnerships with\u00a0academic medical centers Emory University, West Virginia University, West Clinic, and three others. They join previously announced partners The University of Southern California Keck School of Medicine and the Medical College of Wisconsin.",
+      "FinSMEs",
+      "12/06/2025"
+    ],
+    [
+      "Trupeer.ai, a San Francisco, CA-based provider of an AI video creation platform, raised $3M in Seed funding.",
+      "The round was led by RTP Global, with participation from Salesforce Ventures.",
+      "The company intends to use the funds to expand operations and its development efforts.",
+      "Founded by Shivali Goyal and Pritish Gupta, Trupeer provides an AI-powered platform that turns screen recordings into studio-quality product videos, automatically. Designed for teams in product, support, sales, and training, it helps businesses scale software content without scaling production teams. From removing pauses and filler words to adding dynamic cuts, zooms, voiceovers, and translations, the solution creates polished, professional videos in minutes, along with step by step guides and documentations.",
+      "FinSMEs",
+      "15/07/2025"
+    ],
+    [
+      "Chai AI, a Palo Alto, CA-based provider of a platform for user-generated\u00a0AI (UGAI), secured additional rounds of funding, bringing its total investment to date to over\u00a0$55M.",
+      "Backers included individual investors such as\u00a0Ken Howery\u00a0and\u00a0Bill Elmore, along with AI companies CoreWeave and AMD.",
+      "Led by William Beauchamp, Founder, Chai aims to build a platform for user-generated\u00a0AI (UGAI). The company entered the UGAI space launching in 2021 and hitting 1 million users in early 2022, preceding both ChatGPT and Character AI.",
+      "As of 2025, Chai has continued its growth and now serves over\u00a010M\u00a0users and is one of the most valuable private AI startups in Silicon Valley. With its office in\u00a0Palo Alto\u00a0and a lean team of 11 engineers, it has an ARR of\u00a0$40M.",
+      "FinSMEs",
+      "04/07/2025"
+    ],
+    [
+      "Memories.ai, a San Francisco, CA-based AI research lab building visual memories for AI, raised $8m in seed funding.",
+      "The round was led by Susa Ventures, with participation from Samsung Next, Crane Venture Partners, Fusion Fund, Seedcamp and Creator Ventures.",
+      "The startup intends to use the funds to expand operations and its development efforts.",
+      "Founded by former Meta Reality Labs researchers, Dr. Shawn Shen and Ben Zhou, Memories.ai has developed the Large Visual Memory Model (LVMM) which is driving advancements across physical security, media production, marketing, and robotics.\u00a0Its technology builds human-like visual memories for AI, enabling machines to see, understand, and recall visual experiences across unlimited timeframes. Its platform delivers persistent, searchable memory for video at scale.",
+      "Key applications include:",
+      "Memories.ai\u2019s technology is currently available via API as well as a chatbot web app in which users can upload videos or connect with their own libraries.",
+      "FinSMEs",
+      "24/07/2025"
+    ],
+    [
+      "Autonomize AI, an Austin, TX-based company which speicializes in AI-driven healthcare solutions, raised $28M in Series A funding.",
+      "The round was led by\u00a0Valtruis,\u00a0The Cigna Group Ventures,\u00a0Tau Ventures, and other strategic investors.\u00a0Asset Management Ventures,\u00a0ATX Venture Partners\u00a0and\u00a0Capital Factory also participated.",
+      "The company intends to use the funds to accelerate its expansion and development efforts",
+      "Founded in 2022 by\u00a0Ganesh Padmanabhan\u00a0and\u00a0Kris Nair, Autonomize AI offers copilot services that organize, contextualize and summarize unstructured data to reduce the administrative burden for healthcare knowledge workers to make data-driven decisions and improve patient outcomes. Their customers include Top 20 Pharmaceuticals, Fortune 100 Healthcare Enterprises, and Life Sciences companies.",
+      "It has already achieved transformative results, including:",
+      "The raise brought the total amount to $32M.",
+      "FinSMEs",
+      "13/06/2025"
+    ],
+    [
+      "Spacely AI, a Bangkok, Thailand-based startup providing generative AI for architecture and interior design, raised US $1M in Seed funding.",
+      "The round was led by\u00a0PropTech Farm Fund III, with participation from\u00a0Wannaporn Phornprapha,\u00a0Ted Poshakrishna Thirapatana\u00a0(Founder, UTC Holdings Co., Ltd.), and\u00a0Mek Srunyu Stittri\u00a0(former VP Engineering, GitLab).",
+      "The company intends to use the funds to accelerate product development and expand the company\u2019s footprint in key global markets.",
+      "Led by CEO Paruey Anadirekkul, Spacely AI is a SaaS company developing generative AI for the architecture, engineering, and construction industry. Its cloud suite delivers AI rendering for interior and exterior spaces, image-editing tools, AI virtual staging, and automated 3D model generation. Fully integrated with SketchUp via Extension Warehouse, the platform is adding support for more CAD tools so professionals can work inside the software they already know.",
+      "The round followed a pre-seed investment from\u00a0SCB 10X.",
+      "FinSMEs",
+      "22/07/2025"
+    ],
+    [
+      "Inntelo AI, a London, UK-based hospitality technology company, raised \u00a3506K in Pre-Seed funding.",
+      "The round was led by Haatch and British Business Bank, with participation from Look AI Ventures and angel investors including former executives from Trip.com, DocuSign, and others.",
+      "The company intends to use the funds to accelerate its commercial growth, expand sales and marketing while support ongoing customer deployments and integration with property management systems.",
+      "Led by CEO Asif Alidina, Inntelo AI has developed a platform for hotels that combines guest and team communication, leveraging both conversational and agentic AI to improve the guest experience while delivering real operational efficiencies. The Inntelo AI Concierge automates guest enquiries via WhatsApp or phone and converts them into coordinated tasks, improving team responsiveness across all departments, including housekeeping, maintenance, food and beverage outlets, spas, and any other services the hotel provides.",
+      "It followed an earlier \u00a3120K investment from Antler.",
+      "FinSMEs",
+      "14/07/2025"
+    ],
+    [
+      "Kosmc AI, a New Delhi, India-based social commerce infrastructure startup, has raised $200K in pre-seed funding.",
+      "Backers included a group of undisclosed angel investors across India and the Middle East.",
+      "The capital will be used to strengthen its no-code product suite, grow its affiliate integrations, and expand operations across India and Southeast Asia.",
+      "Currently, the platform supports over 160,000 monthly active users across 25 countries, catering to digital-first entrepreneurs, content creators, and early-stage consumer brands.",
+      "Founded in 2024 by Ankur Gupta and Manavta Narula, Kosmc AI is a no-code social commerce technology company providing a platform that helps brands, creators, and professionals monetise their presence on social media through tools that support link-in-bio commerce, chat automation, and affiliate selling.",
+      "FinSMEs",
+      "06/06/2025"
+    ],
+    [
+      "Iterate.ai, a San Jose, CA-based company empowering businesses with AI solutions, raised $6.4M in funding.",
+      "The round was led by Auxier Asset Management\u00a0and with participation from Peter Cobb, Mike Edwards, and Dave Zentmyer.",
+      "The company intends to use the funds to expand operations and its development efforts.",
+      "Led by CEO Jon Nordmark, Iterate.ai offers an\u00a0AI platform\u00a0and\u00a0four distinct AI products, including its newest product, Generate, which is an AI Assistant that can run entirely on an AI PC, even without an internet connection, and an AI low-code platform, Interplay, which is cloud-agnostic and can run AI on the edge and in secure private environments.",
+      "With its largest offices in San Jose, CA and Denver, CO, Iterate.ai has a global presence with other offices in North America (Texas, Washington, Arizona), Europe (Stockholm), and Asia (India, Sri Lanka, Singapore).",
+      "FinSMEs",
+      "12/06/2025"
+    ],
+    [
+      "Nexxa.ai, a Sunnyvale, CA-based AI-native company supporting industrial engineers that operate in digital environments, raised $4.4M in Pre-Seed funding.",
+      "The round was led by Andreesen Horowitz\u2019 a16z speedrun with participation from investors Augment Ventures, Propeller Ventures, Plug and Play, Beat Ventures, SBI, Untapped Ventures, and Cross Atlantic Angels as well as angel investors\u00a0Rick Berry\u00a0and\u00a0Pat McCarthy, among others.",
+      "The company intends to use the funds to grow its engineering resources and expand into more industries.",
+      "Led by CEO Philipp Wehn, Nexxa.ai improves the automation landscape with its product, Full Self Computing, a solution designed to streamline business processes through cognitive Robotic Process Automation (RPA). The company offers a pay-per-use model with no upfront costs, providing flexibility and scalability. This approach empowers automation industry by making process optimization tools accessible to companies of all sizes, from small and medium businesses to large enterprises.",
+      "FinSMEs",
+      "21/07/2025"
+    ],
+    [
+      "Mozart AI, a London, UK-based music AI startup, raised \u00a3530K in Pre-Seed funding.",
+      "Backers included EWOR,\u00a0New Renaissance Ventures,\u00a0Stefan Glaenzer\u00a0(founder of\u00a0last.fm, early backer of Monzo),\u00a0Atlantis Ventures, and serial entrepreneur\u00a0Felix Jahn.",
+      "The company intends to use the funds to expand operations and its development efforts.",
+      "Led by CEO Sundar Arvind, Mozart AI is an intelligent DAW that understands natural language through text and voice, and converts user instructions to musical output. It uses the artist\u2019s style and voice to provide suggestions, iterations, and extensions for melodies, chords, drums, vocals, mixing and more.",
+      "A simple user query, like \u201cHey Mozart, can you create a euphoric, 8 bar chord pattern and EQ the lows out?\u201d, will produce melodic output in seconds.",
+      "Currently in private beta, Mozart AI launches publicly on\u00a0July 16, 2025, with a waitlist of early adopters shaping the product.",
+      "FinSMEs",
+      "01/07/2025"
+    ],
+    [
+      "Callidus Legal AI, a San Francisco, CA-based provider of an AI platform that automates and accelerates core litigation workflows, raised $10M in funding.",
+      "The round was led by Cervin Ventures, with participation from AI Fund, Myriad Venture Partners, Tandem Ventures, Active Capital, Capital Factory, Foley & Lardner, and a consortium of partners from a 25 law firm.",
+      "The company intends to use the funds to accelerate product development and expand the team to continue its growth trajectory through the second half of 2025.",
+      "Led by CEO Justin McCallon, Callidus Legal AI is a new legal technology company leveraging advanced artificial intelligence to automate legal research, drafting, and litigation preparation. With a proprietary case law database and deeply agentic AI infrastructure, it delivers productivity and accuracy across the demanding areas of legal practice.",
+      "The raise brought the total amount to $13M.",
+      "FinSMEs",
+      "15/07/2025"
+    ],
+    [
+      "Bolo AI, a Palo Alto, CA-based enterprise AI company building intelligent tools for the  heavy industry, raised $8.1M in Seed funding.",
+      "The round was led by True Ventures, with participation from Benchstrength, Accomplice, J Ventures, and Beat Ventures.",
+      "The company intends to use the funds to expand operations and its development efforts.",
+      "Co-founded by Diti Sood and Dr. Lalit Jain, Bolo AI is the AI system of action for heavy industries. By generating knowledge buried across documents, procedures, and legacy systems, it helps industrial teams act quickly, work safely, and drive better outcomes.",
+      "The company has an engineering hub in Bangalore, India.",
+      "FinSMEs",
+      "11/06/2025"
+    ],
+    [
+      "Genesis AI, a Paris, France- and Palo Alto, CA-based physical AI research lab and full-stack robotics company, raised $105M in funding.",
+      "The round was co-led by Eclipse\u00a0and\u00a0Khosla Ventures, with participation from\u00a0Bpifrance,\u00a0HSG,\u00a0Eric Schmidt\u00a0and\u00a0Xavier Niel.",
+      "The company intends to use the funds to expand operations and its development efforts.",
+      "Led by CEO Zhou Xian, Genesis brings a data-centric, full-stack approach to physical AI \u2013 building a scalable and universal data engine that unifies high-fidelity physics simulation, multimodal generative modeling, and large-scale real robot data collection. Its simulation stack, developed entirely in-house, will generate rich synthetic data at scale, together with a more efficient and scalable real-world data collection system.",
+      "The company also plans to open-source components of its data engine and foundation model to empower developers, researchers, and partners to build and accelerate progress across the broader field of physical AI.",
+      "FinSMEs",
+      "01/07/2025"
+    ],
+    [
+      "Veris AI, a NYC-based platform that lets companies safely train and test AI agents through new fidelity simulated experiences, raised $8.5M in Seed funding.",
+      "The round was led by Decibel Ventures\u00a0and\u00a0Acrew Capital, with participation from angel investors\u00a0Ian Livingstone,\u00a0The House Fund,\u00a0Idris Mokhtarzada,\u00a0Dorothy Chang, and others.",
+      "The company intends to use the funds to expand operations, team and development efforts.",
+      "Led by CEO Mehdi Jamei, Veris AI provides an experiential training ground for AI agents to learn through real-world experience. Its dynamic, realistic, simulated environments gives enterprises a safe space for reinforcement learning and continuous improvement, ultimately helping them deploy and scale more accurate AI agents.",
+      "The company is currently working with a select group of early customers across financial services, enterprise productivity, and manufacturing. Early use cases include:",
+      "FinSMEs",
+      "03/06/2025"
+    ],
+    [
+      "Sciencia AI, a Palo Alto, CA-based company focused on advancing AI infrastructure, raised an undisclosed amount in funding.",
+      "Backers were not disclosed.",
+      "The company intends to use the funds to expand its engineering and machine learning teams, improve its data orchestration tools, and enhance support for multi-modal AI workflows.",
+      "Sciencia AI develops infrastructure to support generative AI applications. It offers a platform that supports organizations in managing complex AI development tasks. Its capabilities include orchestrating data pipelines to handle diverse data types, enabling human-in-the-loop annotation with quality assurance, evaluating large language models for accuracy and safety, and supporting decision-making systems guided by structured data.",
+      "These tools are designed to help clients scale AI applications while maintaining reliability in high-stakes environments.",
+      "The news followed a Pre-Seed round in September 2024.",
+      "FinSMEs",
+      "01/07/2025"
+    ],
+    [
+      "Klutch AI, a Seattle, WA-based provider of AI-powered construction management solutions, raised $8m in seed funding.",
+      "The round was led by Bain Capital Ventures and Bling Capital, with participation from Brick & Mortar Ventures, Original Capital, Anthology Fund and angel investors from Autodesk and BuildZoom.",
+      "The company intends to use the funds to advance workflow automation capabilities and build integrations with industry-standard tools to serve the broader construction market.",
+      "Founded by Xu Rui, CEO, and Tanin Na Nakorn, CTO, Klutch AI builds intelligent, field-tested agents that automate workflows across the construction lifecycle. Designed to work within the tools teams already use, like SMS, email and incumbent construction management solutions, Klutch agents streamline everything from takeoffs and vendor selection to jobsite documentation and warranty management. They pull jobsite updates, flag issues and surface vendor insights from photos, texts, calls and emails.",
+      "Key offerings include:",
+      "FinSMEs"
+    ],
+    [
+      "VoiceCare AI, a San Francisco, CA-based provider of a healthcare administration general intelligence (HAGI) company, raised $4.54M in funding.",
+      "The round was led by Caduceus Capital Partners, with participation from\u00a0Bread and Butter Ventures,\u00a0Mayo Clinic, and a strategic revenue cycle management (RCM) company.",
+      "The company intends to use the funds to accelerate scaling operations, enhance platform intelligence, accelerate product development, expand its engineering and go-to-market team efforts.",
+      "Founded by CEO Parag Jhaveri, VoiceCare AI is a healthcare administration general intelligence (HAGI) company built to automate back-office conversations and super-staff the workforce through the application of generative AI. Its AI voice-based automation and agentic AI architecture eliminates administrative burden and improves operational efficiency.",
+      "\u201cJoy,\u201d its human-like voice AI agent, is capable of supporting long, complex, and highly nuanced conversations.",
+      "FinSMEs",
+      "23/06/2025"
+    ],
+    [
+      "Thread AI, a NYC-based AI powered platform for enterprises to build, connect, and manage\u00a0workflows\u00a0and\u00a0agents, raised $20m in Series A funding.",
+      "The round was led by Greycroft\u00a0with participaiton from Index Ventures, Scale Venture Partners, Meritech Capital, and Homebrew.",
+      "The company intends to use the funds to expand operations and its development efforts.",
+      "Co-founded by Angela McNeal & Mayada Gonimah, Thread AI provides enterprises and public sector agencies with Lemma, a composable infrastructure platform to design, deploy, and scale AI-powered workflows by connecting AI models, data sources, and business logic into adaptable, end-to-end processes aligned with their specific needs.",
+      "Lemma empowers enterprises to rapidly prototype and deploy event-driven, distributed AI workflows and agents. It supports unlimited AI models, APIs, and applications, all within a single platform built with enterprise-grade security.",
+      "FinSMEs",
+      "05/06/2025"
+    ]
+  ]
+}
