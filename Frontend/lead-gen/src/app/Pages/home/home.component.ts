@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { SearchBarComponent } from "../../@shared/Components/search-bar/search-bar.component";
 import { DataCardComponent } from "../../@shared/Components/data-card/data-card.component";
+import { SearchBarComponent } from '../../@shared/Components/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-home',

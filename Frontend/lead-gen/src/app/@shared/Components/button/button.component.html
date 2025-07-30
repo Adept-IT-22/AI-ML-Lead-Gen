@@ -1,0 +1,9 @@
+<div class="button-component">
+    <button
+        matButton
+        [class]="'btn'"
+        [type]="buttonType"
+        [routerLink]="buttonType === 'button' ? buttonLink: null"
+        [ngClass]="buttonStyleClass"
+    ></button>
+</div>

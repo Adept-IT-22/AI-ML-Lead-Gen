@@ -1,0 +1,29 @@
+.search-component{
+    border: 1px solid #f9f9f9;
+    height: 3rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px 10px;
+}
+
+.search-bar{
+    width: 80%;
+    height: 100%;
+    background: none;
+    border: 0;
+}
+
+::ng-deep input::placeholder {
+    font-family: var(--font-family-base);
+    font-weight: var(--font-weight-base);
+    font-size: var(--font-size-data);
+    color: var(--color-white);
+}
+
+.button-container{
+    margin-left: auto;
+    height: 100%;
+    width: 5rem;
+    background: var(--color-green);
+}

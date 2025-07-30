@@ -183,11 +183,6 @@ if __name__ == "__main__":
             await file.writelines(json.dumps(llm_results, indent=2))
         logger.info("Done logging results to file")
 
-        #Write article paragraphs to file
-        logger.info("logging results to file....")
-        async with aiofiles.open("finSMEs_paragraphs.txt", "a") as file:
-            await file.writelines(json.dumps(results, indent=2))
-
         logger.info("Done logging results to file")
         logger.info("Done fetching from FinSMEs.Time for AI information extraction")
         duration = time.perf_counter() - current_time

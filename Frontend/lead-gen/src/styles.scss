@@ -19,7 +19,7 @@
 
     /* Font Sizes (Conversion from px to rem done assuming a 16px base i.e. 16px = 1rem */
     --font-size-base: 0.75rem;
-    --font-size-headers: 1rem;
+    --font-size-header: 1rem;
     --font-size-data: 1.5rem;
 
     /* Font Weights */
@@ -35,8 +35,11 @@
     }
 }
 
-html, body { height: 100%; }
+html, body { 
+    background-color: var(--color-black);
+    height: 100%; 
+}
 body { 
-    margin: 0; 
+    margin: 40px 40px; 
     font-family:  var(--font-family-base);
 }
