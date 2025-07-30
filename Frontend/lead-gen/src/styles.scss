@@ -1,0 +1,42 @@
+@use '@angular/material' as mat;
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+:root {
+    /* Primary Colors */
+    --color-black: #000000;
+    --color-white: #ffffff;
+    --color-yellow: #edce1f;
+    --color-blue: #1fafed;
+    --color-red: #e41f1f;
+    --color-green: #1fe41f;
+    --color-teal: #1fedc3;
+
+    /* Backgrounds */
+    --bg-primary: var(--color-black);
+
+    /* Text Colors */
+    --text-primary: var(--color-yellow);
+
+    /* Font Sizes (Conversion from px to rem done assuming a 16px base i.e. 16px = 1rem */
+    --font-size-base: 0.75rem;
+    --font-size-headers: 1rem;
+    --font-size-data: 1.5rem;
+
+    /* Font Weights */
+    --font-weight-normal: 400;
+    --font-weight-header: 600;
+
+    /* Font Family */
+    --font-family-base: 'IBM Plex Mono', monospace;
+
+    /* Homepage Background */
+    .bg-black {
+        background-color: var(--color-black);
+    }
+}
+
+html, body { height: 100%; }
+body { 
+    margin: 0; 
+    font-family:  var(--font-family-base);
+}
