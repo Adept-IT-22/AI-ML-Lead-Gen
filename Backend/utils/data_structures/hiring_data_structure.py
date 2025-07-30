@@ -1,5 +1,7 @@
-fetched_funding_data = {
-    "type": "funding",
+fetched_hiring_data = {
+    "type": "hiring",
+    "source": [],
+    "article_id": [],
     "article_title": [],
     "article_link": [],
     "article_date": [],
@@ -7,10 +9,7 @@ fetched_funding_data = {
     "company_city": [],
     "company_country": [],
     "company_decision_makers": [],
-    "funding_round": [],
-    "amount_raised": [],
-    "currency": [],
-    "investor companies": [],
-    "investor people": [],
+    "job_roles": [],
+    "hiring_reasons": [],
     "tags": []
 }

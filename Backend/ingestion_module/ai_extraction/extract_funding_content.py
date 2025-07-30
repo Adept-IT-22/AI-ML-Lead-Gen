@@ -47,7 +47,7 @@ async def safe_process_articles_batch(batch: Dict[str, List[Any]]):
 
 #======================SPLIT DATA INTO BATCHES===========================
 def split_into_batches(links_and_paragraphs: Dict[str, List[str]], BATCH_SIZE)->List[Dict[str, List[Any]]]:
-    logger.info("Splitting data into batches...")
+    logger.info("Splitting funding data into batches...")
     total_articles = len(links_and_paragraphs["urls"])
     result = []
     for i in range(0, total_articles, BATCH_SIZE):
@@ -57,7 +57,7 @@ def split_into_batches(links_and_paragraphs: Dict[str, List[str]], BATCH_SIZE)->
                 "paragraphs": links_and_paragraphs["paragraphs"][i:i+BATCH_SIZE]
             }
         )
-    logger.info("Splitting data into batches done")
+    logger.info("Splitting funding data into batches done")
     logger.info(json.dumps(result, indent=2))
     return result
     
@@ -88,7 +88,7 @@ async def _call_gemini_api_with_retry(prompt: str) -> types.GenerateContentRespo
 
 #=======================PROCESS EACH BATCH=========================
 async def process_articles_batch(batch: Dict[str, List[Any]])->Dict[str, List[Any]]:
-    logger.info("AI information extraction beginning...")
+    logger.info("AI funding information extraction beginning...")
 
     return_data = {
         "type": "news",
@@ -104,7 +104,7 @@ async def process_articles_batch(batch: Dict[str, List[Any]])->Dict[str, List[An
         "currency": [],
         "investor_companies": [],
         "investor_people": [],
-        "keywords": []
+        "tags": []
     }
 
     try:
@@ -139,7 +139,7 @@ async def process_articles_batch(batch: Dict[str, List[Any]])->Dict[str, List[An
         - Currency (e.g., USD, EUR, GBP. Infer from amount raised or context.)
         - Investor Companies (as a list of strings. Include names of all identifiable investor companies.)
         - Investor People (as a list of strings. Include names of all identifiable investor people associated with the above mentioned companies.)
-        - 5 Keywords (as a list of strings, relevant to the company/funding event.)
+        - Tags (as a list of strings, relevant to the company/funding event.)
         - Original Article ID (the 'Article_ID' provided for each article in the input. This is crucial for matching results.)
 
         If any information on a particular field is not present or cannot be confidently extracted, return an empty string "" for string fields or an empty list [] for list fields. Do not make up information.
@@ -161,7 +161,7 @@ async def process_articles_batch(batch: Dict[str, List[Any]])->Dict[str, List[An
                 "currency": ["USD", "USD"],
                 "investor_companies": [["VC Firm Alpha", "Angel Investor Beta"], ["GreenTech Investments"]],
                 "investor_people": [["John Doe", "John Smith"], ["Jane Doe"]],
-                "keywords": [["tech", "startup", "funding", "SaaS", "innovation"], ["energy", "sustainability"]]
+                "tags": [["tech", "startup", "funding", "SaaS", "innovation"], ["energy", "sustainability"]]
             }
         }
 
@@ -206,9 +206,9 @@ async def process_articles_batch(batch: Dict[str, List[Any]])->Dict[str, List[An
     return return_data
 
 #===============REGROUP THE BATCHES================
-async def regroup_batches(links_and_paragraphs: Dict[str, List[str]])->Dict[str, List[Any]]:
+async def finalize_ai_extraction(links_and_paragraphs: Dict[str, List[str]])->Dict[str, List[Any]]:
     try:
-        logger.info("Regrouping the batches...")
+        logger.info("Finalizing AI extraction...")
         list_of_batches = split_into_batches(links_and_paragraphs, BATCH_SIZE)
         tasks = [safe_process_articles_batch(batch) for batch in list_of_batches]
         results = await asyncio.gather(*tasks)
@@ -220,7 +220,7 @@ async def regroup_batches(links_and_paragraphs: Dict[str, List[str]])->Dict[str,
                     final_results[key] = val
                 else:
                     final_results[key].extend(val)
-        logger.info("Done regrouping the batches")
+        logger.info("AI extraction done")
         return final_results
 
     except Exception as e:
