@@ -10,8 +10,8 @@ import asyncio
 import logging
 from lxml import etree, html
 from typing import Dict, List
-from ingestion_module.ai_extraction.extract_content import regroup_batches
-from utils.data_structures.news_data_structure import fetched_data
+from Backend.ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
+from utils.data_structures.news_data_structure import fetched_funding_data
 
 logger = logging.getLogger()
 
@@ -42,11 +42,11 @@ async def fetch_tech_eu_data()->Dict[str, List[str]]:
 
                 #=======APPEND LINK IF AI RELATED============
                 if ("-ai" in article_link or "ai-" in article_link) and "-raises" in article_link:
-                    fetched_data["article_link"].append(article_link)
+                    fetched_funding_data["article_link"].append(article_link)
 
             #=========OPEN LINK TO GET PARAGRAPHS============
             results = {"urls": [], "paragraphs": []}
-            tasks = [extract_paragraphs(client, url) for url in fetched_data["article_link"]]
+            tasks = [extract_paragraphs(client, url) for url in fetched_funding_data["article_link"]]
 
             for coroutine in asyncio.as_completed(tasks):
                 url, paragraphs = await coroutine
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     async def main():
         start_time = time.perf_counter()
         links_and_paragraphs = await fetch_tech_eu_data()
-        result = await regroup_batches(links_and_paragraphs=links_and_paragraphs)
+        result = await finalize_ai_extraction(links_and_paragraphs=links_and_paragraphs)
         logger.info(json.dumps(result, indent=2))
         duration = time.perf_counter() - start_time
         logger.info(f"This task took {duration:.2f} seconds")

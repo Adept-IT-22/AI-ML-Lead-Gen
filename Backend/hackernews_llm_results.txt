@@ -1,0 +1,131 @@
+{
+  "type": "hiring",
+  "source": [],
+  "article_id": [
+    44643981,
+    44584497,
+    44669631,
+    44541458,
+    44536748,
+    44602364
+  ],
+  "article_title": [
+    "Software Engineer (Full-Stack) at Kapa.ai",
+    "Founding AI Engineer at Weave",
+    "C++ Systems Engineer at Thunder Compute",
+    "Researcher at Sieve",
+    "Activeloop Is Hiring AI Search and Python Back End Engineers",
+    "Arva AI Is Hiring an AI Research Engineer"
+  ],
+  "article_link": [
+    "https://www.ycombinator.com/companies/kapa-ai/jobs/JPE2ofG-software-engineer-full-stack",
+    "https://www.ycombinator.com/companies/weave-3/jobs/SqFnIFE-founding-ai-engineer",
+    "https://www.ycombinator.com/companies/thunder-compute/jobs/DhML6Uf-c-systems-engineer",
+    "https://sievedata.com/about/jobs",
+    "https://careers.activeloop.ai/",
+    "https://www.arva.ai/careers/ai-research-engineer"
+  ],
+  "article_date": [
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ],
+  "company_name": [
+    "Kapa.ai",
+    "Weave",
+    "Thunder Compute",
+    "Sieve",
+    "Activeloop",
+    "Arva AI"
+  ],
+  "company_city": [
+    "",
+    "",
+    "",
+    "",
+    "Mountain View",
+    "London"
+  ],
+  "company_country": [
+    "Europe",
+    "",
+    "",
+    "",
+    "USA",
+    "UK"
+  ],
+  "company_decision_makers": [
+    "emil_sorensen",
+    "adchurch",
+    "cpeterson42",
+    "mvoodarla",
+    "davidbuniat",
+    "OliverWales"
+  ],
+  "job_roles": [
+    [
+      "software engineer",
+      "full-stack engineer"
+    ],
+    [
+      "AI engineer",
+      "founding engineer"
+    ],
+    [
+      "C++ Systems Engineer",
+      "systems engineer"
+    ],
+    [
+      "researcher"
+    ],
+    [
+      "AI Search Engineer",
+      "Python Back End Engineer"
+    ],
+    [
+      "AI Research Engineer"
+    ]
+  ],
+  "hiring_reasons": [],
+  "tags": [
+    [
+      "AI",
+      "startup",
+      "remote",
+      "YC S23"
+    ],
+    [
+      "AI",
+      "startup",
+      "YC W25"
+    ],
+    [
+      "startup",
+      "YC S24"
+    ],
+    [
+      "AI",
+      "startup",
+      "YC X25",
+      "video datasets"
+    ],
+    [
+      "AI",
+      "startup",
+      "YC",
+      "engineering",
+      "python",
+      "onsite"
+    ],
+    [
+      "AI",
+      "startup",
+      "YC",
+      "engineering",
+      "research"
+    ]
+  ]
+}

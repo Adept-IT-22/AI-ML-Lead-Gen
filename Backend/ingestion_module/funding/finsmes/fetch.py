@@ -7,8 +7,8 @@ import logging
 import aiofiles
 from lxml import etree, html
 from typing import Dict, List
-from ingestion_module.ai_extraction.extract_content import regroup_batches
-from utils.data_structures.news_data_structure import fetched_data as news_fetched_data
+from Backend.ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
+from utils.data_structures.news_data_structure import fetched_funding_data as funding_fetched_data
 
 logger = logging.getLogger()
 
@@ -62,7 +62,7 @@ async def find_newest_sitemap(url: str)->str:
                         highest_number = current_number
                         latest_sitemap = url
 
-            print(f"Latest sitemap: {latest_sitemap}")
+            logger.info(f"Latest sitemap: {latest_sitemap}")
             logger.info("Fetching latest sitemap done")
             return latest_sitemap
 
@@ -89,7 +89,7 @@ async def fetch_ai_funding_article_links(url: str)->list:
             if "-ai-" in article_link and ("funding" in article_link or "raises" in article_link):
                 ai_funding_articles.append(article_link)
 
-        print(json.dumps(ai_funding_articles, indent=2))
+        logger.info(json.dumps(ai_funding_articles, indent=2))
         logger.info("Feching AI specific urls done")
         return list(set(ai_funding_articles))
 
@@ -162,13 +162,13 @@ if __name__ == "__main__":
             if ai_urls:
                 results = await get_paragraphs(ai_urls)
 
-        llm_results = news_fetched_data
+        llm_results = funding_fetched_data
 
         #Check if results has urls in the first place
         if results["urls"]:
 
             #Feed the results to the llm
-            extracted_data = await regroup_batches(results)
+            extracted_data = await finalize_ai_extraction(results)
 
             #Append extracted_data to llm_results
             for key, value_list in extracted_data.items():
@@ -177,14 +177,20 @@ if __name__ == "__main__":
                 elif key in llm_results:
                     llm_results[key] = value_list
 
-        #Write results to file
-        logger.info("logger results to file....")
+        #Write llm results to file
+        logger.info("Logging results to file....")
         async with aiofiles.open("finSMEs_data.txt", "a") as file:
             await file.writelines(json.dumps(llm_results, indent=2))
-        logger.info("Done logger results to file")
+        logger.info("Done logging results to file")
 
+        #Write article paragraphs to file
+        logger.info("logging results to file....")
+        async with aiofiles.open("finSMEs_paragraphs.txt", "a") as file:
+            await file.writelines(json.dumps(results, indent=2))
+
+        logger.info("Done logging results to file")
         logger.info("Done fetching from FinSMEs.Time for AI information extraction")
         duration = time.perf_counter() - current_time
-        print(f"Program ran for {duration:.2f} seconds")
+        logger.info(f"Program ran for {duration:.2f} seconds")
     
-    asyncio.run(main())
+    asyncio.run(main())        
