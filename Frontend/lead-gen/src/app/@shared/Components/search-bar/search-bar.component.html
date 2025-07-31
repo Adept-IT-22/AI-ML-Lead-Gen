@@ -1,1 +1,10 @@
-<p>search-bar works!</p>
+<div class="search-component">
+    <input class="search-bar" type="text" matInput placeholder="SEARCH HERE: ">
+    <div class="button-container">
+        <app-button
+        [icon]="'search'"
+        [iconPosition]="'left'"
+        [buttonText]="'GO'"
+        [buttonStyleClass]="'btn-search-bar'"
+        ></app-button>
+</div>

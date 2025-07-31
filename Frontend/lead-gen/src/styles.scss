@@ -19,8 +19,9 @@
 
     /* Font Sizes (Conversion from px to rem done assuming a 16px base i.e. 16px = 1rem */
     --font-size-base: 0.75rem;
-    --font-size-headers: 1rem;
-    --font-size-data: 1.5rem;
+    --font-size-header: 1rem;
+    --font-size-title: 1.5rem; /*Reference data card title*/
+    --font-size-data: 2rem; /*References data card numbers*/
 
     /* Font Weights */
     --font-weight-normal: 400;
@@ -35,8 +36,11 @@
     }
 }
 
-html, body { height: 100%; }
+html, body { 
+    background-color: var(--color-black);
+    height: 100%; 
+}
 body { 
-    margin: 0; 
+    margin: 40px 40px; 
     font-family:  var(--font-family-base);
 }

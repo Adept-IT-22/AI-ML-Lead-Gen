@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { ButtonComponent } from "../button/button.component";
 
 @Component({
   selector: 'app-search-bar',
-  imports: [MatFormFieldModule, MatInputModule],
+  standalone: true,
+  imports: [MatFormFieldModule, MatInputModule, ButtonComponent],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.scss'
 })

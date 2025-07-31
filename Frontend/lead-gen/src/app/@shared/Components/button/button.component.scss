@@ -1,0 +1,20 @@
+.button-component {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.btn {
+  border: 2px solid #a9a9a9;
+  cursor: pointer;
+  height: 100%;
+  background-color: var(--color-green);
+  color: var(--color-black);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-header);
+  font-size: var(--font-size-title);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
