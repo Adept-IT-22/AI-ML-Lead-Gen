@@ -5,11 +5,11 @@
     </div>
 
     <div class="data-cards">
-        <app-data-card></app-data-card>
-        <app-data-card></app-data-card>
-        <app-data-card></app-data-card>
-        <app-data-card></app-data-card>
-        <app-data-card></app-data-card>
-        <app-data-card></app-data-card>
+        <app-data-card
+        *ngFor="let stat of stats"
+        [title]="stat.title"
+        [data]="stat.data"
+        [color]="stat.color"
+        ></app-data-card>
     </div>
 </div>

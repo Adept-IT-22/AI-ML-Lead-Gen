@@ -4,10 +4,11 @@ import { MatButtonModule} from '@angular/material/button'
 import { RouterLink } from '@angular/router';
 import { Router } from 'express';
 import { NgClass } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon'
 
 @Component({
   selector: 'app-button',
-  imports: [MatButtonModule, RouterLink, NgClass],
+  imports: [MatButtonModule, RouterLink, NgClass, MatIconModule],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss'
 })

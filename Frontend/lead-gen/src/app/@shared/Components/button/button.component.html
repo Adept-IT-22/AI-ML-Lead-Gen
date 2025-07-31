@@ -1,9 +1,13 @@
 <div class="button-component">
     <button
-        matButton
+        matButton="filled"
         [class]="'btn'"
         [type]="buttonType"
         [routerLink]="buttonType === 'button' ? buttonLink: null"
         [ngClass]="buttonStyleClass"
-    ></button>
+    >
+    @if(icon){
+        <mat-icon>{{icon}}</mat-icon>
+    }
+    {{buttonText}}</button>
 </div>
