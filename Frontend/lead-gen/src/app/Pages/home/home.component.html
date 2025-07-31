@@ -1,9 +1,11 @@
 <div class="home-component">
 
+    <!--Search Bar-->
     <div class="search-bar">
         <app-search-bar></app-search-bar>
     </div>
 
+    <!--Data Cards-->
     <div class="data-cards">
         <app-data-card
         *ngFor="let stat of stats"
@@ -11,5 +13,19 @@
         [data]="stat.data"
         [color]="stat.color"
         ></app-data-card>
+    </div>
+
+    <!--Data Feed-->
+    <div class="data-feed">
+        <app-data-feed
+        [title]="'RECENT ACTIVITY'"
+        [data]="activity_feed"
+        ></app-data-feed>
+        
+        <app-data-feed
+        [title]="'RELEVANT NEWS FEED'"
+        [data]="news_feed"
+        >
+        </app-data-feed>
     </div>
 </div>

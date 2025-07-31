@@ -1,0 +1,35 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.data-feed-component{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 12rem;
+    border: 1px solid #f9f9f9;
+}
+
+.data-feed-title{
+    padding: 10px 10px;
+    height: 20%;
+    border-bottom: 1px solid #f9f9f9;
+    width: 100%;
+    font-family: var(--font-family-base);
+    font-weight: var(--font-weight-header);
+    font-size: var(--font-size-header);
+    color: var(--color-yellow);
+    box-sizing: border-box;
+}
+
+.data-feed-data{
+    padding: 10px 10px;
+    height: 80%;
+    width: 100%;
+    font-family: var(--font-family-base);
+    font-weight: var(--font-weight-base);
+    font-size: var(--font-size-header);
+    color: var(--color-yellow);
+    box-sizing: border-box;
+}

@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { DataCardComponent } from "../../@shared/Components/data-card/data-card.component";
 import { SearchBarComponent } from '../../@shared/Components/search-bar/search-bar.component';
 import { NgFor } from '@angular/common';
+import { DataFeedComponent } from "../../@shared/Components/data-feed/data-feed.component";
 
 @Component({
   selector: 'app-home',
-  imports: [SearchBarComponent, DataCardComponent, NgFor],
+  imports: [SearchBarComponent, DataCardComponent, NgFor, DataFeedComponent],
   standalone: true,
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -20,4 +21,15 @@ export class HomeComponent {
   { data: '11', title: 'DISQUALIFIED', color: '#e41f1f' }
 ];
 
+  news_feed = [
+    '[2025-07-21] Acme Corp raises $10M Series A',
+    '[2025-07-21] Tech Inc looking for AI Engineer',
+    '[2025-07-21] New ML event in Cambridge, MA'
+  ];
+
+  activity_feed = [
+    '[2025-07-21] Lead 01 status changed to MQL',
+    '[2025-07-21] New Lead 02 from Google News',
+    '[2025-07-21] Meeting shcedule for lead 03'
+  ]
 }
