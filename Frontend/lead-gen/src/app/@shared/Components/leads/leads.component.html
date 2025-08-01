@@ -1,0 +1,17 @@
+<div class="leads-wrapper">
+  <h1>{{title}}</h1>
+  <div class="leads-table-container">
+    <table>
+      <thead class="table-head">
+        <tr *ngFor="let column of columns">
+          <th>{{column.header}}</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let item of data">
+        <tr>
+          {{item}}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

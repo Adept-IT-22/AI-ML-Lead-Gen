@@ -1,7 +1,7 @@
 .home-component{
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1rem;
 }
 
 .data-cards{
@@ -19,4 +19,14 @@
     gap: 1rem;
     padding: 0;
     height: 12rem;
+}
+
+.filter-leads{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.leads-table{
+   background-color: red;
 }
