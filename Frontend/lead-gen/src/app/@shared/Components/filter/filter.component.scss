@@ -1,0 +1,17 @@
+.leads-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+
+  border: 1px solid #f9f9f9;
+  width: 100%;
+}
+.option {
+    color: var(--color-yellow);
+    display: flex;
+}
+.progress-mat-icon {
+    color: yellow;
+    size: 5rem;
+}
