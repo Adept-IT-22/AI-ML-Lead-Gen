@@ -10,9 +10,8 @@ import asyncio
 import logging
 from lxml import etree, html
 from typing import Dict, List
-from Backend.ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
-from utils.data_structures.news_data_structure import fetched_funding_data
-
+from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
+from utils.data_structures.news_data_structure import fetched_funding_data as funding_data_dict
 logger = logging.getLogger()
 
 #============URLs===============
@@ -27,7 +26,6 @@ async def fetch_tech_eu_data()->Dict[str, List[str]]:
             if response.status_code != 200:
                 logger.error(f"Failed to fetch URL: {URL} - Status code: {response.status_code}")
                 return {}
-
             root = etree.fromstring(response.content) #type: ignore
 
             #=========NAMESPACES=============
@@ -83,14 +81,24 @@ async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, Li
     return url, []
 
 
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-    async def main():
-        start_time = time.perf_counter()
-        links_and_paragraphs = await fetch_tech_eu_data()
-        result = await finalize_ai_extraction(links_and_paragraphs=links_and_paragraphs)
-        logger.info(json.dumps(result, indent=2))
-        duration = time.perf_counter() - start_time
-        logger.info(f"This task took {duration:.2f} seconds")
+async def main():
+    start_time = time.perf_counter()
+    links_and_paragraphs = await fetch_tech_eu_data()
+    result = await finalize_ai_extraction(links_and_paragraphs=links_and_paragraphs)
 
-    asyncio.run(main())
+    llm_results = funding_data_dict
+
+    for key, value_list in result.items():
+        if key in llm_results and isinstance(value_list, list):
+            llm_results[key].extend(value_list)
+        elif key in llm_results:
+            llm_results[key] = value_list
+
+    #Add llm results to file
+    logger.info("Writing tech eu data to file...")
+    async with aiofiles.open("tech_eu_data.txt", "a") as file:
+        await file.writelines(json.dumps(llm_results, indent=2))
+    logger.info("Done writing tech eu data to file")
+
+    duration = time.perf_counter() - start_time
+    logger.info(f"This task took {duration:.2f} seconds")

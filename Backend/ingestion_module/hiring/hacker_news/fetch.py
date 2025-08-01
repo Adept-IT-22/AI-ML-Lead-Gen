@@ -84,45 +84,42 @@ def dict_of_lists(all_jobs: List[Dict])->Dict[str, List[Any]]:
 
 #==========FINALLY FEED TEXT (OR TITLE) INTO LLM=============
 
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    
+async def main():
     start_time = time.perf_counter()
-    async def main():
-        async with httpx.AsyncClient() as client:
-            job_ids = await fetch_hackernews_jobs(url=URL, client=client)
-            job_details = await get_all_job_details(client=client, ids=job_ids, url=URL)
-            jobs_arranged_and_filtered = dict_of_lists(all_jobs=job_details)
+    async with httpx.AsyncClient() as client:
+        job_ids = await fetch_hackernews_jobs(url=URL, client=client)
+        job_details = await get_all_job_details(client=client, ids=job_ids, url=URL)
+        jobs_arranged_and_filtered = dict_of_lists(all_jobs=job_details)
 
-            #extract id, url and title only from all arranged jobs
-            ids_urls_titles = {}
-            ids_urls_titles["ids"] = jobs_arranged_and_filtered["id"]
-            ids_urls_titles["urls"] = jobs_arranged_and_filtered["url"]
-            ids_urls_titles["titles"] = jobs_arranged_and_filtered["title"]
-            
-            #feed to llm
-            extracted_data = await finalize_ai_extraction(ids_urls_titles)
+        #extract id, url and title only from all arranged jobs
+        ids_urls_titles = {}
+        ids_urls_titles["ids"] = jobs_arranged_and_filtered["id"]
+        ids_urls_titles["urls"] = jobs_arranged_and_filtered["url"]
+        ids_urls_titles["titles"] = jobs_arranged_and_filtered["title"]
+        
+        #feed to llm
+        extracted_data = await finalize_ai_extraction(ids_urls_titles)
 
-        #put extracted data to llm_results
-        llm_results = hiring_fetched_data
-        for key, value in extracted_data.items():
-            if key in llm_results and isinstance(llm_results[key], list):
-                llm_results[key].extend(value)
-            elif key in llm_results:
-                llm_results[key] = value
+    #put extracted data to llm_results
+    llm_results = hiring_fetched_data
+    for key, value in extracted_data.items():
+        if key in llm_results and isinstance(llm_results[key], list):
+            llm_results[key].extend(value)
+        elif key in llm_results:
+            llm_results[key] = value
 
-        #"by" in jobs_arranged_and_filtered = "company_decision_makers" in llm_results
-        for i in range(len(jobs_arranged_and_filtered["by"])):
-            llm_results["company_decision_makers"][i] = jobs_arranged_and_filtered["by"][i]
+    #"by" in jobs_arranged_and_filtered = "company_decision_makers" in llm_results
+    for i in range(len(jobs_arranged_and_filtered["by"])):
+        llm_results["company_decision_makers"][i] = jobs_arranged_and_filtered["by"][i]
 
-        #Write ai_jobs to file
-        async with aiofiles.open("hackernews_ai_jobs.txt", "a") as file:
-            await file.writelines(json.dumps(jobs_arranged_and_filtered, indent=2))
+    #Write ai_jobs to file
+    async with aiofiles.open("hackernews_ai_jobs.txt", "a") as file:
+        await file.writelines(json.dumps(jobs_arranged_and_filtered, indent=2))
 
-        #Write llm results to file
-        async with aiofiles.open("hackernews_llm_results.txt", "a") as file:
-            await file.writelines(json.dumps(llm_results, indent=2))
+    #Write llm results to file
+    async with aiofiles.open("hackernews_llm_results.txt", "a") as file:
+        await file.writelines(json.dumps(llm_results, indent=2))
 
-        duration = time.perf_counter() - start_time
-        logger.info(f"This task took {duration:.2f} seconds")
-
-    asyncio.run(main())
+    duration = time.perf_counter() - start_time
+    logger.info(f"This task took {duration:.2f} seconds")

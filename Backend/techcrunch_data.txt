@@ -1,0 +1,136 @@
+{
+  "type": "funding",
+  "article_title": [
+    "How 2 UC Berkeley dropouts raised $28M for their AI marketing automation startup",
+    "PlayerZero raises $15M to prevent AI agents from shipping buggy code"
+  ],
+  "article_link": [
+    "https://techcrunch.com/2025/07/30/how-2-uc-berkeley-dropouts-raised-28m-for-their-ai-marketing-automation-startup/",
+    "https://techcrunch.com/2025/07/30/playerzero-raises-15m-to-prevent-ai-agents-from-shipping-buggy-code/"
+  ],
+  "article_date": [
+    "2025-07-30",
+    "2025-07-30"
+  ],
+  "company_name": [
+    "Conversion",
+    "PlayerZero"
+  ],
+  "company_city": [
+    "",
+    ""
+  ],
+  "company_country": [
+    "America",
+    "America"
+  ],
+  "company_decision_makers": [
+    [
+      "Neil Tewari",
+      "James Jiao"
+    ],
+    [
+      "Animesh Koratana"
+    ]
+  ],
+  "funding_round": [
+    "Series A",
+    "Series A"
+  ],
+  "amount_raised": [
+    "$28M",
+    "$15M"
+  ],
+  "currency": [
+    "USD",
+    "USD"
+  ],
+  "investor companies": [],
+  "investor people": [],
+  "tags": [
+    [
+      "AI",
+      "marketing automation",
+      "startup",
+      "SaaS",
+      "funding"
+    ],
+    [
+      "AI",
+      "software programming",
+      "bug detection",
+      "code quality",
+      "developer tools",
+      "startup",
+      "funding"
+    ]
+  ]
+}{
+  "type": "funding",
+  "article_title": [
+    "How 2 UC Berkeley dropouts raised $28M for their AI marketing automation startup",
+    "PlayerZero raises $15M to prevent AI agents from shipping buggy code"
+  ],
+  "article_link": [
+    "https://techcrunch.com/2025/07/30/how-2-uc-berkeley-dropouts-raised-28m-for-their-ai-marketing-automation-startup/",
+    "https://techcrunch.com/2025/07/30/playerzero-raises-15m-to-prevent-ai-agents-from-shipping-buggy-code/"
+  ],
+  "article_date": [
+    "2025-07-30",
+    "2025-07-30"
+  ],
+  "company_name": [
+    "Conversion",
+    "PlayerZero"
+  ],
+  "company_city": [
+    "",
+    ""
+  ],
+  "company_country": [
+    "America",
+    "America"
+  ],
+  "company_decision_makers": [
+    [
+      "Neil Tewari",
+      "James Jiao"
+    ],
+    [
+      "Animesh Koratana"
+    ]
+  ],
+  "funding_round": [
+    "Series A",
+    "Series A"
+  ],
+  "amount_raised": [
+    "$28 million",
+    "$15 million"
+  ],
+  "currency": [
+    "USD",
+    "USD"
+  ],
+  "investor companies": [],
+  "investor people": [],
+  "tags": [
+    [
+      "AI",
+      "marketing automation",
+      "startup",
+      "funding",
+      "SaaS",
+      "entrepreneurship"
+    ],
+    [
+      "AI",
+      "software programming",
+      "bug detection",
+      "code quality",
+      "developer tools",
+      "startup",
+      "funding"
+    ]
+  ]
+}
