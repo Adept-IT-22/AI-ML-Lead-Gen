@@ -1,3 +1,4 @@
+import copy
 import json
 import time
 import httpx
@@ -38,7 +39,7 @@ async def get_all_job_details(client: httpx.AsyncClient, ids: List, url: str)->L
         async for job in asyncio.as_completed(tasks):
             unwrapped_job = await job
             all_jobs.append(unwrapped_job)
-            logger.info(json.dumps(unwrapped_job, indent=2))
+        logger.info("Done getting all jobs' details")
         return all_jobs
 
     except Exception as e:
@@ -70,7 +71,7 @@ def dict_of_lists(all_jobs: List[Dict])->Dict[str, List[Any]]:
         "url": []
     }
 
-    ai_keywords = ["ai", "artificial intelligence", "machine learning", "ml", "deep learning", "nlp", "computer vision"]
+    ai_keywords = [" ai", "artificial intelligence", "machine learning", "ml", "deep learning", "nlp", "computer vision"]
 
     for job in all_jobs:
         if any(keyword in job.get("url", "").lower() or keyword in job.get("title", "").lower() for keyword in ai_keywords):
@@ -79,12 +80,8 @@ def dict_of_lists(all_jobs: List[Dict])->Dict[str, List[Any]]:
                     value = job.get(key)
                     all_jobs_well_arranged[key].append("" if value is None else value)
 
-    logger.info(all_jobs_well_arranged)
     return all_jobs_well_arranged
 
-#==========FINALLY FEED TEXT (OR TITLE) INTO LLM=============
-
-    
 async def main():
     start_time = time.perf_counter()
     async with httpx.AsyncClient() as client:
@@ -94,32 +91,34 @@ async def main():
 
         #extract id, url and title only from all arranged jobs
         ids_urls_titles = {}
-        ids_urls_titles["ids"] = jobs_arranged_and_filtered["id"]
-        ids_urls_titles["urls"] = jobs_arranged_and_filtered["url"]
-        ids_urls_titles["titles"] = jobs_arranged_and_filtered["title"]
+        ids_urls_titles["ids"] = jobs_arranged_and_filtered.get("id", "")
+        ids_urls_titles["urls"] = jobs_arranged_and_filtered.get("url", "")
+        ids_urls_titles["titles"] = jobs_arranged_and_filtered.get("title", "")
         
         #feed to llm
-        extracted_data = await finalize_ai_extraction(ids_urls_titles)
+        try:
+            extracted_data = await finalize_ai_extraction(ids_urls_titles)
+        except Exception as e:
+            logger.error(f"Failed to extract AI content from HackerNews data: {str(e)}")
+            extracted_data = {}
 
     #put extracted data to llm_results
-    llm_results = hiring_fetched_data
-    for key, value in extracted_data.items():
-        if key in llm_results and isinstance(llm_results[key], list):
-            llm_results[key].extend(value)
-        elif key in llm_results:
-            llm_results[key] = value
+    if extracted_data:
+        llm_results = copy.deepcopy(hiring_fetched_data)
+        for key, value in extracted_data.items():
+            if key in llm_results and isinstance(llm_results[key], list):
+                llm_results[key].extend(value)
+            elif key in llm_results:
+                llm_results[key] = value
 
-    #"by" in jobs_arranged_and_filtered = "company_decision_makers" in llm_results
-    for i in range(len(jobs_arranged_and_filtered["by"])):
-        llm_results["company_decision_makers"][i] = jobs_arranged_and_filtered["by"][i]
+        #"by" in jobs_arranged_and_filtered = "company_decision_makers" in llm_results
+        llm_results["company_decision_makers"].extend(jobs_arranged_and_filtered["by"])
 
-    #Write ai_jobs to file
-    async with aiofiles.open("hackernews_ai_jobs.txt", "a") as file:
-        await file.writelines(json.dumps(jobs_arranged_and_filtered, indent=2))
-
-    #Write llm results to file
-    async with aiofiles.open("hackernews_llm_results.txt", "a") as file:
-        await file.writelines(json.dumps(llm_results, indent=2))
+        #Write llm results to file
+        async with aiofiles.open("hackernews_data.txt", "a") as file:
+            await file.writelines(json.dumps(llm_results, indent=2))
+    else:
+        logger.warning("AI extraction for HackerNews returned no data. No logging will happen")
 
     duration = time.perf_counter() - start_time
     logger.info(f"This task took {duration:.2f} seconds")

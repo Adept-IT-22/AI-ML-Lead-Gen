@@ -1,0 +1,98 @@
+{
+  "type": "hiring",
+  "source": [],
+  "article_id": [
+    44669631,
+    44602364,
+    44584497,
+    44541458
+  ],
+  "article_title": [
+    "Thunder Compute (YC S24) Is Hiring a C++ Systems Engineer",
+    "Arva AI (YC S24) Is Hiring an AI Research Engineer (London, UK)",
+    "Weave (YC W25) is hiring an AI engineer",
+    "Sieve (YC X25) is hiring researchers to build large video datasets for AI labs"
+  ],
+  "article_link": [
+    "https://www.ycombinator.com/companies/thunder-compute/jobs/DhML6Uf-c-systems-engineer",
+    "https://www.arva.ai/careers/ai-research-engineer",
+    "https://www.ycombinator.com/companies/weave-3/jobs/SqFnIFE-founding-ai-engineer",
+    "https://sievedata.com/about/jobs"
+  ],
+  "article_date": [
+    "",
+    "",
+    "",
+    ""
+  ],
+  "company_name": [
+    "Thunder Compute",
+    "Arva AI",
+    "Weave",
+    "Sieve"
+  ],
+  "company_city": [
+    "",
+    "London",
+    "",
+    ""
+  ],
+  "company_country": [
+    "",
+    "UK",
+    "",
+    ""
+  ],
+  "company_decision_makers": [
+    [],
+    [],
+    [],
+    [],
+    "cpeterson42",
+    "OliverWales",
+    "adchurch",
+    "mvoodarla"
+  ],
+  "job_roles": [
+    [
+      "C++ Systems Engineer"
+    ],
+    [
+      "AI Research Engineer"
+    ],
+    [
+      "AI engineer"
+    ],
+    [
+      "researchers"
+    ]
+  ],
+  "hiring_reasons": [],
+  "tags": [
+    [
+      "YC S24",
+      "engineering",
+      "startup"
+    ],
+    [
+      "AI",
+      "YC S24",
+      "engineering",
+      "research",
+      "startup"
+    ],
+    [
+      "AI",
+      "YC W25",
+      "engineering",
+      "startup"
+    ],
+    [
+      "AI",
+      "YC X25",
+      "research",
+      "startup",
+      "video datasets"
+    ]
+  ]
+}

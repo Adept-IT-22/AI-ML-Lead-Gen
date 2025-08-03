@@ -91,3 +91,9 @@ _Insert change history here_
 
 + [Github Repo](github.com/adept-it-22/ai-ml-lead-gen)
 + [System Architecture](./SYS-ARCHITECTURE.md)
+
+### To-Do
+
+This section is a to-do list for me as the programmer.
+
++ Cache results so that the next round of sitemap traversal doesn't start from the top but from the most recent one.

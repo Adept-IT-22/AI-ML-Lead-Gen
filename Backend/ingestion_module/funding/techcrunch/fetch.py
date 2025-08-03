@@ -1,5 +1,6 @@
 #This file handles fetching of techcrunch funding news and feeding it to an llm
 
+import copy
 import time
 import json
 import httpx
@@ -48,8 +49,11 @@ async def traverse_sitemap(client:httpx.AsyncClient, url: str)->Dict[str, List[A
 
         for url in root.findall('ns:url', namespaces):
             article_link = url.find('ns:loc', namespaces).text
+            
+            funding_keywords_present = any(keyword in article_link.lower() for keyword in ["raise", "raised", "raises"])
+            ai_keywords_present = any(keyword in article_link.lower() for keyword in ["ai", "ml", "artifical intelligence", "machine learning"])
 
-            if article_link is not None and ("ai" in article_link and "raise" in article_link):
+            if funding_keywords_present and ai_keywords_present:
                 article_data["article_link"].append(article_link)
 
                 article_date_and_time = url.find('news:news/news:publication_date', namespaces).text
@@ -126,22 +130,29 @@ async def main():
         links_and_paragraphs = await get_paragraphs(client, article_links)
 
         #Feed those to the LLM
-        llm_results =  funding_data_dict
-        extracted_data = await finalize_ai_extraction(links_and_paragraphs)
+        try:
+            extracted_data = await finalize_ai_extraction(links_and_paragraphs)
+        except Exception as e:
+            logger.error(f"Failed to extract AI content from TechCrunch's data: {str(e)}")
+            extracted_data = {}
 
-        #Add data to llm_results
-        for key, value_list in extracted_data.items():
-            if key in llm_results and isinstance(value_list, List):
-                llm_results[key].extend(value_list)
-            elif key in llm_results:
-                llm_results[key] = value_list
+        if extracted_data:
+            llm_results =  copy.deepcopy(funding_data_dict)
 
-    #Add results to file
-    logger.info("Adding llm results to file...")
-    async with aiofiles.open("techcrunch_data.txt", "a") as file:
-        await file.writelines(json.dumps(llm_results, indent=2))
-    logger.info("Done writing llm_results to file")
+            #Add data to llm_results
+            for key, value_list in extracted_data.items():
+                if key in llm_results and isinstance(llm_results[key], List):
+                    llm_results[key].extend(value_list)
+                elif key in llm_results:
+                    llm_results[key] = value_list
+
+            #Add results to file
+            logger.info("Adding llm results to file...")
+            async with aiofiles.open("techcrunch_data.txt", "a") as file:
+                await file.writelines(json.dumps(llm_results, indent=2))
+            logger.info("Done writing llm_results to file")
+        else:
+            logger.warning("AI extraction for TechCrunch returned no data. No logging will happen")
 
     duration = time.perf_counter() - start_time
     logger.info(f"This file ran for {duration:.2f} seconds")
-

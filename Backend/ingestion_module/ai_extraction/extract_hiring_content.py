@@ -1,9 +1,8 @@
 import os
-import time
 import json
 import logging
 import asyncio
-from tenacity import retry, wait_exponential, stop_after_attempt
+from tenacity import retry, wait_exponential, stop_after_attempt, RetryCallState
 from dotenv import load_dotenv
 from typing import List, Any, Dict, Union
 import google.generativeai as genai
@@ -27,8 +26,29 @@ model = genai.GenerativeModel(
 )
 
 BATCH_SIZE = 4 #How many jobs we want to feed the llm at a time
-MAX_CONCURRENT_REQUEST = 4 #How many API request we can send the llm at a time
+
+#=============REQUEST CONCURRENCY==============
+MAX_CONCURRENT_REQUEST = 10 #How many API request we can send the llm at a time
 semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUEST)
+
+#============API RATE LIMITS==============
+RATE_LIMIT_SECONDS = 6
+gemini_lock = asyncio.Lock()
+last_call = 0   
+
+async def rate_limited_gemini_call(prompt: str):
+    global last_call
+    async with gemini_lock:
+        now = asyncio.get_running_loop().time()
+        elapsed = now - last_call
+
+        if elapsed < RATE_LIMIT_SECONDS:
+            sleep_time = RATE_LIMIT_SECONDS - elapsed
+            logger.info(f"Rate limiting in effect, sleeping for {sleep_time:.2f}s")
+            await asyncio.sleep(sleep_time)
+
+        last_call = asyncio.get_running_loop().time()  # Update AFTER waiting
+        return await _call_gemini_api_with_retry(prompt)
 
 #Wrapper around process_article_batch to enforce the semaphore
 async def safe_process_hiring_data_batch(batch: Dict[str, List[Any]]):
@@ -57,24 +77,42 @@ def retry_if_resource_exhausted(exception: BaseException) -> bool:
     """Returns True if the exception is a ResourceExhausted exception."""
     return isinstance(exception, ResourceExhausted)
 
+
+def log_before_retry(retry_state: RetryCallState):
+    logger.info(f"Retrying Gemini API call... attempt #{retry_state.attempt_number}")
+
+def log_after(retry_state: RetryCallState):
+    logger.info(f"Attempt #{retry_state.attempt_number} done")
+
+def log_failure():
+    logger.error("Gemini API failed after retries.")
+    return
+
 @retry(
-    wait=wait_exponential(multiplier=1, min=4, max=60), 
-    stop=stop_after_attempt(5), 
+    wait=wait_exponential(multiplier=1, min=4, max=60),
+    stop=stop_after_attempt(5),
     retry=retry_if_resource_exhausted,
-    reraise=True
+    reraise=True,
+    before=log_before_retry,
+    after=log_after,
+    retry_error_callback=log_failure
 )
 async def _call_gemini_api_with_retry(prompt: str) -> types.GenerateContentResponse:
     """Internal function to call Gemini API with retry logic."""
-    logger.info("Attempting Gemini API call...")
-    response = await model.generate_content_async(
-        contents=prompt,
-        generation_config=types.GenerationConfig(
-            response_mime_type="application/json",
-            temperature=0.5,
+    logger.info("Attempting Gemini API call for hiring...")
+    try:
+        response = await model.generate_content_async(
+            contents=prompt,
+            generation_config=types.GenerationConfig(
+                response_mime_type="application/json",
+                temperature=0.5,
+            )
         )
-    )
-    logger.info("Gemini API call successful.")
-    return response
+        logger.info("Gemini API for hiring call successful.")
+        return response
+    except Exception as e:
+        logger.error(f"Gemini API call for hiring failed: {str(e)}")
+        return
 
 #=======================PROCESS EACH BATCH=========================
 async def process_hiring_data_batch(batch: Dict[str, List[Union[str, int]]])->Dict[str, List[Any]]:
@@ -116,7 +154,7 @@ async def process_hiring_data_batch(batch: Dict[str, List[Union[str, int]]])->Di
 
         #=============EXTRACT JSON FROM RESULT===============
         try:
-            response = await _call_gemini_api_with_retry(prompt)
+            response = await rate_limited_gemini_call(prompt)
             response_data = response.text
             extracted_json_data = json.loads(response_data)
         except json.JSONDecodeError as e:
@@ -147,26 +185,28 @@ async def process_hiring_data_batch(batch: Dict[str, List[Union[str, int]]])->Di
 
     except Exception as e:
         logger.error(f"AI information extraction failed: {str(e)}")
-
-    return return_data
+        return return_data
 
 #===============REGROUP THE BATCHES================
 async def finalize_ai_extraction(ids_urls_titles: Dict[str, List[str]])->Dict[str, List[Any]]:
+    final_results = {}
     try:
         logger.info("Finalizing AI extraction...")
         list_of_batches = split_into_batches(ids_urls_titles, BATCH_SIZE)
         tasks = [safe_process_hiring_data_batch(batch) for batch in list_of_batches]
         results = await asyncio.gather(*tasks)
-
-        final_results = {}
+        
         for result in results:
             for key, val in result.items():
                 if key not in final_results:
                     final_results[key] = val
                 else:
-                    final_results[key].extend(val)
+                    if isinstance(final_results[key], list) and isinstance(val, list):
+                        final_results[key].extend(val)
+
         logger.info("AI extraction done")
         return final_results
 
     except Exception as e:
         logger.error(f"Failed to regroup the batches: {str(e)}")
+        return final_results

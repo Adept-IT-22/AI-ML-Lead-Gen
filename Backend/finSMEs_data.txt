@@ -1,0 +1,1043 @@
+{
+  "type": "funding",
+  "article_title": [
+    "Wordsmith AI Raises $25M in Series A Funding",
+    "Nexchain Secures Strategic Funding to Lead the AI Crypto Market",
+    "MOTOR Ai Raises $20M in Funding",
+    "Synthflow AI Raises $20M in Series A Funding",
+    "Kuvi.ai Raises $700K in Seed Funding",
+    "Litero AI Raises $800K in Pre-Seed Funding",
+    "Pano AI Raises $44M in Series B Funding",
+    "Mozart AI Raises \u00a3530K in Pre-Seed Funding",
+    "Apera AI Raises Series A Funding",
+    "Manex AI Raises \u20ac8M in Seed Funding",
+    "Opper AI Raises $3M in Pre-Seed Funding",
+    "Nexxa.ai Raises $4.4M in Pre-Seed Funding",
+    "Spacely AI Raises US $1M in Seed Funding",
+    "pWin.ai Raises $10M in Seed Funding",
+    "Veris AI Raises $8.5M in Seed Funding",
+    "VoiceCare AI Raises $4.54M in Funding",
+    "RevEng.ai Raises $4.1M in Seed Funding",
+    "Caseflood.ai Raises $3.2M in Funding",
+    "Scrunch AI Raises $15M in Series A Funding",
+    "Matrice.ai Expands Seed Funding",
+    "SiMa.ai Raises $85M in Funding",
+    "Iterate.ai Raises $6.4M in Funding",
+    "Emerald AI Raises $24.5M in Seed Funding",
+    "Chai AI Raises Additional Funding, Total to Over $55M",
+    "Klutch AI Raises $8M in Seed Funding",
+    "Castellum.AI Raises $8.5M in Series A Funding",
+    "Genesis AI Raises $105M in Funding",
+    "Julius AI Raises $10M in Seed Funding",
+    "Argon AI Raises $5.5M in Seed Funding",
+    "Callidus Legal AI Raises $10M in Funding",
+    "Kosmc AI Raises $200K in Pre-Seed Funding Round",
+    "VODA.ai Raises Series A Funding",
+    "Thread AI Raises $20M in Series A Funding",
+    "Sciencia AI Raises Funding Round",
+    "Prop-AI Raises $1.5M in Pre-Seed Funding",
+    "Ryght AI Raises $3M in Seed Funding",
+    "Inntelo AI Raises Over \u00a3500K in Pre-Seed Funding",
+    "Memories.ai Raises $8M in Seed Funding",
+    "Horizon3.ai Raises $100M in Series D Funding",
+    "Interactly AI Raises Pre-Seed Funding",
+    "Spear AI Raises Seed Funding",
+    "Autonomize AI Raises $28M in Series A Funding",
+    "Bolo AI Raises $8.1M in Seed Funding",
+    "Trupeer.ai Raises $3M in Seed Funding",
+    "Moonshine AI Raises Funding",
+    "Warden AI Raises Funding",
+    "Sema4.ai Raises $25M in Series A Extension",
+    "GridFree AI Raises $5M in Funding",
+    "Radical AI Raises $55M in Seed Funding",
+    "BackOps AI Raises $6M in Seed Funding",
+    "Dropzone AI Raises $37M Series B Funding",
+    "DataBahn.ai Raises $17M in Series A Funding"
+  ],
+  "article_link": [
+    "https://www.finsmes.com/2025/06/wordsmith-ai-raises-25m-in-series-a-funding.html",
+    "https://www.finsmes.com/2025/06/nexchain-secures-strategic-funding-to-lead-the-ai-crypto-market.html",
+    "https://www.finsmes.com/2025/07/motor-ai-raises-20m-in-funding.html",
+    "https://www.finsmes.com/2025/06/synthflow-ai-raises-20m-in-series-a-funding.html",
+    "https://www.finsmes.com/2025/07/kuvi-ai-raises-700k-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/litero-ai-raises-800k-in-pre-seed-funding.html",
+    "https://www.finsmes.com/2025/06/pano-ai-raises-44m-in-series-b-funding.html",
+    "https://www.finsmes.com/2025/07/mozart-ai-raises-530k-in-pre-seed-funding.html",
+    "https://www.finsmes.com/2025/07/apera-ai-raises-series-a-funding.html",
+    "https://www.finsmes.com/2025/06/manex-ai-raises-e8m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/opper-ai-raises-3m-in-pre-seed-funding.html",
+    "https://www.finsmes.com/2025/07/nexxa-ai-raises-4-4m-in-pre-seed-funding.html",
+    "https://www.finsmes.com/2025/07/spacely-ai-raises-us-1m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/06/pwin-ai-raises-10m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/06/veris-ai-raises-8-5m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/06/voicecare-ai-raises-4-54m-in-funding.html",
+    "https://www.finsmes.com/2025/06/reveng-ai-raises-4-15m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/caseflood-ai-raises-3-2m-in-funding.html",
+    "https://www.finsmes.com/2025/07/scrunch-ai-raises-15m-in-series-a-funding.html",
+    "https://www.finsmes.com/2025/07/matrice-ai-expands-seed-funding.html",
+    "https://www.finsmes.com/2025/08/sima-ai-raises-85m-in-funding.html",
+    "https://www.finsmes.com/2025/06/iterate-ai-raises-6-4m-in-funding.html",
+    "https://www.finsmes.com/2025/07/emerald-ai-raises-24-5m-in-funding.html",
+    "https://www.finsmes.com/2025/07/chai-ai-raises-additional-funding-total-to-over-55m.html",
+    "https://www.finsmes.com/2025/06/klutch-ai-raises-8m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/castellum-ai-raises-8-5m-in-series-a-funding.html",
+    "https://www.finsmes.com/2025/07/genesis-ai-raises-105m-in-funding.html",
+    "https://www.finsmes.com/2025/07/julius-ai-raises-10m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/argon-ai-raises-5-5m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/callidus-legal-ai-raises-10m-in-funding.html",
+    "https://www.finsmes.com/2025/06/kosmc-ai-raises-200k-in-pre-seed-funding-round.html",
+    "https://www.finsmes.com/2025/06/voda-ai-raises-series-a-funding.html",
+    "https://www.finsmes.com/2025/06/thread-ai-raises-20m-in-series-a-funding.html",
+    "https://www.finsmes.com/2025/07/sciencia-ai-raises-funding-round.html",
+    "https://www.finsmes.com/2025/06/prop-ai-raises-1-5m-in-pre-seed-funding.html",
+    "https://www.finsmes.com/2025/06/ryght-ai-raises-3m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/inntelo-ai-raises-over-500k-in-pre-seed-funding.html",
+    "https://www.finsmes.com/2025/07/memories-ai-raises-8m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/06/horizon3-ai-raises-100m-in-series-d-funding.html",
+    "https://www.finsmes.com/2025/06/interactly-ai-raises-pre-seed-funding.html",
+    "https://www.finsmes.com/2025/07/spear-ai-raises-seed-funding.html",
+    "https://www.finsmes.com/2025/06/autonomize-ai-raises-28m-in-series-a-funding.html",
+    "https://www.finsmes.com/2025/06/bolo-ai-raises-8-1m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/trupeer-ai-raises-3m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/moonshine-ai-raises-funding.html",
+    "https://www.finsmes.com/2025/07/warden-ai-raises-funding.html",
+    "https://www.finsmes.com/2025/06/sema4-ai-raises-25m-in-series-a-extension.html",
+    "https://www.finsmes.com/2025/06/gridfree-ai-raises-5m-in-funding.html",
+    "https://www.finsmes.com/2025/07/radical-ai-raises-55m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/06/backops-ai-raises-6m-in-seed-funding.html",
+    "https://www.finsmes.com/2025/07/dropzone-ai-raises-37m-series-b-funding.html",
+    "https://www.finsmes.com/2025/06/databahn-ai-raises-17m-in-series-a-funding.html"
+  ],
+  "article_date": [
+    "2025-06-04",
+    "",
+    "2025-07-14",
+    "2025-06-25",
+    "2025-07-30",
+    "2025-07-21",
+    "2025-06-01",
+    "2025-07-01",
+    "2025-07-28",
+    "2025-06-04",
+    "2025-07-14",
+    "2025-07-21",
+    "2025-07-22",
+    "2025-06-03",
+    "2025-06-03",
+    "2025-06-23",
+    "2025-06-30",
+    "2025-07-30",
+    "2025-07-23",
+    "2025-07-30",
+    "2025-08-01",
+    "2025-06-12",
+    "2025-07-01",
+    "2025-07-04",
+    "2025-06",
+    "2025-07-08",
+    "2025-07-01",
+    "2025-07-28",
+    "2025-07-02",
+    "2025-07-15",
+    "2025-06-06",
+    "2025-06-10",
+    "2025-06-05",
+    "2025-07-01",
+    "2025-06-17",
+    "2025-06-12",
+    "2025-07-14",
+    "2025-07-24",
+    "2025-06-11",
+    "2025-06-04",
+    "2025-07-26",
+    "2025-06-13",
+    "2025-06-11",
+    "2025-07-15",
+    "2025-07-31",
+    "2025-07-16",
+    "2025-06-04",
+    "2025-06-03",
+    "2025-07-20",
+    "2025-06-25",
+    "2025-07-28",
+    "2025-06-26"
+  ],
+  "company_name": [
+    "Wordsmith AI",
+    "Nexchain",
+    "MOTOR Ai",
+    "Synthflow AI",
+    "Kuvi.ai",
+    "Litero AI",
+    "Pano AI",
+    "Mozart AI",
+    "Apera AI",
+    "Manex AI",
+    "Opper AI",
+    "Nexxa.ai",
+    "Spacely AI",
+    "pWin.ai",
+    "Veris AI",
+    "VoiceCare AI",
+    "RevEng.ai",
+    "Caseflood.ai",
+    "Scrunch AI",
+    "Matrice.ai",
+    "SiMa.ai",
+    "Iterate.ai",
+    "Emerald AI",
+    "Chai AI",
+    "Klutch AI",
+    "Castellum.AI",
+    "Genesis AI",
+    "Julius AI",
+    "Argon AI",
+    "Callidus Legal AI",
+    "Kosmc AI",
+    "VODA.ai",
+    "Thread AI",
+    "Sciencia AI",
+    "Prop-AI",
+    "Ryght AI",
+    "Inntelo AI",
+    "Memories.ai",
+    "Horizon3.ai",
+    "Interactly AI",
+    "Spear AI",
+    "Autonomize AI",
+    "Bolo AI",
+    "Trupeer.ai",
+    "Moonshine AI",
+    "Warden AI",
+    "Sema4.ai",
+    "GridFree AI",
+    "Radical AI",
+    "BackOps AI",
+    "Dropzone AI",
+    "DataBahn.ai"
+  ],
+  "company_city": [
+    "Edinburgh",
+    "",
+    "Berlin",
+    "Berlin",
+    "Toronto",
+    "NYC",
+    "San Francisco",
+    "London",
+    "Vancouver",
+    "Munich",
+    "Stockholm",
+    "Sunnyvale",
+    "Bangkok",
+    "Tysons",
+    "NYC",
+    "San Francisco",
+    "San Francisco",
+    "San Francisco",
+    "Salt Lake City",
+    "San Francisco",
+    "San Jose",
+    "San Jose",
+    "Washington, DC",
+    "Palo Alto",
+    "Seattle",
+    "NYC",
+    "Paris",
+    "San Francisco",
+    "New York City",
+    "San Francisco",
+    "New Delhi",
+    "Boston",
+    "NYC",
+    "Palo Alto",
+    "Dubai",
+    "Laguna Beach",
+    "London",
+    "San Francisco",
+    "San Francisco",
+    "San Francisco",
+    "Washington",
+    "Austin",
+    "Palo Alto",
+    "San Francisco",
+    "Mountain View",
+    "Austin",
+    "Atlanta",
+    "Houston",
+    "NYC",
+    "San Francisco",
+    "Seattle",
+    "Dallas"
+  ],
+  "company_country": [
+    "UK",
+    "",
+    "Germany",
+    "Germany",
+    "Canada",
+    "America",
+    "America",
+    "UK",
+    "Canada",
+    "Germany",
+    "Sweden",
+    "America",
+    "Thailand",
+    "USA",
+    "USA",
+    "USA",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "France",
+    "America",
+    "USA",
+    "USA",
+    "India",
+    "USA",
+    "America",
+    "America",
+    "UAE",
+    "America",
+    "UK",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America",
+    "America"
+  ],
+  "company_decision_makers": [
+    [
+      "Ross McNairn"
+    ],
+    [
+      "Logan Reynolds"
+    ],
+    [
+      "Roy Uhlmann",
+      "Adam Bahlke"
+    ],
+    [
+      "Hakob Astabatsyans",
+      "Albert Astabatsyans",
+      "Sassun Mirzakhan-Saky"
+    ],
+    [
+      "Dylan Dewdney",
+      "Jay Nasr",
+      "Maxim Sindall"
+    ],
+    [],
+    [
+      "Sonia Kastner"
+    ],
+    [
+      "Sundar Arvind"
+    ],
+    [
+      "Sina Afrooze"
+    ],
+    [
+      "Nathan Gruber"
+    ],
+    [
+      "G\u00f6ran Sandahl"
+    ],
+    [
+      "Philipp Wehn"
+    ],
+    [
+      "Paruey Anadirekkul"
+    ],
+    [
+      "Vishwas Lele"
+    ],
+    [
+      "Mehdi Jamei"
+    ],
+    [
+      "Parag Jhaveri"
+    ],
+    [
+      "James Patrick-Evans"
+    ],
+    [
+      "Ethan Hilton"
+    ],
+    [
+      "Chris Andrew"
+    ],
+    [
+      "Dipendra Jha"
+    ],
+    [
+      "Krishna Rangasayee"
+    ],
+    [
+      "Jon Nordmark"
+    ],
+    [
+      "Dr. Varun Sivaram"
+    ],
+    [
+      "William Beauchamp"
+    ],
+    [
+      "Xu Rui",
+      "Tanin Na Nakorn"
+    ],
+    [
+      "Peter Piatetsky"
+    ],
+    [
+      "Zhou Xian"
+    ],
+    [],
+    [
+      "Samy Danesh"
+    ],
+    [
+      "Justin McCallon"
+    ],
+    [
+      "Ankur Gupta",
+      "Manavta Narula"
+    ],
+    [
+      "George Demosthenous"
+    ],
+    [
+      "Angela McNeal",
+      "Mayada Gonimah"
+    ],
+    [],
+    [
+      "Ranime El-Skaff"
+    ],
+    [
+      "Simon Arkell"
+    ],
+    [
+      "Asif Alidina"
+    ],
+    [
+      "Dr. Shawn Shen",
+      "Ben Zhou"
+    ],
+    [
+      "Snehal Antani"
+    ],
+    [
+      "Nava Davuluri",
+      "Shiva Chaitanya"
+    ],
+    [
+      "Michael Hunter",
+      "John McGunnigle"
+    ],
+    [
+      "Ganesh Padmanabhan",
+      "Kris Nair"
+    ],
+    [
+      "Diti Sood",
+      "Dr. Lalit Jain"
+    ],
+    [
+      "Shivali Goyal",
+      "Pritish Gupta"
+    ],
+    [
+      "Pete Warden"
+    ],
+    [
+      "Jeffrey Pole",
+      "Eduard Schikurski"
+    ],
+    [
+      "Rob Bearden"
+    ],
+    [
+      "Patrick Yantz",
+      "Ralph Alexander"
+    ],
+    [
+      "Joseph F. Krause",
+      "Jorge Colindres"
+    ],
+    [
+      "Sean McCarthy"
+    ],
+    [
+      "Edward Wu"
+    ],
+    [
+      "Nanda Santhana"
+    ]
+  ],
+  "funding_round": [
+    "Series A",
+    "Strategic Investment",
+    "Funding",
+    "Series A",
+    "Seed",
+    "Pre-Seed",
+    "Series B",
+    "Pre-Seed",
+    "Series A",
+    "Seed",
+    "Pre-Seed",
+    "Pre-Seed",
+    "Seed",
+    "Seed",
+    "Seed",
+    "",
+    "Seed",
+    "",
+    "Series A",
+    "Seed",
+    "",
+    "",
+    "Seed",
+    "",
+    "Seed",
+    "Series A",
+    "",
+    "Seed",
+    "Seed",
+    "Funding",
+    "Pre-Seed",
+    "Series A",
+    "Series A",
+    "",
+    "Pre-Seed",
+    "Seed",
+    "Pre-Seed",
+    "Seed",
+    "Series D",
+    "Pre-Seed",
+    "Seed",
+    "Series A",
+    "Seed",
+    "Seed",
+    "",
+    "",
+    "Series A extension",
+    "",
+    "Seed",
+    "Seed",
+    "Series B",
+    "Series A"
+  ],
+  "amount_raised": [
+    "$25M",
+    "",
+    "$20M",
+    "$20M",
+    "$700K",
+    "$800K",
+    "$44M",
+    "\u00a3530K",
+    "",
+    "$8M",
+    "$3M",
+    "$4.4M",
+    "$1M",
+    "$120M",
+    "$8.5M",
+    "$4.54M",
+    "$4.1M",
+    "$3.2M",
+    "$15M",
+    "",
+    "$85m",
+    "$6.4M",
+    "$24.5M",
+    "",
+    "$8m",
+    "$8.5m",
+    "$105M",
+    "$10m",
+    "$5.5M",
+    "$10M",
+    "$200K",
+    "",
+    "$20m",
+    "",
+    "$1.5M",
+    "$3m",
+    "\u00a3506K",
+    "$8m",
+    "$100M",
+    "",
+    "",
+    "$28M",
+    "$8.1M",
+    "$3M",
+    "",
+    "",
+    "$25M",
+    "$5M",
+    "$55M",
+    "$6M",
+    "$37M",
+    "$17m"
+  ],
+  "currency": [
+    "USD",
+    "",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "GBP",
+    "",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "",
+    "USD",
+    "USD",
+    "USD",
+    "",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "",
+    "USD",
+    "",
+    "USD",
+    "USD",
+    "GBP",
+    "USD",
+    "USD",
+    "",
+    "",
+    "USD",
+    "USD",
+    "USD",
+    "",
+    "",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "USD",
+    "USD"
+  ],
+  "investor companies": [],
+  "investor people": [],
+  "tags": [
+    [
+      "legal intelligence",
+      "AI",
+      "software",
+      "Series A"
+    ],
+    [
+      "blockchain",
+      "AI",
+      "crypto",
+      "Web3",
+      "DeFi",
+      "DAO"
+    ],
+    [
+      "AI",
+      "autonomous driving",
+      "automotive",
+      "cognitive AI"
+    ],
+    [
+      "voice AI",
+      "automated phone calls",
+      "no-code",
+      "customer support",
+      "Series A"
+    ],
+    [
+      "AI",
+      "crypto",
+      "finance services",
+      "digital assets"
+    ],
+    [
+      "EdTech",
+      "AI",
+      "academic writing",
+      "education"
+    ],
+    [
+      "AI",
+      "wildfire detection",
+      "public safety",
+      "environmental"
+    ],
+    [
+      "music AI",
+      "AI",
+      "DAW",
+      "startup"
+    ],
+    [
+      "AI",
+      "robotic automation",
+      "4D vision",
+      "industrial automation",
+      "robotics"
+    ],
+    [
+      "AI",
+      "industrial quality management",
+      "process steering",
+      "software platform",
+      "manufacturing"
+    ],
+    [
+      "AI",
+      "machine learning",
+      "observability platform",
+      "large language models",
+      "developer tools"
+    ],
+    [
+      "AI",
+      "industrial engineers",
+      "digital environments",
+      "Robotic Process Automation",
+      "RPA",
+      "automation"
+    ],
+    [
+      "generative AI",
+      "architecture",
+      "interior design",
+      "SaaS",
+      "AEC industry"
+    ],
+    [
+      "AI",
+      "proposal writing",
+      "government contracting",
+      "GovCon"
+    ],
+    [
+      "AI agents",
+      "simulated experiences",
+      "reinforcement learning"
+    ],
+    [
+      "healthcare administration",
+      "AI",
+      "generative AI",
+      "RCM"
+    ],
+    [
+      "artificial intelligence",
+      "cybersecurity",
+      "AI",
+      "software"
+    ],
+    [
+      "legal tech",
+      "AI",
+      "law firms",
+      "voice AI"
+    ],
+    [
+      "AI search",
+      "marketing",
+      "enterprise platform",
+      "AI"
+    ],
+    [
+      "Vision AI",
+      "computer vision",
+      "AI Factories",
+      "enterprise solutions"
+    ],
+    [
+      "Physical AI",
+      "AI",
+      "hardware",
+      "software",
+      "robotics",
+      "automotive",
+      "industrial automation",
+      "aerospace & defense",
+      "smart vision",
+      "healthcare",
+      "MLSoC",
+      "multimodal ML",
+      "Edgematic",
+      "Palette",
+      "Modalix"
+    ],
+    [
+      "AI",
+      "AI solutions",
+      "AI platform",
+      "Generate",
+      "Interplay",
+      "low-code platform",
+      "AI PC"
+    ],
+    [
+      "AI",
+      "compute orchestration",
+      "data centers",
+      "intelligent grid assets",
+      "Conductor platform",
+      "AI workloads",
+      "energy management"
+    ],
+    [
+      "AI",
+      "UGAI",
+      "user-generated AI",
+      "ChatGPT",
+      "Character AI",
+      "Silicon Valley"
+    ],
+    [
+      "AI",
+      "construction management",
+      "workflow automation",
+      "software",
+      "seed funding"
+    ],
+    [
+      "AI",
+      "financial crime compliance",
+      "fintech",
+      "AML",
+      "KYC",
+      "platform",
+      "Series A funding"
+    ],
+    [
+      "AI",
+      "robotics",
+      "physical AI",
+      "research lab",
+      "data engine",
+      "simulation",
+      "funding"
+    ],
+    [
+      "AI",
+      "data analyst",
+      "knowledge workers",
+      "SaaS",
+      "seed funding"
+    ],
+    [
+      "AI",
+      "life sciences",
+      "biopharma",
+      "workspace",
+      "digital health",
+      "seed funding"
+    ],
+    [
+      "AI",
+      "legal tech",
+      "litigation",
+      "legal research",
+      "automation",
+      "funding"
+    ],
+    [
+      "social commerce",
+      "AI",
+      "no-code",
+      "startup",
+      "India",
+      "pre-seed funding"
+    ],
+    [
+      "AI",
+      "water infrastructure",
+      "utilities",
+      "SaaS",
+      "Series A funding"
+    ],
+    [
+      "AI",
+      "platform",
+      "enterprises",
+      "workflows",
+      "agents"
+    ],
+    [
+      "AI",
+      "infrastructure",
+      "generative AI",
+      "machine learning",
+      "data orchestration",
+      "LLM"
+    ],
+    [
+      "AI",
+      "real estate",
+      "property",
+      "platform",
+      "MENA"
+    ],
+    [
+      "AI",
+      "generative AI",
+      "clinical research",
+      "clinical trials",
+      "healthcare",
+      "platform"
+    ],
+    [
+      "hospitality technology",
+      "AI",
+      "pre-seed funding",
+      "startup",
+      "SaaS"
+    ],
+    [
+      "AI research",
+      "visual AI",
+      "memory model",
+      "seed funding",
+      "startup"
+    ],
+    [
+      "autonomous security",
+      "cybersecurity",
+      "AI",
+      "series D funding",
+      "SaaS"
+    ],
+    [
+      "healthcare administration",
+      "AI",
+      "multimodal AI",
+      "pre-seed funding",
+      "startup"
+    ],
+    [
+      "AI",
+      "maritime",
+      "defense",
+      "software",
+      "sensors",
+      "seed funding"
+    ],
+    [
+      "AI",
+      "healthcare",
+      "software",
+      "copilot services",
+      "Series A funding"
+    ],
+    [
+      "AI",
+      "enterprise AI",
+      "heavy industry",
+      "software",
+      "seed funding"
+    ],
+    [
+      "AI",
+      "video creation",
+      "platform",
+      "software",
+      "seed funding"
+    ],
+    [
+      "voice AI",
+      "on-device processing",
+      "privacy",
+      "AI",
+      "startup",
+      "funding"
+    ],
+    [
+      "AI auditing platform",
+      "HR tech",
+      "compliance",
+      "AI",
+      "startup",
+      "funding"
+    ],
+    [
+      "enterprise AI agents",
+      "AI platform",
+      "SaaS",
+      "Snowflake",
+      "funding",
+      "Series A"
+    ],
+    [
+      "data center infrastructure",
+      "Power Foundry",
+      "AI",
+      "computing",
+      "funding"
+    ],
+    [
+      "AI",
+      "materials R&D",
+      "autonomous labs",
+      "scientific intelligence",
+      "next-generation materials"
+    ],
+    [
+      "AI operations platform",
+      "supply chain workflows",
+      "logistics",
+      "automation"
+    ],
+    [
+      "AI",
+      "SOC analysts",
+      "cyber defenders",
+      "LLMs",
+      "cybersecurity",
+      "security"
+    ],
+    [
+      "security-native data pipeline",
+      "AI",
+      "enterprise workloads",
+      "data engineering",
+      "telemetry",
+      "data fabric"
+    ]
+  ]
+}
