@@ -49,11 +49,8 @@ async def traverse_sitemap(client:httpx.AsyncClient, url: str)->Dict[str, List[A
 
         for url in root.findall('ns:url', namespaces):
             article_link = url.find('ns:loc', namespaces).text
-            
-            funding_keywords_present = any(keyword in article_link.lower() for keyword in ["raise", "raised", "raises"])
-            ai_keywords_present = any(keyword in article_link.lower() for keyword in ["ai", "ml", "artifical intelligence", "machine learning"])
 
-            if funding_keywords_present and ai_keywords_present:
+            if article_link is not None and ("ai-" in article_link and "raise" in article_link):
                 article_data["article_link"].append(article_link)
 
                 article_date_and_time = url.find('news:news/news:publication_date', namespaces).text
@@ -156,3 +153,5 @@ async def main():
 
     duration = time.perf_counter() - start_time
     logger.info(f"This file ran for {duration:.2f} seconds")
+
+asyncio.run(main())
