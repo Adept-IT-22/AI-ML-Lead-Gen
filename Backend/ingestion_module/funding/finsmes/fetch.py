@@ -1,4 +1,5 @@
 import re
+import copy
 import json
 import time
 import httpx
@@ -87,7 +88,6 @@ async def fetch_ai_funding_article_links(client: httpx.AsyncClient, url: str)->l
             if "-ai-" in article_link and ("funding" in article_link or "raises" in article_link):
                 ai_funding_articles.append(article_link)
 
-        logger.info(json.dumps(ai_funding_articles, indent=2))
         logger.info("Feching AI specific urls done")
         return list(set(ai_funding_articles))
 
@@ -159,30 +159,36 @@ async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronousl
             if ai_urls:
                 results = await get_paragraphs(client, ai_urls)
 
-    llm_results = funding_fetched_data
-
     #Check if results has urls in the first place
     if results["urls"]:
 
         #Feed the results to the llm
-        extracted_data = await finalize_ai_extraction(results)
+        try:
+            extracted_data = await finalize_ai_extraction(results)
+        except Exception as e:
+            logger.error(f"Failed to extract AI content from FinSMEs data: {str(e)}")
+            extracted_data = {}
 
-        #Append extracted_data to llm_results
-        for key, value_list in extracted_data.items():
-            if key in llm_results and isinstance(llm_results[key], list) and isinstance(value_list, list):
-                llm_results[key].extend(value_list)
-            elif key in llm_results:
-                llm_results[key] = value_list
+        if extracted_data:
+            llm_results = copy.deepcopy(funding_fetched_data)
 
-    #Write llm results to file
-    logger.info("Logging results to file....")
-    async with aiofiles.open("finSMEs_data.txt", "a") as file:
-        await file.writelines(json.dumps(llm_results, indent=2))
-    logger.info("Done logging results to file")
+            #Append extracted_data to llm_results
+            for key, value_list in extracted_data.items():
+                if key in llm_results and isinstance(llm_results[key], list) and isinstance(value_list, list):
+                    llm_results[key].extend(value_list)
+                elif key in llm_results:
+                    llm_results[key] = value_list
 
-    logger.info("Done logging results to file")
-    logger.info("Done fetching from FinSMEs.Time for AI information extraction")
-    duration = time.perf_counter() - current_time
-    logger.info(f"Program ran for {duration:.2f} seconds")
+            #Write llm results to file
+            logger.info("Logging results to file....")
+            async with aiofiles.open("finSMEs_data.txt", "a") as file:
+                await file.writelines(json.dumps(llm_results, indent=2))
+
+            logger.info("Done logging results to file")
+        
+        else:
+            logger.warning("AI extraction for FinSMEs returned no data. No logging will happen")
+
+        duration = time.perf_counter() - current_time
+        logger.info(f"Program ran for {duration:.2f} seconds")
     
-asyncio.run(main())
