@@ -28,19 +28,15 @@
         >
         </app-data-feed>
     </div>
-
     <div class="filter-leads">
+
         <app-filter
             *ngFor="let filter of filters"
             [optionType]="filter.optionType">
         </app-filter>
-    </div>
 
-    <div class="leads-table">
-        <app-leads
-            [title] = "'Lead List'"
-            [columns]="leadTableColumns"
-            [data]="leadTableData"></app-leads>
     </div>
+    <app-leads [leads]="leads"></app-leads>
+
 
 </div>

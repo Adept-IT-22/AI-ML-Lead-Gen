@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { DataCardComponent } from "../../@shared/Components/data-card/data-card.component";
 import { SearchBarComponent } from '../../@shared/Components/search-bar/search-bar.component';
 import { DataFeedComponent } from "../../@shared/Components/data-feed/data-feed.component";
-import { LeadsTableComponent, TableColumn } from '../../@shared/Components/leads/leads.component';
+import { LeadsTableComponent } from '../../@shared/Components/leads/leads.component';
 import { FilterComponent } from '../../@shared/Components/filter/filter.component';
+import { Lead } from '../../@shared/Components/leads/leads.component';
 import { NgFor } from '@angular/common';
-import { leadData } from '../../Libs/data/lead.data';
-import { ILead } from '../../Libs/interfaces/lead.interface';
 
 @Component({
   selector: 'app-home',
@@ -44,10 +43,43 @@ export class HomeComponent {
     { optionType: 'BY SOURCE' }
   ];
 
-  leadTableColumns: TableColumn[] = [
-    {header: 'No'},
-    {header: 'Company Name'}
-  ]
-  
-  leadTableData = leadData
+  //homeComponent.ts
+  leads:Lead [] = [
+    {
+      id: 1,
+      companyName: 'Acme Corp',
+      status: 'MQL',
+      dateUpdated: '2025-07-21',
+      source: 'Google News',
+      industry: 'Fintech',
+      score: 85,
+    },
+    {
+      id: 2,
+      companyName: 'Innovate Inc',
+      status: 'SQL',
+      dateUpdated: '2025-07-17',
+      source: 'Tech.Eu',
+      industry: 'Education',
+      score: 70,
+    },
+    {
+      id: 3,
+      companyName: 'NextGen Ltd',
+      status: 'MQL',
+      dateUpdated: '2025-07-19',
+      source: 'Email Campaign',
+      industry: 'AI',
+      score: 90,
+    },
+    {
+      id: 4,
+      companyName: 'OldCorp',
+      status: 'Disqualified',
+      dateUpdated: '2025-07-10',
+      source: 'Email Blast',
+      industry: 'Retail',
+      score: 50,
+    },
+  ];
 }

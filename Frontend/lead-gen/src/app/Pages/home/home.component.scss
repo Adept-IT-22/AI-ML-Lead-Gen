@@ -21,12 +21,29 @@
     height: 12rem;
 }
 
-.filter-leads{
+.lead-list{
+    width: 100%;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     gap: 1rem;
+    padding: 0;
+    height: 12rem;
 }
 
-.leads-table{
-   background-color: red;
+ 
+
+.filter-leads{
+    
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    height: 12rem;
+    width: 100%;
+    gap: 1rem;
+    line-height: normal;
+
+}
+
+.leads-table-container{
+    border: 1px solid #f9f9f9;
+    width: 100%;
 }

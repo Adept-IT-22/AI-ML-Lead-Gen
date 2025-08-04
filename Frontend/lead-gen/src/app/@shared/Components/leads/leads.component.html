@@ -1,15 +1,32 @@
 <div class="leads-wrapper">
-  <h1>{{title}}</h1>
+  <h1>LEADS LIST</h1>
   <div class="leads-table-container">
     <table>
-      <thead class="table-head">
-        <tr *ngFor="let column of columns">
-          <th>{{column.header}}</th>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Company Name</th>
+          <th>Status</th>
+          <th>Date Updated</th>
+          <th>Score</th>
+          <th>Source</th>
+          <th>Industry</th>
+          <th>Actions</th>
         </tr>
       </thead>
-      <tbody *ngFor="let item of data">
-        <tr>
-          {{item}}
+      <tbody>
+        <tr *ngFor="let lead of filteredLeads">
+          <td>{{ lead.id }}</td>
+          <td>{{ lead.companyName }}</td>
+          <td>{{ lead.status }}</td>
+          <td>{{ lead.dateUpdated }}</td>
+          <td>{{ lead.score }}</td>
+          <td>{{ lead.source }}</td>
+          <td>{{ lead.industry }}</td>
+          <td>
+            <button>View</button>
+            <button>Update</button>
+          </td>
         </tr>
       </tbody>
     </table>
