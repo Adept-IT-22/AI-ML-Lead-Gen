@@ -142,6 +142,8 @@ async def main():
                     llm_results[key].extend(value_list)
                 elif key in llm_results:
                     llm_results[key] = value_list
+                    
+            llm_results["source"] = "TechCrunch"
 
             #Add results to file
             logger.info("Adding llm results to file...")

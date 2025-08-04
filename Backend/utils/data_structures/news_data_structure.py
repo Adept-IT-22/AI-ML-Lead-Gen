@@ -1,5 +1,6 @@
 fetched_funding_data = {
     "type": "funding",
+    "source": "",
     "article_title": [],
     "article_link": [],
     "article_date": [],

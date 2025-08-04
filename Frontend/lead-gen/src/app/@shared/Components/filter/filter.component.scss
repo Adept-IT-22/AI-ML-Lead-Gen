@@ -7,14 +7,25 @@
   padding: 10px 10px;
 }
 
-.option {
-    color: var(--color-yellow);
-    display: flex;
-    font-size: var(--font-size-header);
-    font-weight: var(--font-weight-header);
+select{
+  cursor: pointer;
+  color: var(--color-yellow);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-header);
+  font-size: var(--font-size-header);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  background-color: var(--color-black);
+  border: none;
 }
 
-.progress-mat-icon {
-    color: var(--color-yellow);
-    size: 5rem;
+.dropdown-title{
+  color: var(--color-yellow);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-header);
+  font-size: var(--font-size-header);
 }

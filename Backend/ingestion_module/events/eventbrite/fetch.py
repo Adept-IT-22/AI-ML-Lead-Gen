@@ -26,6 +26,7 @@ async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str
     logger.info("Fetching Eventbrite events....")
     logger.info(f"The url is : {url}")
     event_data = {
+        "source": "",
         "event_title": [],
         "event_link": [],
         "event_date": [],
@@ -67,6 +68,8 @@ async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str
             event_data["event_organizer_id"].append(event.get("primary_organizer_id", ""))
             event_tags = [tag.get("display_name", "") for tag in event.get("tags", [])]
             event_data["event_tags"].append(event_tags)
+
+        event_data["source"] = "Eventbrite"
 
         logger.info("Done fetching Eventbrite events")
 

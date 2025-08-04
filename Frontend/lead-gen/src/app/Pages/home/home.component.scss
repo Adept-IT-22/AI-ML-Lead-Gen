@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    overflow-x:hidden ;
 }
 
 .data-cards{
@@ -18,32 +19,17 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
     padding: 0;
-    height: 12rem;
+}
+
+.lead-filters{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+    gap: 1rem;
+    padding: 0;
 }
 
 .lead-list{
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 1rem;
-    padding: 0;
-    height: 12rem;
 }
 
- 
 
-.filter-leads{
-    
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    height: 12rem;
-    width: 100%;
-    gap: 1rem;
-    line-height: normal;
-
-}
-
-.leads-table-container{
-    border: 1px solid #f9f9f9;
-    width: 100%;
-}

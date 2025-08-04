@@ -113,6 +113,7 @@ async def main():
 
         #"by" in jobs_arranged_and_filtered = "company_decision_makers" in llm_results
         llm_results["company_decision_makers"].extend(jobs_arranged_and_filtered["by"])
+        llm_results["source"] = "HackerNews"
 
         #Write llm results to file
         async with aiofiles.open("hackernews_data.txt", "a") as file:
