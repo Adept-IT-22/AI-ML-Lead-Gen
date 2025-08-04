@@ -4,7 +4,6 @@ import { SearchBarComponent } from '../../@shared/Components/search-bar/search-b
 import { DataFeedComponent } from "../../@shared/Components/data-feed/data-feed.component";
 import { LeadsTableComponent } from '../../@shared/Components/leads/leads.component';
 import { FilterComponent } from '../../@shared/Components/filter/filter.component';
-import { Lead } from '../../@shared/Components/leads/leads.component';
 import { NgFor } from '@angular/common';
 
 @Component({
@@ -43,43 +42,21 @@ export class HomeComponent {
     { optionType: 'BY SOURCE' }
   ];
 
-  //homeComponent.ts
-  leads:Lead [] = [
-    {
-      id: 1,
-      companyName: 'Acme Corp',
-      status: 'MQL',
-      dateUpdated: '2025-07-21',
-      source: 'Google News',
-      industry: 'Fintech',
-      score: 85,
-    },
-    {
-      id: 2,
-      companyName: 'Innovate Inc',
-      status: 'SQL',
-      dateUpdated: '2025-07-17',
-      source: 'Tech.Eu',
-      industry: 'Education',
-      score: 70,
-    },
-    {
-      id: 3,
-      companyName: 'NextGen Ltd',
-      status: 'MQL',
-      dateUpdated: '2025-07-19',
-      source: 'Email Campaign',
-      industry: 'AI',
-      score: 90,
-    },
-    {
-      id: 4,
-      companyName: 'OldCorp',
-      status: 'Disqualified',
-      dateUpdated: '2025-07-10',
-      source: 'Email Blast',
-      industry: 'Retail',
-      score: 50,
-    },
+   leadData = [
+    { no: '01', companyName: 'Acme Corp', status: 'MQL', dateUpdated: '2025-07-20', score: '85', source: 'Google News', industry: 'Fintech'},
+    { no: '02', companyName: 'Innovate Inc', status: 'SQL', dateUpdated: '2025-07-23', score: '70', source: 'Tech.Eu', industry: 'Education'},
+    { no: '03', companyName: 'Tech AI', status: 'MQL', dateUpdated: '2025-07-19', score: '81', source: 'HackerNews', industry: 'Defense'},
+  ];
+
+  // Define the columns for the lead data table
+  leadColumns = [
+    { key: 'no', header: 'No.' },
+    { key: 'companyName', header: 'Company Name' },
+    { key: 'status', header: 'Status' },
+    { key: 'dateUpdated', header: 'Date Updated' },
+    { key: 'score', header: 'Score' },
+    { key: 'source', header: 'Source' },
+    { key: 'industry', header: 'Industry' },
+    { key: 'action', header: 'Action' },
   ];
 }

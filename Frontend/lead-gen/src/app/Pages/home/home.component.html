@@ -30,13 +30,21 @@
     </div>
     <div class="filter-leads">
 
-        <app-filter
-            *ngFor="let filter of filters"
-            [optionType]="filter.optionType">
-        </app-filter>
-
+        
+    <!--Filters-->
+    <div class="lead-filters">
+        <app-filter [title]="'BY DATE'" [options]="['Today', 'This Week', 'This Month']"></app-filter>
+        <app-filter [title]="'BY SOURCE'"[options]="['Funding', 'Hiring', 'Events']"></app-filter>
+        <app-filter [title]="'BY STATUS'" [options]="['Total Leads','MQLs', 'SQLs']"></app-filter>
+        <app-filter [title]="'BY SCORE'" [options]="['70s', '80s', '90s']"></app-filter>
     </div>
-    <app-leads [leads]="leads"></app-leads>
 
-
+    <!--Leads Table-->
+    <div class="lead-list">
+        <app-leads
+            [title]="'LEAD LIST'"
+            [columns]="leadColumns"
+            [data]="leadData"
+        ></app-leads>
+    </div>
 </div>

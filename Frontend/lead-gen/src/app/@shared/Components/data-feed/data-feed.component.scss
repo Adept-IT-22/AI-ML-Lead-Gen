@@ -7,7 +7,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 12rem;
+    height: 11rem;
     border: 1px solid #f9f9f9;
 }
 
@@ -32,4 +32,10 @@
     font-size: var(--font-size-header);
     color: var(--color-yellow);
     box-sizing: border-box;
+
+    &:hover{
+        color: var(--color-black);
+        background-color: var(--color-yellow);
+        cursor: pointer;
+    }
 }

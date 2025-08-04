@@ -1,34 +1,24 @@
-<div class="leads-wrapper">
-  <h1>LEADS LIST</h1>
-  <div class="leads-table-container">
+<div class="leads-component">
+  <div class="lead-table-title">{{ title }}</div>
+
+  <div class="lead-table">
     <table>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Company Name</th>
-          <th>Status</th>
-          <th>Date Updated</th>
-          <th>Score</th>
-          <th>Source</th>
-          <th>Industry</th>
-          <th>Actions</th>
+          <th *ngFor="let column of columns">
+            {{ column.header }}
+          </th>
         </tr>
       </thead>
+
       <tbody>
-        <tr *ngFor="let lead of filteredLeads">
-          <td>{{ lead.id }}</td>
-          <td>{{ lead.companyName }}</td>
-          <td>{{ lead.status }}</td>
-          <td>{{ lead.dateUpdated }}</td>
-          <td>{{ lead.score }}</td>
-          <td>{{ lead.source }}</td>
-          <td>{{ lead.industry }}</td>
-          <td>
-            <button>View</button>
-            <button>Update</button>
+        <tr *ngFor="let row of data">
+          <td *ngFor="let column of columns">
+            {{ row[column.key] }}
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
+

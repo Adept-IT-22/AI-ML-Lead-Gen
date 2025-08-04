@@ -99,6 +99,8 @@ async def main():
             elif key in llm_results:
                 llm_results[key] = value_list
 
+        llm_results["source"] = "Tech.EU"
+
         #Add llm results to file
         logger.info("Writing tech eu data to file...")
         async with aiofiles.open("tech_eu_data.txt", "a") as file:
