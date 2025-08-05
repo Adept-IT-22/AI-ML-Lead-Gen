@@ -8,6 +8,7 @@ fetched_funding_data = {
     "company_city": [],
     "company_country": [],
     "company_decision_makers": [],
+    "company_decision_makers_position": [],
     "funding_round": [],
     "amount_raised": [],
     "currency": [],

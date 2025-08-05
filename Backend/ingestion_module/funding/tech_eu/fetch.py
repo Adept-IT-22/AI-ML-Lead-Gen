@@ -23,9 +23,8 @@ async def fetch_tech_eu_data()->Dict[str, List[str]]:
     async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
         try:
             response = await client.get(URL)
-            if response.status_code != 200:
-                logger.error(f"Failed to fetch URL: {URL} - Status code: {response.status_code}")
-                return {}
+            response.raise_for_status()
+
             root = etree.fromstring(response.content) #type: ignore
 
             #=========NAMESPACES=============
@@ -41,7 +40,7 @@ async def fetch_tech_eu_data()->Dict[str, List[str]]:
 
                 #=======APPEND LINK IF AI RELATED============
                 if ("-ai" in article_link or "ai-" in article_link) and "-raises" in article_link:
-                    article_links["article_link"].append(article_link)
+                    article_links.append(article_link)
 
             #=========OPEN LINK TO GET PARAGRAPHS============
             results = {"urls": [], "paragraphs": []}
@@ -84,10 +83,14 @@ async def main():
     start_time = time.perf_counter()
     links_and_paragraphs = await fetch_tech_eu_data()
 
-    try:
-        result = await finalize_ai_extraction(links_and_paragraphs=links_and_paragraphs)
-    except Exception as e:
-        logger.error(f"Failed to extract AI content from Tech_EU's data: {str(e)}")
+    if links_and_paragraphs and (links_and_paragraphs.get("urls") and links_and_paragraphs.get("paragraphs")):
+        try:
+            result = await finalize_ai_extraction(links_and_paragraphs=links_and_paragraphs)
+        except Exception as e:
+            logger.error(f"Failed to extract AI content from Tech_EU's data: {str(e)}")
+            result = {}
+    else:
+        logger.error("No links or paragraphs found for AI extraction. Skipping LLM call")
         result = {}
 
     if result:

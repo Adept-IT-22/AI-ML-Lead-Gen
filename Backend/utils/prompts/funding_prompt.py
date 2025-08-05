@@ -10,6 +10,7 @@ def get_funding_extraction_prompt(combined_input_for_llm):
     - Company City
     - Company Country
     - Company Decision Makers (as a list of strings. Include names of all identifiable decision makers for the company that's raising money.)
+    - Company Decision Makers Position (the positions occupied by the company decision makers above)
     - Funding Round (e.g., Seed, Series A, Series B, Venture, Private Equity, Debt, Grant, Convertible Note, Bridge, IPO, Acquisition, etc. If not explicitly mentioned, infer based on context or leave empty string if no clear indication.)
     - Amount Raised (e.g., $10M, €5M, £2.5M. Extract the numerical value and currency symbol.)
     - Currency (e.g., USD, EUR, GBP. Infer from amount raised or context.)
@@ -31,6 +32,7 @@ def get_funding_extraction_prompt(combined_input_for_llm):
         "company_city": ["San Francisco", "Berlin"],
         "company_country": ["America", "Germany"],
         "company_decision_makers": [["John Doe"],["Jane Doe", "John Smith"]],
+        "company_decision_makers_position": [["CEO"], ["CTO", "CEO"]]
         "funding_round": ["Seed", "Series A"],
         "amount_raised": ["$5M", "$10M"],
         "currency": ["USD", "USD"],
