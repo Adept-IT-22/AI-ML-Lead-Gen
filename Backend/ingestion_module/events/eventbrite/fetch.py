@@ -10,7 +10,7 @@ from typing import Dict, List, Any
 logger = logging.getLogger()
 
 BASE_URL = "https://www.eventbrite.com/d"
-LOCATION = "united-states"
+LOCATION = "kenya"
 SEARCH_FILTER = "ai"
 
 SEARCH_URL = f"{BASE_URL}/{LOCATION}/{SEARCH_FILTER}/"
@@ -26,6 +26,7 @@ async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str
     logger.info("Fetching Eventbrite events....")
     logger.info(f"The url is : {url}")
     event_data = {
+        "type": "events",
         "source": "",
         "event_title": [],
         "event_link": [],
@@ -35,7 +36,6 @@ async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str
         "event_id": [],
         "event_summary": [],
         "event_is_online": [],
-        "event_organizer_id": [],
         "event_tags": []
         }
 
@@ -64,7 +64,7 @@ async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str
             event_data["event_link"].append(event.get("url", ""))
             event_data["event_id"].append(event.get("eventbrite_event_id", ""))
             event_data["event_summary"].append(event.get("summary", ""))
-            event_data["event_is_online"].append(event.get("is_online_event", False))
+            event_data["event_is_online"].append(event.get("is_online_event", "").lower() == "true")
             event_data["event_organizer_id"].append(event.get("primary_organizer_id", ""))
             event_tags = [tag.get("display_name", "") for tag in event.get("tags", [])]
             event_data["event_tags"].append(event_tags)

@@ -24,6 +24,14 @@ Below are the phases through which data will flow through the system:
 
     + The data will again be placed into a queue, decoupling this module from the very I/O heavy enrichment module.
 
+    + Standardization will be done in the following way:
+
+        + Dates - ISO 8601 format (YYYY-MM-DD)
+        + Countries - ISO 3166-1 country name
+        + Cities - Title cased
+        + URLs - stripped of whitespace
+        + Tags - lowercase and stripped of whitespace
+
 + **Enrichment Phase**
     + Here the data is fetched from the normalization queue as a clean/formatted dictionary and the company name from the dictionary is used to fetch company details from an API.
     

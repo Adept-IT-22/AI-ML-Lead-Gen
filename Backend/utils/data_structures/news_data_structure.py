@@ -12,7 +12,7 @@ fetched_funding_data = {
     "funding_round": [],
     "amount_raised": [],
     "currency": [],
-    "investor companies": [],
-    "investor people": [],
+    "investor_companies": [],
+    "investor_people": [],
     "tags": []
 }
