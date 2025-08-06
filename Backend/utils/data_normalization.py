@@ -16,7 +16,6 @@ def normalize_country(country: str) -> str:
         return ""
 
     cleaned = country.strip().lower()
-    
     if cleaned in OVERRIDES:
         return OVERRIDES[cleaned]
 
@@ -61,3 +60,15 @@ def normalize_tags(tags: List[str])->List[str]:
             normalized_tags.append(clean_tag)
 
     return normalized_tags
+
+def normalize_company_decision_makers(decision_makers: List[str])->List[str]:
+    if not decision_makers:
+        return []
+    
+    normalized_decision_makers = []
+    for decision_maker in decision_makers:
+        clean_decision_maker = decision_makers.strip().lower()
+        if clean_decision_maker:
+            normalized_decision_makers.append(clean_decision_maker)
+
+    return normalized_decision_makers
