@@ -32,7 +32,7 @@ async def normalize_event_data(ingested_data: Dict[str, List[Any]]) -> Dict[str,
 
     normalized_event_data.update({
         "type": "event",
-        "source": ingested_data.get("source"),
+        "source": ingested_data.get("source", ""),
         "event_title": [title.strip() for title in ingested_data.get("event_title", [])],
         "event_link": [normalize_url(url) for url in ingested_data.get("event_link", [])],
         "event_date": [str(normalize_date(date)) for date in ingested_data.get("event_date", [])],

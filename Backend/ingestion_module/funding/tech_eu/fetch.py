@@ -102,7 +102,7 @@ async def main():
             elif key in llm_results:
                 llm_results[key] = value_list
 
-        llm_results["source"] = "Tech.EU"
+        llm_results["source"] = "Tech.eu"
 
         #Add llm results to file
         logger.info("Writing tech eu data to file...")

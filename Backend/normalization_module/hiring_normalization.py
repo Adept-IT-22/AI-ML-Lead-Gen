@@ -30,7 +30,7 @@ async def normalize_hiring_data(ingested_data: Dict[str, List[Any]]) -> Dict[str
 
     normalized_hiring_data.update({
         "type": "hiring",
-        "source": ingested_data.get("source"),
+        "source": ingested_data.get("source", ""),
         "article_id": [str(aid) for aid in ingested_data.get("article_id", [])],
         "article_title": [title.strip() for title in ingested_data.get("article_title", [])],
         "article_link": [normalize_url(url) for url in ingested_data.get("article_link", [])],

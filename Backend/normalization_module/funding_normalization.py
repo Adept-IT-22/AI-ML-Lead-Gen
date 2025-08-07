@@ -31,7 +31,7 @@ async def normalize_funding_data(ingested_data: Dict[str, List[Any]]) -> Dict[st
 
     normalized_funding_data.update({
         "type": "funding",
-        "source": ingested_data.get("source"),
+        "source": ingested_data.get("source", ""),
         "article_title": [title.strip() for title in ingested_data.get("article_title", [])],
         "article_link": [normalize_url(url) for url in ingested_data.get("article_link", [])],
         "article_date": [str(normalize_date(date)) for date in ingested_data.get("article_date", [])],
