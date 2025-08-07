@@ -1,4 +1,5 @@
 import json
+import aiofiles
 import asyncio
 import logging
 from typing import List, Dict, Any, Awaitable, Union, Callable
@@ -8,6 +9,8 @@ from ingestion_module.funding.techcrunch.fetch import main as techcrunch_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 from normalization_module.event_normalization import normalize_event_data
+from normalization_module.funding_normalization import normalize_funding_data
+from normalization_module.hiring_normalization import normalize_hiring_data
 
 logger = logging.getLogger()
 
@@ -83,24 +86,43 @@ async def main():
     logger.info("Adding ingestion module results to queue")
     #Add {"finsmes": {}, "tech_eu": {}, "eventbrite": {}}
     for name, result in results.items():
-        if not isinstance(result, Exception):
+        if not isinstance(result, Exception) and isinstance(result, dict) and result.get("type"):
             #Put name and result in queue for easier debugging
             await ingestion_to_normalization_queue.put((name, result))
             logger.info(f"The ingestion to normalization queue size is: {ingestion_to_normalization_queue.qsize()}")
-
-    logger.info("Done adding ingestion module results to queue")
+        else:
+            logger.error(f"Skipping {name} as its results were empty")
 
     #==============2. NORMALIZATION================
     #2.1 =========Fetch from queue============
     logger.info("Normalizing ingested data")
     while not ingestion_to_normalization_queue.empty():
-        name, data = await ingestion_to_normalization_queue.get(result)
+        name, data = await ingestion_to_normalization_queue.get()
+        logger.info(f"Fetched data from {name}. Queue size is now: {ingestion_to_normalization_queue.qsize()}")
 
     #2.2 ==========Normalize data ===============
         if isinstance(data, dict) and data.get("type") == "event": 
-            normalized_event_data = normalize_event_data(result)
-            logger.info(f"Normalized data from {name}:\n{json.dumps(normalize_event_data, indent=2)}")
+            normalized_event_data = await normalize_event_data(data)
+            logger.info(f"Normalized event data from {name}")
+            file_name = data.get("source")
+            async with aiofiles.open(f"{file_name}.txt", "a") as event_file:
+                await event_file.write(json.dumps(normalized_event_data, indent=2))
 
+        elif isinstance(data, dict) and data.get("type") == "funding":
+            normalized_funding_data = await normalize_funding_data(data)
+            logger.info(f"Normalized funding data from {name}")
+            file_name = data.get("source")
+            async with aiofiles.open(f"{file_name}.txt", "a") as funding_file:
+                await funding_file.write(json.dumps(normalized_funding_data, indent=2))
+
+        elif isinstance(data, dict) and data.get("type") == "hiring":
+            normalized_hiring_data = await normalize_hiring_data(data)
+            logger.info(f"Normalized hiring data from {name}")
+            file_name = data.get("source")
+            async with aiofiles.open(f"{file_name}.txt", "a") as hiring_file:
+                await hiring_file.write(json.dumps(normalized_hiring_data, indent=2))
+
+    return "Ingestion and Normalization Done"
 
 if __name__ == "__main__":
     asyncio.run(main())

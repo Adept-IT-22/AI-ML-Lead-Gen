@@ -86,4 +86,8 @@ async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str
 
 async def main():
     async with httpx.AsyncClient() as client:
-        await fetch_eventbrite_events(client, SEARCH_URL)
+        return await fetch_eventbrite_events(client, SEARCH_URL)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+

@@ -62,15 +62,19 @@ def normalize_tags(tags: List[str])->List[str]:
 
     return normalized_tags
 
-def normalize_company_decision_makers(decision_makers: List[str])->List[str]:
+def normalize_company_decision_makers(decision_makers: str|List[str])->List[str]:
     if not decision_makers:
         return []
     
     normalized_decision_makers = []
-    for decision_maker in decision_makers:
-        clean_decision_maker = decision_maker.strip().title()
-        if clean_decision_maker:
-            normalized_decision_makers.append(clean_decision_maker)
+    if isinstance(decision_makers, List):
+        for decision_maker in decision_makers:
+            clean_decision_maker = decision_maker.strip().title()
+            if clean_decision_maker:
+                normalized_decision_makers.append(clean_decision_maker)
+
+    elif isinstance(decision_makers, str):
+        normalized_decision_makers.append(decision_makers.strip().title())
 
     return normalized_decision_makers
 

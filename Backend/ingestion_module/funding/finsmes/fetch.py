@@ -192,3 +192,7 @@ async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronousl
         duration = time.perf_counter() - current_time
         logger.info(f"Program ran for {duration:.2f} seconds")
     
+    return llm_results
+
+if __name__ == "__main__":
+    asyncio.run(main())
