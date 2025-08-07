@@ -1,0 +1,68 @@
+{
+  "type": "funding",
+  "source": "Tech.EU",
+  "article_title": [
+    "Bisly Raises \u20ac4.3M to Expand AI Building Automation in Europe"
+  ],
+  "article_link": [
+    "https://tech.eu/2025/08/06/bisly-raises-eur43m-to-expand-ai-building-automation-in-europe//"
+  ],
+  "article_date": [
+    "2025-08-06"
+  ],
+  "company_name": [
+    "Bisly"
+  ],
+  "company_city": [
+    "Tallinn"
+  ],
+  "company_country": [
+    "Estonia"
+  ],
+  "company_decision_makers": [
+    [
+      "Ants Vill"
+    ]
+  ],
+  "company_decision_makers_position": [
+    [
+      "CEO",
+      "co-founder"
+    ]
+  ],
+  "funding_round": [
+    "Funding Round"
+  ],
+  "amount_raised": [
+    "\u20ac4.3 million"
+  ],
+  "currency": [
+    "EUR"
+  ],
+  "investor_companies": [
+    [
+      "2C Ventures",
+      "Aconterra",
+      "Pinorena",
+      "Foxway",
+      "SmartCap"
+    ]
+  ],
+  "investor_people": [
+    [
+      "Martin Koppel"
+    ]
+  ],
+  "tags": [
+    [
+      "AI",
+      "building automation",
+      "smart building",
+      "energy efficiency",
+      "climate tech",
+      "Estonia",
+      "Europe",
+      "expansion"
+    ]
+  ]
+}

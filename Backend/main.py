@@ -1,3 +1,4 @@
+import json
 import asyncio
 import logging
 from typing import List, Dict, Any, Awaitable, Union, Callable
@@ -6,13 +7,14 @@ from ingestion_module.funding.tech_eu.fetch import main as tech_eu_main
 from ingestion_module.funding.techcrunch.fetch import main as techcrunch_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
+from normalization_module.event_normalization import normalize_event_data
 
 logger = logging.getLogger()
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 #This function pairs a name with a coroutine (if all goes well) or with an exception otherwise 
-async def wrap(name: str, coroutine: Callable[[], Awaitable[Any]] )->tuple[str, Union[Any, Exception]]:
+async def wrap(name: str, coroutine: Awaitable[Any] )->tuple[str, Union[Any, Exception]]:
     try:
         result = await coroutine 
         logger.info(f"Coroutine {name} done")
@@ -51,10 +53,8 @@ async def run_ingestion_modules():
 
     logger.info(f"\n============FINAL SUMMARY============")
     for name, result in results.items():
-        if isinstance(result, Exception):
-            logger.error(f"Final status for {name}: FAILED ❌")
-        else:
-            logger.info(f"Final state for {name}: SUCCESS ✅")
+        status = "SUCCESS ✅" if not isinstance(result, Exception) else "FAILED ❌"
+        logger.info(f"{name}: {status}")
 
     return results
 
@@ -68,7 +68,8 @@ async def main():
         results = {
             "finmes": {
                 "type": "funding",
-                "source": "finsmes"
+                "source": "finsmes",
+                etc.
             }
         }
     }
@@ -80,13 +81,26 @@ async def main():
 
     #========1.3 Enqueue ingestion result values if they're not exceptions=====
     logger.info("Adding ingestion module results to queue")
-    for result in results.values():
+    #Add {"finsmes": {}, "tech_eu": {}, "eventbrite": {}}
+    for name, result in results.items():
         if not isinstance(result, Exception):
             #Put name and result in queue for easier debugging
-            await ingestion_to_normalization_queue.put(result)
+            await ingestion_to_normalization_queue.put((name, result))
             logger.info(f"The ingestion to normalization queue size is: {ingestion_to_normalization_queue.qsize()}")
 
     logger.info("Done adding ingestion module results to queue")
+
+    #==============2. NORMALIZATION================
+    #2.1 =========Fetch from queue============
+    logger.info("Normalizing ingested data")
+    while not ingestion_to_normalization_queue.empty():
+        name, data = await ingestion_to_normalization_queue.get(result)
+
+    #2.2 ==========Normalize data ===============
+        if isinstance(data, dict) and data.get("type") == "event": 
+            normalized_event_data = normalize_event_data(result)
+            logger.info(f"Normalized data from {name}:\n{json.dumps(normalize_event_data, indent=2)}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

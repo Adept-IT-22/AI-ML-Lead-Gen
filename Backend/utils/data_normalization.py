@@ -1,3 +1,4 @@
+import re
 import pycountry
 from dateutil.parser import parse
 from typing import Dict, List, Any
@@ -16,7 +17,6 @@ def normalize_country(country: str) -> str:
         return ""
 
     cleaned = country.strip().lower()
-    
     if cleaned in OVERRIDES:
         return OVERRIDES[cleaned]
 
@@ -61,3 +61,51 @@ def normalize_tags(tags: List[str])->List[str]:
             normalized_tags.append(clean_tag)
 
     return normalized_tags
+
+def normalize_company_decision_makers(decision_makers: List[str])->List[str]:
+    if not decision_makers:
+        return []
+    
+    normalized_decision_makers = []
+    for decision_maker in decision_makers:
+        clean_decision_maker = decision_maker.strip().title()
+        if clean_decision_maker:
+            normalized_decision_makers.append(clean_decision_maker)
+
+    return normalized_decision_makers
+
+def normalize_currency(currency: str)->str:
+    if not currency:
+        return "" 
+    
+    try: 
+        normalized_currency = pycountry.currencies.lookup(currency)
+        return normalize_currency.name
+    except:
+        return currency.strip().lower()
+
+def normalize_amount_raised(amount_raised: str) -> str:
+    if not amount_raised:
+        return ""
+
+    try:
+        match = re.search(r'(\d+(?:\.\d+)?)\s*(M|B|K|Million|Billion|Thousand)', amount_raised, re.IGNORECASE)
+        if match:
+            number = float(match.group(1))
+            unit = match.group(2).lower()
+
+            multipliers = {
+                'k': 1_000,
+                'thousand': 1_000,
+                'm': 1_000_000,
+                'million': 1_000_000,
+                'b': 1_000_000_000,
+                'billion': 1_000_000_000
+            }
+
+            normalized = int(number * multipliers[unit])
+            return str(normalized)
+    except:
+        pass
+
+    return amount_raised.strip()
