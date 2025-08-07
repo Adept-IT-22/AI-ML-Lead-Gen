@@ -114,3 +114,5 @@ async def main():
 
     duration = time.perf_counter() - start_time
     logger.info(f"This task took {duration:.2f} seconds")
+
+asyncio.run(main())

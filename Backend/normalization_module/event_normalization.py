@@ -21,7 +21,7 @@ ingested_data below looks like this:
     }
 """
 
-def normalize_event_data(ingested_data: Dict[str, List[Any]]) -> Dict[str, List[Any]]:
+async def normalize_event_data(ingested_data: Dict[str, List[Any]]) -> Dict[str, List[Any]]:
     if not ingested_data:
         logger.error("No data to normalize. Ingested data is empty")
         return {}

@@ -31,6 +31,7 @@ Below are the phases through which data will flow through the system:
         + Cities - Title cased
         + URLs - stripped of whitespace
         + Tags - lowercase and stripped of whitespace
+        + Currencies - ISO 4217
 
 + **Enrichment Phase**
     + Here the data is fetched from the normalization queue as a clean/formatted dictionary and the company name from the dictionary is used to fetch company details from an API.
