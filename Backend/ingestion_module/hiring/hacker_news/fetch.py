@@ -123,3 +123,8 @@ async def main():
 
     duration = time.perf_counter() - start_time
     logger.info(f"This task took {duration:.2f} seconds")
+
+    return llm_results
+
+if __name__ == "__main__":
+    asyncio.run(main())

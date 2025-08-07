@@ -13,6 +13,7 @@ def get_hiring_extraction_prompt(combined_input_for_llm: str):
         - Company City  
         - Company Country  
         - Company Decision Makers (as a list of strings. Include names of all identifiable decision makers or hiring managers mentioned.)  
+        - Company Decision Makers Position (the position of the above decision makers e.g. CEO, CTO, etc.)
         - Job Roles (as a list of strings. Extract the specific job roles, positions, or departments the company is hiring for, e.g., "software engineer", "data scientist", "marketing", "product design".)  
         - Hiring Reason (e.g., "expansion", "product launch", "new funding", "team growth", etc. If not clear, leave as an empty string "")  
         - Tags (as a list of strings relevant to the article or company, such as "AI", "healthtech", "startup", "remote", "growth")  
@@ -34,6 +35,7 @@ def get_hiring_extraction_prompt(combined_input_for_llm: str):
             "company_city": ["New York", "Paris"],
             "company_country": ["USA", "France"],
             "company_decision_makers": [["Jane Doe"], ["Pierre Martin", "Sophie Durand"]],
+            "company_decision_makers_position": [["CEO"], ["CTO", "COO"]],
             "job_roles": [["software engineer", "machine learning"], ["sales", "business development"]],
             "hiring_reason": ["expansion", "new product launch"],
             "tags": [["AI", "startup", "engineering"], ["fintech", "europe", "growth"]],

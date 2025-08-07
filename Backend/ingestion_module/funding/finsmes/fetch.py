@@ -179,6 +179,8 @@ async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronousl
                 elif key in llm_results:
                     llm_results[key] = value_list
 
+            llm_results["source"] = "FinSMEs"
+
             #Write llm results to file
             logger.info("Logging results to file....")
             async with aiofiles.open("finSMEs_data.txt", "a") as file:
@@ -192,3 +194,7 @@ async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronousl
         duration = time.perf_counter() - current_time
         logger.info(f"Program ran for {duration:.2f} seconds")
     
+    return llm_results
+
+if __name__ == "__main__":
+    asyncio.run(main())

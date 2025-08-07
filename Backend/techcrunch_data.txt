@@ -318,4 +318,769 @@
       "private equity"
     ]
   ]
+}{
+  "type": "funding",
+  "source": "TechCrunch",
+  "article_title": [
+    "Tavily raises $25M to connect AI agents to the web"
+  ],
+  "article_link": [
+    "https://techcrunch.com/2025/08/06/tavily-raises-25m-to-connect-ai-agents-to-the-web/"
+  ],
+  "article_date": [
+    "2025-08-06"
+  ],
+  "company_name": [
+    "Tavily"
+  ],
+  "company_city": [
+    ""
+  ],
+  "company_country": [
+    ""
+  ],
+  "company_decision_makers": [
+    [
+      "Rotem Weiss"
+    ]
+  ],
+  "company_decision_makers_position": [
+    [
+      "Founder"
+    ]
+  ],
+  "funding_round": [
+    "Series A"
+  ],
+  "amount_raised": [
+    "$20 million"
+  ],
+  "currency": [
+    "USD"
+  ],
+  "investor_companies": [
+    [
+      "Insight Partners"
+    ]
+  ],
+  "investor_people": [
+    [
+      "George Mathew"
+    ]
+  ],
+  "tags": [
+    [
+      "AI agents",
+      "web search",
+      "enterprise AI",
+      "LLMs",
+      "funding",
+      "startup"
+    ]
+  ]
+}{
+  "type": "news",
+  "source": "TechCrunch",
+  "article_title": [],
+  "article_link": [],
+  "article_date": [],
+  "company_name": [],
+  "company_city": [],
+  "company_country": [],
+  "company_decision_makers": [],
+  "company_decision_makers_position": [],
+  "funding_round": [],
+  "amount_raised": [],
+  "currency": [],
+  "investor_companies": [],
+  "investor_people": [],
+  "tags": []
+}{
+  "type": "funding",
+  "source": "TechCrunch",
+  "article_title": [
+    "Tavily raises $25M to connect AI agents to the web"
+  ],
+  "article_link": [
+    "https://techcrunch.com/2025/08/06/tavily-raises-25m-to-connect-ai-agents-to-the-web/"
+  ],
+  "article_date": [
+    "2025-08-06"
+  ],
+  "company_name": [
+    "Tavily"
+  ],
+  "company_city": [
+    ""
+  ],
+  "company_country": [
+    ""
+  ],
+  "company_decision_makers": [
+    [
+      "Rotem Weiss"
+    ]
+  ],
+  "company_decision_makers_position": [
+    [
+      "Founder",
+      "data scientist"
+    ]
+  ],
+  "funding_round": [
+    "Series A"
+  ],
+  "amount_raised": [
+    "$20 million"
+  ],
+  "currency": [
+    "USD"
+  ],
+  "investor_companies": [
+    [
+      "Insight Partners"
+    ]
+  ],
+  "investor_people": [
+    [
+      "George Mathew"
+    ]
+  ],
+  "tags": [
+    [
+      "AI agents",
+      "web search",
+      "enterprise AI",
+      "LLMs",
+      "funding",
+      "startup"
+    ]
+  ]
+}{
+  "type": "news",
+  "source": "TechCrunch",
+  "article_title": [],
+  "article_link": [],
+  "article_date": [],
+  "company_name": [],
+  "company_city": [],
+  "company_country": [],
+  "company_decision_makers": [],
+  "company_decision_makers_position": [],
+  "funding_round": [],
+  "amount_raised": [],
+  "currency": [],
+  "investor_companies": [],
+  "investor_people": [],
+  "tags": []
+}{
+  "type": "funding",
+  "source": "TechCrunch",
+  "article_title": [
+    "Tavily raises $25M to connect AI agents to the web"
+  ],
+  "article_link": [
+    "https://techcrunch.com/2025/08/06/tavily-raises-25m-to-connect-ai-agents-to-the-web/"
+  ],
+  "article_date": [
+    "2025-08-06"
+  ],
+  "company_name": [
+    "Tavily"
+  ],
+  "company_city": [
+    ""
+  ],
+  "company_country": [
+    ""
+  ],
+  "company_decision_makers": [
+    [
+      "Rotem Weiss"
+    ]
+  ],
+  "company_decision_makers_position": [
+    [
+      "Founder",
+      "data scientist"
+    ]
+  ],
+  "funding_round": [
+    "Series A"
+  ],
+  "amount_raised": [
+    "$20 million"
+  ],
+  "currency": [
+    "USD"
+  ],
+  "investor_companies": [
+    [
+      "Insight Partners"
+    ]
+  ],
+  "investor_people": [
+    [
+      "George Mathew"
+    ]
+  ],
+  "tags": [
+    [
+      "AI agents",
+      "web connectivity",
+      "enterprise AI",
+      "LLMs",
+      "search tools",
+      "funding",
+      "startup"
+    ]
+  ]
+}{
+  "type": "news",
+  "source": "TechCrunch",
+  "article_title": [],
+  "article_link": [],
+  "article_date": [],
+  "company_name": [],
+  "company_city": [],
+  "company_country": [],
+  "company_decision_makers": [],
+  "company_decision_makers_position": [],
+  "funding_round": [],
+  "amount_raised": [],
+  "currency": [],
+  "investor_companies": [],
+  "investor_people": [],
+  "tags": []
+}{
+  "type": "funding",
+  "source": "TechCrunch",
+  "article_title": [
+    "Tavily raises $25M to connect AI agents to the web"
+  ],
+  "article_link": [
+    "https://techcrunch.com/2025/08/06/tavily-raises-25m-to-connect-ai-agents-to-the-web/"
+  ],
+  "article_date": [
+    "2025-08-06"
+  ],
+  "company_name": [
+    "Tavily"
+  ],
+  "company_city": [
+    ""
+  ],
+  "company_country": [
+    ""
+  ],
+  "company_decision_makers": [
+    [
+      "Rotem Weiss"
+    ]
+  ],
+  "company_decision_makers_position": [
+    [
+      "data scientist",
+      "Founder"
+    ]
+  ],
+  "funding_round": [
+    "Series A"
+  ],
+  "amount_raised": [
+    "$20 million"
+  ],
+  "currency": [
+    "USD"
+  ],
+  "investor_companies": [
+    [
+      "Insight Partners"
+    ]
+  ],
+  "investor_people": [
+    [
+      "George Mathew"
+    ]
+  ],
+  "tags": [
+    [
+      "AI agents",
+      "web connectivity",
+      "enterprise AI",
+      "LLMs",
+      "governance",
+      "compliance",
+      "startup"
+    ]
+  ]
+}{
+  "type": "news",
+  "source": "TechCrunch",
+  "article_title": [],
+  "article_link": [],
+  "article_date": [],
+  "company_name": [],
+  "company_city": [],
+  "company_country": [],
+  "company_decision_makers": [],
+  "company_decision_makers_position": [],
+  "funding_round": [],
+  "amount_raised": [],
+  "currency": [],
+  "investor_companies": [],
+  "investor_people": [],
+  "tags": []
+}{
+  "type": "funding",
+  "source": "TechCrunch",
+  "article_title": [
+    "Tavily raises $25M to connect AI agents to the web"
+  ],
+  "article_link": [
+    "https://techcrunch.com/2025/08/06/tavily-raises-25m-to-connect-ai-agents-to-the-web/"
+  ],
+  "article_date": [
+    "2025-08-06"
+  ],
+  "company_name": [
+    "Tavily"
+  ],
+  "company_city": [
+    ""
+  ],
+  "company_country": [
+    ""
+  ],
+  "company_decision_makers": [
+    [
+      "Rotem Weiss"
+    ]
+  ],
+  "company_decision_makers_position": [
+    [
+      "data scientist"
+    ]
+  ],
+  "funding_round": [
+    "Series A"
+  ],
+  "amount_raised": [
+    "$20 million"
+  ],
+  "currency": [
+    "USD"
+  ],
+  "investor_companies": [
+    [
+      "Insight Partners"
+    ]
+  ],
+  "investor_people": [
+    [
+      "George Mathew"
+    ]
+  ],
+  "tags": [
+    [
+      "AI agents",
+      "web search",
+      "enterprise AI",
+      "LLMs",
+      "funding",
+      "startup"
+    ]
+  ]
+}{
+  "type": "news",
+  "source": "TechCrunch",
+  "article_title": [],
+  "article_link": [],
+  "article_date": [],
+  "company_name": [],
+  "company_city": [],
+  "company_country": [],
+  "company_decision_makers": [],
+  "company_decision_makers_position": [],
+  "funding_round": [],
+  "amount_raised": [],
+  "currency": [],
+  "investor_companies": [],
+  "investor_people": [],
+  "tags": []
+}{
+  "type": "funding",
+  "source": "TechCrunch",
+  "article_title": [
+    "Tavily raises $25M to connect AI agents to the web"
+  ],
+  "article_link": [
+    "https://techcrunch.com/2025/08/06/tavily-raises-25m-to-connect-ai-agents-to-the-web/"
+  ],
+  "article_date": [
+    "2025-08-06"
+  ],
+  "company_name": [
+    "Tavily"
+  ],
+  "company_city": [
+    ""
+  ],
+  "company_country": [
+    ""
+  ],
+  "company_decision_makers": [
+    [
+      "Rotem Weiss"
+    ]
+  ],
+  "company_decision_makers_position": [
+    [
+      "Founder"
+    ]
+  ],
+  "funding_round": [
+    "Series A"
+  ],
+  "amount_raised": [
+    "$20 million"
+  ],
+  "currency": [
+    "USD"
+  ],
+  "investor_companies": [
+    [
+      "Insight Partners"
+    ]
+  ],
+  "investor_people": [
+    [
+      "George Mathew"
+    ]
+  ],
+  "tags": [
+    [
+      "AI agents",
+      "web search",
+      "enterprise AI",
+      "LLMs",
+      "startup",
+      "funding"
+    ]
+  ]
+}{
+  "type": "news",
+  "source": "TechCrunch",
+  "article_title": [],
+  "article_link": [],
+  "article_date": [],
+  "company_name": [],
+  "company_city": [],
+  "company_country": [],
+  "company_decision_makers": [],
+  "company_decision_makers_position": [],
+  "funding_round": [],
+  "amount_raised": [],
+  "currency": [],
+  "investor_companies": [],
+  "investor_people": [],
+  "tags": []
+}{
+  "type": "funding",
+  "source": "TechCrunch",
+  "article_title": [
+    "Tavily raises $25M to connect AI agents to the web"
+  ],
+  "article_link": [
+    "https://techcrunch.com/2025/08/06/tavily-raises-25m-to-connect-ai-agents-to-the-web/"
+  ],
+  "article_date": [
+    "2025-08-06"
+  ],
+  "company_name": [
+    "Tavily"
+  ],
+  "company_city": [
+    ""
+  ],
+  "company_country": [
+    ""
+  ],
+  "company_decision_makers": [
+    [
+      "Rotem Weiss"
+    ]
+  ],
+  "company_decision_makers_position": [
+    [
+      "Founder"
+    ]
+  ],
+  "funding_round": [
+    "Series A"
+  ],
+  "amount_raised": [
+    "$20 million"
+  ],
+  "currency": [
+    "USD"
+  ],
+  "investor_companies": [
+    [
+      "Insight Partners"
+    ]
+  ],
+  "investor_people": [
+    [
+      "George Mathew"
+    ]
+  ],
+  "tags": [
+    [
+      "AI",
+      "AI agents",
+      "web connectivity",
+      "enterprise AI",
+      "LLM",
+      "startup",
+      "funding",
+      "Series A"
+    ]
+  ]
+}{
+  "type": "news",
+  "source": "TechCrunch",
+  "article_title": [],
+  "article_link": [],
+  "article_date": [],
+  "company_name": [],
+  "company_city": [],
+  "company_country": [],
+  "company_decision_makers": [],
+  "company_decision_makers_position": [],
+  "funding_round": [],
+  "amount_raised": [],
+  "currency": [],
+  "investor_companies": [],
+  "investor_people": [],
+  "tags": []
+}{
+  "type": "news",
+  "source": "TechCrunch",
+  "article_title": [],
+  "article_link": [],
+  "article_date": [],
+  "company_name": [],
+  "company_city": [],
+  "company_country": [],
+  "company_decision_makers": [],
+  "company_decision_makers_position": [],
+  "funding_round": [],
+  "amount_raised": [],
+  "currency": [],
+  "investor_companies": [],
+  "investor_people": [],
+  "tags": []
+}{
+  "type": "news",
+  "source": "TechCrunch",
+  "article_title": [],
+  "article_link": [],
+  "article_date": [],
+  "company_name": [],
+  "company_city": [],
+  "company_country": [],
+  "company_decision_makers": [],
+  "company_decision_makers_position": [],
+  "funding_round": [],
+  "amount_raised": [],
+  "currency": [],
+  "investor_companies": [],
+  "investor_people": [],
+  "tags": []
+}{
+  "type": "funding",
+  "source": "TechCrunch",
+  "article_title": [
+    "Tavily raises $25M to connect AI agents to the web"
+  ],
+  "article_link": [
+    "https://techcrunch.com/2025/08/06/tavily-raises-25m-to-connect-ai-agents-to-the-web/"
+  ],
+  "article_date": [
+    "2025-08-06"
+  ],
+  "company_name": [
+    "Tavily"
+  ],
+  "company_city": [
+    ""
+  ],
+  "company_country": [
+    ""
+  ],
+  "company_decision_makers": [
+    [
+      "Rotem Weiss"
+    ]
+  ],
+  "company_decision_makers_position": [
+    [
+      "founder"
+    ]
+  ],
+  "funding_round": [
+    "Series A"
+  ],
+  "amount_raised": [
+    "$20 million"
+  ],
+  "currency": [
+    "USD"
+  ],
+  "investor_companies": [
+    [
+      "Insight Partners"
+    ]
+  ],
+  "investor_people": [
+    [
+      "George Mathew"
+    ]
+  ],
+  "tags": [
+    [
+      "AI agents",
+      "web connectivity",
+      "enterprise AI",
+      "LLM",
+      "search tools",
+      "funding",
+      "startup"
+    ]
+  ]
+}{
+  "type": "funding",
+  "source": "TechCrunch",
+  "article_title": [
+    "Tavily raises $25M to connect AI agents to the web"
+  ],
+  "article_link": [
+    "https://techcrunch.com/2025/08/06/tavily-raises-25m-to-connect-ai-agents-to-the-web/"
+  ],
+  "article_date": [
+    "2025-08-06"
+  ],
+  "company_name": [
+    "Tavily"
+  ],
+  "company_city": [
+    ""
+  ],
+  "company_country": [
+    ""
+  ],
+  "company_decision_makers": [
+    [
+      "Rotem Weiss"
+    ]
+  ],
+  "company_decision_makers_position": [
+    [
+      "founder",
+      "data scientist"
+    ]
+  ],
+  "funding_round": [
+    "Series A"
+  ],
+  "amount_raised": [
+    "$20 million"
+  ],
+  "currency": [
+    "USD"
+  ],
+  "investor_companies": [
+    [
+      "Insight Partners"
+    ]
+  ],
+  "investor_people": [
+    [
+      "George Mathew"
+    ]
+  ],
+  "tags": [
+    [
+      "AI agents",
+      "web search",
+      "enterprise AI",
+      "LLMs",
+      "startup",
+      "funding",
+      "compliance"
+    ]
+  ]
+}{
+  "type": "funding",
+  "source": "TechCrunch",
+  "article_title": [
+    "Tavily raises $25M to connect AI agents to the web"
+  ],
+  "article_link": [
+    "https://techcrunch.com/2025/08/06/tavily-raises-25m-to-connect-ai-agents-to-the-web/"
+  ],
+  "article_date": [
+    "2025-08-06"
+  ],
+  "company_name": [
+    "Tavily"
+  ],
+  "company_city": [
+    ""
+  ],
+  "company_country": [
+    ""
+  ],
+  "company_decision_makers": [
+    [
+      "Rotem Weiss"
+    ]
+  ],
+  "company_decision_makers_position": [
+    [
+      "Founder",
+      "Data Scientist"
+    ]
+  ],
+  "funding_round": [
+    "Series A"
+  ],
+  "amount_raised": [
+    "$20 million"
+  ],
+  "currency": [
+    "USD"
+  ],
+  "investor_companies": [
+    [
+      "Insight Partners"
+    ]
+  ],
+  "investor_people": [
+    [
+      "George Mathew"
+    ]
+  ],
+  "tags": [
+    [
+      "AI agents",
+      "web search",
+      "enterprise AI",
+      "LLMs",
+      "compliance",
+      "startup",
+      "funding"
+    ]
+  ]
 }

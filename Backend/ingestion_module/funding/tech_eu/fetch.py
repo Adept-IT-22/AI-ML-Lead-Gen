@@ -102,7 +102,7 @@ async def main():
             elif key in llm_results:
                 llm_results[key] = value_list
 
-        llm_results["source"] = "Tech.EU"
+        llm_results["source"] = "Tech.eu"
 
         #Add llm results to file
         logger.info("Writing tech eu data to file...")
@@ -115,4 +115,7 @@ async def main():
     duration = time.perf_counter() - start_time
     logger.info(f"This task took {duration:.2f} seconds")
 
-asyncio.run(main())
+    return llm_results
+
+if __name__ == "__main__":
+    asyncio.run(main())
