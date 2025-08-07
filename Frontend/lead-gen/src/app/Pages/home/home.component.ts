@@ -5,6 +5,7 @@ import { DataFeedComponent } from "../../@shared/Components/data-feed/data-feed.
 import { LeadsTableComponent } from '../../@shared/Components/leads/leads.component';
 import { FilterComponent } from '../../@shared/Components/filter/filter.component';
 import { NgFor } from '@angular/common';
+import { ButtonComponent } from "../../@shared/Components/button/button.component";
 
 @Component({
   selector: 'app-home',
@@ -59,4 +60,5 @@ export class HomeComponent {
     { key: 'industry', header: 'Industry' },
     { key: 'action', header: 'Action' },
   ];
+  buttons: string[] = ['View', 'Update'];
 }

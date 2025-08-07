@@ -14,7 +14,16 @@
       <tbody>
         <tr *ngFor="let row of data">
           <td *ngFor="let column of columns">
-            {{ row[column.key] }}
+            <!-- Check if this is the 'Action' column -->
+            <ng-container *ngIf="column.header !== 'Action'; else actionButtons">
+              {{ row[column.key] }}
+            </ng-container>
+
+            <!-- Template for Action column -->
+            <ng-template #actionButtons>
+              <button class="btn" mat-button (click)="onView(row)">{{ buttons[0] }}</button>
+              <button class="btn" mat-button (click)="onUpdate(row)">{{ buttons[1] }}</button>
+            </ng-template>
           </td>
         </tr>
       </tbody>

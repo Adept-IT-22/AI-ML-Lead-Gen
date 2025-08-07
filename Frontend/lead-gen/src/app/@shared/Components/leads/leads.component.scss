@@ -53,3 +53,14 @@ thead tr th{
   color: white;
 }
 
+.btn{
+    background-color: var(--color-black);
+    font-weight: var(--font-weight-header);
+    color: var(--color-green);
+    align-items: end;
+    margin-top: 0.5rem;
+    height: 100%;
+    width: auto;
+    gap: 1rem;
+    padding:  0px 16px;
+}

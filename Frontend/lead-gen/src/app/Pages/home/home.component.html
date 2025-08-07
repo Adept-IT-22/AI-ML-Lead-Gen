@@ -1,3 +1,13 @@
+<nav class="navbar">
+  <div class="logo">
+    <img src="assets/images/adept.jpg" alt="logo"/>
+  </div>
+  <ul class="nav-links">
+    <li><a routerLink="/">Home</a></li>
+    <li><a routerLink="/">Analytics</a></li>
+  </ul>
+</nav>
+
 <div class="home-component">
 
     <!--Search Bar-->
@@ -15,6 +25,23 @@
         ></app-data-card>
     </div>
 
+    <div class="lead-filters">
+        <app-filter [title]="'BY DATE'" [options]="['Today', 'This Week', 'This Month']"></app-filter>
+        <app-filter [title]="'BY SOURCE'"[options]="['Funding', 'Hiring', 'Events']"></app-filter>
+        <app-filter [title]="'BY STATUS'" [options]="['Total Leads','MQLs', 'SQLs']"></app-filter>
+        <app-filter [title]="'BY SCORE'" [options]="['70s', '80s', '90s']"></app-filter>
+    </div>
+
+    <div class="lead-list">
+        <app-leads
+            [title]="'LEAD LIST'"
+            [columns]="leadColumns"
+            [data]="leadData"
+            [buttons]="['View', 'Update']"
+            
+        ></app-leads>
+    </div>
+
     <!--Data Feed-->
     <div class="data-feed">
         <app-data-feed
@@ -27,24 +54,10 @@
         [data]="news_feed"
         >
         </app-data-feed>
-    </div>
-    <div class="filter-leads">
-
-        
+    </div>        
     <!--Filters-->
-    <div class="lead-filters">
-        <app-filter [title]="'BY DATE'" [options]="['Today', 'This Week', 'This Month']"></app-filter>
-        <app-filter [title]="'BY SOURCE'"[options]="['Funding', 'Hiring', 'Events']"></app-filter>
-        <app-filter [title]="'BY STATUS'" [options]="['Total Leads','MQLs', 'SQLs']"></app-filter>
-        <app-filter [title]="'BY SCORE'" [options]="['70s', '80s', '90s']"></app-filter>
-    </div>
+    
 
     <!--Leads Table-->
-    <div class="lead-list">
-        <app-leads
-            [title]="'LEAD LIST'"
-            [columns]="leadColumns"
-            [data]="leadData"
-        ></app-leads>
-    </div>
+   
 </div>
