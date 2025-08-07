@@ -1,21 +1,20 @@
-<div class="data-card-container">
+
     <div class="data-card">
-        <h3 
+        <div 
         class="title"
         [ngStyle]="{'color': color}"
-        >{{title}}</h3>
+        >{{title}}</div>
 
-        <h1 
+        <div 
         class="data"
         [ngStyle]="{'color': color}"
-        >{{data}} </h1>
+        >{{data}} </div>
 
-        <p
+        <div
         class="progress-bar"
         [ngStyle]="{'color': color}"
         >
         <mat-icon class="progress-mat-icon">arrow_drop_up</mat-icon>
         <span class="progress-text">"+5 % (vs. LW)"</span>
-        </p>
+        </div>
     </div>
-</div>
