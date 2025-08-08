@@ -1,10 +1,9 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { SearchBarComponent } from "../search-bar/search-bar.component";
-import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
-  imports: [SearchBarComponent, NgFor],
+  imports: [SearchBarComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
