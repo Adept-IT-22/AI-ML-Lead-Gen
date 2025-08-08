@@ -20,10 +20,23 @@
             </ng-container>
 
             <!-- Template for Action column -->
-            <ng-template #actionButtons>
-              <button class="btn" mat-button (click)="onView(row)">{{ buttons[0] }}</button>
-              <button class="btn" mat-button (click)="onUpdate(row)">{{ buttons[1] }}</button>
-            </ng-template>
+            
+              <ng-template #actionButtons>
+                <div class="action-buttons">
+                  <app-button 
+                  [buttonText]="'VIEW'"
+                  [icon]="'visibility'"
+                  [iconPosition]="'left'"
+                  ></app-button>
+
+                  <app-button 
+                  [buttonText]="'ACTION'"
+                  [icon]="'more_vert'"
+                  [iconPosition]="'left'"
+                  ></app-button>
+                </div>
+              </ng-template>
+              
           </td>
         </tr>
       </tbody>

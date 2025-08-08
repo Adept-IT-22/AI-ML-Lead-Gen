@@ -9,7 +9,7 @@ export interface Column {
 
 @Component({
   selector: 'app-leads',
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './leads.component.html',
   styleUrls: ['./leads.component.scss']
 })
@@ -19,6 +19,15 @@ export class LeadsTableComponent {
   @Input()columns: Column[] = [];
   @Input()data: any[] = [];
   @Input() buttons: string[] = [];
+  @Input() selectTitle: string = "";
+  @Input() selectOptions: string[] = [];
+  selectedOption: string = '';
+
+  onSelect(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedOption = selectElement.value;
+    console.log('Selected:', this.selectedOption);
+  }
 
  onView(row: any) {
   console.log('Viewing row:', row);

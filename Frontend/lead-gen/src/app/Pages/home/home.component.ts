@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { DataCardComponent } from "../../@shared/Components/data-card/data-card.component";
-import { SearchBarComponent } from '../../@shared/Components/search-bar/search-bar.component';
 import { DataFeedComponent } from "../../@shared/Components/data-feed/data-feed.component";
 import { LeadsTableComponent } from '../../@shared/Components/leads/leads.component';
 import { FilterComponent } from '../../@shared/Components/filter/filter.component';
 import { NgFor } from '@angular/common';
 import { ButtonComponent } from "../../@shared/Components/button/button.component";
+import { NavbarComponent } from '../../@shared/Components/navbar/navbar.component';
 
 @Component({
   selector: 'app-home',
-  imports: [SearchBarComponent, DataCardComponent, DataFeedComponent, FilterComponent, NgFor, LeadsTableComponent],
+  imports: [DataCardComponent, DataFeedComponent, FilterComponent, NgFor, LeadsTableComponent, NavbarComponent],
   standalone: true,
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'

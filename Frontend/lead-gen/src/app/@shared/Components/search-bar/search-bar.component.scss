@@ -1,31 +1,29 @@
 .search-component{
-    border: 1px solid #f9f9f9;
-    height: 1rem;
     display: flex;
-    justify-content: space-between;
+    justify-content:space-evenly;
     align-items: center;
     padding: 10px 10px;
+    gap: 2rem;
 }
 
 .search-bar{
-    width: 80%;
-    height: 100%;
     background: none;
     border:none;
     color: var(--color-white);
+    border: 1px solid #f9f9f9;
 }
 
 input{
     font-family: var(--font-family-base);
     font-weight: var(--font-weight-base);
-    font-size: var(--font-size-title);
+    font-size: var(--font-size-header);
     color: var(--color-white);
 }
 
 ::ng-deep input::placeholder {
     font-family: var(--font-family-base);
-    font-weight: var(--font-weight-base);
-    font-size: var(--font-size-title);
+    font-weight: var(--font-weight-header);
+    font-size: var(--font-size-header);
     color: var(--color-white);
 }
 

@@ -1,0 +1,31 @@
+.navbar-component{
+    display: flex;
+    gap: 16rem;
+    position: sticky;
+    top: 0%;
+    left: 0%;
+    border: 2px solid #f9f9f9;
+}
+
+.navbar-menu{
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.app-logo{
+    color: var(--color-yellow);
+}
+
+.search-bar{
+    margin-left: auto;
+}
+
+.menu-item{
+    color: var(--color-yellow);
+    font-family: var(--font-family-base);
+    font-weight: var(--font-weight-header);
+    font-size: var(--font-size-header);
+    cursor: pointer;
+    text-decoration: underline;
+}
