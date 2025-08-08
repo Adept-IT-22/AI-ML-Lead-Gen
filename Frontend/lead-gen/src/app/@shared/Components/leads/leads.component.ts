@@ -21,6 +21,7 @@ export class LeadsTableComponent {
   @Input() buttons: string[] = [];
   @Input() selectTitle: string = "";
   @Input() selectOptions: string[] = [];
+  @Input() filters: { [key: string]: string } = {};
   selectedOption: string = '';
 
   onSelect(event: Event): void {
