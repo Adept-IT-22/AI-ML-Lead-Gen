@@ -1,7 +1,6 @@
 .leads-component {
   color: var(--color-yellow);
-  margin-top: 1rem;
-  border: 1px solid #f9f9f9;
+  border: 2px solid #f9f9f9;
 
   .lead-table {
     width: 100%;
@@ -10,7 +9,7 @@
       width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
-
+      
       th, td {
         padding: 12px;
         border-top: 1px solid #ccc;
@@ -18,6 +17,7 @@
         border-left: none;
         border-right: none;
         text-align: left;
+        
       }
 
       th {
@@ -30,9 +30,14 @@
         background-color: var(--color-black);
         }
 
+      tbody tr{
+        width: 100%;
+      }
+
       tbody tr:hover{
         background-color: var(--color-yellow);
-        color: var(--color-green)
+        color: var(--color-green);
+        cursor: pointer;
       }
       }
     }
@@ -64,3 +69,10 @@ thead tr th{
     gap: 1rem;
     padding:  0px 16px;
 }
+
+.action-buttons{
+  display: flex;
+}
+
+
+

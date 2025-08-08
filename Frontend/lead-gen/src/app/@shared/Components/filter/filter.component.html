@@ -1,7 +1,7 @@
 <div class="leads-filter">
     <div class="custom-select-wrapper">
         <select class="option" (change)="onSelect($event)">
-            <option value="" disabled selected>Select {{ title.toLowerCase() }}</option>
+            <option value="" disabled selected>{{ title.toUpperCase() }}</option>
             <option *ngFor="let opt of options" [value]="opt">{{ opt }}</option>
         </select>
     </div>

@@ -1,0 +1,15 @@
+<nav class="navbar-component">
+    <div class="app-logo">
+        <img src="Adept.jpg" alt="Adept Logo"/>
+    </div>
+
+    <div class="navbar-menu">
+        <a class="menu-item" *ngFor="let item of menuItems">
+            {{item}}
+        </a>
+    </div>
+
+    <div class="search-bar">
+        <app-search-bar></app-search-bar>
+    </div>
+</nav>
