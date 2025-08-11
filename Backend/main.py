@@ -2,6 +2,7 @@ import json
 import aiofiles
 import asyncio
 import logging
+import cProfile
 from typing import List, Dict, Any, Awaitable, Union, Callable
 from ingestion_module.funding.finsmes.fetch import main as finsmes_main
 from ingestion_module.funding.tech_eu.fetch import main as tech_eu_main
@@ -83,7 +84,7 @@ async def main():
     ingestion_to_normalization_queue = asyncio.Queue()
 
     #========1.3 Enqueue ingestion result values if they're not exceptions=====
-    logger.info("Adding ingestion module results to queue")
+    logger.info("Adding ingestion module results to queue 🚂")
     #Add {"finsmes": {}, "tech_eu": {}, "eventbrite": {}}
     for name, result in results.items():
         if not isinstance(result, Exception) and isinstance(result, dict) and result.get("type"):
@@ -125,4 +126,4 @@ async def main():
     return "Ingestion and Normalization Done"
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    cProfile.run(asyncio.run(main()), sort="cumtime")
