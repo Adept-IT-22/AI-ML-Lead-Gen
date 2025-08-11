@@ -1,9 +1,10 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { SearchBarComponent } from "../search-bar/search-bar.component";
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
-  imports: [SearchBarComponent],
+  imports: [SearchBarComponent, RouterLink],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
