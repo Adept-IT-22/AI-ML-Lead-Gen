@@ -4,7 +4,8 @@
 
   .lead-table {
     width: 100%;
-    max-height: 250px; /* adjust height for ~5 rows */
+    /* adjust height for ~5 rows */
+    max-height: 250px; 
     overflow-y: auto;
 
     table {
