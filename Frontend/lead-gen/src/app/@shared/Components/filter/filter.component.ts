@@ -1,6 +1,8 @@
+//filter.component.ts
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-filter',
@@ -10,13 +12,18 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './filter.component.scss'
 })
 export class FilterComponent {
-  @Input() title: string = "";
+   @Input() title: string = "";
   @Input() options: string[] = [];
+  @Input() filterKey: string = ""; // key to identify which column this filter applies to
+
+  @Output() filterChanged = new EventEmitter<{ key: string, value: string }>();
+
   selectedOption: string = '';
 
   onSelect(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     this.selectedOption = selectElement.value;
-    console.log('Selected:', this.selectedOption);
+    this.filterChanged.emit({ key: this.filterKey, value: this.selectedOption });
   }
 }
+
