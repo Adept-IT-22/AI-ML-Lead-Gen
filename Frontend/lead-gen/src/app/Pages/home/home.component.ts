@@ -47,8 +47,8 @@ export class HomeComponent {
     { no: '01', companyName: 'Acme Corp', status: 'MQL', dateUpdated: '2025-07-20', score: '85', source: 'Google News', industry: 'Fintech'},
     { no: '02', companyName: 'Innovate Inc', status: 'SQL', dateUpdated: '2025-07-23', score: '70', source: 'Tech.Eu', industry: 'Education'},
     { no: '03', companyName: 'Tech AI', status: 'MQL', dateUpdated: '2025-07-19', score: '81', source: 'HackerNews', industry: 'Defense'},
-    { no: '04', companyName: 'Tesla', status: 'MQL', dateUpdated: '2025-08-08', score: '93', source: 'finSMES', industry: 'commerce'},
-    { no: '05', companyName: 'adept', status: 'SQL', dateUpdated: '2025-08-02', score: '78', source: 'crunchbase', industry: 'education'},
+    { no: '04', companyName: 'Terraform', status: 'MQL', dateUpdated: '2025-08-08', score: '93', source: 'FinSMES', industry: 'Commerce'},
+    { no: '05', companyName: 'AI Ventures', status: 'SQL', dateUpdated: '2025-08-02', score: '78', source: 'Crunchbase', industry: 'Education'},
     { no: '07', companyName: 'Tech AI', status: 'MQL', dateUpdated: '2025-08-01', score: '56', source: 'HackerNews', industry: 'Defense'},
   ];
 
