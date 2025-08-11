@@ -1,10 +1,5 @@
 <div class="home-component">
-    <!--Navbar-->
-    <div class="navbar">
-        <app-navbar></app-navbar>
-    </div>
-
-    <!--Data Cards-->
+       <!--Data Cards-->
     <div class="data-cards">
         <app-data-card
         *ngFor="let stat of stats"
@@ -16,10 +11,14 @@
 
     <!--Filters-->
     <div class="lead-filters">
-        <app-filter [title]="'BY DATE'" [options]="['Today', 'This Week', 'This Month']"></app-filter>
-        <app-filter [title]="'BY SOURCE'"[options]="['Funding', 'Hiring', 'Events']"></app-filter>
-        <app-filter [title]="'BY STATUS'" [options]="['Total Leads','MQLs', 'SQLs']"></app-filter>
-        <app-filter [title]="'BY SCORE'" [options]="['70s', '80s', '90s']"></app-filter>
+        
+        <ng-container *ngFor="let filter of filters">
+            <app-filter 
+            [title]="filter.optionType" 
+            [options]="filter.options" 
+            [filterKey]="filter.key"
+            (filterChanged)="onFilterChange($event)"></app-filter>
+        </ng-container>
     </div>
 
     <!--Lead List-->
@@ -27,18 +26,11 @@
         <app-leads
             [title]="'LEAD LIST'"
             [columns]="leadColumns"
-            [data]="leadData"
+            [data]="filteredLeads"
             [buttons]="['View', 'Update']"
             
         ></app-leads>
-    </div>
-
-    <!--Data Feed-->
     <div class="data-feed">
-        <app-data-feed
-        [title]="'RECENT ACTIVITY'"
-        [data]="activity_feed"
-        ></app-data-feed>
         
         <app-data-feed
         [title]="'RELEVANT NEWS FEED'"
