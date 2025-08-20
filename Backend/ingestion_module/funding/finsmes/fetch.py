@@ -152,7 +152,13 @@ async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, li
 async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronously to avoid blocking
     logger.info("Fetching from FinSMEs...")
     current_time = time.perf_counter()
-    async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/115.0 Safari/537.36"
+    }
+
+    async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, headers=headers) as client:
         newest_sitemap = await find_newest_sitemap(client, URL)
         if newest_sitemap:
             ai_urls = await fetch_ai_funding_article_links(client, newest_sitemap)

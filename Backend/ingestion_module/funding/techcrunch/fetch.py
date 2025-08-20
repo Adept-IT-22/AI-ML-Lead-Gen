@@ -73,6 +73,7 @@ async def traverse_sitemap(client:httpx.AsyncClient, url: str)->Dict[str, List[A
 
 async def get_paragraphs(client: httpx.AsyncClient, urls: List[str])->Dict[str, List[Any]]:
     logger.info("Getting paragraphs from urls...")
+    logger.info(f"The URLs are: {urls}")
 
     url_paragraph_dict = {"urls": [], "paragraphs": []}
 
@@ -87,7 +88,7 @@ async def get_paragraphs(client: httpx.AsyncClient, urls: List[str])->Dict[str, 
             url, paragraphs = await task
             url_paragraph_dict["urls"].append(url if url is not None else "")
             url_paragraph_dict["paragraphs"].append('\n'.join(paragraphs) if paragraphs is not None else "")
-
+        
         logger.info("Done getting paragraphs from urls")
         return url_paragraph_dict
 

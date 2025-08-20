@@ -64,7 +64,7 @@ async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str
             event_data["event_link"].append(event.get("url", ""))
             event_data["event_id"].append(event.get("eventbrite_event_id", ""))
             event_data["event_summary"].append(event.get("summary", ""))
-            event_data["event_is_online"].append(event.get("is_online_event", "").lower() == "true")
+            event_data["event_is_online"].append(event.get("is_online_event", "") == "true")
             event_data["event_organizer_id"].append(event.get("primary_organizer_id", ""))
             event_tags = [tag.get("display_name", "") for tag in event.get("tags", [])]
             event_data["event_tags"].append(event_tags)
@@ -84,4 +84,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
