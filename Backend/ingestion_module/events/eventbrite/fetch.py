@@ -72,12 +72,6 @@ async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str
         event_data["source"] = "Eventbrite"
 
         logger.info("Done fetching Eventbrite events")
-
-        logger.info("Logging eventbrite info to file")
-        async with aiofiles.open("eventbrite_data.txt", "a") as file:
-            await file.writelines(json.dumps(event_data, indent=2))
-        logger.info("Done logging eventbrite info to file")
-
         return event_data
 
     except Exception as e:

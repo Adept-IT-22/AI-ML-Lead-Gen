@@ -66,6 +66,8 @@ That is because:
 + **XML Parsing** - As sitemaps are done in XML. Done using lxml as it's faster than BeautifulSoup due to its dependencies on C library's under the hood.
 + **Gemini 2.5 Flash** - AI model used to go through paragraphs and extract meaningful based on the data structures in the utils folder.
 + **Semaphores** - Used while making API calls to Gemini to ensure only 4 concurrent request can be made in an attempt to avoid the ResourceExhaustedException.
++ **Apollo Organization Search API** - Used to get a company's website which we will use to enrich that company's data
++ **Apollo Bulk Organization Enrichment API** - Used to enrich 10 companies at a time. This means less network overhead due to reduced network requests
 
 ### Databases Used
 

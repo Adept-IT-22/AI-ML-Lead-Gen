@@ -181,13 +181,6 @@ async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronousl
 
             llm_results["source"] = "FinSMEs"
 
-            #Write llm results to file
-            logger.info("Logging results to file....")
-            async with aiofiles.open("finSMEs_data.txt", "a") as file:
-                await file.writelines(json.dumps(llm_results, indent=2))
-
-            logger.info("Done logging results to file")
-        
         else:
             logger.warning("AI extraction for FinSMEs returned no data. No logging will happen")
 

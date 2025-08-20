@@ -2,7 +2,7 @@ import json
 import aiofiles
 import asyncio
 import logging
-import cProfile
+import yappi
 from typing import List, Dict, Any, Awaitable, Union, Callable
 from ingestion_module.funding.finsmes.fetch import main as finsmes_main
 from ingestion_module.funding.tech_eu.fetch import main as tech_eu_main
@@ -123,7 +123,26 @@ async def main():
             async with aiofiles.open(f"{file_name}.txt", "a") as hiring_file:
                 await hiring_file.write(json.dumps(normalized_hiring_data, indent=2))
 
-    return "Ingestion and Normalization Done"
+    #==============3. ENRICHMENT================
+    #2.1 =========Fetch from queue============
 
 if __name__ == "__main__":
-    cProfile.run(asyncio.run(main()), sort="cumtime")
+    logger.info("Application running....")
+    yappi.set_clock_type("WALL")
+    yappi.start(builtins=True)
+    try:
+        asyncio.run(main())
+    finally:
+        yappi.stop()
+
+    profile_stats = yappi.get_func_stats()
+    logger.info("========PROFILED STATS=======")
+    profile_stats.print_all()
+
+    profile_stats_filename = "profile_stats"
+    profile_stats_file_type = "pstat"
+    logger.info(f"Saving profile stats to file {profile_stats_filename}..")
+    profile_stats.save(f"{profile_stats_filename}.{profile_stats_file_type}", type=profile_stats_file_type)
+    logger.info("Profile saved")
+
+    logger.info("Application Done")

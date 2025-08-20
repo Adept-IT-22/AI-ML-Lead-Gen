@@ -145,11 +145,6 @@ async def main():
                     
             llm_results["source"] = "TechCrunch"
 
-            #Add results to file
-            logger.info("Adding llm results to file...")
-            async with aiofiles.open("techcrunch_data.txt", "a") as file:
-                await file.writelines(json.dumps(llm_results, indent=2))
-            logger.info("Done writing llm_results to file")
         else:
             logger.warning("AI extraction for TechCrunch returned no data. No logging will happen")
 
