@@ -80,8 +80,9 @@ async def main():
     """
     results = await run_ingestion_modules()
 
-    #========1.2 Create ingestion to normalization queue===========
+    #========1.2 Create queues===========
     ingestion_to_normalization_queue = asyncio.Queue()
+    normalization_to_enrichment_queue = asyncio.Queue()
 
     #========1.3 Enqueue ingestion result values if they're not exceptions=====
     logger.info("Adding ingestion module results to queue 🚂")
@@ -96,7 +97,7 @@ async def main():
 
     #==============2. NORMALIZATION================
     #2.1 =========Fetch from queue============
-    logger.info("Normalizing ingested data")
+    logger.info("Normalizing ingested data....")
     while not ingestion_to_normalization_queue.empty():
         name, data = await ingestion_to_normalization_queue.get()
         logger.info(f"Fetched data from {name}. Queue size is now: {ingestion_to_normalization_queue.qsize()}")
@@ -122,9 +123,45 @@ async def main():
             file_name = data.get("source")
             async with aiofiles.open(f"{file_name}.txt", "a") as hiring_file:
                 await hiring_file.write(json.dumps(normalized_hiring_data, indent=2))
+    logger.info("Done normalizing ingested data")
+
+    #2.3 ==========Put In Normalization-Enrichment Queue===========
+    logger.info("Adding normalized data to queue...")
+    await normalization_to_enrichment_queue.put(normalized_event_data)
+    await normalization_to_enrichment_queue.put(normalized_funding_data)
+    await normalization_to_enrichment_queue.put(normalized_hiring_data)
+    logger.info("Done adding normalized data to queue")
 
     #==============3. ENRICHMENT================
     #2.1 =========Fetch from queue============
+    logger.info("Enriching normalized data....")
+    while not normalization_to_enrichment_queue.empty():
+        data_to_enrich = await normalization_to_enrichment_queue.get()
+        logger.info(f"Fetched data from normaliztion_to_enrichment queue. Queue size is now {normalization_to_enrichment_queue.qsize()}")
+    #2.2 ========Organization Search to Get Org Website=========
+        company_name = data_to_enrich.get("company_name") if company_name in data_to_enrich else ""
+
+    #2.3 ========Bulk Org Enrichment===========
+    #2.4 ========Bulk People Enrichment========
+
+
+    #===============PROFILING==============
+    #Do app profiling
+    await handle_profiling()
+
+async def handle_profiling():
+    profile_stats = yappi.get_func_stats()
+    logger.info("========PROFILED STATS=======")
+    async with aiofiles.open("yappi_stats.txt", "a") as file:
+        await file.write(json.dumps(profile_stats, indent=2))
+        await file.write("\n")
+
+    profile_stats_filename = "profile_stats"
+    profile_stats_file_type = "pstat"
+    logger.info(f"Saving profile stats to file {profile_stats_filename}..")
+    profile_stats.save(f"{profile_stats_filename}.{profile_stats_file_type}", type=profile_stats_file_type)
+    logger.info("Profile saved")
+    return
 
 if __name__ == "__main__":
     logger.info("Application running....")
@@ -134,15 +171,5 @@ if __name__ == "__main__":
         asyncio.run(main())
     finally:
         yappi.stop()
-
-    profile_stats = yappi.get_func_stats()
-    logger.info("========PROFILED STATS=======")
-    profile_stats.print_all()
-
-    profile_stats_filename = "profile_stats"
-    profile_stats_file_type = "pstat"
-    logger.info(f"Saving profile stats to file {profile_stats_filename}..")
-    profile_stats.save(f"{profile_stats_filename}.{profile_stats_file_type}", type=profile_stats_file_type)
-    logger.info("Profile saved")
 
     logger.info("Application Done")
