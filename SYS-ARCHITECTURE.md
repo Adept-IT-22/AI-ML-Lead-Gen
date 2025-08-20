@@ -34,9 +34,9 @@ Below are the phases through which data will flow through the system:
         + Currencies - ISO 4217
 
 + **Enrichment Phase**
-    + Here the data is fetched from the normalization queue as a clean/formatted dictionary and the company name from the dictionary is used to fetch company details from an API.
+    + Here the data is fetched from the normalization queue as a clean/formatted dictionary and the company name from the dictionary is used to fetch company details from the Apollo Bulk Organization Enrichment API.
     
-    + The ouput of this phase is a dictionary similar to the one from the normalization phase but with more company information.
+    + The output of this phase is a dictionary similar to the one from the normalization phase but with more company information.
 
 + **Storage Phase**
     + After the data has been enriched it's time for it to be stored. This will be done in a:

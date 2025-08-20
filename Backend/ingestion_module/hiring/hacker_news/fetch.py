@@ -115,9 +115,6 @@ async def main():
         llm_results["company_decision_makers"].extend(jobs_arranged_and_filtered["by"])
         llm_results["source"] = "HackerNews"
 
-        #Write llm results to file
-        async with aiofiles.open("hackernews_data.txt", "a") as file:
-            await file.writelines(json.dumps(llm_results, indent=2))
     else:
         logger.warning("AI extraction for HackerNews returned no data. No logging will happen")
 

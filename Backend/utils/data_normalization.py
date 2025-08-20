@@ -84,7 +84,7 @@ def normalize_currency(currency: str)->str:
     
     try: 
         normalized_currency = pycountry.currencies.lookup(currency)
-        return normalize_currency.name
+        return normalized_currency.name
     except:
         return currency.strip().lower()
 
