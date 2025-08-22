@@ -1,4 +1,5 @@
 import json
+import httpx
 import aiofiles
 import asyncio
 import logging
@@ -12,9 +13,10 @@ from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 from normalization_module.event_normalization import normalize_event_data
 from normalization_module.funding_normalization import normalize_funding_data
 from normalization_module.hiring_normalization import normalize_hiring_data
+from enrichment_module.organization_search import org_search as apollo_org_search
+from enrichment_module.bulk_org_enrichment import bulk_org_enrichment 
 
 logger = logging.getLogger()
-
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 #This function pairs a name with a coroutine (if all goes well) or with an exception otherwise 
@@ -98,51 +100,103 @@ async def main():
     #==============2. NORMALIZATION================
     #2.1 =========Fetch from queue============
     logger.info("Normalizing ingested data....")
+    all_normalized_data = []
+
     while not ingestion_to_normalization_queue.empty():
         name, data = await ingestion_to_normalization_queue.get()
         logger.info(f"Fetched data from {name}. Queue size is now: {ingestion_to_normalization_queue.qsize()}")
 
     #2.2 ==========Normalize data ===============
-        if isinstance(data, dict) and data.get("type") == "event": 
-            normalized_event_data = await normalize_event_data(data)
-            logger.info(f"Normalized event data from {name}")
-            file_name = data.get("source")
-            async with aiofiles.open(f"{file_name}.txt", "a") as event_file:
-                await event_file.write(json.dumps(normalized_event_data, indent=2))
+        data_type = data.get("type")
+        if isinstance(data, dict) and data_type == "event": 
+            normalized_data= await normalize_event_data(data)
 
-        elif isinstance(data, dict) and data.get("type") == "funding":
-            normalized_funding_data = await normalize_funding_data(data)
-            logger.info(f"Normalized funding data from {name}")
-            file_name = data.get("source")
-            async with aiofiles.open(f"{file_name}.txt", "a") as funding_file:
-                await funding_file.write(json.dumps(normalized_funding_data, indent=2))
+        elif isinstance(data, dict) and data_type == "funding":
+            normalized_data = await normalize_funding_data(data)
 
-        elif isinstance(data, dict) and data.get("type") == "hiring":
-            normalized_hiring_data = await normalize_hiring_data(data)
-            logger.info(f"Normalized hiring data from {name}")
-            file_name = data.get("source")
-            async with aiofiles.open(f"{file_name}.txt", "a") as hiring_file:
-                await hiring_file.write(json.dumps(normalized_hiring_data, indent=2))
+        elif isinstance(data, dict) and data_type == "hiring":
+            normalized_data = await normalize_hiring_data(data)
+
+        all_normalized_data.append(normalized_data)
+        logger.info(f"Normalized {data_type} data from {name}")
+
+    async with aiofiles.open("normalized.txt", "a") as file:
+        await file.write(json.dumps(all_normalized_data, indent=2))
+
     logger.info("Done normalizing ingested data")
 
     #2.3 ==========Put In Normalization-Enrichment Queue===========
     logger.info("Adding normalized data to queue...")
-    await normalization_to_enrichment_queue.put(normalized_event_data)
-    await normalization_to_enrichment_queue.put(normalized_funding_data)
-    await normalization_to_enrichment_queue.put(normalized_hiring_data)
-    logger.info("Done adding normalized data to queue")
+    await normalization_to_enrichment_queue.put(all_normalized_data)
+    logger.info(f"Done adding {len(all_normalized_data)} normalized items to queue")
 
     #==============3. ENRICHMENT================
     #2.1 =========Fetch from queue============
     logger.info("Enriching normalized data....")
     while not normalization_to_enrichment_queue.empty():
-        data_to_enrich = await normalization_to_enrichment_queue.get()
-        logger.info(f"Fetched data from normaliztion_to_enrichment queue. Queue size is now {normalization_to_enrichment_queue.qsize()}")
-    #2.2 ========Organization Search to Get Org Website=========
-        company_name = data_to_enrich.get("company_name") if company_name in data_to_enrich else ""
+        data_to_enrich_list = await normalization_to_enrichment_queue.get()
+        logger.info(f"Fetched{len(data_to_enrich_list)} items from normaliztion_to_enrichment queue.")
+    
+        async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
+            orgs_to_search = []
+            searched_orgs = []
 
+            for normalized_company in data_to_enrich_list:
+                company_names = normalized_company.get("company_name", [])
+                orgs_to_search.extend(company_names)
+
+    #2.2 =======Organization Search to Get Org Website=========
+            logger.info("Organizational search started...")
+
+            searched_tasks = [apollo_org_search(client=client, company_name=name) for name in company_names]
+            search_results = await asyncio.gather(*searched_tasks, return_exceptions=True)
+            
+            for result in search_results:
+                if isinstance(result, Exception):
+                    logger.error(f"Search task failed {result}")
+                else:
+                    searched_orgs.append(result)
+
+            logger.info(f"Completed organization seach for {len(searched_orgs)} companies")
+
+            async with aiofiles.open(f"org_search.txt", "a") as org_search_file:
+                await org_search_file.write(json.dumps(searched_orgs, indent=2))
+
+            logger.info("Completed organizational search")
+    
     #2.3 ========Bulk Org Enrichment===========
+            logger.info("Org Enrichment started...")
+            enriched_orgs = []
+
+            #Batch orgs in groups of 10
+            searched_orgs_length = len(searched_orgs)
+            for i in range(0, searched_orgs_length, 10):
+                batch = searched_orgs[i: i+10]
+
+            #EXtract websites from batch
+            org_websites = []
+            for org_data in batch:
+                if 'organizations' in org_data and org_data['organizations']:
+                    logger.info(f"Enriching {org_data.get("organizations")[0].get("name")}")
+                    website = org_data.get('organizations')[0].get('website_url')
+                    if website:
+                        org_websites.append(website)
+            
+            if org_websites:
+                try:
+                    enriched_batch= await bulk_org_enrichment(client=client, company_websites=org_websites)
+                    enriched_orgs.extend(enriched_batch)
+                except Exception as e:
+                    logger.error(f"Failed bulk enrichment for bulk starting at index {i}")
+            
+            async with aiofiles.open(f"org_enrichment.txt", "a") as org_enrichment_file:
+                await org_enrichment_file.write(json.dumps(enriched_orgs, indent=2))
+
+            logger.info("Completed Org Enrichment")
     #2.4 ========Bulk People Enrichment========
+
+
+    #==============4. STORAGE================
 
 
     #===============PROFILING==============
