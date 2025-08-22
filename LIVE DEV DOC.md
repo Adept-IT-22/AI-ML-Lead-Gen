@@ -75,6 +75,14 @@ That is because:
 ### Databases Used
 
 _Insert database used here_
++ **Relational DB**: Postgres (version...)
+
+    + **DB Name** - Lead Gen
+    + **DB Tables** - Companies
+    + **DB Columns per Table**
+        + Companies - id, apollo_id, name, website_url, linkedin_url, phone, founded_year, market_cap, industry, estimated_num_employees, keywords, organization_revenue, city, state, country, short_description, 
+
++ **Graph DB**: _To Be Determined_
 
 ### Commit Message Format
 
