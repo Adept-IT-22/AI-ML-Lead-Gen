@@ -15,6 +15,7 @@ from normalization_module.funding_normalization import normalize_funding_data
 from normalization_module.hiring_normalization import normalize_hiring_data
 from enrichment_module.organization_search import org_search as apollo_org_search
 from enrichment_module.bulk_org_enrichment import bulk_org_enrichment 
+from enrichment_module.people_search import people_search
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -185,24 +186,52 @@ async def main():
             if org_websites:
                 try:
                     enriched_batch= await bulk_org_enrichment(client=client, company_websites=org_websites)
-                    enriched_orgs.extend(enriched_batch)
+                    enriched_orgs.append(enriched_batch)
                 except Exception as e:
                     logger.error(f"Failed bulk enrichment for bulk starting at index {i}")
             
-            async with aiofiles.open(f"org_enrichment.txt", "a") as org_enrichment_file:
+            async with aiofiles.open("org_enrichment.txt", "w") as org_enrichment_file:
                 await org_enrichment_file.write(json.dumps(enriched_orgs, indent=2))
 
             logger.info("Completed Org Enrichment")
-    #2.4 ========Bulk People Enrichment========
 
+    #2.4 ========People Search to get Emails========
+            logger.info("People Search started...")
 
+            #Get org ids
+            org_ids = []
+            for org in enriched_orgs:
+                org_id = org.get("organizations").get("id")
+                org_ids.append(org_id)
+
+            #Call people search and get people's names and emails
+            found_people_names = []
+            found_people_emails = []
+            found_people_titles = []
+            found_people_orgs = []
+            searched_people = people_search(client=client, org_ids=org_ids)
+            for people in searched_people.get("people", []):
+                found_people_names.append(people.get("name", ""))
+                found_people_emails.append(people.get("email", ""))
+                found_people_titles.append(people.get("title", ""))
+                found_people_orgs.append(people.get("employment_history")[0].get("organization_name", ""))
+
+            found_people_details = {
+                "names": found_people_names,
+                "emails": found_people_emails,
+                "titles": found_people_titles,
+                "orgs": found_people_orgs
+            }
+
+            async with aiofiles.open("people_search.txt", "w") as people_search_file:
+                people_search_file.write(json.dumps(found_people_details, indent=2))
+
+            logger.info("Completed people Search")
     #==============4. STORAGE================
 
 
-    #===============PROFILING==============
-    #Do app profiling
-    await handle_profiling()
 
+#Profiling Code
 async def handle_profiling():
     profile_stats = yappi.get_func_stats()
     logger.info("========PROFILED STATS=======")
@@ -219,11 +248,5 @@ async def handle_profiling():
 
 if __name__ == "__main__":
     logger.info("Application running....")
-    yappi.set_clock_type("WALL")
-    yappi.start(builtins=True)
-    try:
-        asyncio.run(main())
-    finally:
-        yappi.stop()
-
+    asyncio.run(main())
     logger.info("Application Done")

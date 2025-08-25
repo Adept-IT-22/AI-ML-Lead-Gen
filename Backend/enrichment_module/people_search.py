@@ -1,0 +1,62 @@
+import time
+import httpx
+import logging
+import asyncio
+from typing import Dict, Any, List
+from config.apollo_config import headers as APOLLO_HEADERS
+
+logger = logging.getLogger()
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+PEOPLE_SEARCH_URL = "https://api.apollo.io/api/v1/mixed_people/search"
+
+async def people_search(
+        client: httpx.AsyncClient, 
+        org_ids: List[str], 
+        api_url: str = PEOPLE_SEARCH_URL, 
+        headers: Dict[str, str] = APOLLO_HEADERS
+    )->Dict[str, Any]:
+    logger.info(f"Performing people search...")
+
+    #Payload going into request body
+    payload = {
+        "person_titles": ["ceo", "sales", "founder"],
+        "include_similar_titles": True,
+        "person_seniorities": ["owner", "founder", "c-suite", "partner", "vp", "head", "director", "manager"],
+        "contact_email_status": ["verified", "unverified", "likely to engage"],
+        "organization_ids": org_ids,
+        "page": 1,
+        "per_page": 10
+    }
+
+    try:
+        #API call then check for errors
+        response = await client.post(
+            url=api_url, 
+            headers=headers, 
+            json=payload
+        )
+        response.raise_for_status()
+
+        logger.info(f"Completed people search")
+        return response.json()
+    
+    except Exception as e:
+        logger.error(f"Couldnt perform people search: {str(e)}")
+        return {"Error": str(e)}
+
+if __name__ == "__main__":
+    async def main():
+        start_time = time.perf_counter()
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            results = await people_search(
+                client=client, 
+                org_ids=["64523d489cad5100a35209c7", "5569f0e5736964254fc3bd00"], 
+                org_domains=["coloop.ai", "beyondtype1.org"])
+            logger.info(f"People search results are: \n{results}")
+
+        duration = time.perf_counter() - start_time
+        logger.info(f"This task took {duration:.2f} seconds")
+        return
+
+    asyncio.run(main())

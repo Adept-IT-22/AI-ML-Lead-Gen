@@ -69,6 +69,7 @@ That is because:
     + **PS: FOR THE SECTION BELOW INCLUDE YOUR APIKEY IN THE REQUEST HEADER, NOT THE URL**
 + **Apollo Organization Search API** - Used to get a company's website which we will use to enrich that company's data
 + **Apollo Bulk Organization Enrichment API** - Used to enrich 10 companies at a time. This means less network overhead due to reduced network requests
++ **People Search** - Used to search for people from a particular organization
 + **Apollo Bulk People Enrichment** - Used to get people's emails and phone numbers. **REMEMBER TO USE THE `reveal_personal_emails` and `reveal_phone_number` PARAMETERS**
 
 
