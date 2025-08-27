@@ -49,6 +49,7 @@ async def traverse_sitemap(client:httpx.AsyncClient, url: str)->Dict[str, List[A
 
         for url in root.findall('ns:url', namespaces):
             article_link = url.find('ns:loc', namespaces).text
+            logger.info(f"The article link is {article_link}")
 
             if article_link is not None and ("ai-" in article_link and "raise" in article_link):
                 article_data["article_link"].append(article_link)
@@ -61,6 +62,7 @@ async def traverse_sitemap(client:httpx.AsyncClient, url: str)->Dict[str, List[A
                 article_data["article_title"].append(article_title if article_title is not None else "")
 
         logger.info("Sitemap traversal done")
+        logger.info(f"The article data is: {article_data}")
         return article_data
     except Exception as e:
         logger.error(f"Error traversing sitemap: {str(e)}")

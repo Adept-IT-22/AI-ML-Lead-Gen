@@ -136,7 +136,7 @@ async def main():
     logger.info("Enriching normalized data....")
     while not normalization_to_enrichment_queue.empty():
         data_to_enrich_list = await normalization_to_enrichment_queue.get()
-        logger.info(f"Fetched{len(data_to_enrich_list)} items from normaliztion_to_enrichment queue.")
+        logger.info(f"Fetched {len(data_to_enrich_list)} items from normaliztion_to_enrichment queue.")
     
         async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
             orgs_to_search = []
@@ -161,7 +161,7 @@ async def main():
             logger.info(f"Completed organization seach for {len(searched_orgs)} companies")
 
             async with aiofiles.open(f"org_search.txt", "a") as org_search_file:
-                await org_search_file.write(json.dumps(searched_orgs, indent=2))
+                await org_search_file.write(json.dumps(searched_orgs[0], indent=2))
 
             logger.info("Completed organizational search")
     
@@ -195,36 +195,48 @@ async def main():
 
             logger.info("Completed Org Enrichment")
 
-    #2.4 ========People Search to get Emails========
+    #2.4 ========People Search========
             logger.info("People Search started...")
 
             #Get org ids
             org_ids = []
-            for org in enriched_orgs:
-                org_id = org.get("organizations").get("id")
-                org_ids.append(org_id)
+            org_domains = []
+            for orgs in enriched_orgs:
+                org_data = orgs.get("organizations") #returns a list of dicts
+                for each_org in org_data:
+                    org_id = each_org.get("id")
+                    org_ids.append(org_id)
+                    org_domain = each_org.get("primary_domain")
+                    org_domains.append(org_domain)
+
+            logger.info(f"The org ids are {org_ids}")
+            logger.info(f"The org domains are {org_domains}")
 
             #Call people search and get people's names and emails
             found_people_names = []
+            found_people_numbers = []
             found_people_emails = []
             found_people_titles = []
             found_people_orgs = []
-            searched_people = people_search(client=client, org_ids=org_ids)
+            searched_people = await people_search(client=client, org_ids=org_ids, org_domains=org_domains)
+            logger.info(f"The people search results are: {searched_people}")
             for people in searched_people.get("people", []):
                 found_people_names.append(people.get("name", ""))
+                found_people_names.append(people.get("sanitized_phone", ""))
                 found_people_emails.append(people.get("email", ""))
                 found_people_titles.append(people.get("title", ""))
                 found_people_orgs.append(people.get("employment_history")[0].get("organization_name", ""))
 
             found_people_details = {
                 "names": found_people_names,
+                "numbers": found_people_numbers,
                 "emails": found_people_emails,
                 "titles": found_people_titles,
                 "orgs": found_people_orgs
             }
 
             async with aiofiles.open("people_search.txt", "w") as people_search_file:
-                people_search_file.write(json.dumps(found_people_details, indent=2))
+                await people_search_file.write(json.dumps(found_people_details, indent=2))
 
             logger.info("Completed people Search")
     #==============4. STORAGE================

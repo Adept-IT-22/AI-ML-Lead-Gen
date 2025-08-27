@@ -62,7 +62,7 @@ async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str
             event_data["event_country"].append(event.get("timezone", "").split("/")[0])
             event_data["event_city"].append(event.get("timezone", "").split("/")[1])
             event_data["event_link"].append(event.get("url", ""))
-            event_data["event_id"].append(event.get("eventbrite_event_id", ""))
+            event_data["event_id"].append(event.get("id", ""))
             event_data["event_summary"].append(event.get("summary", ""))
             event_data["event_is_online"].append(event.get("is_online_event", "") == "true")
             event_data["event_organizer_id"].append(event.get("primary_organizer_id", ""))
