@@ -13,6 +13,7 @@ PEOPLE_SEARCH_URL = "https://api.apollo.io/api/v1/mixed_people/search"
 async def people_search(
         client: httpx.AsyncClient, 
         org_ids: List[str], 
+        org_domains: List[str],
         api_url: str = PEOPLE_SEARCH_URL, 
         headers: Dict[str, str] = APOLLO_HEADERS
     )->Dict[str, Any]:
@@ -25,6 +26,7 @@ async def people_search(
         "person_seniorities": ["owner", "founder", "c-suite", "partner", "vp", "head", "director", "manager"],
         "contact_email_status": ["verified", "unverified", "likely to engage"],
         "organization_ids": org_ids,
+        "q_organization_domains_list": org_domains,
         "page": 1,
         "per_page": 10
     }

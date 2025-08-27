@@ -11,6 +11,7 @@ class EventData(TypedDict):
     event_id: List[str]
     event_summary: List[str]
     event_is_online: List[str]
+    event_organizer_id: List[str]
     event_tags: List[List[str]]
 
 fetched_event_data = {
@@ -24,5 +25,6 @@ fetched_event_data = {
     "event_id": [],
     "event_summary": [],
     "event_is_online": [],
+    "event_organizer_id": [],
     "event_tags": []
 }
