@@ -36,6 +36,7 @@ async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str
         "event_id": [],
         "event_summary": [],
         "event_is_online": [],
+        "event_organizer_id": [],
         "event_tags": []
         }
 
@@ -83,4 +84,6 @@ async def main():
         return await fetch_eventbrite_events(client, SEARCH_URL)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    events_data = asyncio.run(main())
+    print(json.dumps(events_data, indent=2))
+

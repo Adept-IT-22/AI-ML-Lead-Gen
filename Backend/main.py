@@ -5,6 +5,8 @@ import asyncio
 import logging
 import yappi
 from typing import List, Dict, Any, Awaitable, Union, Callable
+
+from utils.countries import countries
 from ingestion_module.funding.finsmes.fetch import main as finsmes_main
 from ingestion_module.funding.tech_eu.fetch import main as tech_eu_main
 from ingestion_module.funding.techcrunch.fetch import main as techcrunch_main
@@ -15,10 +17,13 @@ from normalization_module.funding_normalization import normalize_funding_data
 from normalization_module.hiring_normalization import normalize_hiring_data
 from enrichment_module.organization_search import org_search as apollo_org_search
 from enrichment_module.bulk_org_enrichment import bulk_org_enrichment 
+from enrichment_module.single_org_enrichment import single_org_enrichment
 from enrichment_module.people_search import people_search
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+MAX_EMPLOYEE_COUNT = 20
 
 #This function pairs a name with a coroutine (if all goes well) or with an exception otherwise 
 async def wrap(name: str, coroutine: Awaitable[Any] )->tuple[str, Union[Any, Exception]]:
@@ -166,51 +171,88 @@ async def main():
             logger.info("Completed organizational search")
     
     #2.3 ========Bulk Org Enrichment===========
-            logger.info("Org Enrichment started...")
-            enriched_orgs = []
+            logger.info("Bulk Org Enrichment started...")
+            bulk_enriched_orgs = []
 
             #Batch orgs in groups of 10
             searched_orgs_length = len(searched_orgs)
             for i in range(0, searched_orgs_length, 10):
                 batch = searched_orgs[i: i+10]
 
-            #EXtract websites from batch
-            org_websites = []
-            for org_data in batch:
-                if 'organizations' in org_data and org_data['organizations']:
-                    logger.info(f"Enriching {org_data.get("organizations")[0].get("name")}")
-                    website = org_data.get('organizations')[0].get('website_url')
-                    if website:
-                        org_websites.append(website)
+                #Extract websites from batch
+                bulk_org_websites = []
+                for bulk_org_data in batch:
+                    if 'organizations' in bulk_org_data and bulk_org_data['organizations']:
+                        logger.info(f"Enriching {bulk_org_data.get('organizations')[0].get('name')}")
+                        website = bulk_org_data.get('organizations')[0].get('website_url')
+                        if website:
+                            bulk_org_websites.append(website)
+                
+                #Perform enrichment on the batch
+                if bulk_org_websites:
+                    try:
+                        bulk_enriched_batch= await bulk_org_enrichment(client=client, company_websites=bulk_org_websites)
+                        bulk_enriched_orgs.append(bulk_enriched_batch)
+                    except Exception as e:
+                        logger.error(f"Failed bulk enrichment for bulk starting at index {i}: {str(e)}")
             
-            if org_websites:
-                try:
-                    enriched_batch= await bulk_org_enrichment(client=client, company_websites=org_websites)
-                    enriched_orgs.append(enriched_batch)
-                except Exception as e:
-                    logger.error(f"Failed bulk enrichment for bulk starting at index {i}")
+            async with aiofiles.open("bulk_org_enrichment.txt", "w") as bulk_org_enrichment_file:
+                await bulk_org_enrichment_file.write(json.dumps(bulk_enriched_orgs, indent=2))
+
+            logger.info("Completed Bulk Org Enrichment")
+
+    #2.4 ========Single Org Enrichment===========
+            logger.info("Single Org Enrichment started...")
+
+            funding_data = {
+                "total_funding": [],
+                "latest_funding_round_date": [],
+                "latest_funding_stage": [],
+                "latest_funding_amount": [],
+                "latest_funding_round_investors": []
+            }
+
+            #Filter necessary companies from bulk enrichment based on size and location
+            for single_org in bulk_enriched_orgs[0].get("organizations"):
+                org_size = single_org.get("estimated_num_employees", "") 
+                org_country = single_org.get("country", "")
+
+                all_countries = countries["North American Countries"].union(countries["European Countries"])
+                if org_size and org_size <= MAX_EMPLOYEE_COUNT and org_country in all_countries:
+                    org_domain = single_org.get("primary_domain")
+                    single_enriched_org = await single_org_enrichment(client=client, company_website=org_domain)
+
+                    #Extract funding data from enrichment results
+                    org_info = single_enriched_org.get("organization", {})
+                    funding_data["total_funding"].append(org_info.get("total_funding_printed", ""))
+                    funding_data["latest_funding_round_date"].append(org_info.get("latest_funding_round_date", ""))
+                    funding_data["latest_funding_stage"].append(org_info.get("latest_funding_stage", ""))
+
+                    funding_events = org_info.get("funding_events", {})
+                    if funding_events:
+                        amount = funding_events[0].get("amount", "")
+                        currency = funding_events[0].get("currency", "")
+                        funding_data["latest_funding_amount"].append(f"{amount}{currency}")
+                        funding_data["latest_funding_round_investors"].append(funding_events[0].get("investors", ""))
             
-            async with aiofiles.open("org_enrichment.txt", "w") as org_enrichment_file:
-                await org_enrichment_file.write(json.dumps(enriched_orgs, indent=2))
+            async with aiofiles.open("single_org_enrichment.txt", "w") as single_org_enrichment_file:
+                await single_org_enrichment_file.write(json.dumps(funding_data, indent=2))
 
-            logger.info("Completed Org Enrichment")
-
-    #2.4 ========People Search========
+            logger.info("Completed Single Org Enrichment")
+    
+    #2.5 ========People Search========
             logger.info("People Search started...")
 
             #Get org ids
             org_ids = []
             org_domains = []
-            for orgs in enriched_orgs:
+            for orgs in bulk_enriched_orgs:
                 org_data = orgs.get("organizations") #returns a list of dicts
                 for each_org in org_data:
                     org_id = each_org.get("id")
                     org_ids.append(org_id)
                     org_domain = each_org.get("primary_domain")
                     org_domains.append(org_domain)
-
-            logger.info(f"The org ids are {org_ids}")
-            logger.info(f"The org domains are {org_domains}")
 
             #Call people search and get people's names and emails
             found_people_names = []
@@ -219,7 +261,6 @@ async def main():
             found_people_titles = []
             found_people_orgs = []
             searched_people = await people_search(client=client, org_ids=org_ids, org_domains=org_domains)
-            logger.info(f"The people search results are: {searched_people}")
             for people in searched_people.get("people", []):
                 found_people_names.append(people.get("name", ""))
                 found_people_names.append(people.get("sanitized_phone", ""))
@@ -239,6 +280,7 @@ async def main():
                 await people_search_file.write(json.dumps(found_people_details, indent=2))
 
             logger.info("Completed people Search")
+
     #==============4. STORAGE================
 
 

@@ -1,7 +1,61 @@
 {
-  "names": [],
+  "names": [
+    "Jack Bowen",
+    "",
+    "Sebastian Peralta",
+    "",
+    "Michael Fester",
+    "",
+    "Puneet Sukhija",
+    "",
+    "Xavier Chi",
+    "",
+    "Marie Schneegans",
+    "",
+    "Roop Pal",
+    "",
+    "Jostein Engen",
+    "",
+    "Jon Stanley",
+    "",
+    "Michael Yerkes",
+    ""
+  ],
   "numbers": [],
-  "emails": [],
-  "titles": [],
-  "orgs": []
+  "emails": [
+    "email_not_unlocked@domain.com",
+    "email_not_unlocked@domain.com",
+    "email_not_unlocked@domain.com",
+    "email_not_unlocked@domain.com",
+    "email_not_unlocked@domain.com",
+    "email_not_unlocked@domain.com",
+    "email_not_unlocked@domain.com",
+    "email_not_unlocked@domain.com",
+    "email_not_unlocked@domain.com",
+    "email_not_unlocked@domain.com"
+  ],
+  "titles": [
+    "Founder",
+    "Founder",
+    "Co-Founder",
+    "Co-Founder",
+    "Co-Founder",
+    "Co-Founder",
+    "Co-Founder",
+    "Co-Founder/ Salgsdirekt\u00f8r",
+    "Sales Manager",
+    "Director of Sales"
+  ],
+  "orgs": [
+    "CoLoop",
+    "Mbodi",
+    "14.ai",
+    "Bild AI",
+    "Mbodi AI",
+    "14.ai",
+    "Bild AI",
+    "Prosper AI",
+    "WEAVE Communications",
+    "Weave"
+  ]
 }

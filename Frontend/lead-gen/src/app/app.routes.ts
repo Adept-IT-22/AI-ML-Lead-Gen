@@ -4,7 +4,7 @@ import { AnalyticsComponent } from './Pages/analytics/analytics.component';
 
 export const routes: Routes = [
     {
-        path: 'home',
+        path: '',
         component: HomeComponent
     },    
     {
