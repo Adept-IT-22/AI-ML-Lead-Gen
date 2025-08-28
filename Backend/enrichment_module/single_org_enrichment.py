@@ -8,32 +8,23 @@ from config.apollo_config import headers as APOLLO_HEADERS
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-BULK_ORG_ENRICHMENT_URL = "https://api.apollo.io/api/v1/organizations/bulk_enrich"
-RATE_LIMIT = 10
+SINGLE_ORG_ENRICHMENT_URL = "https://api.apollo.io/api/v1/organizations/enrich"
 
-async def bulk_org_enrichment(
+async def single_org_enrichment(
         client: httpx.AsyncClient, 
-        company_websites: List[str], 
-        api_url: str = BULK_ORG_ENRICHMENT_URL, 
+        company_website: str, #primary_domain from enrichment results
+        api_url: str = SINGLE_ORG_ENRICHMENT_URL, 
         headers: Dict[str, str] = APOLLO_HEADERS
     )->Dict[str, Any]:
-    logger.info(f"Performing bulk organization enrichment for {company_websites}...")
+    logger.info(f"Performing single organization enrichment for {company_website}...")
 
     #Check if company websites is empty or > 10
-    if not company_websites:
-        logger.warning("Company_wesbites array in Bulk org enrichment is empty")
-    elif len(company_websites) > RATE_LIMIT:
-        logger.warning(f"Company_websites in bulk org enrichment is > {RATE_LIMIT}")
-
-    #Remove the www. at the start of the website
-    clean_urls = []
-    for website in company_websites:
-        final_url = website.replace("http://", "").replace("https://", "").replace("www.", "")
-        clean_urls.append(final_url) if final_url else None
+    if not company_website:
+        logger.warning("Company_wesbites in single org enrichment is empty")
 
     #Payload going into request body
     payload = {
-        "domains": clean_urls,
+        "domain": company_website,
     }
 
     try:
@@ -45,18 +36,18 @@ async def bulk_org_enrichment(
         )
         response.raise_for_status()
 
-        logger.info(f"Completed organization search for {company_websites}")
+        logger.info(f"Completed single organization search for {company_website}")
         return response.json()
     
     except Exception as e:
-        logger.error(f"Couldnt perform organization search for {company_websites}: {str(e)}")
+        logger.error(f"Couldnt perform single organization search for {company_website}: {str(e)}")
         return {"Error": str(e)}
 
 if __name__ == "__main__":
     async def main():
         start_time = time.perf_counter()
         async with httpx.AsyncClient(timeout=10.0) as client:
-            results = await bulk_org_enrichment(client=client, company_websites=["http://www.apollo.io", "www.microsoft.com"])
+            results = await single_org_enrichment(client=client, company_website="coloop.ai")
             logger.info(f"Org search results are: \n{results}")
 
         duration = time.perf_counter() - start_time

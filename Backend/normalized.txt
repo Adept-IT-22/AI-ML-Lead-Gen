@@ -3,56 +3,102 @@
     "type": "funding",
     "source": "Tech.eu",
     "article_title": [
-      "Farang raises \u20ac1.5M to launch outperforming AI models"
+      "German everwave raises growth capital for AI-powered river cleanups"
     ],
     "article_link": [
-      "https://tech.eu/2025/08/27/farang-raises-eur15m-to-launch-outperforming-ai-models//"
+      "https://tech.eu/2025/08/28/german-everwave-raises-growth-capital-for-ai-powered-river-cleanups//"
+    ],
+    "article_date": [
+      "2025-08-28"
+    ],
+    "company_name": [
+      "Everwave"
+    ],
+    "company_city": [
+      "Aachen"
+    ],
+    "company_country": [
+      "Germany"
+    ],
+    "company_decision_makers": [
+      [
+        "Clemens Feigl"
+      ]
+    ],
+    "company_decision_makers_position": [
+      [
+        "Ceo & Co-Founder"
+      ]
+    ],
+    "funding_round": [
+      "Growth"
+    ],
+    "amount_raised": [
+      ""
+    ],
+    "currency": [
+      ""
+    ],
+    "investor_companies": [
+      [
+        "Viessmann Generations Group",
+        "Ksk-Wagniskapital",
+        "Sistaact",
+        "European Social Innovation And Impact Fund",
+        "Capacura",
+        "Nrw.Bank"
+      ]
+    ],
+    "investor_people": [
+      [
+        "Max Viessmann"
+      ]
+    ],
+    "tags": [
+      []
+    ]
+  },
+  {
+    "type": "funding",
+    "source": "TechCrunch",
+    "article_title": [
+      "Here are the 33 U.S. AI startups that have raised $100M or more in 2025"
+    ],
+    "article_link": [
+      "https://techcrunch.com/2025/08/27/here-are-the-33-us-ai-startups-that-have-raised-100m-or-more-in-2025/"
     ],
     "article_date": [
       "2025-08-27"
     ],
     "company_name": [
-      "Farang"
+      ""
     ],
     "company_city": [
-      "Stockholm"
+      ""
     ],
     "company_country": [
-      "Sweden"
+      ""
     ],
     "company_decision_makers": [
-      [
-        "Emil Romanus"
-      ]
+      []
     ],
     "company_decision_makers_position": [
-      [
-        "Founder"
-      ]
+      []
     ],
     "funding_round": [
-      "Seed"
+      ""
     ],
     "amount_raised": [
-      "1500000"
+      ""
     ],
     "currency": [
-      "Euro"
+      ""
     ],
     "investor_companies": [
-      [
-        "Voima Ventures",
-        "Amadeus Apex Technology Fund"
-      ]
+      []
     ],
     "investor_people": [
-      [
-        "Tero Ojanpera",
-        "Nilay Oza",
-        "Niraj Aswani",
-        "Inka Mero",
-        "Ion Hauer"
-      ]
+      []
     ],
     "tags": [
       []
@@ -62,277 +108,34 @@
     "type": "hiring",
     "source": "HackerNews",
     "article_id": [
-      "44879015",
-      "44997289",
       "44963693",
-      "44899381",
-      "44873222",
-      "44856667"
-    ],
-    "article_title": [
-      "Weave (YC W25) is hiring a founding AI engineer",
-      "Bild AI (YC W25) Is Hiring an Applied AI Engineer",
-      "14.ai (YC W24) is hiring engineers in SF to build an AI-native Zendesk",
-      "Mbodi AI (YC X25) Is Hiring a Founding Research Engineer (Robotics)",
-      "CoLoop (YC S21) Is Hiring AI Engineers in London",
-      "Type (YC W23) is hiring a founding engineer to build an AI-native doc editor"
-    ],
-    "article_link": [
-      "https://www.ycombinator.com/companies/weave-3/jobs/sqfnife-founding-ai-engineer",
-      "https://www.workatastartup.com/jobs/75647",
-      "https://14.ai/careers",
-      "https://www.ycombinator.com/companies/mbodi-ai/jobs/fttsxcl-founding-research-engineer",
-      "",
-      "https://www.ycombinator.com/companies/type/jobs/1idounl-founding-product-engineer"
-    ],
-    "article_date": [
-      "",
-      "",
-      "",
-      "",
-      "",
-      ""
-    ],
-    "company_name": [
-      "Weave",
-      "Bild Ai",
-      "14.Ai",
-      "Mbodi Ai",
-      "Coloop",
-      "Type"
-    ],
-    "company_city": [
-      "",
-      "",
-      "San Francisco",
-      "",
-      "London",
-      ""
-    ],
-    "company_country": [
-      "",
-      "",
-      "America",
-      "",
-      "Uganda",
-      ""
-    ],
-    "company_decision_makers": [
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [
-        "Adchurch"
-      ],
-      [
-        "Rooppal"
-      ],
-      [
-        "Michaelfester"
-      ],
-      [
-        "Chitianhao"
-      ],
-      [
-        "Mrlowlevel"
-      ],
-      [
-        "Stewfortier"
-      ]
-    ],
-    "company_decision_makers_position": [
-      [],
-      [],
-      [],
-      [],
-      [],
-      []
-    ],
-    "job_roles": [
-      [
-        "Founding Ai Engineer"
-      ],
-      [
-        "Applied Ai Engineer"
-      ],
-      [
-        "Engineer"
-      ],
-      [
-        "Founding Research Engineer (Robotics)"
-      ],
-      [
-        "Ai Engineers"
-      ],
-      [
-        "Founding Engineer"
-      ]
-    ],
-    "hiring_reasons": [],
-    "tags": [
-      [],
-      [],
-      [],
-      [],
-      [],
-      []
-    ]
-  },
-  {
-    "type": "hiring",
-    "source": "HackerNews",
-    "article_id": [
       "44879015",
-      "44997289",
-      "44963693",
       "44899381",
-      "44873222",
-      "44856667"
-    ],
-    "article_title": [
-      "Weave (YC W25) is hiring a founding AI engineer",
-      "Bild AI (YC W25) Is Hiring an Applied AI Engineer",
-      "14.ai (YC W24) is hiring engineers in SF to build an AI-native Zendesk",
-      "Mbodi AI (YC X25) Is Hiring a Founding Research Engineer (Robotics)",
-      "CoLoop (YC S21) Is Hiring AI Engineers in London",
-      "Type (YC W23) is hiring a founding engineer to build an AI-native doc editor"
-    ],
-    "article_link": [
-      "https://www.ycombinator.com/companies/weave-3/jobs/sqfnife-founding-ai-engineer",
-      "https://www.workatastartup.com/jobs/75647",
-      "https://14.ai/careers",
-      "https://www.ycombinator.com/companies/mbodi-ai/jobs/fttsxcl-founding-research-engineer",
-      "",
-      "https://www.ycombinator.com/companies/type/jobs/1idounl-founding-product-engineer"
-    ],
-    "article_date": [
-      "",
-      "",
-      "",
-      "",
-      "",
-      ""
-    ],
-    "company_name": [
-      "Weave",
-      "Bild Ai",
-      "14.Ai",
-      "Mbodi Ai",
-      "Coloop",
-      "Type"
-    ],
-    "company_city": [
-      "",
-      "",
-      "San Francisco",
-      "",
-      "London",
-      ""
-    ],
-    "company_country": [
-      "",
-      "",
-      "America",
-      "",
-      "Uganda",
-      ""
-    ],
-    "company_decision_makers": [
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [
-        "Adchurch"
-      ],
-      [
-        "Rooppal"
-      ],
-      [
-        "Michaelfester"
-      ],
-      [
-        "Chitianhao"
-      ],
-      [
-        "Mrlowlevel"
-      ],
-      [
-        "Stewfortier"
-      ]
-    ],
-    "company_decision_makers_position": [
-      [],
-      [],
-      [],
-      [],
-      [],
-      []
-    ],
-    "job_roles": [
-      [
-        "Founding Ai Engineer"
-      ],
-      [
-        "Applied Ai Engineer"
-      ],
-      [
-        "Engineer"
-      ],
-      [
-        "Founding Research Engineer (Robotics)"
-      ],
-      [
-        "Ai Engineers"
-      ],
-      [
-        "Founding Engineer"
-      ]
-    ],
-    "hiring_reasons": [],
-    "tags": [
-      [],
-      [],
-      [],
-      [],
-      [],
-      []
-    ]
-  }
-][
-  {
-    "type": "hiring",
-    "source": "HackerNews",
-    "article_id": [
-      "44873222",
+      "45051096",
       "44997289",
       "44856667",
-      "44879015",
-      "44963693",
-      "44899381"
+      "44873222"
     ],
     "article_title": [
-      "CoLoop (YC S21) Is Hiring AI Engineers in London",
+      "14.ai (YC W24) is hiring engineers in SF to build an AI-native Zendesk",
+      "Weave (YC W25) is hiring a founding AI engineer",
+      "Mbodi AI (YC X25) Is Hiring a Founding Research Engineer (Robotics)",
+      "Prosper AI (YC S23) Is Hiring Founding Account Executives (NYC)",
       "Bild AI (YC W25) Is Hiring an Applied AI Engineer",
       "Type (YC W23) is hiring a founding engineer to build an AI-native doc editor",
-      "Weave (YC W25) is hiring a founding AI engineer",
-      "14.ai is hiring engineers in SF to build an AI-native Zendesk",
-      "Mbodi AI Is Hiring a Founding Research Engineer (Robotics)"
+      "CoLoop (YC S21) Is Hiring AI Engineers in London"
     ],
     "article_link": [
-      "",
+      "https://14.ai/careers",
+      "https://www.ycombinator.com/companies/weave-3/jobs/sqfnife-founding-ai-engineer",
+      "https://www.ycombinator.com/companies/mbodi-ai/jobs/fttsxcl-founding-research-engineer",
+      "https://jobs.ashbyhq.com/prosper-ai/29684590-4cec-4af2-bb69-eb5c6d595fb8",
       "https://www.workatastartup.com/jobs/75647",
       "https://www.ycombinator.com/companies/type/jobs/1idounl-founding-product-engineer",
-      "https://www.ycombinator.com/companies/weave-3/jobs/sqfnife-founding-ai-engineer",
-      "https://14.ai/careers",
-      "https://www.ycombinator.com/companies/mbodi-ai/jobs/fttsxcl-founding-research-engineer"
+      ""
     ],
     "article_date": [
+      "",
       "",
       "",
       "",
@@ -341,28 +144,31 @@
       ""
     ],
     "company_name": [
-      "Coloop",
+      "14.Ai",
+      "Weave",
+      "Mbodi Ai",
+      "Prosper Ai",
       "Bild Ai",
       "Type",
-      "Weave",
-      "14.Ai",
-      "Mbodi Ai"
+      "Coloop"
     ],
     "company_city": [
-      "London",
-      "",
-      "",
-      "",
       "San Francisco",
-      ""
+      "",
+      "",
+      "New York City",
+      "",
+      "",
+      "London"
     ],
     "company_country": [
-      "United Kingdom",
-      "",
+      "America",
       "",
       "",
       "America",
-      ""
+      "",
+      "",
+      "Uganda"
     ],
     "company_decision_makers": [
       [],
@@ -371,8 +177,18 @@
       [],
       [],
       [],
+      [],
       [
-        "Mrlowlevel"
+        "Michaelfester"
+      ],
+      [
+        "Adchurch"
+      ],
+      [
+        "Chitianhao"
+      ],
+      [
+        "Xdgc"
       ],
       [
         "Rooppal"
@@ -381,13 +197,7 @@
         "Stewfortier"
       ],
       [
-        "Adchurch"
-      ],
-      [
-        "Michaelfester"
-      ],
-      [
-        "Chitianhao"
+        "Mrlowlevel"
       ]
     ],
     "company_decision_makers_position": [
@@ -396,31 +206,36 @@
       [],
       [],
       [],
+      [],
       []
     ],
     "job_roles": [
-      [
-        "Ai Engineers"
-      ],
-      [
-        "Applied Ai Engineer"
-      ],
-      [
-        "Founding Engineer",
-        "Product Engineer"
-      ],
-      [
-        "Founding Ai Engineer"
-      ],
       [
         "Engineers"
       ],
       [
-        "Founding Research Engineer (Robotics)"
+        "Founding Ai Engineer"
+      ],
+      [
+        "Founding Research Engineer",
+        "Robotics Engineer"
+      ],
+      [
+        "Founding Account Executive"
+      ],
+      [
+        "Applied Ai Engineer"
+      ],
+      [
+        "Founding Engineer"
+      ],
+      [
+        "Ai Engineers"
       ]
     ],
     "hiring_reasons": [],
     "tags": [
+      [],
       [],
       [],
       [],
@@ -433,30 +248,34 @@
     "type": "hiring",
     "source": "HackerNews",
     "article_id": [
-      "44873222",
+      "44963693",
+      "44879015",
+      "44899381",
+      "45051096",
       "44997289",
       "44856667",
-      "44879015",
-      "44963693",
-      "44899381"
+      "44873222"
     ],
     "article_title": [
-      "CoLoop (YC S21) Is Hiring AI Engineers in London",
+      "14.ai (YC W24) is hiring engineers in SF to build an AI-native Zendesk",
+      "Weave (YC W25) is hiring a founding AI engineer",
+      "Mbodi AI (YC X25) Is Hiring a Founding Research Engineer (Robotics)",
+      "Prosper AI (YC S23) Is Hiring Founding Account Executives (NYC)",
       "Bild AI (YC W25) Is Hiring an Applied AI Engineer",
       "Type (YC W23) is hiring a founding engineer to build an AI-native doc editor",
-      "Weave (YC W25) is hiring a founding AI engineer",
-      "14.ai is hiring engineers in SF to build an AI-native Zendesk",
-      "Mbodi AI Is Hiring a Founding Research Engineer (Robotics)"
+      "CoLoop (YC S21) Is Hiring AI Engineers in London"
     ],
     "article_link": [
-      "",
+      "https://14.ai/careers",
+      "https://www.ycombinator.com/companies/weave-3/jobs/sqfnife-founding-ai-engineer",
+      "https://www.ycombinator.com/companies/mbodi-ai/jobs/fttsxcl-founding-research-engineer",
+      "https://jobs.ashbyhq.com/prosper-ai/29684590-4cec-4af2-bb69-eb5c6d595fb8",
       "https://www.workatastartup.com/jobs/75647",
       "https://www.ycombinator.com/companies/type/jobs/1idounl-founding-product-engineer",
-      "https://www.ycombinator.com/companies/weave-3/jobs/sqfnife-founding-ai-engineer",
-      "https://14.ai/careers",
-      "https://www.ycombinator.com/companies/mbodi-ai/jobs/fttsxcl-founding-research-engineer"
+      ""
     ],
     "article_date": [
+      "",
       "",
       "",
       "",
@@ -465,28 +284,31 @@
       ""
     ],
     "company_name": [
-      "Coloop",
+      "14.Ai",
+      "Weave",
+      "Mbodi Ai",
+      "Prosper Ai",
       "Bild Ai",
       "Type",
-      "Weave",
-      "14.Ai",
-      "Mbodi Ai"
+      "Coloop"
     ],
     "company_city": [
-      "London",
-      "",
-      "",
-      "",
       "San Francisco",
-      ""
+      "",
+      "",
+      "New York City",
+      "",
+      "",
+      "London"
     ],
     "company_country": [
-      "United Kingdom",
-      "",
+      "America",
       "",
       "",
       "America",
-      ""
+      "",
+      "",
+      "Uganda"
     ],
     "company_decision_makers": [
       [],
@@ -495,8 +317,18 @@
       [],
       [],
       [],
+      [],
       [
-        "Mrlowlevel"
+        "Michaelfester"
+      ],
+      [
+        "Adchurch"
+      ],
+      [
+        "Chitianhao"
+      ],
+      [
+        "Xdgc"
       ],
       [
         "Rooppal"
@@ -505,13 +337,7 @@
         "Stewfortier"
       ],
       [
-        "Adchurch"
-      ],
-      [
-        "Michaelfester"
-      ],
-      [
-        "Chitianhao"
+        "Mrlowlevel"
       ]
     ],
     "company_decision_makers_position": [
@@ -520,278 +346,36 @@
       [],
       [],
       [],
+      [],
       []
     ],
     "job_roles": [
-      [
-        "Ai Engineers"
-      ],
-      [
-        "Applied Ai Engineer"
-      ],
-      [
-        "Founding Engineer",
-        "Product Engineer"
-      ],
-      [
-        "Founding Ai Engineer"
-      ],
       [
         "Engineers"
       ],
       [
-        "Founding Research Engineer (Robotics)"
-      ]
-    ],
-    "hiring_reasons": [],
-    "tags": [
-      [],
-      [],
-      [],
-      [],
-      [],
-      []
-    ]
-  }
-][
-  {
-    "type": "hiring",
-    "source": "HackerNews",
-    "article_id": [
-      "44997289",
-      "44963693",
-      "44873222",
-      "44856667",
-      "44899381",
-      "44879015"
-    ],
-    "article_title": [
-      "Bild AI (YC W25) Is Hiring an Applied AI Engineer",
-      "14.ai (YC W24) is hiring engineers in SF to build an AI-native Zendesk",
-      "CoLoop (YC S21) Is Hiring AI Engineers in London",
-      "Type (YC W23) is hiring a founding engineer to build an AI-native doc editor",
-      "Mbodi AI (YC X25) Is Hiring a Founding Research Engineer (Robotics)",
-      "Weave (YC W25) is hiring a founding AI engineer"
-    ],
-    "article_link": [
-      "https://www.workatastartup.com/jobs/75647",
-      "https://14.ai/careers",
-      "",
-      "https://www.ycombinator.com/companies/type/jobs/1idounl-founding-product-engineer",
-      "https://www.ycombinator.com/companies/mbodi-ai/jobs/fttsxcl-founding-research-engineer",
-      "https://www.ycombinator.com/companies/weave-3/jobs/sqfnife-founding-ai-engineer"
-    ],
-    "article_date": [
-      "",
-      "",
-      "",
-      "",
-      "",
-      ""
-    ],
-    "company_name": [
-      "Bild Ai",
-      "14.Ai",
-      "Coloop",
-      "Type",
-      "Mbodi Ai",
-      "Weave"
-    ],
-    "company_city": [
-      "",
-      "San Francisco",
-      "London",
-      "",
-      "",
-      ""
-    ],
-    "company_country": [
-      "",
-      "America",
-      "Uganda",
-      "",
-      "",
-      ""
-    ],
-    "company_decision_makers": [
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [
-        "Rooppal"
+        "Founding Ai Engineer"
       ],
       [
-        "Michaelfester"
+        "Founding Research Engineer",
+        "Robotics Engineer"
       ],
       [
-        "Mrlowlevel"
+        "Founding Account Executive"
       ],
-      [
-        "Stewfortier"
-      ],
-      [
-        "Chitianhao"
-      ],
-      [
-        "Adchurch"
-      ]
-    ],
-    "company_decision_makers_position": [
-      [],
-      [],
-      [],
-      [],
-      [],
-      []
-    ],
-    "job_roles": [
       [
         "Applied Ai Engineer"
-      ],
-      [
-        "Engineer"
-      ],
-      [
-        "Ai Engineer"
       ],
       [
         "Founding Engineer"
       ],
       [
-        "Founding Research Engineer (Robotics)"
-      ],
-      [
-        "Founding Ai Engineer"
+        "Ai Engineers"
       ]
     ],
     "hiring_reasons": [],
     "tags": [
       [],
-      [],
-      [],
-      [],
-      [],
-      []
-    ]
-  },
-  {
-    "type": "hiring",
-    "source": "HackerNews",
-    "article_id": [
-      "44997289",
-      "44963693",
-      "44873222",
-      "44856667",
-      "44899381",
-      "44879015"
-    ],
-    "article_title": [
-      "Bild AI (YC W25) Is Hiring an Applied AI Engineer",
-      "14.ai (YC W24) is hiring engineers in SF to build an AI-native Zendesk",
-      "CoLoop (YC S21) Is Hiring AI Engineers in London",
-      "Type (YC W23) is hiring a founding engineer to build an AI-native doc editor",
-      "Mbodi AI (YC X25) Is Hiring a Founding Research Engineer (Robotics)",
-      "Weave (YC W25) is hiring a founding AI engineer"
-    ],
-    "article_link": [
-      "https://www.workatastartup.com/jobs/75647",
-      "https://14.ai/careers",
-      "",
-      "https://www.ycombinator.com/companies/type/jobs/1idounl-founding-product-engineer",
-      "https://www.ycombinator.com/companies/mbodi-ai/jobs/fttsxcl-founding-research-engineer",
-      "https://www.ycombinator.com/companies/weave-3/jobs/sqfnife-founding-ai-engineer"
-    ],
-    "article_date": [
-      "",
-      "",
-      "",
-      "",
-      "",
-      ""
-    ],
-    "company_name": [
-      "Bild Ai",
-      "14.Ai",
-      "Coloop",
-      "Type",
-      "Mbodi Ai",
-      "Weave"
-    ],
-    "company_city": [
-      "",
-      "San Francisco",
-      "London",
-      "",
-      "",
-      ""
-    ],
-    "company_country": [
-      "",
-      "America",
-      "Uganda",
-      "",
-      "",
-      ""
-    ],
-    "company_decision_makers": [
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [
-        "Rooppal"
-      ],
-      [
-        "Michaelfester"
-      ],
-      [
-        "Mrlowlevel"
-      ],
-      [
-        "Stewfortier"
-      ],
-      [
-        "Chitianhao"
-      ],
-      [
-        "Adchurch"
-      ]
-    ],
-    "company_decision_makers_position": [
-      [],
-      [],
-      [],
-      [],
-      [],
-      []
-    ],
-    "job_roles": [
-      [
-        "Applied Ai Engineer"
-      ],
-      [
-        "Engineer"
-      ],
-      [
-        "Ai Engineer"
-      ],
-      [
-        "Founding Engineer"
-      ],
-      [
-        "Founding Research Engineer (Robotics)"
-      ],
-      [
-        "Founding Ai Engineer"
-      ]
-    ],
-    "hiring_reasons": [],
-    "tags": [
       [],
       [],
       [],

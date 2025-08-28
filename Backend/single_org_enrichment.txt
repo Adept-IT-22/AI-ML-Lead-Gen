@@ -1,0 +1,25 @@
+{
+  "total_funding": [
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "latest_funding_round_date": [
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "latest_funding_stage": [
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "latest_funding_amount": [],
+  "latest_funding_round_investors": []
+}

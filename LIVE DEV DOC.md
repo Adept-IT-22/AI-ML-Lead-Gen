@@ -79,9 +79,13 @@ _Insert database used here_
 + **Relational DB**: Postgres (version...)
 
     + **DB Name** - Lead Gen
-    + **DB Tables** - Companies
+    + **DB Tables** - Companies, People
     + **DB Columns per Table**
-        + Companies - id, apollo_id, name, website_url, linkedin_url, phone, founded_year, market_cap, industry, estimated_num_employees, keywords, organization_revenue, city, state, country, short_description, 
+        + Companies - 
+            + id
+            + **From the bulk enrichment API -** apollo_id, name, website_url, linkedin_url, phone, founded_year, market_cap, industries, estimated_num_employees, keywords, organization_revenue, city, state, country, short_description
+            + **From the single enrichment API -** total_funding_printed, latest_funding_stage, latest_funding_round_date, latest_funding_amount
+        + People - 
 
 + **Graph DB**: _To Be Determined_
 

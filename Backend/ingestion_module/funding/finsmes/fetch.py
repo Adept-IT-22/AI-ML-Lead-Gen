@@ -8,6 +8,7 @@ import logging
 import aiofiles
 from lxml import etree, html
 from typing import Dict, List
+from services.request_headers import get_header
 from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
 from utils.data_structures.news_data_structure import fetched_funding_data as funding_fetched_data
 
@@ -149,14 +150,11 @@ async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, li
         
     return url, []
 
+
 async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronously to avoid blocking
     logger.info("Fetching from FinSMEs...")
     current_time = time.perf_counter()
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/115.0 Safari/537.36"
-    }
+    headers = get_header()
 
     async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, headers=headers) as client:
         newest_sitemap = await find_newest_sitemap(client, URL)
