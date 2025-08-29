@@ -143,6 +143,7 @@ async def main():
         data_to_enrich_list = await normalization_to_enrichment_queue.get()
         logger.info(f"Fetched {len(data_to_enrich_list)} items from normaliztion_to_enrichment queue.")
     
+    #2.2 =======Organization Search to Get Org Website=========
         async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
             orgs_to_search = []
             searched_orgs = []
@@ -151,7 +152,6 @@ async def main():
                 company_names = normalized_company.get("company_name", [])
                 orgs_to_search.extend(company_names)
 
-    #2.2 =======Organization Search to Get Org Website=========
             logger.info("Organizational search started...")
 
             searched_tasks = [apollo_org_search(client=client, company_name=name) for name in company_names]
@@ -166,7 +166,7 @@ async def main():
             logger.info(f"Completed organization seach for {len(searched_orgs)} companies")
 
             async with aiofiles.open(f"org_search.txt", "a") as org_search_file:
-                await org_search_file.write(json.dumps(searched_orgs[0], indent=2))
+                await org_search_file.write(json.dumps(searched_orgs, indent=2))
 
             logger.info("Completed organizational search")
     
@@ -204,39 +204,14 @@ async def main():
     #2.4 ========Single Org Enrichment===========
             logger.info("Single Org Enrichment started...")
 
-            funding_data = {
-                "total_funding": [],
-                "latest_funding_round_date": [],
-                "latest_funding_stage": [],
-                "latest_funding_amount": [],
-                "latest_funding_round_investors": []
-            }
-
-            #Filter necessary companies from bulk enrichment based on size and location
+            single_enriched_orgs = []
             for single_org in bulk_enriched_orgs[0].get("organizations"):
-                org_size = single_org.get("estimated_num_employees", "") 
-                org_country = single_org.get("country", "")
-
-                all_countries = countries["North American Countries"].union(countries["European Countries"])
-                if org_size and org_size <= MAX_EMPLOYEE_COUNT and org_country in all_countries:
-                    org_domain = single_org.get("primary_domain")
-                    single_enriched_org = await single_org_enrichment(client=client, company_website=org_domain)
-
-                    #Extract funding data from enrichment results
-                    org_info = single_enriched_org.get("organization", {})
-                    funding_data["total_funding"].append(org_info.get("total_funding_printed", ""))
-                    funding_data["latest_funding_round_date"].append(org_info.get("latest_funding_round_date", ""))
-                    funding_data["latest_funding_stage"].append(org_info.get("latest_funding_stage", ""))
-
-                    funding_events = org_info.get("funding_events", {})
-                    if funding_events:
-                        amount = funding_events[0].get("amount", "")
-                        currency = funding_events[0].get("currency", "")
-                        funding_data["latest_funding_amount"].append(f"{amount}{currency}")
-                        funding_data["latest_funding_round_investors"].append(funding_events[0].get("investors", ""))
-            
+                org_domain = single_org.get("primary_domain")
+                single_enriched_org = await single_org_enrichment(client=client, company_website=org_domain)
+                single_enriched_orgs.append(single_enriched_org)
+                
             async with aiofiles.open("single_org_enrichment.txt", "w") as single_org_enrichment_file:
-                await single_org_enrichment_file.write(json.dumps(funding_data, indent=2))
+                await single_org_enrichment_file.write(json.dumps(single_enriched_orgs, indent=2))
 
             logger.info("Completed Single Org Enrichment")
     
@@ -253,37 +228,66 @@ async def main():
                     org_ids.append(org_id)
                     org_domain = each_org.get("primary_domain")
                     org_domains.append(org_domain)
-
-            #Call people search and get people's names and emails
-            found_people_names = []
-            found_people_numbers = []
-            found_people_emails = []
-            found_people_titles = []
-            found_people_orgs = []
+            
             searched_people = await people_search(client=client, org_ids=org_ids, org_domains=org_domains)
-            for people in searched_people.get("people", []):
-                found_people_names.append(people.get("name", ""))
-                found_people_names.append(people.get("sanitized_phone", ""))
-                found_people_emails.append(people.get("email", ""))
-                found_people_titles.append(people.get("title", ""))
-                found_people_orgs.append(people.get("employment_history")[0].get("organization_name", ""))
-
-            found_people_details = {
-                "names": found_people_names,
-                "numbers": found_people_numbers,
-                "emails": found_people_emails,
-                "titles": found_people_titles,
-                "orgs": found_people_orgs
-            }
 
             async with aiofiles.open("people_search.txt", "w") as people_search_file:
-                await people_search_file.write(json.dumps(found_people_details, indent=2))
+                await people_search_file.write(json.dumps(searched_people, indent=2))
 
             logger.info("Completed people Search")
 
     #==============4. STORAGE================
 
+    #Get necessary data from org search
+    #Get necessary data from bulk enriched orgs
+    #Get necessary data from single enriched orgs
 
+
+
+
+
+
+
+
+
+
+
+
+    funding_data = {
+        "total_funding": [],
+        "latest_funding_round_date": [],
+        "latest_funding_stage": [],
+        "latest_funding_amount": [],
+        "latest_funding_round_investors": []
+    }
+    #Extract funding data from enrichment results
+    org_info = single_enriched_org.get("organization", {})
+    funding_data["total_funding"].append(org_info.get("total_funding_printed", ""))
+    funding_data["latest_funding_round_date"].append(org_info.get("latest_funding_round_date", ""))
+    funding_data["latest_funding_stage"].append(org_info.get("latest_funding_stage", ""))
+
+    funding_events = org_info.get("funding_events", {})
+    if funding_events:
+        amount = funding_events[0].get("amount", "")
+        currency = funding_events[0].get("currency", "")
+        funding_data["latest_funding_amount"].append(f"{amount}{currency}")
+        funding_data["latest_funding_round_investors"].append(funding_events[0].get("investors", ""))
+        
+
+    #Call people search and get people's names and emails
+    found_people_details = {
+        "names": [],
+        "numbers": [],
+        "emails": [],
+        "titles": [],
+        "orgs": []
+    }
+    for people in searched_people.get("people", []):
+        found_people_details["names"].append(people.get("name", ""))
+        found_people_details["numbers"].append(people.get("sanitized_phone", ""))
+        found_people_details["emails"].append(people.get("email", ""))
+        found_people_details["titles"].append(people.get("title", ""))
+        found_people_details["orgs"].append(people.get("employment_history")[0].get("organization_name", ""))
 
 #Profiling Code
 async def handle_profiling():

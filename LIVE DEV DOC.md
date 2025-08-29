@@ -83,11 +83,19 @@ _Insert database used here_
     + **DB Columns per Table**
         + Companies - 
             + id
-            + **From the bulk enrichment API -** apollo_id, name, website_url, linkedin_url, phone, founded_year, market_cap, industries, estimated_num_employees, keywords, organization_revenue, city, state, country, short_description
-            + **From the single enrichment API -** total_funding_printed, latest_funding_stage, latest_funding_round_date, latest_funding_amount
+            + **From the org search API -** organization_headcount_six_month_growth, organization_headcount_twelve_month_growth
+            + **From the bulk enrichment API -** apollo_id, name, website_url, linkedin_url, phone, founded_year, market_cap, industries, estimated_num_employees, keywords, city, state, country, short_description, 
+            + **From the single enrichment API -** total_funding, technology_names, annual_revenue
+            + **Others -** created_at, updated_at, icp_score, contacted_status, notes
+
         + People - 
 
+        + Funding - 
+            + **From the single enrichment API -** company_id, funding_event_id, date, type, investors, amount, currency, news_url, created_at, updated_at
+
 + **Graph DB**: _To Be Determined_
+
++ **Normalized data before enrichment**: Add normalized data but not enriched just to track any failures in enrichment
 
 ### Commit Message Format
 
