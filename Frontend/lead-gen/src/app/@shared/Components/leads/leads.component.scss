@@ -5,7 +5,7 @@
   .lead-table {
     width: 100%;
     /* adjust height for ~5 rows */
-    max-height: 250px; 
+    max-height: 250px;
     overflow-y: auto;
 
     table {
@@ -76,6 +76,7 @@ thead tr th{
 
 .action-buttons{
   display: flex;
+  
 }
 
 

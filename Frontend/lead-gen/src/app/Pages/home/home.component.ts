@@ -63,6 +63,7 @@ export class HomeComponent {
     { key: 'industry', header: 'Industry' },
     { key: 'action', header: 'Action' },
   ];
+
   buttons: string[] = ['View', 'Update'];
 // logic for filters
   filtersState: { [key: string]: string } = {};
