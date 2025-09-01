@@ -93,9 +93,13 @@ _Insert database used here_
         + Funding - 
             + **From the single enrichment API -** company_id, funding_event_id, date, type, investors, amount, currency, news_url, created_at, updated_at
 
+        + Metadata - 
+            + Source (where the data was fetched i.e. TechCrunch)
+            + Type of data i.e. funding, hiring or event
+
 + **Graph DB**: _To Be Determined_
 
-+ **Normalized data before enrichment**: Add normalized data but not enriched just to track any failures in enrichment
++**[BACKLOG ITEM] Normalized data before enrichment**: Add normalized data but not enriched just to track any failures in enrichment 
 
 ### Commit Message Format
 

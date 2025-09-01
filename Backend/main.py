@@ -7,6 +7,7 @@ import yappi
 from typing import List, Dict, Any, Awaitable, Union, Callable
 
 from utils.countries import countries
+from services.db_service import *
 from ingestion_module.funding.finsmes.fetch import main as finsmes_main
 from ingestion_module.funding.tech_eu.fetch import main as tech_eu_main
 from ingestion_module.funding.techcrunch.fetch import main as techcrunch_main
@@ -238,56 +239,63 @@ async def main():
 
     #==============4. STORAGE================
 
-    #Get necessary data from org search
+    #Check LIVE DEV DOC for the "necessary data" mentioned below
+    
+    company_data_to_store = []
+
+    org_search_data = searched_orgs[0]
+    searched_organizations = org_search_data.get("organizations", [])
+
+    bulk_enriched_data = bulk_enriched_orgs[0]
+    bulk_enriched_organizations = bulk_enriched_data.get("organizations", [])
+
+    single_enriched_data = single_enriched_orgs[0]
+    single_enriched_organizations = single_enriched_data.get("organization", [])
+
+    if searched_organizations and bulk_enriched_organizations and single_enriched_organizations:
+
+    #Get necessary data from org search 
+        for searched_org, bulk_enriched_org, single_enriched_organization in zip(searched_organizations, bulk_enriched_organizations, single_enriched_organizations):
+            headcount_six_month_growth = searched_org.get("organization_headcount_six_month_growth", "")
+            headcount_twelve_month_growth = searched_org.get("organization_headcount_twelve_month_growth", "")
+
     #Get necessary data from bulk enriched orgs
+            apollo_id = bulk_enriched_org.get("id", "")
+            company_name = bulk_enriched_org.get("name", "")
+            website_url = bulk_enriched_org.get("website_url", "")
+            linkedin_url = bulk_enriched_org.get("linkedin_url", "")
+            phone = bulk_enriched_org.get("phone", "")
+            founded_year = bulk_enriched_org.get("founded_year", "")
+            market_cap = bulk_enriched_org.get("market_cap", "")
+            industries = bulk_enriched_org.get("industries", [])
+            estimated_num_employees = bulk_enriched_org.get("estimated_num_employees", "")
+            keywords = bulk_enriched_org.get("keywords", [])
+            city = bulk_enriched_org.get("city", "")
+            state = bulk_enriched_org.get("state", "")
+            country = bulk_enriched_org.get("country", "")
+            short_description = bulk_enriched_org.get("short_description", "")
+
     #Get necessary data from single enriched orgs
+            total_funding = single_enriched_organization.get("total_funding", "")
+            technology_names = single_enriched_organization.get("technology_names", [])
+            annual_revenue_printed = single_enriched_organization.get("annual_revenue", "")
 
+            row = (
+                apollo_id, company_name, website_url, linkedin_url, phone, founded_year,
+                market_cap, annual_revenue_printed, industries, estimated_num_employees, 
+                keywords, headcount_six_month_growth, headcount_twelve_month_growth, city,
+                state, country, short_description, total_funding, technology_names,
+                None, #icp score placeholder
+                "uncontacted", #Default contacted_status
+                None, #notes
+                None, #created_at. Use DB default
+                None, #updated_at. Use DB Default
+            )
 
+            company_data_to_store.append(row)
 
-
-
-
-
-
-
-
-
-
-    funding_data = {
-        "total_funding": [],
-        "latest_funding_round_date": [],
-        "latest_funding_stage": [],
-        "latest_funding_amount": [],
-        "latest_funding_round_investors": []
-    }
-    #Extract funding data from enrichment results
-    org_info = single_enriched_org.get("organization", {})
-    funding_data["total_funding"].append(org_info.get("total_funding_printed", ""))
-    funding_data["latest_funding_round_date"].append(org_info.get("latest_funding_round_date", ""))
-    funding_data["latest_funding_stage"].append(org_info.get("latest_funding_stage", ""))
-
-    funding_events = org_info.get("funding_events", {})
-    if funding_events:
-        amount = funding_events[0].get("amount", "")
-        currency = funding_events[0].get("currency", "")
-        funding_data["latest_funding_amount"].append(f"{amount}{currency}")
-        funding_data["latest_funding_round_investors"].append(funding_events[0].get("investors", ""))
-        
-
-    #Call people search and get people's names and emails
-    found_people_details = {
-        "names": [],
-        "numbers": [],
-        "emails": [],
-        "titles": [],
-        "orgs": []
-    }
-    for people in searched_people.get("people", []):
-        found_people_details["names"].append(people.get("name", ""))
-        found_people_details["numbers"].append(people.get("sanitized_phone", ""))
-        found_people_details["emails"].append(people.get("email", ""))
-        found_people_details["titles"].append(people.get("title", ""))
-        found_people_details["orgs"].append(people.get("employment_history")[0].get("organization_name", ""))
+    #Store company data in "companies" database
+    await store_to_db(company_data_to_store=company_data_to_store)
 
 #Profiling Code
 async def handle_profiling():
