@@ -4,6 +4,7 @@ import aiofiles
 import asyncio
 import logging
 import yappi
+from decimal import Decimal
 from typing import List, Dict, Any, Awaitable, Union, Callable
 
 from utils.countries import countries
@@ -25,6 +26,19 @@ logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 MAX_EMPLOYEE_COUNT = 20
+
+#These 2 functions safely convert strings to integers and decimals
+def safe_int(value: Any)->Union[int, None]:
+    try: 
+        return int(value)
+    except (ValueError, TypeError):
+        return None
+
+def safe_decimal(value: Any)->Union[Decimal, None]:
+    try:
+        return Decimal(str(value))
+    except (ValueError, TypeError, ArithmeticError):
+        return None
 
 #This function pairs a name with a coroutine (if all goes well) or with an exception otherwise 
 async def wrap(name: str, coroutine: Awaitable[Any] )->tuple[str, Union[Any, Exception]]:
@@ -238,28 +252,24 @@ async def main():
             logger.info("Completed people Search")
 
     #==============4. STORAGE================
+    logger.info("Storing data....")
 
     #Check LIVE DEV DOC for the "necessary data" mentioned below
-    
     company_data_to_store = []
 
-    org_search_data = searched_orgs[0]
-    searched_organizations = org_search_data.get("organizations", [])
+    searched_organizations = searched_orgs[0].get("organizations", [])
+    bulk_enriched_organizations = bulk_enriched_orgs[0].get("organizations", [])
+    single_enriched_organizations = single_enriched_orgs[0].get("organization", [])
 
-    bulk_enriched_data = bulk_enriched_orgs[0]
-    bulk_enriched_organizations = bulk_enriched_data.get("organizations", [])
-
-    single_enriched_data = single_enriched_orgs[0]
-    single_enriched_organizations = single_enriched_data.get("organization", [])
-
+    #Iterate over orgs. Zip will stop when shortest list ends preventing errors
     if searched_organizations and bulk_enriched_organizations and single_enriched_organizations:
+        for searched_org, bulk_enriched_org, single_enriched_organization in zip(searched_organizations, bulk_enriched_organizations, single_enriched_organizations, strict=True):
 
-    #Get necessary data from org search 
-        for searched_org, bulk_enriched_org, single_enriched_organization in zip(searched_organizations, bulk_enriched_organizations, single_enriched_organizations):
+            #Get necessary data from org search 
             headcount_six_month_growth = searched_org.get("organization_headcount_six_month_growth", "")
             headcount_twelve_month_growth = searched_org.get("organization_headcount_twelve_month_growth", "")
 
-    #Get necessary data from bulk enriched orgs
+            #Get necessary data from bulk enriched orgs
             apollo_id = bulk_enriched_org.get("id", "")
             company_name = bulk_enriched_org.get("name", "")
             website_url = bulk_enriched_org.get("website_url", "")
@@ -275,16 +285,16 @@ async def main():
             country = bulk_enriched_org.get("country", "")
             short_description = bulk_enriched_org.get("short_description", "")
 
-    #Get necessary data from single enriched orgs
+            #Get necessary data from single enriched orgs
             total_funding = single_enriched_organization.get("total_funding", "")
             technology_names = single_enriched_organization.get("technology_names", [])
             annual_revenue_printed = single_enriched_organization.get("annual_revenue", "")
 
             row = (
-                apollo_id, company_name, website_url, linkedin_url, phone, founded_year,
-                market_cap, annual_revenue_printed, industries, estimated_num_employees, 
-                keywords, headcount_six_month_growth, headcount_twelve_month_growth, city,
-                state, country, short_description, total_funding, technology_names,
+                apollo_id, company_name, website_url, linkedin_url, phone, safe_int(founded_year),
+                safe_decimal(market_cap), safe_decimal(annual_revenue_printed), industries, safe_int(estimated_num_employees), 
+                keywords, safe_decimal(headcount_six_month_growth), safe_decimal(headcount_twelve_month_growth), city,
+                state, country, short_description, safe_decimal(total_funding), technology_names,
                 None, #icp score placeholder
                 "uncontacted", #Default contacted_status
                 None, #notes
@@ -295,7 +305,19 @@ async def main():
             company_data_to_store.append(row)
 
     #Store company data in "companies" database
-    await store_to_db(company_data_to_store=company_data_to_store)
+    company_query = """
+            INSERT INTO companies (apollo_id, name, website_url, linkedin_url,
+                        phone, founded_year, market_cap, annual_revenue, industries,
+                        estimated_num_employees, keywords, organization_headcount_six_month_growth,
+                        organization_headcount_twelve_month_growth, city, state, country, short_description,
+                        total_funding, technology_names, icp_score, contacted_status, notes, created_at,
+                        updated_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) 
+                """
+    if company_data_to_store:
+        await store_to_db(data_to_store=company_data_to_store, query=company_query)
+    else:
+        logger.warning("No companies to store ❌")
 
 #Profiling Code
 async def handle_profiling():
