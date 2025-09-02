@@ -1,59 +1,1465 @@
-{
-  "breadcrumbs": [
-    {
-      "label": "Company Name",
-      "signal_field_name": "q_organization_name",
-      "value": "14.Ai",
-      "display_name": "14.Ai"
-    }
-  ],
-  "partial_results_only": false,
-  "has_join": false,
-  "disable_eu_prospecting": false,
-  "partial_results_limit": 10000,
-  "pagination": {
-    "page": 1,
-    "per_page": 1,
-    "total_entries": 2,
-    "total_pages": 2
+[
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "14.Ai",
+        "display_name": "14.Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 2,
+      "total_pages": 2
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "683d7916a3f12c0021b0f321",
+        "name": "14.ai",
+        "website_url": "http://www.14.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/14ai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "107389070",
+        "founded_year": null,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68aeb6c479140f0001c34798/picture",
+        "crunchbase_url": null,
+        "primary_domain": "14.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.5,
+        "organization_headcount_twelve_month_growth": 1.0,
+        "organization_headcount_twenty_four_month_growth": null
+      }
+    ],
+    "model_ids": [
+      "683d7916a3f12c0021b0f321"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
   },
-  "accounts": [],
-  "organizations": [
-    {
-      "id": "683d7916a3f12c0021b0f321",
-      "name": "14.ai",
-      "website_url": "http://www.14.ai",
-      "blog_url": null,
-      "angellist_url": null,
-      "linkedin_url": "http://www.linkedin.com/company/14ai",
-      "twitter_url": null,
-      "facebook_url": null,
-      "primary_phone": {},
-      "languages": [],
-      "alexa_ranking": null,
-      "phone": null,
-      "linkedin_uid": "107389070",
-      "founded_year": null,
-      "publicly_traded_symbol": null,
-      "publicly_traded_exchange": null,
-      "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68aeb6c479140f0001c34798/picture",
-      "crunchbase_url": null,
-      "primary_domain": "14.ai",
-      "owned_by_organization_id": null,
-      "organization_revenue_printed": null,
-      "organization_revenue": 0.0,
-      "intent_strength": null,
-      "show_intent": true,
-      "has_intent_signal_account": false,
-      "intent_signal_account": null,
-      "organization_headcount_six_month_growth": 0.5,
-      "organization_headcount_twelve_month_growth": 1.0,
-      "organization_headcount_twenty_four_month_growth": null
-    }
-  ],
-  "model_ids": [
-    "683d7916a3f12c0021b0f321"
-  ],
-  "num_fetch_result": null,
-  "derived_params": null
-}
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Bild Ai",
+        "display_name": "Bild Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 1,
+      "total_pages": 1
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "679059f0fd228301b2234207",
+        "name": "Bild AI",
+        "website_url": "http://www.bild.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/bild-ai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "105593757",
+        "founded_year": null,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68b1ec27b63f8100017035d8/picture",
+        "crunchbase_url": null,
+        "primary_domain": "bild.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.5,
+        "organization_headcount_twelve_month_growth": null,
+        "organization_headcount_twenty_four_month_growth": null
+      }
+    ],
+    "model_ids": [
+      "679059f0fd228301b2234207"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Weave",
+        "display_name": "Weave"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 1671,
+      "total_pages": 1671
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "60f3c5498dbf150001e70682",
+        "name": "Weave",
+        "website_url": "http://www.getweave.com",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/getweave",
+        "twitter_url": "https://twitter.com/getweave",
+        "facebook_url": "https://facebook.com/weavecomm/",
+        "primary_phone": {
+          "number": "+1 888-579-5668",
+          "source": "Owler",
+          "sanitized_number": "+18885795668"
+        },
+        "languages": [],
+        "alexa_ranking": 158005,
+        "phone": "+1 888-579-5668",
+        "linkedin_uid": "1271877",
+        "founded_year": 2008,
+        "publicly_traded_symbol": "WEAV",
+        "publicly_traded_exchange": "nasdaq",
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68ae122440c2c6000190c421/picture",
+        "crunchbase_url": null,
+        "primary_domain": "getweave.com",
+        "sanitized_phone": "+18885795668",
+        "market_cap": "599.3M",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": "213.0M",
+        "organization_revenue": 212950000.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0731958762886598,
+        "organization_headcount_twelve_month_growth": 0.1050955414012739,
+        "organization_headcount_twenty_four_month_growth": 0.271062271062271
+      }
+    ],
+    "model_ids": [
+      "60f3c5498dbf150001e70682"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Prosper Ai",
+        "display_name": "Prosper Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 6,
+      "total_pages": 6
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "661f42b3dd9aa80007bd9be5",
+        "name": "Prosper AI",
+        "website_url": "http://www.prosper-ai.no",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/prosper-ai-as",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {
+          "number": "+47 901 46 207",
+          "source": "Account",
+          "sanitized_number": "+4790146207"
+        },
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": "+47 901 46 207",
+        "linkedin_uid": "102187751",
+        "founded_year": 2024,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/6895981d937b2f0001ad4ae3/picture",
+        "crunchbase_url": null,
+        "primary_domain": "prosper-ai.no",
+        "sanitized_phone": "+4790146207",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0,
+        "organization_headcount_twelve_month_growth": 0.0,
+        "organization_headcount_twenty_four_month_growth": -0.3333333333333333
+      }
+    ],
+    "model_ids": [
+      "661f42b3dd9aa80007bd9be5"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Mbodi Ai",
+        "display_name": "Mbodi Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 1,
+      "total_pages": 1
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "661028afb5043701c7066d0b",
+        "name": "Mbodi AI",
+        "website_url": "http://www.mbodi.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/mbodiai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "103113911",
+        "founded_year": 2024,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68affdca658b270001963637/picture",
+        "crunchbase_url": null,
+        "primary_domain": "mbodi.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0,
+        "organization_headcount_twelve_month_growth": 0.0,
+        "organization_headcount_twenty_four_month_growth": 4.0
+      }
+    ],
+    "model_ids": [
+      "661028afb5043701c7066d0b"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Coloop",
+        "display_name": "Coloop"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 4,
+      "total_pages": 4
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "64523d489cad5100a35209c7",
+        "name": "CoLoop",
+        "website_url": "http://www.coloop.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/coloopai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "93372710",
+        "founded_year": null,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68af109f82dac200013aa11e/picture",
+        "crunchbase_url": null,
+        "primary_domain": "coloop.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0,
+        "organization_headcount_twelve_month_growth": 0.0,
+        "organization_headcount_twenty_four_month_growth": null
+      }
+    ],
+    "model_ids": [
+      "64523d489cad5100a35209c7"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  }
+][
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "14.Ai",
+        "display_name": "14.Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 2,
+      "total_pages": 2
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "683d7916a3f12c0021b0f321",
+        "name": "14.ai",
+        "website_url": "http://www.14.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/14ai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "107389070",
+        "founded_year": null,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68aeb6c479140f0001c34798/picture",
+        "crunchbase_url": null,
+        "primary_domain": "14.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.5,
+        "organization_headcount_twelve_month_growth": 1.0,
+        "organization_headcount_twenty_four_month_growth": null
+      }
+    ],
+    "model_ids": [
+      "683d7916a3f12c0021b0f321"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Mbodi Ai",
+        "display_name": "Mbodi Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 1,
+      "total_pages": 1
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "661028afb5043701c7066d0b",
+        "name": "Mbodi AI",
+        "website_url": "http://www.mbodi.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/mbodiai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "103113911",
+        "founded_year": 2024,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68affdca658b270001963637/picture",
+        "crunchbase_url": null,
+        "primary_domain": "mbodi.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0,
+        "organization_headcount_twelve_month_growth": 0.0,
+        "organization_headcount_twenty_four_month_growth": 4.0
+      }
+    ],
+    "model_ids": [
+      "661028afb5043701c7066d0b"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Bild Ai",
+        "display_name": "Bild Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 1,
+      "total_pages": 1
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "679059f0fd228301b2234207",
+        "name": "Bild AI",
+        "website_url": "http://www.bild.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/bild-ai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "105593757",
+        "founded_year": null,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68b1ec27b63f8100017035d8/picture",
+        "crunchbase_url": null,
+        "primary_domain": "bild.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.5,
+        "organization_headcount_twelve_month_growth": null,
+        "organization_headcount_twenty_four_month_growth": null
+      }
+    ],
+    "model_ids": [
+      "679059f0fd228301b2234207"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Weave",
+        "display_name": "Weave"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 1671,
+      "total_pages": 1671
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "60f3c5498dbf150001e70682",
+        "name": "Weave",
+        "website_url": "http://www.getweave.com",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/getweave",
+        "twitter_url": "https://twitter.com/getweave",
+        "facebook_url": "https://facebook.com/weavecomm/",
+        "primary_phone": {
+          "number": "+1 888-579-5668",
+          "source": "Owler",
+          "sanitized_number": "+18885795668"
+        },
+        "languages": [],
+        "alexa_ranking": 158005,
+        "phone": "+1 888-579-5668",
+        "linkedin_uid": "1271877",
+        "founded_year": 2008,
+        "publicly_traded_symbol": "WEAV",
+        "publicly_traded_exchange": "nasdaq",
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68ae122440c2c6000190c421/picture",
+        "crunchbase_url": null,
+        "primary_domain": "getweave.com",
+        "sanitized_phone": "+18885795668",
+        "market_cap": "599.3M",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": "213.0M",
+        "organization_revenue": 212950000.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0731958762886598,
+        "organization_headcount_twelve_month_growth": 0.1050955414012739,
+        "organization_headcount_twenty_four_month_growth": 0.271062271062271
+      }
+    ],
+    "model_ids": [
+      "60f3c5498dbf150001e70682"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Prosper Ai",
+        "display_name": "Prosper Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 6,
+      "total_pages": 6
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "661f42b3dd9aa80007bd9be5",
+        "name": "Prosper AI",
+        "website_url": "http://www.prosper-ai.no",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/prosper-ai-as",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {
+          "number": "+47 901 46 207",
+          "source": "Account",
+          "sanitized_number": "+4790146207"
+        },
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": "+47 901 46 207",
+        "linkedin_uid": "102187751",
+        "founded_year": 2024,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/6895981d937b2f0001ad4ae3/picture",
+        "crunchbase_url": null,
+        "primary_domain": "prosper-ai.no",
+        "sanitized_phone": "+4790146207",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0,
+        "organization_headcount_twelve_month_growth": 0.0,
+        "organization_headcount_twenty_four_month_growth": -0.3333333333333333
+      }
+    ],
+    "model_ids": [
+      "661f42b3dd9aa80007bd9be5"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Coloop",
+        "display_name": "Coloop"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 4,
+      "total_pages": 4
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "64523d489cad5100a35209c7",
+        "name": "CoLoop",
+        "website_url": "http://www.coloop.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/coloopai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "93372710",
+        "founded_year": null,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68af109f82dac200013aa11e/picture",
+        "crunchbase_url": null,
+        "primary_domain": "coloop.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0,
+        "organization_headcount_twelve_month_growth": 0.0,
+        "organization_headcount_twenty_four_month_growth": null
+      }
+    ],
+    "model_ids": [
+      "64523d489cad5100a35209c7"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  }
+][
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Mbodi Ai",
+        "display_name": "Mbodi Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 1,
+      "total_pages": 1
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "661028afb5043701c7066d0b",
+        "name": "Mbodi AI",
+        "website_url": "http://www.mbodi.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/mbodiai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "103113911",
+        "founded_year": 2024,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68affdca658b270001963637/picture",
+        "crunchbase_url": null,
+        "primary_domain": "mbodi.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0,
+        "organization_headcount_twelve_month_growth": 0.0,
+        "organization_headcount_twenty_four_month_growth": 4.0
+      }
+    ],
+    "model_ids": [
+      "661028afb5043701c7066d0b"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "14.Ai",
+        "display_name": "14.Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 2,
+      "total_pages": 2
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "683d7916a3f12c0021b0f321",
+        "name": "14.ai",
+        "website_url": "http://www.14.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/14ai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "107389070",
+        "founded_year": null,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68aeb6c479140f0001c34798/picture",
+        "crunchbase_url": null,
+        "primary_domain": "14.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.5,
+        "organization_headcount_twelve_month_growth": 1.0,
+        "organization_headcount_twenty_four_month_growth": null
+      }
+    ],
+    "model_ids": [
+      "683d7916a3f12c0021b0f321"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Prosper Ai",
+        "display_name": "Prosper Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 6,
+      "total_pages": 6
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "661f42b3dd9aa80007bd9be5",
+        "name": "Prosper AI",
+        "website_url": "http://www.prosper-ai.no",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/prosper-ai-as",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {
+          "number": "+47 901 46 207",
+          "source": "Account",
+          "sanitized_number": "+4790146207"
+        },
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": "+47 901 46 207",
+        "linkedin_uid": "102187751",
+        "founded_year": 2024,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/6895981d937b2f0001ad4ae3/picture",
+        "crunchbase_url": null,
+        "primary_domain": "prosper-ai.no",
+        "sanitized_phone": "+4790146207",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0,
+        "organization_headcount_twelve_month_growth": 0.0,
+        "organization_headcount_twenty_four_month_growth": -0.3333333333333333
+      }
+    ],
+    "model_ids": [
+      "661f42b3dd9aa80007bd9be5"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Weave",
+        "display_name": "Weave"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 1671,
+      "total_pages": 1671
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "60f3c5498dbf150001e70682",
+        "name": "Weave",
+        "website_url": "http://www.getweave.com",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/getweave",
+        "twitter_url": "https://twitter.com/getweave",
+        "facebook_url": "https://facebook.com/weavecomm/",
+        "primary_phone": {
+          "number": "+1 888-579-5668",
+          "source": "Owler",
+          "sanitized_number": "+18885795668"
+        },
+        "languages": [],
+        "alexa_ranking": 158005,
+        "phone": "+1 888-579-5668",
+        "linkedin_uid": "1271877",
+        "founded_year": 2008,
+        "publicly_traded_symbol": "WEAV",
+        "publicly_traded_exchange": "nasdaq",
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68ae122440c2c6000190c421/picture",
+        "crunchbase_url": null,
+        "primary_domain": "getweave.com",
+        "sanitized_phone": "+18885795668",
+        "market_cap": "599.3M",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": "213.0M",
+        "organization_revenue": 212950000.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0731958762886598,
+        "organization_headcount_twelve_month_growth": 0.1050955414012739,
+        "organization_headcount_twenty_four_month_growth": 0.271062271062271
+      }
+    ],
+    "model_ids": [
+      "60f3c5498dbf150001e70682"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Bild Ai",
+        "display_name": "Bild Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 1,
+      "total_pages": 1
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "679059f0fd228301b2234207",
+        "name": "Bild AI",
+        "website_url": "http://www.bild.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/bild-ai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "105593757",
+        "founded_year": null,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68b1ec27b63f8100017035d8/picture",
+        "crunchbase_url": null,
+        "primary_domain": "bild.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.5,
+        "organization_headcount_twelve_month_growth": null,
+        "organization_headcount_twenty_four_month_growth": null
+      }
+    ],
+    "model_ids": [
+      "679059f0fd228301b2234207"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Coloop",
+        "display_name": "Coloop"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 4,
+      "total_pages": 4
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "64523d489cad5100a35209c7",
+        "name": "CoLoop",
+        "website_url": "http://www.coloop.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/coloopai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "93372710",
+        "founded_year": null,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68af109f82dac200013aa11e/picture",
+        "crunchbase_url": null,
+        "primary_domain": "coloop.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0,
+        "organization_headcount_twelve_month_growth": 0.0,
+        "organization_headcount_twenty_four_month_growth": null
+      }
+    ],
+    "model_ids": [
+      "64523d489cad5100a35209c7"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  }
+][
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Weave",
+        "display_name": "Weave"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 1671,
+      "total_pages": 1671
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "60f3c5498dbf150001e70682",
+        "name": "Weave",
+        "website_url": "http://www.getweave.com",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/getweave",
+        "twitter_url": "https://twitter.com/getweave",
+        "facebook_url": "https://facebook.com/weavecomm/",
+        "primary_phone": {
+          "number": "+1 888-579-5668",
+          "source": "Owler",
+          "sanitized_number": "+18885795668"
+        },
+        "languages": [],
+        "alexa_ranking": 158005,
+        "phone": "+1 888-579-5668",
+        "linkedin_uid": "1271877",
+        "founded_year": 2008,
+        "publicly_traded_symbol": "WEAV",
+        "publicly_traded_exchange": "nasdaq",
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68ae122440c2c6000190c421/picture",
+        "crunchbase_url": null,
+        "primary_domain": "getweave.com",
+        "sanitized_phone": "+18885795668",
+        "market_cap": "599.3M",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": "213.0M",
+        "organization_revenue": 212950000.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0731958762886598,
+        "organization_headcount_twelve_month_growth": 0.1050955414012739,
+        "organization_headcount_twenty_four_month_growth": 0.271062271062271
+      }
+    ],
+    "model_ids": [
+      "60f3c5498dbf150001e70682"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "14.Ai",
+        "display_name": "14.Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 2,
+      "total_pages": 2
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "683d7916a3f12c0021b0f321",
+        "name": "14.ai",
+        "website_url": "http://www.14.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/14ai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "107389070",
+        "founded_year": null,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68aeb6c479140f0001c34798/picture",
+        "crunchbase_url": null,
+        "primary_domain": "14.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.5,
+        "organization_headcount_twelve_month_growth": 1.0,
+        "organization_headcount_twenty_four_month_growth": null
+      }
+    ],
+    "model_ids": [
+      "683d7916a3f12c0021b0f321"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Coloop",
+        "display_name": "Coloop"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 4,
+      "total_pages": 4
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "64523d489cad5100a35209c7",
+        "name": "CoLoop",
+        "website_url": "http://www.coloop.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/coloopai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "93372710",
+        "founded_year": null,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68af109f82dac200013aa11e/picture",
+        "crunchbase_url": null,
+        "primary_domain": "coloop.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0,
+        "organization_headcount_twelve_month_growth": 0.0,
+        "organization_headcount_twenty_four_month_growth": null
+      }
+    ],
+    "model_ids": [
+      "64523d489cad5100a35209c7"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Bild Ai",
+        "display_name": "Bild Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 1,
+      "total_pages": 1
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "679059f0fd228301b2234207",
+        "name": "Bild AI",
+        "website_url": "http://www.bild.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/bild-ai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "105593757",
+        "founded_year": null,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68b1ec27b63f8100017035d8/picture",
+        "crunchbase_url": null,
+        "primary_domain": "bild.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.5,
+        "organization_headcount_twelve_month_growth": null,
+        "organization_headcount_twenty_four_month_growth": null
+      }
+    ],
+    "model_ids": [
+      "679059f0fd228301b2234207"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Mbodi Ai",
+        "display_name": "Mbodi Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 1,
+      "total_pages": 1
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "661028afb5043701c7066d0b",
+        "name": "Mbodi AI",
+        "website_url": "http://www.mbodi.ai",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/mbodiai",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {},
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": null,
+        "linkedin_uid": "103113911",
+        "founded_year": 2024,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/68affdca658b270001963637/picture",
+        "crunchbase_url": null,
+        "primary_domain": "mbodi.ai",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0,
+        "organization_headcount_twelve_month_growth": 0.0,
+        "organization_headcount_twenty_four_month_growth": 4.0
+      }
+    ],
+    "model_ids": [
+      "661028afb5043701c7066d0b"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  },
+  {
+    "breadcrumbs": [
+      {
+        "label": "Company Name",
+        "signal_field_name": "q_organization_name",
+        "value": "Prosper Ai",
+        "display_name": "Prosper Ai"
+      }
+    ],
+    "partial_results_only": false,
+    "has_join": false,
+    "disable_eu_prospecting": false,
+    "partial_results_limit": 10000,
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_entries": 6,
+      "total_pages": 6
+    },
+    "accounts": [],
+    "organizations": [
+      {
+        "id": "661f42b3dd9aa80007bd9be5",
+        "name": "Prosper AI",
+        "website_url": "http://www.prosper-ai.no",
+        "blog_url": null,
+        "angellist_url": null,
+        "linkedin_url": "http://www.linkedin.com/company/prosper-ai-as",
+        "twitter_url": null,
+        "facebook_url": null,
+        "primary_phone": {
+          "number": "+47 901 46 207",
+          "source": "Account",
+          "sanitized_number": "+4790146207"
+        },
+        "languages": [],
+        "alexa_ranking": null,
+        "phone": "+47 901 46 207",
+        "linkedin_uid": "102187751",
+        "founded_year": 2024,
+        "publicly_traded_symbol": null,
+        "publicly_traded_exchange": null,
+        "logo_url": "https://zenprospect-production.s3.amazonaws.com/uploads/pictures/6895981d937b2f0001ad4ae3/picture",
+        "crunchbase_url": null,
+        "primary_domain": "prosper-ai.no",
+        "sanitized_phone": "+4790146207",
+        "owned_by_organization_id": null,
+        "organization_revenue_printed": null,
+        "organization_revenue": 0.0,
+        "intent_strength": null,
+        "show_intent": true,
+        "has_intent_signal_account": false,
+        "intent_signal_account": null,
+        "organization_headcount_six_month_growth": 0.0,
+        "organization_headcount_twelve_month_growth": 0.0,
+        "organization_headcount_twenty_four_month_growth": -0.3333333333333333
+      }
+    ],
+    "model_ids": [
+      "661f42b3dd9aa80007bd9be5"
+    ],
+    "num_fetch_result": null,
+    "derived_params": null
+  }
+]

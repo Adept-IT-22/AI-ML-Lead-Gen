@@ -4,9 +4,11 @@ import aiofiles
 import asyncio
 import logging
 import yappi
+from decimal import Decimal
 from typing import List, Dict, Any, Awaitable, Union, Callable
 
 from utils.countries import countries
+from services.db_service import *
 from ingestion_module.funding.finsmes.fetch import main as finsmes_main
 from ingestion_module.funding.tech_eu.fetch import main as tech_eu_main
 from ingestion_module.funding.techcrunch.fetch import main as techcrunch_main
@@ -24,6 +26,19 @@ logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 MAX_EMPLOYEE_COUNT = 20
+
+#These 2 functions safely convert strings to integers and decimals
+def safe_int(value: Any)->Union[int, None]:
+    try: 
+        return int(value)
+    except (ValueError, TypeError):
+        return None
+
+def safe_decimal(value: Any)->Union[Decimal, None]:
+    try:
+        return Decimal(str(value))
+    except (ValueError, TypeError, ArithmeticError):
+        return None
 
 #This function pairs a name with a coroutine (if all goes well) or with an exception otherwise 
 async def wrap(name: str, coroutine: Awaitable[Any] )->tuple[str, Union[Any, Exception]]:
@@ -143,6 +158,7 @@ async def main():
         data_to_enrich_list = await normalization_to_enrichment_queue.get()
         logger.info(f"Fetched {len(data_to_enrich_list)} items from normaliztion_to_enrichment queue.")
     
+    #2.2 =======Organization Search to Get Org Website=========
         async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
             orgs_to_search = []
             searched_orgs = []
@@ -151,7 +167,6 @@ async def main():
                 company_names = normalized_company.get("company_name", [])
                 orgs_to_search.extend(company_names)
 
-    #2.2 =======Organization Search to Get Org Website=========
             logger.info("Organizational search started...")
 
             searched_tasks = [apollo_org_search(client=client, company_name=name) for name in company_names]
@@ -166,7 +181,7 @@ async def main():
             logger.info(f"Completed organization seach for {len(searched_orgs)} companies")
 
             async with aiofiles.open(f"org_search.txt", "a") as org_search_file:
-                await org_search_file.write(json.dumps(searched_orgs[0], indent=2))
+                await org_search_file.write(json.dumps(searched_orgs, indent=2))
 
             logger.info("Completed organizational search")
     
@@ -204,39 +219,14 @@ async def main():
     #2.4 ========Single Org Enrichment===========
             logger.info("Single Org Enrichment started...")
 
-            funding_data = {
-                "total_funding": [],
-                "latest_funding_round_date": [],
-                "latest_funding_stage": [],
-                "latest_funding_amount": [],
-                "latest_funding_round_investors": []
-            }
-
-            #Filter necessary companies from bulk enrichment based on size and location
+            single_enriched_orgs = []
             for single_org in bulk_enriched_orgs[0].get("organizations"):
-                org_size = single_org.get("estimated_num_employees", "") 
-                org_country = single_org.get("country", "")
-
-                all_countries = countries["North American Countries"].union(countries["European Countries"])
-                if org_size and org_size <= MAX_EMPLOYEE_COUNT and org_country in all_countries:
-                    org_domain = single_org.get("primary_domain")
-                    single_enriched_org = await single_org_enrichment(client=client, company_website=org_domain)
-
-                    #Extract funding data from enrichment results
-                    org_info = single_enriched_org.get("organization", {})
-                    funding_data["total_funding"].append(org_info.get("total_funding_printed", ""))
-                    funding_data["latest_funding_round_date"].append(org_info.get("latest_funding_round_date", ""))
-                    funding_data["latest_funding_stage"].append(org_info.get("latest_funding_stage", ""))
-
-                    funding_events = org_info.get("funding_events", {})
-                    if funding_events:
-                        amount = funding_events[0].get("amount", "")
-                        currency = funding_events[0].get("currency", "")
-                        funding_data["latest_funding_amount"].append(f"{amount}{currency}")
-                        funding_data["latest_funding_round_investors"].append(funding_events[0].get("investors", ""))
-            
+                org_domain = single_org.get("primary_domain")
+                single_enriched_org = await single_org_enrichment(client=client, company_website=org_domain)
+                single_enriched_orgs.append(single_enriched_org)
+                
             async with aiofiles.open("single_org_enrichment.txt", "w") as single_org_enrichment_file:
-                await single_org_enrichment_file.write(json.dumps(funding_data, indent=2))
+                await single_org_enrichment_file.write(json.dumps(single_enriched_orgs, indent=2))
 
             logger.info("Completed Single Org Enrichment")
     
@@ -253,37 +243,85 @@ async def main():
                     org_ids.append(org_id)
                     org_domain = each_org.get("primary_domain")
                     org_domains.append(org_domain)
-
-            #Call people search and get people's names and emails
-            found_people_names = []
-            found_people_numbers = []
-            found_people_emails = []
-            found_people_titles = []
-            found_people_orgs = []
+            
             searched_people = await people_search(client=client, org_ids=org_ids, org_domains=org_domains)
-            for people in searched_people.get("people", []):
-                found_people_names.append(people.get("name", ""))
-                found_people_names.append(people.get("sanitized_phone", ""))
-                found_people_emails.append(people.get("email", ""))
-                found_people_titles.append(people.get("title", ""))
-                found_people_orgs.append(people.get("employment_history")[0].get("organization_name", ""))
-
-            found_people_details = {
-                "names": found_people_names,
-                "numbers": found_people_numbers,
-                "emails": found_people_emails,
-                "titles": found_people_titles,
-                "orgs": found_people_orgs
-            }
 
             async with aiofiles.open("people_search.txt", "w") as people_search_file:
-                await people_search_file.write(json.dumps(found_people_details, indent=2))
+                await people_search_file.write(json.dumps(searched_people, indent=2))
 
             logger.info("Completed people Search")
 
     #==============4. STORAGE================
+    logger.info("Storing data....")
 
+    #Check LIVE DEV DOC for the "necessary data" mentioned below
+    company_data_to_store = []
 
+    searched_organizations = [dictionary.get("organizations")[0] for dictionary in searched_orgs]
+    bulk_enriched_organizations = bulk_enriched_orgs[0].get("organizations", [])
+    single_enriched_organizations = [item.get("organization", []) for item in single_enriched_orgs]
+
+    #Iterate over orgs. Zip will stop when shortest list ends preventing errors
+    if searched_organizations and bulk_enriched_organizations and single_enriched_organizations:
+        for searched_org, bulk_enriched_org, single_enriched_organization in zip(searched_organizations, bulk_enriched_organizations, single_enriched_organizations, strict=True):
+            try:
+                #Get necessary data from org search 
+                headcount_six_month_growth = searched_org.get("organization_headcount_six_month_growth", "")
+                headcount_twelve_month_growth = searched_org.get("organization_headcount_twelve_month_growth", "")
+
+                #Get necessary data from bulk enriched orgs
+                apollo_id = bulk_enriched_org.get("id", "")
+                company_name = bulk_enriched_org.get("name", "")
+                website_url = bulk_enriched_org.get("website_url", "")
+                linkedin_url = bulk_enriched_org.get("linkedin_url", "")
+                phone = bulk_enriched_org.get("phone", "")
+                founded_year = bulk_enriched_org.get("founded_year", "")
+                market_cap = bulk_enriched_org.get("market_cap", "")
+                industries = bulk_enriched_org.get("industries", [])
+                estimated_num_employees = bulk_enriched_org.get("estimated_num_employees", "")
+                keywords = bulk_enriched_org.get("keywords", [])
+                city = bulk_enriched_org.get("city", "")
+                state = bulk_enriched_org.get("state", "")
+                country = bulk_enriched_org.get("country", "")
+                short_description = bulk_enriched_org.get("short_description", "")
+
+                #Get necessary data from single enriched orgs
+                total_funding = single_enriched_organization.get("total_funding", "")
+                technology_names = single_enriched_organization.get("technology_names", [])
+                annual_revenue_printed = single_enriched_organization.get("annual_revenue", "")
+
+                row = (
+                    apollo_id, company_name, website_url, linkedin_url, phone, safe_int(founded_year),
+                    safe_decimal(market_cap), safe_decimal(annual_revenue_printed), industries, safe_int(estimated_num_employees), 
+                    keywords, safe_decimal(headcount_six_month_growth), safe_decimal(headcount_twelve_month_growth), city,
+                    state, country, short_description, safe_decimal(total_funding), technology_names,
+                    None, #icp score placeholder
+                    "uncontacted", #Default contacted_status
+                    None, #notes
+                    None, #created_at. Use DB default
+                    None, #updated_at. Use DB Default
+                )
+
+                company_data_to_store.append(row)
+
+            except Exception as e:
+                logger.error(f"Failed to process company data during merge: {str(e)}")
+                continue #Skip this entry and move to the next
+
+    #Store company data in "companies" database
+    company_query = """
+            INSERT INTO companies (apollo_id, name, website_url, linkedin_url,
+                        phone, founded_year, market_cap, annual_revenue, industries,
+                        estimated_num_employees, keywords, organization_headcount_six_month_growth,
+                        organization_headcount_twelve_month_growth, city, state, country, short_description,
+                        total_funding, technology_names, icp_score, contacted_status, notes, created_at,
+                        updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+                        $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24) 
+                """
+    if company_data_to_store:
+        await store_to_db(data_to_store=company_data_to_store, query=company_query)
+    else:
+        logger.warning("No companies to store ❌")
 
 #Profiling Code
 async def handle_profiling():
