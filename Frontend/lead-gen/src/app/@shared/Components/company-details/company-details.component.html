@@ -1,0 +1,26 @@
+/**company-details.component.html**/
+<div *ngIf="companySections; else noData">
+  <div class="cards-container">
+    <mat-card *ngFor="let section of companySections" class="company-card">
+      <mat-card-header>
+        <mat-card-title>{{ section.section }}</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div *ngFor="let field of section.fields" class="card-item">
+        <p>
+          <strong>{{ field.label }}:</strong> {{ field.value }}
+        </p>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <app-button label="Action"></app-button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+
+<ng-template #noData>
+  <p>No company details available.</p>
+</ng-template>
