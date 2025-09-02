@@ -21,6 +21,7 @@ from enrichment_module.organization_search import org_search as apollo_org_searc
 from enrichment_module.bulk_org_enrichment import bulk_org_enrichment 
 from enrichment_module.single_org_enrichment import single_org_enrichment
 from enrichment_module.people_search import people_search
+from enrichment_module.people_enrichment import people_enrichment
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -251,10 +252,32 @@ async def main():
 
             logger.info("Completed people Search")
 
+    #2.6 ============People Enrichment=============
+            logger.info("People Enrichment started....")
+
+            enriched_people = []
+
+            #Get user id's and names
+            people_to_enrich = searched_people.get("people", [])
+            for person in people_to_enrich:
+                user_id = person.get("id", "")
+                user_name = person.get("name", "")
+
+                #Call people enrichment API
+                enriched_person = await people_enrichment(client=client, user_id=user_id, user_name=user_name)
+                enriched_people.append(enriched_person)
+
+            async with aiofiles.open("people_enrichment.txt", "w") as people_enrichment_file:
+                await people_enrichment_file.write(json.dumps(searched_people, indent=2))
+
+            logger.info("Completed people enrichment")
+
     #==============4. STORAGE================
     logger.info("Storing data....")
 
     #Check LIVE DEV DOC for the "necessary data" mentioned below
+
+    #=============Company Data Storage=============
     company_data_to_store = []
 
     searched_organizations = [dictionary.get("organizations")[0] for dictionary in searched_orgs]
@@ -290,7 +313,7 @@ async def main():
                 technology_names = single_enriched_organization.get("technology_names", [])
                 annual_revenue_printed = single_enriched_organization.get("annual_revenue", "")
 
-                row = (
+                company_row = (
                     apollo_id, company_name, website_url, linkedin_url, phone, safe_int(founded_year),
                     safe_decimal(market_cap), safe_decimal(annual_revenue_printed), industries, safe_int(estimated_num_employees), 
                     keywords, safe_decimal(headcount_six_month_growth), safe_decimal(headcount_twelve_month_growth), city,
@@ -302,10 +325,10 @@ async def main():
                     None, #updated_at. Use DB Default
                 )
 
-                company_data_to_store.append(row)
+                company_data_to_store.append(company_row)
 
             except Exception as e:
-                logger.error(f"Failed to process company data during merge: {str(e)}")
+                logger.error(f"Failed to process company data for storage: {str(e)}")
                 continue #Skip this entry and move to the next
 
     #Store company data in "companies" database
@@ -319,9 +342,67 @@ async def main():
                         $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24) 
                 """
     if company_data_to_store:
-        await store_to_db(data_to_store=company_data_to_store, query=company_query)
+        await store_to_db(data_to_store=company_data_to_store, query=company_query, company_or_people="company")
     else:
         logger.warning("No companies to store ❌")
+
+    #==============People Data Storage=================
+    people_data_to_store = []
+
+    people_search_data = searched_people.get("people", [])
+    people_enrichment_data = enriched_people
+
+    if people_search_data and people_enrichment_data:
+        for person_search_data, person_enrichment_data in zip(people_search_data, people_enrichment_data):
+            try:
+                #From people search API
+                apollo_user_id = person_search_data.get("id", "")
+                user_first_name = person_search_data.get("first_name", "")
+                user_last_name = person_search_data.get("last_name", "")
+                user_full_name = person_search_data.get("name", "")
+                user_linkedin_url = person_search_data.get("linkedin_url")
+                user_title = person_search_data.get("title", "")
+                user_email_status = person_search_data.get("email_status", "")
+                user_headline = person_search_data.get("headline", "")
+                user_organization_id = person_search_data.get("organization_id", "")
+                user_seniority = person_search_data.get("seniority", "")
+                user_departments = person_search_data.get("departments", [])
+                user_subdepartments = person_search_data.get("subdepartments", [])
+                user_functions = person_search_data.get("functions", [])
+
+                #From people enrichment API
+                user_email = person_enrichment_data.get("email")
+                user_phone_number_data = person_enrichment_data.get("phone_numbers", [])
+                if user_phone_number_data:
+                    user_phone_number = user_phone_number_data[0].get("sanitized_number", "")
+
+                people_row = (apollo_user_id, user_first_name, user_last_name, user_full_name,
+                                user_linkedin_url, user_title, user_email_status, user_headline,
+                                user_organization_id, user_seniority, user_departments, 
+                                user_subdepartments, user_functions, user_email, user_phone_number,
+                                None, #created_at. Use DB default
+                                None, #updated_at. Use DB Default
+                                "uncontacted", #Default contacted_status
+                                None, #notes
+                            ) 
+
+                people_data_to_store.append(people_row)
+
+            except Exception as e:
+                logger.error(f"Failed to process people data for storage: {str(e)}")
+                continue
+
+    people_query = """
+                    INSERT INTO people (apollo_id, first_name, last_name, full_name,
+                    linkedin_url, title, email_status, headline, organization_id,
+                    seniority, departments, subdepartments, functions, email,
+                    number, created_at, updated_at, contacted_status, notes) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+                        $11, $12, $13, $14, $15, $16, $17, $18, $19)
+                """
+    if people_data_to_store:
+        await store_to_db(data_to_store=people_data_to_store, query=people_query, company_or_people="people")
+    else: 
+        logger.error("No people data to store in db ❌")
 
 #Profiling Code
 async def handle_profiling():
