@@ -1,5 +1,6 @@
 import os
 import logging
+import asyncio
 import asyncpg
 from typing import List, Any, Tuple
 from dotenv import load_dotenv
@@ -8,16 +9,26 @@ load_dotenv(verbose=True, override=True)
 DB_URL = os.getenv("DATABASE_URL")
 
 logger = logging.getLogger()
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-company_query = """
-        INSERT INTO companies (apollo_id, name, website_url, linkedin_url,
-                    phone, founded_year, market_cap, annual_revenue, industries,
-                    estimated_num_employees, keywords, organization_headcount_six_month_growth,
-                    organization_headcount_twelve_month_growth, city, state, country, short_description,
-                    total_funding, technology_names, icp_score, contacted_status, notes, created_at,
-                    updated_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) 
-            """
+async def initialize_db():
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL)
+        if conn:
+            logger.info("Connection Made")
+    except Exception as e:
+        logger.error("Sikujui!")
+
+async def fetch_companies():
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL)
+        query = "SELECT * FROM companies"
+        results = await conn.fetch(query)
+        for result in results:
+            logger.info(f"This is the result: {result}")
+    except Exception as e:
+        logger.error(f"Didn't work boy! {str(e)}")
+
 #Store company data to database
 async def store_to_db(
         data_to_store: List[Tuple[Any]],
@@ -37,3 +48,9 @@ async def store_to_db(
     except Exception as e:
         logger.error(f"Failed to store company data. {str(e)}")
         return False
+
+if __name__ == "__main__":
+    async def main():
+        await fetch_companies()
+
+asyncio.run(main())

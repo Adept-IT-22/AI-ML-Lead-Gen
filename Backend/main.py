@@ -257,52 +257,56 @@ async def main():
     #Check LIVE DEV DOC for the "necessary data" mentioned below
     company_data_to_store = []
 
-    searched_organizations = searched_orgs[0].get("organizations", [])
+    searched_organizations = [dictionary.get("organizations")[0] for dictionary in searched_orgs]
     bulk_enriched_organizations = bulk_enriched_orgs[0].get("organizations", [])
-    single_enriched_organizations = single_enriched_orgs[0].get("organization", [])
+    single_enriched_organizations = [item.get("organization", []) for item in single_enriched_orgs]
 
     #Iterate over orgs. Zip will stop when shortest list ends preventing errors
     if searched_organizations and bulk_enriched_organizations and single_enriched_organizations:
         for searched_org, bulk_enriched_org, single_enriched_organization in zip(searched_organizations, bulk_enriched_organizations, single_enriched_organizations, strict=True):
+            try:
+                #Get necessary data from org search 
+                headcount_six_month_growth = searched_org.get("organization_headcount_six_month_growth", "")
+                headcount_twelve_month_growth = searched_org.get("organization_headcount_twelve_month_growth", "")
 
-            #Get necessary data from org search 
-            headcount_six_month_growth = searched_org.get("organization_headcount_six_month_growth", "")
-            headcount_twelve_month_growth = searched_org.get("organization_headcount_twelve_month_growth", "")
+                #Get necessary data from bulk enriched orgs
+                apollo_id = bulk_enriched_org.get("id", "")
+                company_name = bulk_enriched_org.get("name", "")
+                website_url = bulk_enriched_org.get("website_url", "")
+                linkedin_url = bulk_enriched_org.get("linkedin_url", "")
+                phone = bulk_enriched_org.get("phone", "")
+                founded_year = bulk_enriched_org.get("founded_year", "")
+                market_cap = bulk_enriched_org.get("market_cap", "")
+                industries = bulk_enriched_org.get("industries", [])
+                estimated_num_employees = bulk_enriched_org.get("estimated_num_employees", "")
+                keywords = bulk_enriched_org.get("keywords", [])
+                city = bulk_enriched_org.get("city", "")
+                state = bulk_enriched_org.get("state", "")
+                country = bulk_enriched_org.get("country", "")
+                short_description = bulk_enriched_org.get("short_description", "")
 
-            #Get necessary data from bulk enriched orgs
-            apollo_id = bulk_enriched_org.get("id", "")
-            company_name = bulk_enriched_org.get("name", "")
-            website_url = bulk_enriched_org.get("website_url", "")
-            linkedin_url = bulk_enriched_org.get("linkedin_url", "")
-            phone = bulk_enriched_org.get("phone", "")
-            founded_year = bulk_enriched_org.get("founded_year", "")
-            market_cap = bulk_enriched_org.get("market_cap", "")
-            industries = bulk_enriched_org.get("industries", [])
-            estimated_num_employees = bulk_enriched_org.get("estimated_num_employees", "")
-            keywords = bulk_enriched_org.get("keywords", [])
-            city = bulk_enriched_org.get("city", "")
-            state = bulk_enriched_org.get("state", "")
-            country = bulk_enriched_org.get("country", "")
-            short_description = bulk_enriched_org.get("short_description", "")
+                #Get necessary data from single enriched orgs
+                total_funding = single_enriched_organization.get("total_funding", "")
+                technology_names = single_enriched_organization.get("technology_names", [])
+                annual_revenue_printed = single_enriched_organization.get("annual_revenue", "")
 
-            #Get necessary data from single enriched orgs
-            total_funding = single_enriched_organization.get("total_funding", "")
-            technology_names = single_enriched_organization.get("technology_names", [])
-            annual_revenue_printed = single_enriched_organization.get("annual_revenue", "")
+                row = (
+                    apollo_id, company_name, website_url, linkedin_url, phone, safe_int(founded_year),
+                    safe_decimal(market_cap), safe_decimal(annual_revenue_printed), industries, safe_int(estimated_num_employees), 
+                    keywords, safe_decimal(headcount_six_month_growth), safe_decimal(headcount_twelve_month_growth), city,
+                    state, country, short_description, safe_decimal(total_funding), technology_names,
+                    None, #icp score placeholder
+                    "uncontacted", #Default contacted_status
+                    None, #notes
+                    None, #created_at. Use DB default
+                    None, #updated_at. Use DB Default
+                )
 
-            row = (
-                apollo_id, company_name, website_url, linkedin_url, phone, safe_int(founded_year),
-                safe_decimal(market_cap), safe_decimal(annual_revenue_printed), industries, safe_int(estimated_num_employees), 
-                keywords, safe_decimal(headcount_six_month_growth), safe_decimal(headcount_twelve_month_growth), city,
-                state, country, short_description, safe_decimal(total_funding), technology_names,
-                None, #icp score placeholder
-                "uncontacted", #Default contacted_status
-                None, #notes
-                None, #created_at. Use DB default
-                None, #updated_at. Use DB Default
-            )
+                company_data_to_store.append(row)
 
-            company_data_to_store.append(row)
+            except Exception as e:
+                logger.error(f"Failed to process company data during merge: {str(e)}")
+                continue #Skip this entry and move to the next
 
     #Store company data in "companies" database
     company_query = """
@@ -311,8 +315,8 @@ async def main():
                         estimated_num_employees, keywords, organization_headcount_six_month_growth,
                         organization_headcount_twelve_month_growth, city, state, country, short_description,
                         total_funding, technology_names, icp_score, contacted_status, notes, created_at,
-                        updated_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) 
+                        updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+                        $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24) 
                 """
     if company_data_to_store:
         await store_to_db(data_to_store=company_data_to_store, query=company_query)
