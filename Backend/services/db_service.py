@@ -32,10 +32,11 @@ async def fetch_companies():
 #Store company data to database
 async def store_to_db(
         data_to_store: List[Tuple[Any]],
-        query: str
+        query: str,
+        company_or_people: str
     )->bool: #True = it worked. False = it failed
     
-    logger.info("Storing company data...")
+    logger.info(f"Storing {company_or_people} data...")
     
     try:
         conn = await asyncpg.connect(dsn=DB_URL)
@@ -53,4 +54,4 @@ if __name__ == "__main__":
     async def main():
         await fetch_companies()
 
-asyncio.run(main())
+    asyncio.run(main())

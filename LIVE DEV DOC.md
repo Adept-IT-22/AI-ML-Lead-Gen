@@ -89,6 +89,10 @@ _Insert database used here_
             + **Others -** created_at, updated_at, icp_score, contacted_status, notes
 
         + People - 
+            + id
+            + **From the people search API -** apollo_id, first_name, last_name, full_name, linkedin_url, title, email_status, headline, city, state, country, organization_id, seniority, departments, subdepartments, seniority, functions
+            + **From the people enrichment API -** email, number 
+            + **Others -** created_at, updated_at, contacted_status, notes
 
         + Funding - 
             + **From the single enrichment API -** company_id, funding_event_id, date, type, investors, amount, currency, news_url, created_at, updated_at

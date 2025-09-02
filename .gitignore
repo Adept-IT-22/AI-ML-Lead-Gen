@@ -3,6 +3,13 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+#.txt files related to the program
+normalized.txt
+org_search.txt
+people_search.txt
+bulk_org_enrichment.txt
+single_org_enrichment.txt
+
 # C extensions
 *.so
 
