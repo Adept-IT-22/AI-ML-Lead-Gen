@@ -4,16 +4,18 @@ import aiofiles
 import asyncio
 import logging
 import yappi
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 from decimal import Decimal
 from typing import List, Dict, Any, Awaitable, Union, Callable
 
-from utils.countries import countries
-from services.db_service import *
 from ingestion_module.funding.finsmes.fetch import main as finsmes_main
 from ingestion_module.funding.tech_eu.fetch import main as tech_eu_main
 from ingestion_module.funding.techcrunch.fetch import main as techcrunch_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
+from utils.db_queries import *
+from services.db_service import *
 from normalization_module.event_normalization import normalize_event_data
 from normalization_module.funding_normalization import normalize_funding_data
 from normalization_module.hiring_normalization import normalize_hiring_data
@@ -22,34 +24,16 @@ from enrichment_module.bulk_org_enrichment import bulk_org_enrichment
 from enrichment_module.single_org_enrichment import single_org_enrichment
 from enrichment_module.people_search import people_search
 from enrichment_module.people_enrichment import people_enrichment
+from helpers.helpers import *
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+#Create Flask App
+app = Flask(__name__)
+CORS(app)
+
 MAX_EMPLOYEE_COUNT = 20
-
-#These 2 functions safely convert strings to integers and decimals
-def safe_int(value: Any)->Union[int, None]:
-    try: 
-        return int(value)
-    except (ValueError, TypeError):
-        return None
-
-def safe_decimal(value: Any)->Union[Decimal, None]:
-    try:
-        return Decimal(str(value))
-    except (ValueError, TypeError, ArithmeticError):
-        return None
-
-#This function pairs a name with a coroutine (if all goes well) or with an exception otherwise 
-async def wrap(name: str, coroutine: Awaitable[Any] )->tuple[str, Union[Any, Exception]]:
-    try:
-        result = await coroutine 
-        logger.info(f"Coroutine {name} done")
-        return name, result
-    except Exception as e:
-        logger.error(f"Coroutine {name} failed with the exception: {str(e)}")
-        return name, e
 
 async def run_ingestion_modules():
     #Each coroutine and it's name
@@ -87,6 +71,7 @@ async def run_ingestion_modules():
     return results
 
 #===========PROGRAM'S MAIN CODE==============
+@app.route('/run', methods=["GET", "POST"])
 async def main():
     #==========1. INGESTION ================
     #=========1.1 Run the ingestion modules==========
@@ -319,10 +304,7 @@ async def main():
                     keywords, safe_decimal(headcount_six_month_growth), safe_decimal(headcount_twelve_month_growth), city,
                     state, country, short_description, safe_decimal(total_funding), technology_names,
                     None, #icp score placeholder
-                    "uncontacted", #Default contacted_status
                     None, #notes
-                    None, #created_at. Use DB default
-                    None, #updated_at. Use DB Default
                 )
 
                 company_data_to_store.append(company_row)
@@ -332,15 +314,6 @@ async def main():
                 continue #Skip this entry and move to the next
 
     #Store company data in "companies" database
-    company_query = """
-            INSERT INTO companies (apollo_id, name, website_url, linkedin_url,
-                        phone, founded_year, market_cap, annual_revenue, industries,
-                        estimated_num_employees, keywords, organization_headcount_six_month_growth,
-                        organization_headcount_twelve_month_growth, city, state, country, short_description,
-                        total_funding, technology_names, icp_score, contacted_status, notes, created_at,
-                        updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-                        $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24) 
-                """
     if company_data_to_store:
         await store_to_db(data_to_store=company_data_to_store, query=company_query, company_or_people="company")
     else:
@@ -371,18 +344,17 @@ async def main():
                 user_functions = person_search_data.get("functions", [])
 
                 #From people enrichment API
-                user_email = person_enrichment_data.get("email")
-                user_phone_number_data = person_enrichment_data.get("phone_numbers", [])
-                if user_phone_number_data:
-                    user_phone_number = user_phone_number_data[0].get("sanitized_number", "")
+                user_email = person_enrichment_data.get("person", {}).get("email", "")
+                user_phone_number = None
+
+                #user_phone_number_data = person_enrichment_data.get("phone_numbers", [])
+                #if user_phone_number_data:
+                    #user_phone_number = user_phone_number_data[0].get("sanitized_number", "")
 
                 people_row = (apollo_user_id, user_first_name, user_last_name, user_full_name,
                                 user_linkedin_url, user_title, user_email_status, user_headline,
                                 user_organization_id, user_seniority, user_departments, 
                                 user_subdepartments, user_functions, user_email, user_phone_number,
-                                None, #created_at. Use DB default
-                                None, #updated_at. Use DB Default
-                                "uncontacted", #Default contacted_status
                                 None, #notes
                             ) 
 
@@ -392,17 +364,12 @@ async def main():
                 logger.error(f"Failed to process people data for storage: {str(e)}")
                 continue
 
-    people_query = """
-                    INSERT INTO people (apollo_id, first_name, last_name, full_name,
-                    linkedin_url, title, email_status, headline, organization_id,
-                    seniority, departments, subdepartments, functions, email,
-                    number, created_at, updated_at, contacted_status, notes) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-                        $11, $12, $13, $14, $15, $16, $17, $18, $19)
-                """
     if people_data_to_store:
         await store_to_db(data_to_store=people_data_to_store, query=people_query, company_or_people="people")
     else: 
         logger.error("No people data to store in db ❌")
+
+    return jsonify({"success": "Main function done"}), 200
 
 #Profiling Code
 async def handle_profiling():
@@ -419,7 +386,44 @@ async def handle_profiling():
     logger.info("Profile saved")
     return
 
+
+#Database API for fetching companies
+@app.route('/fetch-companies', methods=["GET"])
+async def fetch_company_data():
+    company_data = await fetch_companies()
+    if not company_data:
+        return jsonify({"Error": "No company data found"}), 404
+    return jsonify(company_data), 200
+
+#Database API for fetching people
+@app.route('/fetch-people', methods=["GET"])
+async def fetch_people_data():
+    people_data = await fetch_people()
+    if not people_data:
+        return jsonify({"Error": "No company data found"}), 404
+    return jsonify(people_data), 200
+
+#Receive phone numbers from Apollo's People Enrichment API
+#This method is dormant and not yet working.
+@app.route('/apollo-phone-webhook', methods=["POST"])
+async def receive_user_phone_number():
+    logger.info("Receiving user phone number...")
+    try:
+        data = request.json
+        if data:
+            logger.info("Received phone number from Apollo webhook")
+            logger.info(data)
+
+            return jsonify({"status": "success", "message": "Phone number received"})
+
+        else:
+            return jsonify
+
+    except Exception as e:
+        logger.error(f"Failed to get phone number: {str(e)}")
+        return jsonify({"status": "error", "message": "Internal Server Error"})
+
 if __name__ == "__main__":
     logger.info("Application running....")
-    asyncio.run(main())
+    app.run(debug=True)
     logger.info("Application Done")
