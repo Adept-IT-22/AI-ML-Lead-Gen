@@ -2,7 +2,7 @@ import os
 import logging
 import asyncio
 import asyncpg
-from typing import List, Any, Tuple
+from typing import List, Any, Tuple, Dict
 from dotenv import load_dotenv
 
 load_dotenv(verbose=True, override=True)
@@ -19,15 +19,47 @@ async def initialize_db():
     except Exception as e:
         logger.error("Sikujui!")
 
-async def fetch_companies():
+#Fetches all companies from the database
+async def fetch_companies()->List[Dict[str, Any]]:
+    logger.info("Fetching companies from DB...")
     try:
-        conn = await asyncpg.connect(dsn=DB_URL)
+        conn = await asyncpg.connect(dsn=DB_URL) 
         query = "SELECT * FROM companies"
         results = await conn.fetch(query)
-        for result in results:
-            logger.info(f"This is the result: {result}")
+        await conn.close()
+        json_serializable_results = [dict(record) for record in results]
+        logger.info("Done fetching companies from DB...")
+        print(results)
+        return json_serializable_results
+
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while trying to fetch companies: {str(e)}")
+        return []
+
     except Exception as e:
-        logger.error(f"Didn't work boy! {str(e)}")
+        logger.error(f"An unexpected error occured: {str(e)}")
+        return []
+
+#Fetch people from database
+async def fetch_people()->List[Dict[str, Any]]:
+    logger.info("Fetching people from DB...")
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL) 
+        query = "SELECT * FROM people"
+        results = await conn.fetch(query)
+        await conn.close()
+        json_serializable_results = [dict(record) for record in results]
+        logger.info("Done fetching people from DB...")
+        print(results)
+        return json_serializable_results
+
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while trying to fetch people: {str(e)}")
+        return []
+
+    except Exception as e:
+        logger.error(f"An unexpected error occured: {str(e)}")
+        return []
 
 #Store company data to database
 async def store_to_db(
@@ -43,15 +75,27 @@ async def store_to_db(
         await conn.executemany(query, data_to_store)               
         await conn.close()
 
-        logger.info("Completed storing company data")
+        logger.info(f"Completed storing {company_or_people} data")
         return True
 
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while storing {company_or_people} data: {str(e)}")
+        
+
     except Exception as e:
-        logger.error(f"Failed to store company data. {str(e)}")
+        logger.error(f"Failed to store {company_or_people} data: {str(e)}")
         return False
+
+async def clear_table(table_name:str):
+    conn = await asyncpg.connect(dsn=DB_URL)
+    query = f"TRUNCATE TABLE {table_name} RESTART IDENTITY"
+    await conn.execute(query)
+    await conn.close()
+    print("Success")
+    return
 
 if __name__ == "__main__":
     async def main():
-        await fetch_companies()
+        await fetch_people()
 
     asyncio.run(main())

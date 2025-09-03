@@ -1,3 +1,5 @@
+import json
+import aiofiles
 import asyncio
 import logging
 from httpx import AsyncClient
@@ -8,6 +10,9 @@ from config.apollo_config import headers as APOLLO_HEADERS
 API_URL = "https://api.apollo.io/api/v1/people/match"
 
 logger = logging.getLogger()
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+WEBHOOK_URL = ""
 
 async def people_enrichment(
       client: AsyncClient, 
@@ -21,7 +26,8 @@ async def people_enrichment(
 
     params = {
       "reveal_personal_emails": True,
-      "reveal_phone_number": True
+      #"reveal_phone_number": True,
+      #"webhook_url": WEBHOOK_URL
     }
 
     payload = {"id": user_id}
@@ -35,6 +41,7 @@ async def people_enrichment(
       )
 
       logger.info(f"Completed people enrichment for {user_name}")
+
       return response.json()
 
     except Exception as e:
@@ -43,7 +50,11 @@ async def people_enrichment(
 if __name__ == "__main__":
     async def main():
       async with AsyncClient(timeout=30.0) as client:
-        await people_enrichment(client=client)
+        await people_enrichment(
+           client=client, 
+           user_id="610c3e23d4d76a0001aa35b3",
+           user_name="Charles Hayter"
+                )
 
     asyncio.run(main())
-        
+      
