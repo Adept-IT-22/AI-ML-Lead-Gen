@@ -4,14 +4,18 @@ import aiofiles
 import asyncio
 import logging
 import yappi
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+from decimal import Decimal
 from typing import List, Dict, Any, Awaitable, Union, Callable
 
-from utils.countries import countries
 from ingestion_module.funding.finsmes.fetch import main as finsmes_main
 from ingestion_module.funding.tech_eu.fetch import main as tech_eu_main
 from ingestion_module.funding.techcrunch.fetch import main as techcrunch_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
+from utils.db_queries import *
+from services.db_service import *
 from normalization_module.event_normalization import normalize_event_data
 from normalization_module.funding_normalization import normalize_funding_data
 from normalization_module.hiring_normalization import normalize_hiring_data
@@ -19,21 +23,17 @@ from enrichment_module.organization_search import org_search as apollo_org_searc
 from enrichment_module.bulk_org_enrichment import bulk_org_enrichment 
 from enrichment_module.single_org_enrichment import single_org_enrichment
 from enrichment_module.people_search import people_search
+from enrichment_module.people_enrichment import people_enrichment
+from helpers.helpers import *
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-MAX_EMPLOYEE_COUNT = 20
+#Create Flask App
+app = Flask(__name__)
+CORS(app)
 
-#This function pairs a name with a coroutine (if all goes well) or with an exception otherwise 
-async def wrap(name: str, coroutine: Awaitable[Any] )->tuple[str, Union[Any, Exception]]:
-    try:
-        result = await coroutine 
-        logger.info(f"Coroutine {name} done")
-        return name, result
-    except Exception as e:
-        logger.error(f"Coroutine {name} failed with the exception: {str(e)}")
-        return name, e
+MAX_EMPLOYEE_COUNT = 20
 
 async def run_ingestion_modules():
     #Each coroutine and it's name
@@ -71,6 +71,7 @@ async def run_ingestion_modules():
     return results
 
 #===========PROGRAM'S MAIN CODE==============
+@app.route('/run', methods=["GET", "POST"])
 async def main():
     #==========1. INGESTION ================
     #=========1.1 Run the ingestion modules==========
@@ -143,6 +144,7 @@ async def main():
         data_to_enrich_list = await normalization_to_enrichment_queue.get()
         logger.info(f"Fetched {len(data_to_enrich_list)} items from normaliztion_to_enrichment queue.")
     
+    #2.2 =======Organization Search to Get Org Website=========
         async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
             orgs_to_search = []
             searched_orgs = []
@@ -151,7 +153,6 @@ async def main():
                 company_names = normalized_company.get("company_name", [])
                 orgs_to_search.extend(company_names)
 
-    #2.2 =======Organization Search to Get Org Website=========
             logger.info("Organizational search started...")
 
             searched_tasks = [apollo_org_search(client=client, company_name=name) for name in company_names]
@@ -166,7 +167,7 @@ async def main():
             logger.info(f"Completed organization seach for {len(searched_orgs)} companies")
 
             async with aiofiles.open(f"org_search.txt", "a") as org_search_file:
-                await org_search_file.write(json.dumps(searched_orgs[0], indent=2))
+                await org_search_file.write(json.dumps(searched_orgs, indent=2))
 
             logger.info("Completed organizational search")
     
@@ -204,39 +205,14 @@ async def main():
     #2.4 ========Single Org Enrichment===========
             logger.info("Single Org Enrichment started...")
 
-            funding_data = {
-                "total_funding": [],
-                "latest_funding_round_date": [],
-                "latest_funding_stage": [],
-                "latest_funding_amount": [],
-                "latest_funding_round_investors": []
-            }
-
-            #Filter necessary companies from bulk enrichment based on size and location
+            single_enriched_orgs = []
             for single_org in bulk_enriched_orgs[0].get("organizations"):
-                org_size = single_org.get("estimated_num_employees", "") 
-                org_country = single_org.get("country", "")
-
-                all_countries = countries["North American Countries"].union(countries["European Countries"])
-                if org_size and org_size <= MAX_EMPLOYEE_COUNT and org_country in all_countries:
-                    org_domain = single_org.get("primary_domain")
-                    single_enriched_org = await single_org_enrichment(client=client, company_website=org_domain)
-
-                    #Extract funding data from enrichment results
-                    org_info = single_enriched_org.get("organization", {})
-                    funding_data["total_funding"].append(org_info.get("total_funding_printed", ""))
-                    funding_data["latest_funding_round_date"].append(org_info.get("latest_funding_round_date", ""))
-                    funding_data["latest_funding_stage"].append(org_info.get("latest_funding_stage", ""))
-
-                    funding_events = org_info.get("funding_events", {})
-                    if funding_events:
-                        amount = funding_events[0].get("amount", "")
-                        currency = funding_events[0].get("currency", "")
-                        funding_data["latest_funding_amount"].append(f"{amount}{currency}")
-                        funding_data["latest_funding_round_investors"].append(funding_events[0].get("investors", ""))
-            
+                org_domain = single_org.get("primary_domain")
+                single_enriched_org = await single_org_enrichment(client=client, company_website=org_domain)
+                single_enriched_orgs.append(single_enriched_org)
+                
             async with aiofiles.open("single_org_enrichment.txt", "w") as single_org_enrichment_file:
-                await single_org_enrichment_file.write(json.dumps(funding_data, indent=2))
+                await single_org_enrichment_file.write(json.dumps(single_enriched_orgs, indent=2))
 
             logger.info("Completed Single Org Enrichment")
     
@@ -253,37 +229,147 @@ async def main():
                     org_ids.append(org_id)
                     org_domain = each_org.get("primary_domain")
                     org_domains.append(org_domain)
-
-            #Call people search and get people's names and emails
-            found_people_names = []
-            found_people_numbers = []
-            found_people_emails = []
-            found_people_titles = []
-            found_people_orgs = []
+            
             searched_people = await people_search(client=client, org_ids=org_ids, org_domains=org_domains)
-            for people in searched_people.get("people", []):
-                found_people_names.append(people.get("name", ""))
-                found_people_names.append(people.get("sanitized_phone", ""))
-                found_people_emails.append(people.get("email", ""))
-                found_people_titles.append(people.get("title", ""))
-                found_people_orgs.append(people.get("employment_history")[0].get("organization_name", ""))
-
-            found_people_details = {
-                "names": found_people_names,
-                "numbers": found_people_numbers,
-                "emails": found_people_emails,
-                "titles": found_people_titles,
-                "orgs": found_people_orgs
-            }
 
             async with aiofiles.open("people_search.txt", "w") as people_search_file:
-                await people_search_file.write(json.dumps(found_people_details, indent=2))
+                await people_search_file.write(json.dumps(searched_people, indent=2))
 
             logger.info("Completed people Search")
 
+    #2.6 ============People Enrichment=============
+            logger.info("People Enrichment started....")
+
+            enriched_people = []
+
+            #Get user id's and names
+            people_to_enrich = searched_people.get("people", [])
+            for person in people_to_enrich:
+                user_id = person.get("id", "")
+                user_name = person.get("name", "")
+
+                #Call people enrichment API
+                enriched_person = await people_enrichment(client=client, user_id=user_id, user_name=user_name)
+                enriched_people.append(enriched_person)
+
+            async with aiofiles.open("people_enrichment.txt", "w") as people_enrichment_file:
+                await people_enrichment_file.write(json.dumps(searched_people, indent=2))
+
+            logger.info("Completed people enrichment")
+
     #==============4. STORAGE================
+    logger.info("Storing data....")
 
+    #Check LIVE DEV DOC for the "necessary data" mentioned below
 
+    #=============Company Data Storage=============
+    company_data_to_store = []
+
+    searched_organizations = [dictionary.get("organizations")[0] for dictionary in searched_orgs]
+    bulk_enriched_organizations = bulk_enriched_orgs[0].get("organizations", [])
+    single_enriched_organizations = [item.get("organization", []) for item in single_enriched_orgs]
+
+    #Iterate over orgs. Zip will stop when shortest list ends preventing errors
+    if searched_organizations and bulk_enriched_organizations and single_enriched_organizations:
+        for searched_org, bulk_enriched_org, single_enriched_organization in zip(searched_organizations, bulk_enriched_organizations, single_enriched_organizations, strict=True):
+            try:
+                #Get necessary data from org search 
+                headcount_six_month_growth = searched_org.get("organization_headcount_six_month_growth", "")
+                headcount_twelve_month_growth = searched_org.get("organization_headcount_twelve_month_growth", "")
+
+                #Get necessary data from bulk enriched orgs
+                apollo_id = bulk_enriched_org.get("id", "")
+                company_name = bulk_enriched_org.get("name", "")
+                website_url = bulk_enriched_org.get("website_url", "")
+                linkedin_url = bulk_enriched_org.get("linkedin_url", "")
+                phone = bulk_enriched_org.get("phone", "")
+                founded_year = bulk_enriched_org.get("founded_year", "")
+                market_cap = bulk_enriched_org.get("market_cap", "")
+                industries = bulk_enriched_org.get("industries", [])
+                estimated_num_employees = bulk_enriched_org.get("estimated_num_employees", "")
+                keywords = bulk_enriched_org.get("keywords", [])
+                city = bulk_enriched_org.get("city", "")
+                state = bulk_enriched_org.get("state", "")
+                country = bulk_enriched_org.get("country", "")
+                short_description = bulk_enriched_org.get("short_description", "")
+
+                #Get necessary data from single enriched orgs
+                total_funding = single_enriched_organization.get("total_funding", "")
+                technology_names = single_enriched_organization.get("technology_names", [])
+                annual_revenue_printed = single_enriched_organization.get("annual_revenue", "")
+
+                company_row = (
+                    apollo_id, company_name, website_url, linkedin_url, phone, safe_int(founded_year),
+                    safe_decimal(market_cap), safe_decimal(annual_revenue_printed), industries, safe_int(estimated_num_employees), 
+                    keywords, safe_decimal(headcount_six_month_growth), safe_decimal(headcount_twelve_month_growth), city,
+                    state, country, short_description, safe_decimal(total_funding), technology_names,
+                    None, #icp score placeholder
+                    None, #notes
+                )
+
+                company_data_to_store.append(company_row)
+
+            except Exception as e:
+                logger.error(f"Failed to process company data for storage: {str(e)}")
+                continue #Skip this entry and move to the next
+
+    #Store company data in "companies" database
+    if company_data_to_store:
+        await store_to_db(data_to_store=company_data_to_store, query=company_query, company_or_people="company")
+    else:
+        logger.warning("No companies to store ❌")
+
+    #==============People Data Storage=================
+    people_data_to_store = []
+
+    people_search_data = searched_people.get("people", [])
+    people_enrichment_data = enriched_people
+
+    if people_search_data and people_enrichment_data:
+        for person_search_data, person_enrichment_data in zip(people_search_data, people_enrichment_data):
+            try:
+                #From people search API
+                apollo_user_id = person_search_data.get("id", "")
+                user_first_name = person_search_data.get("first_name", "")
+                user_last_name = person_search_data.get("last_name", "")
+                user_full_name = person_search_data.get("name", "")
+                user_linkedin_url = person_search_data.get("linkedin_url")
+                user_title = person_search_data.get("title", "")
+                user_email_status = person_search_data.get("email_status", "")
+                user_headline = person_search_data.get("headline", "")
+                user_organization_id = person_search_data.get("organization_id", "")
+                user_seniority = person_search_data.get("seniority", "")
+                user_departments = person_search_data.get("departments", [])
+                user_subdepartments = person_search_data.get("subdepartments", [])
+                user_functions = person_search_data.get("functions", [])
+
+                #From people enrichment API
+                user_email = person_enrichment_data.get("person", {}).get("email", "")
+                user_phone_number = None
+
+                #user_phone_number_data = person_enrichment_data.get("phone_numbers", [])
+                #if user_phone_number_data:
+                    #user_phone_number = user_phone_number_data[0].get("sanitized_number", "")
+
+                people_row = (apollo_user_id, user_first_name, user_last_name, user_full_name,
+                                user_linkedin_url, user_title, user_email_status, user_headline,
+                                user_organization_id, user_seniority, user_departments, 
+                                user_subdepartments, user_functions, user_email, user_phone_number,
+                                None, #notes
+                            ) 
+
+                people_data_to_store.append(people_row)
+
+            except Exception as e:
+                logger.error(f"Failed to process people data for storage: {str(e)}")
+                continue
+
+    if people_data_to_store:
+        await store_to_db(data_to_store=people_data_to_store, query=people_query, company_or_people="people")
+    else: 
+        logger.error("No people data to store in db ❌")
+
+    return jsonify({"success": "Main function done"}), 200
 
 #Profiling Code
 async def handle_profiling():
@@ -300,7 +386,44 @@ async def handle_profiling():
     logger.info("Profile saved")
     return
 
+
+#Database API for fetching companies
+@app.route('/fetch-companies', methods=["GET"])
+async def fetch_company_data():
+    company_data = await fetch_companies()
+    if not company_data:
+        return jsonify({"Error": "No company data found"}), 404
+    return jsonify(company_data), 200
+
+#Database API for fetching people
+@app.route('/fetch-people', methods=["GET"])
+async def fetch_people_data():
+    people_data = await fetch_people()
+    if not people_data:
+        return jsonify({"Error": "No company data found"}), 404
+    return jsonify(people_data), 200
+
+#Receive phone numbers from Apollo's People Enrichment API
+#This method is dormant and not yet working.
+@app.route('/apollo-phone-webhook', methods=["POST"])
+async def receive_user_phone_number():
+    logger.info("Receiving user phone number...")
+    try:
+        data = request.json
+        if data:
+            logger.info("Received phone number from Apollo webhook")
+            logger.info(data)
+
+            return jsonify({"status": "success", "message": "Phone number received"})
+
+        else:
+            return jsonify
+
+    except Exception as e:
+        logger.error(f"Failed to get phone number: {str(e)}")
+        return jsonify({"status": "error", "message": "Internal Server Error"})
+
 if __name__ == "__main__":
     logger.info("Application running....")
-    asyncio.run(main())
+    app.run(debug=True)
     logger.info("Application Done")

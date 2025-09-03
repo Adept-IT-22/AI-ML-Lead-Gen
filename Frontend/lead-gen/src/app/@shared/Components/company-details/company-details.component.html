@@ -1,11 +1,10 @@
-
-
 <div *ngIf="companySections; else noData" class="company-details-component ">
   <div class="action-button">
     <app-button 
       [buttonText]="'ACTION'">
     </app-button>
   </div>
+
   <div class="cards-container">
     <mat-card *ngFor="let section of companySections" class="company-card">
       <mat-card-header>

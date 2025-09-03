@@ -1,0 +1,21 @@
+services:
+  lead-gen-db:
+    image: postgres:17
+    restart: always
+    ports: 
+      - "2345:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: lead_gen_db
+      POSTGRES_USER: lead_gen_user
+      POSTGRES_PASSWORD: lead_gen_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lead_gen_user -d lead_gen_db"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  pgdata:
