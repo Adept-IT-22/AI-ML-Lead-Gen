@@ -96,6 +96,6 @@ async def clear_table(table_name:str):
 
 if __name__ == "__main__":
     async def main():
-        await fetch_people()
+        await fetch_companies()
 
     asyncio.run(main())

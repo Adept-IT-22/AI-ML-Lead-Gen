@@ -26,7 +26,7 @@
             <!-- If value is an email -->
             <ng-template #notLink>
               <ng-container *ngIf="isEmail(field.value); else plainText">
-                <a [href]="'mailto:' + field.value">
+                <a [href]="'mailto:' +field.value">
                   {{ field.value }}
                 </a>
               </ng-container>

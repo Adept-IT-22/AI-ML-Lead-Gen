@@ -131,11 +131,8 @@ _Insert change history here_
 This section is a to-do list for me as the programmer.
 
 + Cache results so that the next round of sitemap traversal doesn't start from the top but from the most recent one.
-
 + See if I can get event attendees on eventbrite
-
 + Create queue and push ingestion data
-
 + Fetch from google news
-
-+ Normalize data
++ Create normalization DB
++ Check if company/people are in DB before enriching.
