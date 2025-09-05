@@ -387,21 +387,37 @@ async def handle_profiling():
     return
 
 
-#Database API for fetching companies
+# Database API for fetching companies
 @app.route('/fetch-companies', methods=["GET"])
-async def fetch_company_data():
-    company_data = await fetch_companies()
-    if not company_data:
-        return jsonify({"Error": "No company data found"}), 404
-    return jsonify(company_data), 200
+def fetch_company_data():
+    try:
+        # run the async function inside Flask sync context
+        company_data = asyncio.run(fetch_companies())
+        
+        if not company_data:
+            return jsonify({"Error": "No company data found"}), 404
+        
+        return jsonify(company_data), 200
+    
+    except Exception as e:
+        logger.error(f"Error fetching companies: {e}")
+        return jsonify({"Error": "Internal Server Error"}), 500
+#fetching for a single company
 
-#Database API for fetching people
+
 @app.route('/fetch-people', methods=["GET"])
-async def fetch_people_data():
-    people_data = await fetch_people()
-    if not people_data:
-        return jsonify({"Error": "No company data found"}), 404
-    return jsonify(people_data), 200
+def fetch_people_data():
+    try:
+        people_data = asyncio.run(fetch_people())
+        
+        if not people_data:
+            return jsonify({"Error": "No people data found"}), 404
+        
+        return jsonify(people_data), 200
+    
+    except Exception as e:
+        logger.error(f"Error fetching people: {e}")
+        return jsonify({"Error": "Internal Server Error"}), 500
 
 #Receive phone numbers from Apollo's People Enrichment API
 #This method is dormant and not yet working.
