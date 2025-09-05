@@ -1,48 +1,25 @@
-<div *ngIf="companySections; else noData" class="company-details-component ">
-  <div class="action-button">
-    <app-button 
-      [buttonText]="'ACTION'">
-    </app-button>
-  </div>
-
-  <div class="cards-container">
-    <mat-card *ngFor="let section of companySections" class="company-card">
-      <mat-card-header>
-        <mat-card-title class="header"><u>{{ section.section }}</u></mat-card-title>
-      </mat-card-header>
-
-      <mat-card-content>
-        <div *ngFor="let field of section.fields" class="card-item">
-          <p>
-            <span class="label">{{ field.label }}:</span>
-
-            <!-- If value is a link -->
-            <ng-container *ngIf="isLink(field.value); else notLink">
-              <a style="color: white;" [href]="formatUrl(field.value)" target="_blank" rel="noopener noreferrer">
-                {{ field.value }}
-              </a>
-            </ng-container>
-
-            <!-- If value is an email -->
-            <ng-template #notLink>
-              <ng-container *ngIf="isEmail(field.value); else plainText">
-                <a [href]="'mailto:' +field.value">
-                  {{ field.value }}
-                </a>
-              </ng-container>
-            </ng-template>
-
-            <!-- Otherwise plain text -->
-            <ng-template #plainText>
-              {{ field.value }}
-            </ng-template>
-          </p>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
+<div *ngIf="companySections; else noData">
+  <mat-card *ngFor="let section of companySections" class="company-card">
+    <mat-card-header>
+      <mat-card-title><u>{{ section.section }}</u></mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div *ngFor="let field of section.fields">
+        <strong>{{ field.label }}:</strong>
+        <span *ngIf="!isLink(field.value) && !isEmail(field.value)">
+          {{ field.value }}
+        </span>
+        <a *ngIf="isLink(field.value)" [href]="formatUrl(field.value)" target="_blank">
+          {{ field.value }}
+        </a>
+        <a *ngIf="isEmail(field.value)" [href]="'mailto:' + field.value">
+          {{ field.value }}
+        </a>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>
 
 <ng-template #noData>
-  <p style="color:white">No company details available.</p>
+  <p>No details found for this company.</p>
 </ng-template>

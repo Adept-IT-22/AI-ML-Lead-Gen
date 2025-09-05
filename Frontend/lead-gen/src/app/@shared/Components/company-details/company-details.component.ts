@@ -5,12 +5,11 @@ import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute } from '@angular/router';
 import { CompanyService, CompanySection } from '../../../services/company-details.service';
 import { ButtonComponent } from '../button/button.component';
-import { DataCardComponent } from '../data-card/data-card.component';
 
 @Component({
   selector: 'app-company-details',
   standalone: true,
-  imports: [CommonModule, MatCardModule, ButtonComponent],
+  imports: [CommonModule, MatCardModule],
   templateUrl: './company-details.component.html',
   styleUrls: ['./company-details.component.scss']
 })
@@ -21,31 +20,32 @@ export class CompanyDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private companyService: CompanyService
   ) {}
+  
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const companyId = params.get('id'); // <-- comes from /company/:id
-      console.log('Incoming companyId:', companyId);
+    const id = Number(this.route.snapshot.paramMap.get('id'));
 
-      if (companyId) {
-        this.companySections = this.companyService.getCompanyDetails(companyId);
-        console.log('Fetched details:', this.companySections);
-      }
-    });
+   this.companyService.getCompanyDetails(id).subscribe({
+    next: (res) => {
+      this.companySections = res; // Already organized into sections
+    },
+    error: (err) => console.error('Error loading company', err)
+  });
+
   }
 
   isLink(value: string): boolean {
-  return value.startsWith('http') || value.includes('www.');
-}
-
-formatUrl(value: string): string {
-  if (!/^https?:\/\//i.test(value)) {
-    return 'https://' + value;
+    return value.startsWith('http') || value.includes('www.');
   }
-  return value;
-}
 
-isEmail(value: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
+  formatUrl(value: string): string {
+    if (!/^https?:\/\//i.test(value)) {
+      return 'https://' + value;
+    }
+    return value;
+  }
+
+  isEmail(value: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
 }
