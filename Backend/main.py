@@ -156,9 +156,7 @@ async def main():
                 for each_company in company_names:
                     lowercase_company = each_company.lower()
                     company_is_in_db = await is_company_in_db(company_name=lowercase_company)
-                    if company_is_in_db:
-                        continue
-                    else:
+                    if not company_is_in_db:
                         orgs_to_search.append(each_company)
 
             logger.info("Organizational search started...")
