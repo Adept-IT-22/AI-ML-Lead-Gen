@@ -4,13 +4,9 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
-  imports: [SearchBarComponent],
+  imports: [SearchBarComponent, RouterLink],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
-})
-
-@Injectable({
-  providedIn: 'root'
 })
 
 export class NavbarComponent implements OnInit {

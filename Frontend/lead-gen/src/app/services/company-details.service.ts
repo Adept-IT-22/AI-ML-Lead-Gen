@@ -20,33 +20,36 @@ export class CompanyService {
       {
         section: 'Identity',
         fields: [
-          { label: 'Company Name', value: 'Innovate Inc' },
-          { label: 'Description', value: 'EdTech Platform' },
-          { label: 'Industry', value: 'Education' },
-          { label: 'Location', value: 'Essex, UK' },
+          { label: 'Company Name', value: 'Mbodi AI' },
+          { label: 'Description', value: "Mbodi AI is an embodied AI platform that enhances industrial robotics by... [Read More]"},
+          { label: 'Industry', value: 'Information Technology & Services' },
+          { label: 'Location', value: 'New York, United States' },
         ],
       },
       {
         section: 'Online Presence',
         fields: [
-          { label: 'Website', value: 'www.innovateinc.com' },
-          { label: 'LinkedIn', value: 'www.linkedin.com/Innovate' },
+          { label: 'Website', value: 'http://www.mbodi.ai' },
+          { label: 'LinkedIn', value: 'http://www.linkedin.com/company/mbodiai' },
         ],
       },
       {
         section: 'Company Profile',
         fields: [
-          { label: 'Year Founded', value: '2022' },
-          { label: 'Total Funding', value: '$8M' },
-          { label: 'Number of Employees', value: '98' },
-          { label: 'Annual Revenue', value: '$4M' },
+          { label: 'Year Founded', value: '2024' },
+          { label: 'Number of Employees', value: '6' },
+          { label: 'Total Funding', value: 'N/A' },
+          { label: 'Annual Revenue', value: 'N/A' },
         ],
       },
       {
         section: 'Contacts',
         fields: [
-          { label: 'Contact Person', value: 'Jane Doe' },
-          { label: 'Contacted Status', value: 'Contacted' },
+          { label: 'Contact Person', value: 'Sebastian Peralta' },
+          {label: 'Email', value: 'sebastian@mbodi.ai'},
+          {label: 'LinkedIn', value: 'http://www.linkedin.com/sebbyjp'},
+          {label: 'Position', value: 'Founder'},
+          { label: 'Contacted Status', value: 'Uncontacted' },
         ],
       },
       {
@@ -64,6 +67,10 @@ export class CompanyService {
             label: 'Technologies Used',
             value: 'GitHub Classroom, E-learning tools',
           },
+          {
+            label: 'Keywords',
+            value: 'AI robotics, Automation, Scalable robotics, Software development'
+          }
         ],
       },
     ],
