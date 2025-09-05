@@ -29,7 +29,6 @@ async def fetch_companies()->List[Dict[str, Any]]:
         await conn.close()
         json_serializable_results = [dict(record) for record in results]
         logger.info("Done fetching companies from DB...")
-        print(results)
         return json_serializable_results
 
     except asyncpg.PostgresError as e:
@@ -50,7 +49,6 @@ async def fetch_people()->List[Dict[str, Any]]:
         await conn.close()
         json_serializable_results = [dict(record) for record in results]
         logger.info("Done fetching people from DB...")
-        print(results)
         return json_serializable_results
 
     except asyncpg.PostgresError as e:

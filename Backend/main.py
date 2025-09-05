@@ -15,6 +15,7 @@ from ingestion_module.funding.techcrunch.fetch import main as techcrunch_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 from utils.db_queries import *
+from utils.data_normalization import *
 from services.db_service import *
 from normalization_module.event_normalization import normalize_event_data
 from normalization_module.funding_normalization import normalize_funding_data
@@ -303,11 +304,17 @@ async def main():
                 total_funding = single_enriched_organization.get("total_funding", "")
                 technology_names = single_enriched_organization.get("technology_names", [])
                 annual_revenue_printed = single_enriched_organization.get("annual_revenue", "")
+                funding_events_list = single_enriched_organization.get("funding_events", [])
+                latest_funding_round = funding_events_list[0].get("type")
+                unclean_latest_funding_amount = funding_events_list[0].get("amount")
+                latest_funding_amount = normalize_amount_raised(unclean_latest_funding_amount)
+                latest_funding_currency = funding_events_list[0].get("currency")
 
                 #Get data source (funding, events, hiring) from normalized data
-                normalized_company_names = [normalized_company_name.lower() for normalized_company_name in all_normalized_data[0].get("company_name", [])]
-
-
+                for normalized_company_info in all_normalized_data:
+                    normalized_company_name_list = normalized_company_info.get("company_name")
+                    for normalized_company_name_list in normalized_company_name_list:
+                        company_data_source = normalized_company_info.get("type")
 
                 company_row = (
                     apollo_id, company_name, website_url, linkedin_url, phone, safe_int(founded_year),
@@ -316,6 +323,7 @@ async def main():
                     state, country, short_description, safe_decimal(total_funding), technology_names,
                     None, #icp score placeholder
                     None, #notes
+                    company_data_source, latest_funding_round, latest_funding_amount, latest_funding_currency
                 )
 
                 company_data_to_store.append(company_row)
