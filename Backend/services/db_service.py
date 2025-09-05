@@ -81,21 +81,37 @@ async def store_to_db(
     except asyncpg.PostgresError as e:
         logger.error(f"Database error while storing {company_or_people} data: {str(e)}")
         
-
     except Exception as e:
         logger.error(f"Failed to store {company_or_people} data: {str(e)}")
         return False
 
-async def clear_table(table_name:str):
-    conn = await asyncpg.connect(dsn=DB_URL)
-    query = f"TRUNCATE TABLE {table_name} RESTART IDENTITY"
-    await conn.execute(query)
-    await conn.close()
-    print("Success")
-    return
+#Check if company exists in db
+async def is_company_in_db(company_name: str)->bool:
+    logger.info(f"Checking if {company_name} is in DB")
+    query = f"SELECT 1 FROM companies WHERE LOWER(name) = LOWER($1) LIMIT 1"
+
+    try:
+        #Create a connection pool to avoid creating repeated tcp connections
+        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+            async with pool.acquire() as conn:
+                results = await conn.fetchrow(query, company_name)
+
+            if results:
+                logger.info(f"{company_name} found")
+                return True
+            else: 
+                logger.info(f"{company_name} not found")
+                return False
+
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while fetching {company_name} from DB: {str(e)}")
+    except Exception as e:
+        logger.error(f"Failed to fetch {company_name} from DB: {str(e)}")
+
+    return False
 
 if __name__ == "__main__":
     async def main():
-        await fetch_companies()
+        await is_company_in_db(company_name='mbodi ai')
 
     asyncio.run(main())

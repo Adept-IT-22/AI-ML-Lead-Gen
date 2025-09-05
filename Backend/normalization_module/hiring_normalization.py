@@ -35,7 +35,7 @@ async def normalize_hiring_data(ingested_data: Dict[str, List[Any]]) -> Dict[str
         "article_title": [title.strip() for title in ingested_data.get("article_title", [])],
         "article_link": [normalize_url(url) for url in ingested_data.get("article_link", [])],
         "article_date": [str(normalize_date(date)) for date in ingested_data.get("article_date", [])],
-        "company_name": [name.strip().title() for name in ingested_data.get("company_name", [])],
+        "company_name": [name.strip().lower() for name in ingested_data.get("company_name", [])],
         "company_city": [normalize_city(city) for city in ingested_data.get("company_city", [])],
         "company_country": [normalize_country(country) for country in ingested_data.get("company_country", [])],
         "company_decision_makers": [normalize_company_decision_makers(decision_maker_list) for decision_maker_list in ingested_data.get("company_decision_makers", [])],
