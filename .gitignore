@@ -7,6 +7,7 @@ __pycache__/
 normalized.txt
 org_search.txt
 people_search.txt
+people_enrichment.txt
 bulk_org_enrichment.txt
 single_org_enrichment.txt
 

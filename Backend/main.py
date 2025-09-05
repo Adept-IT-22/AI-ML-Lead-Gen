@@ -305,9 +305,10 @@ async def main():
                 annual_revenue_printed = single_enriched_organization.get("annual_revenue", "")
 
                 #Get data source (funding, events, hiring) from normalized data
-                normalized_company_names = [normalized_company_name.lower() for normalized_company_name in all_normalized_data[0].get("company_name", [])]
-
-
+                for normalized_company_info in all_normalized_data:
+                    normalized_company_name_list = normalized_company_info.get("company_name")
+                    for normalized_company_name_list in normalized_company_name_list:
+                        company_data_source = normalized_company_info.get("type")
 
                 company_row = (
                     apollo_id, company_name, website_url, linkedin_url, phone, safe_int(founded_year),
@@ -316,6 +317,7 @@ async def main():
                     state, country, short_description, safe_decimal(total_funding), technology_names,
                     None, #icp score placeholder
                     None, #notes
+                    company_data_source
                 )
 
                 company_data_to_store.append(company_row)
