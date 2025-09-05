@@ -151,11 +151,17 @@ async def main():
 
             for normalized_company in data_to_enrich_list:
                 company_names = normalized_company.get("company_name", [])
-                orgs_to_search.extend(company_names)
+
+    # ==========Check if company exists in DB before enriching=========
+                for each_company in company_names:
+                    lowercase_company = each_company.lower()
+                    company_is_in_db = await is_company_in_db(company_name=lowercase_company)
+                    if not company_is_in_db:
+                        orgs_to_search.append(each_company)
 
             logger.info("Organizational search started...")
 
-            searched_tasks = [apollo_org_search(client=client, company_name=name) for name in company_names]
+            searched_tasks = [apollo_org_search(client=client, company_name=name) for name in orgs_to_search]
             search_results = await asyncio.gather(*searched_tasks, return_exceptions=True)
             
             for result in search_results:
@@ -297,6 +303,11 @@ async def main():
                 total_funding = single_enriched_organization.get("total_funding", "")
                 technology_names = single_enriched_organization.get("technology_names", [])
                 annual_revenue_printed = single_enriched_organization.get("annual_revenue", "")
+
+                #Get data source (funding, events, hiring) from normalized data
+                normalized_company_names = [normalized_company_name.lower() for normalized_company_name in all_normalized_data[0].get("company_name", [])]
+
+
 
                 company_row = (
                     apollo_id, company_name, website_url, linkedin_url, phone, safe_int(founded_year),
