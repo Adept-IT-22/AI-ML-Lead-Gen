@@ -39,6 +39,8 @@ async def fetch_companies()->List[Dict[str, Any]]:
         logger.error(f"An unexpected error occured: {str(e)}")
         return []
 
+        
+
 #Fetch people from database
 async def fetch_people()->List[Dict[str, Any]]:
     logger.info("Fetching people from DB...")

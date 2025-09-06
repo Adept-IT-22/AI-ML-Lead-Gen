@@ -1,5 +1,7 @@
-// company.service.ts
+// company-details.service.ts
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
 
 export interface CompanyField {
   label: string;
@@ -15,112 +17,67 @@ export interface CompanySection {
   providedIn: 'root',
 })
 export class CompanyService {
-  private companyDetails: { [key: string]: CompanySection[] } = {
-    '01': [
+  private apiUrl = 'http://localhost:5000'; // Flask backend URL
+
+  constructor(private http: HttpClient) {}
+
+  // Fetch a single company by ID
+  getCompanyDetails(id: number): Observable<CompanySection[]> {
+    return this.http.get<any>(`${this.apiUrl}/companies/${id}`).pipe(
+      map((company) => this.mapCompanyToSections(company))
+    );
+  }
+
+  // Transform backend data into UI sections
+  private mapCompanyToSections(company: any): CompanySection[] {
+    return [
       {
         section: 'Identity',
         fields: [
-          { label: 'Company Name', value: 'Mbodi AI' },
-          { label: 'Description', value: "Mbodi AI is an embodied AI platform that enhances industrial robotics by... [Read More]"},
-          { label: 'Industry', value: 'Information Technology & Services' },
-          { label: 'Location', value: 'New York, United States' },
+          { label: 'Company Name', value: company.name || 'N/A' },
+          { label: 'Description', value: company.short_description || 'N/A' },
+          { label: 'Industry', value: (company.industries || []).join(', ') },
+          { label: 'Location', value: `${company.city || ''}, ${company.country || ''}` },
         ],
       },
       {
         section: 'Online Presence',
         fields: [
-          { label: 'Website', value: 'http://www.mbodi.ai' },
-          { label: 'LinkedIn', value: 'http://www.linkedin.com/company/mbodiai' },
+          { label: 'Website', value: company.website_url || 'N/A' },
+          { label: 'LinkedIn', value: company.linkedin_url || 'N/A' },
         ],
       },
       {
         section: 'Company Profile',
         fields: [
-          { label: 'Year Founded', value: '2024' },
-          { label: 'Number of Employees', value: '6' },
-          { label: 'Total Funding', value: 'N/A' },
-          { label: 'Annual Revenue', value: 'N/A' },
+          { label: 'Year Founded', value: company.founded_year || 'N/A' },
+          { label: 'Number of Employees', value: company.estimated_num_employees || 'N/A' },
+          { label: 'Total Funding', value: company.total_funding || 'N/A' },
+          { label: 'Annual Revenue', value: company.annual_revenue || 'N/A' },
         ],
       },
       {
         section: 'Contacts',
         fields: [
-          { label: 'Contact Person', value: 'Sebastian Peralta' },
-          {label: 'Email', value: 'sebastian@mbodi.ai'},
-          {label: 'LinkedIn', value: 'http://www.linkedin.com/sebbyjp'},
-          {label: 'Position', value: 'Founder'},
-          { label: 'Contacted Status', value: 'Uncontacted' },
+          { label: 'Phone', value: company.phone || 'N/A' },
+          { label: 'Contacted Status', value: company.contacted_status || 'N/A' },
         ],
       },
       {
         section: 'Scores & Metrics',
         fields: [
-          { label: 'ICP Score', value: '70' },
-          { label: 'Head-count growth in 6 Months', value: '1.0' },
-          { label: 'Head-count growth in 12 Months', value: '2.0' },
+          { label: 'ICP Score', value: company.icp_score || 'N/A' },
+          { label: 'Head-count growth in 6 Months', value: company.organization_headcount_six_month_growth || 'N/A' },
+          { label: 'Head-count growth in 12 Months', value: company.organization_headcount_twelve_month_growth || 'N/A' },
         ],
       },
       {
         section: 'Technologies',
         fields: [
-          {
-            label: 'Technologies Used',
-            value: 'GitHub Classroom, E-learning tools',
-          },
-          {
-            label: 'Keywords',
-            value: 'AI robotics, Automation, Scalable robotics, Software development'
-          }
+          { label: 'Technologies Used', value: (company.technology_names || []).join(', ') },
+          { label: 'Keywords', value: (company.keywords || []).join(', ') },
         ],
       },
-    ],
-
-    '02': [
-      {
-        section: 'Identity',
-        fields: [
-          { label: 'Company Name', value: 'Tech AI' },
-          { label: 'Description', value: 'Fintech' },
-          { label: 'Industry', value: 'Defense' },
-          { label: 'Location', value: 'Nairobi, Kenya' },
-        ],
-      },
-      {
-        section: 'Online Presence',
-        fields: [
-          { label: 'Website', value: 'www.techai.com' },
-          { label: 'LinkedIn', value: 'www.linkedin.com/Tech-ai' },
-        ],
-      },
-      {
-        section: 'Company Profile',
-        fields: [
-          { label: 'Year Founded', value: '2020' },
-          { label: 'Total Funding', value: '$1.2M' },
-          { label: 'Number of Employees', value: '60' },
-          { label: 'Annual Revenue', value: '$800K' },
-        ],
-      },
-      {
-        section: 'Contacts',
-        fields: [{ label: 'Contact Person', value: 'Mccarthy' }],
-      },
-      {
-        section: 'Scores & Metrics',
-        fields: [
-          { label: 'ICP Score', value: '81' },
-          { label: 'Head-count growth in 6 Months', value: '0.5' },
-          { label: 'Head-count growth in 12 Months', value: '1.0' },
-        ],
-      },
-      {
-        section: 'Technologies',
-        fields: [{ label: 'Technologies Used', value: 'AWS, React, Node.js' }],
-      },
-    ],
-  };
-
-  getCompanyDetails(id: string): CompanySection[] | null {
-    return this.companyDetails[id] || null;
+    ];
   }
 }
