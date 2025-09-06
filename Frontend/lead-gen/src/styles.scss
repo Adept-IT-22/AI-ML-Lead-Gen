@@ -37,9 +37,7 @@
 }
 
 html, body { 
-    background-color: var(--color-black);
-    height: 100%; 
-}
-body { 
     font-family:  var(--font-family-base);
+    background-color: var(--color-black);
+    height: 100%;
 }
