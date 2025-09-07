@@ -1,11 +1,13 @@
 // home.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataCardComponent } from "../../@shared/Components/data-card/data-card.component";
 import { DataFeedComponent } from "../../@shared/Components/data-feed/data-feed.component";
 import { LeadsTableComponent } from '../../@shared/Components/leads/leads.component';
 import { FilterComponent } from '../../@shared/Components/filter/filter.component';
 import { NgFor } from '@angular/common';
 import { ButtonComponent } from "../../@shared/Components/button/button.component";
+import { CompaniesService } from '../../@shared/Services/companies.service';
+import { ICompany } from '../../Libs/interfaces/company.interface';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +16,23 @@ import { ButtonComponent } from "../../@shared/Components/button/button.componen
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit{
+  leadData: ICompany[] = [];
+
+  constructor(private companiesService: CompaniesService){}
+
+  ngOnInit(): void {
+      this.companiesService.fetch_companies().subscribe({
+        next: (companies)=>{
+          this.leadData = companies;
+          this.filteredLeads = companies;
+        },
+        error: (err)=>{
+          console.error("Error fetching companies.", err);
+        }
+      })
+  }
+
   stats = [
   { data: '1280', title: 'TOTAL LEADS', color: '#1fedc3'},
   { data: '472', title: 'MQLs', color: '#edce1f'},
@@ -43,31 +61,22 @@ export class HomeComponent {
   { optionType: 'BY SOURCE', options: ['Google News', 'Tech.Eu', 'HackerNews', 'finSMES', 'crunchbase'], key: 'source' }
 ];
 
-   leadData = [
-    { no: '01', companyName: 'Mbodi AI', status: 'MQL', dateUpdated: '2025-07-20', score: '85', source: 'Google News', industry: 'Robotics'},
-    { no: '02', companyName: 'Innovate Inc', status: 'SQL', dateUpdated: '2025-07-23', score: '70', source: 'Tech.Eu', industry: 'Education'},
-    { no: '03', companyName: 'Tech AI', status: 'MQL', dateUpdated: '2025-07-19', score: '81', source: 'HackerNews', industry: 'Defense'},
-    { no: '04', companyName: 'Terraform', status: 'MQL', dateUpdated: '2025-08-08', score: '93', source: 'FinSMES', industry: 'Commerce'},
-    { no: '05', companyName: 'AI Ventures', status: 'SQL', dateUpdated: '2025-08-02', score: '78', source: 'Crunchbase', industry: 'Education'},
-    { no: '07', companyName: 'Tech AI', status: 'MQL', dateUpdated: '2025-08-01', score: '56', source: 'HackerNews', industry: 'Defense'},
-  ];
-
   // Define the columns for the lead data table
   leadColumns = [
-    { key: 'no', header: 'No.' },
-    { key: 'companyName', header: 'Company Name' },
+    { key: 'id', header: 'ID' },
+    { key: 'name', header: 'Company Name' },
     { key: 'status', header: 'Status' },
-    { key: 'dateUpdated', header: 'Date Updated' },
-    { key: 'score', header: 'Score' },
-    { key: 'source', header: 'Source' },
-    { key: 'industry', header: 'Industry' },
+    { key: 'updated_at', header: 'Date Updated' },
+    { key: 'icp_score', header: 'ICP Score' },
+    { key: 'company_data_source', header: 'Source' },
+    { key: 'industries', header: 'Industry' },
     { key: 'action', header: 'Action' },
   ];
 
   buttons: string[] = ['View', 'Update'];
 // logic for filters
   filtersState: { [key: string]: string } = {};
-  filteredLeads = [...this.leadData];
+  filteredLeads: ICompany[] = [];
 
   onFilterChange(filter: { key: string, value: string }) {
     this.filtersState[filter.key] = filter.value;
@@ -79,7 +88,7 @@ export class HomeComponent {
       return Object.entries(this.filtersState).every(([key, value]) => {
         if (!value) return true;
         if (key === 'score') {
-          return value === '>80' ? Number(lead.score) > 80 : Number(lead.score) < 80;
+          return value === '>80' ? Number(lead.icp_score) > 80 : Number(lead.icp_score) < 80;
         }
         return lead[key as keyof typeof lead] === value;
       });

@@ -1,21 +1,8 @@
-<div *ngIf="companySections; else noData">
-  <mat-card *ngFor="let section of companySections" class="company-card">
+<div>
+  <mat-card class="company-card">
     <mat-card-header>
-      <mat-card-title><u>{{ section.section }}</u></mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div *ngFor="let field of section.fields">
-        <strong>{{ field.label }}:</strong>
-        <span *ngIf="!isLink(field.value) && !isEmail(field.value)">
-          {{ field.value }}
-        </span>
-        <a *ngIf="isLink(field.value)" [href]="formatUrl(field.value)" target="_blank">
-          {{ field.value }}
-        </a>
-        <a *ngIf="isEmail(field.value)" [href]="'mailto:' + field.value">
-          {{ field.value }}
-        </a>
-      </div>
     </mat-card-content>
   </mat-card>
 </div>

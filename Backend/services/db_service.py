@@ -17,19 +17,30 @@ async def initialize_db():
         if conn:
             logger.info("Connection Made")
     except Exception as e:
-        logger.error("Sikujui!")
+        logger.error("Connection not made!")
 
 #Fetches all companies from the database
 async def fetch_companies()->List[Dict[str, Any]]:
     logger.info("Fetching companies from DB...")
     try:
+        all_companies = []
         conn = await asyncpg.connect(dsn=DB_URL) 
-        query = "SELECT * FROM companies"
-        results = await conn.fetch(query)
+
+        #Fetch companies
+        company_query = "SELECT * FROM companies"
+        results = await conn.fetch(company_query)
+
+        #Fetch people for each company
+        for result in results:
+            company_apollo_id = result.get("apollo_id")
+            people_results = await fetch_people_from_company(organization_id=company_apollo_id)
+            dict_result = dict(result)
+            dict_result["people"] = people_results
+            all_companies.append(dict_result)
+
         await conn.close()
-        json_serializable_results = [dict(record) for record in results]
         logger.info("Done fetching companies from DB...")
-        return json_serializable_results
+        return all_companies
 
     except asyncpg.PostgresError as e:
         logger.error(f"Database error while trying to fetch companies: {str(e)}")
@@ -40,6 +51,13 @@ async def fetch_companies()->List[Dict[str, Any]]:
         return []
 
         
+async def fetch_people_from_company(organization_id: str)->List[Dict[str, str]]:
+    conn = await asyncpg.connect(dsn=DB_URL)
+    people_query = "SELECT full_name, title, email FROM people WHERE organization_id = $1"
+    people_results = await conn.fetch(people_query, organization_id)
+    await conn.close()
+    return [dict(record) for record in people_results]
+
 
 #Fetch people from database
 async def fetch_people()->List[Dict[str, Any]]:
@@ -112,6 +130,6 @@ async def is_company_in_db(company_name: str)->bool:
 
 if __name__ == "__main__":
     async def main():
-        await is_company_in_db(company_name='mbodi ai')
+        await fetch_companies()
 
     asyncio.run(main())
