@@ -8,6 +8,7 @@ import { NgFor } from '@angular/common';
 import { ButtonComponent } from "../../@shared/Components/button/button.component";
 import { CompaniesService } from '../../@shared/Services/companies.service';
 import { ICompany } from '../../Libs/interfaces/company.interface';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'
 
 @Component({
   selector: 'app-home',
@@ -18,29 +19,71 @@ import { ICompany } from '../../Libs/interfaces/company.interface';
 })
 export class HomeComponent implements OnInit{
   leadData: ICompany[] = [];
+  loading = true;
 
   constructor(private companiesService: CompaniesService){}
 
   ngOnInit(): void {
-      this.companiesService.fetch_companies().subscribe({
-        next: (companies)=>{
-          this.leadData = companies;
-          this.filteredLeads = companies;
-        },
-        error: (err)=>{
-          console.error("Error fetching companies.", err);
-        }
-      })
+    this.loading = true;
+    this.companiesService.fetch_companies().subscribe({
+      next: (companies) => {
+        this.leadData = companies;
+        this.filteredLeads = companies;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error("Error fetching companies.", err);
+        this.loading = false;
+      }
+    })
   }
 
-  stats = [
-  { data: '1280', title: 'TOTAL LEADS', color: '#1fedc3'},
-  { data: '472', title: 'MQLs', color: '#edce1f'},
-  { data: '316', title: 'SQLs', color: '#1fafed' },
-  { data: '102', title: 'EMAILS', color: '#1fe4c3' },
-  { data: '44', title: 'CONVERSIONS', color: '#1fe41f' },
-  { data: '11', title: 'DISQUALIFIED', color: '#e41f1f' }
-];
+  get stats() {
+    const total = this.filteredLeads.length;
+    const mql = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'mql').length;
+    const sql = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'sql').length;
+    const emails = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'emails').length;
+    const conversions = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'converted').length;
+    const disqualified = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'disqualified').length;
+
+    return [
+      { data: total.toString(), title: 'TOTAL LEADS', color: '#1fedc3' },
+      { data: mql.toString(), title: 'MQLs', color: '#edce1f' },
+      { data: sql.toString(), title: 'SQLs', color: '#1fafed' },
+      { data: emails.toString(), title: 'EMAILS', color: '#1fe4c3' },
+      { data: conversions.toString(), title: 'CONVERSIONS', color: '#1fe41f' },
+      { data: disqualified.toString(), title: 'DISQUALIFIED', color: '#e41f1f' }
+    ];
+  }
+
+  get weeklyStats() {
+    const today = new Date();
+    const sevenDaysAgo = new Date(today);
+    sevenDaysAgo.setDate(today.getDate() - 7);
+    sevenDaysAgo.setHours(0, 0, 0, 0);
+
+    const leadsThisWeek = this.filteredLeads.filter(lead => {
+      if (!lead.updated_at) return false;
+      const leadDate = new Date(lead.updated_at);
+      return leadDate >= sevenDaysAgo && leadDate <= today;
+    });
+
+    const total = leadsThisWeek.length;
+    const mql = leadsThisWeek.filter(lead => lead.status?.toLowerCase() === 'mql').length;
+    const sql = leadsThisWeek.filter(lead => lead.status?.toLowerCase() === 'sql').length;
+    const emails = leadsThisWeek.filter(lead => lead.status?.toLowerCase() === 'emails').length;
+    const conversions = leadsThisWeek.filter(lead => lead.status?.toLowerCase() === 'converted').length;
+    const disqualified = leadsThisWeek.filter(lead => lead.status?.toLowerCase() === 'disqualified').length;
+
+    return [
+      { data: total.toString(), title: 'LEADS THIS WEEK', color: '#1fedc3' },
+      { data: mql.toString(), title: 'MQLs THIS WEEK', color: '#edce1f' },
+      { data: sql.toString(), title: 'SQLs THIS WEEK', color: '#1fafed' },
+      { data: emails.toString(), title: 'EMAILS THIS WEEK', color: '#1fe4c3' },
+      { data: conversions.toString(), title: 'CONVERSIONS THIS WEEK', color: '#1fe41f' },
+      { data: disqualified.toString(), title: 'DISQUALIFIED THIS WEEK', color: '#e41f1f' }
+    ];
+  }
 
   news_feed = [
     '[2025-07-21] Acme Corp raises $10M Series A',
@@ -55,10 +98,10 @@ export class HomeComponent implements OnInit{
   ];
 
   filters = [
-  { optionType: 'BY DATE', options: ['Today', 'This Week', 'This Month'], key: 'date' },
-  { optionType: 'BY SCORE', options: ['>80', '<80'], key: 'score' },
-  { optionType: 'BY STATUS', options: ['MQL', 'SQL'], key: 'status' },
-  { optionType: 'BY SOURCE', options: ['Google News', 'Tech.Eu', 'HackerNews', 'finSMES', 'crunchbase'], key: 'source' }
+  { optionType: 'BY DATE', options: ['All', 'Today', 'This Week', 'This Month'], key: 'updated_at' },
+  { optionType: 'BY SCORE', options: ['All', '>80', '<80'], key: 'icp_score' },
+  { optionType: 'BY STATUS', options: ['All', 'Lead','MQL', 'SQL', 'Contacted', 'Converted', 'Disqualified'], key: 'status' },
+  { optionType: 'BY SOURCE', options: ['All', 'Funding', 'Hiring', 'Events'], key: 'company_data_source' }
 ];
 
   // Define the columns for the lead data table
@@ -87,11 +130,96 @@ export class HomeComponent implements OnInit{
     this.filteredLeads = this.leadData.filter(lead => {
       return Object.entries(this.filtersState).every(([key, value]) => {
         if (!value) return true;
-        if (key === 'score') {
+
+        if (value === 'All'){
+          delete this.filtersState[key];
+        }
+
+        if (key === 'icp_score') {
           return value === '>80' ? Number(lead.icp_score) > 80 : Number(lead.icp_score) < 80;
         }
-        return lead[key as keyof typeof lead] === value;
+
+        if (key === 'company_data_source') {
+          return lead.company_data_source?.toLowerCase() === value.toLowerCase();
+        }
+
+        if (key === 'status') {
+          return lead.status?.toLowerCase() === value.toLowerCase();
+        }
+
+        if (key === 'updated_at') {
+          if (!lead.updated_at) return false;
+          const leadDate = new Date(lead.updated_at);
+          const today = new Date();
+          if (value === 'Today') {
+          return leadDate.toISOString().slice(0, 10) === today.toISOString().slice(0, 10);
+          }
+          if (value === 'This Week') {
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay());
+            startOfWeek.setHours(0, 0, 0, 0);
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            endOfWeek.setHours(23, 59, 59, 999);
+            return leadDate >= startOfWeek && leadDate <= endOfWeek;
+          }
+          if (value === 'This Month') {
+            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999);
+            return leadDate >= startOfMonth && leadDate <= endOfMonth;
+          }
+          return true;
+        }
+
+        return lead[key as keyof ICompany] === value;
       });
     });
+  }
+
+  get statsWithProgress() {
+    // Calculate current stats
+    const total = this.filteredLeads.length;
+    const mql = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'mql').length;
+    const sql = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'sql').length;
+    const emails = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'emails').length;
+    const conversions = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'converted').length;
+    const disqualified = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'disqualified').length;
+
+    // Calculate last week's stats
+    const today = new Date();
+    const lastWeekStart = new Date(today);
+    lastWeekStart.setDate(today.getDate() - 14);
+    lastWeekStart.setHours(0, 0, 0, 0);
+    const lastWeekEnd = new Date(today);
+    lastWeekEnd.setDate(today.getDate() - 7);
+    lastWeekEnd.setHours(23, 59, 59, 999);
+
+    const leadsLastWeek = this.filteredLeads.filter(lead => {
+      if (!lead.updated_at) return false;
+      const leadDate = new Date(lead.updated_at);
+      return leadDate >= lastWeekStart && leadDate <= lastWeekEnd;
+    });
+
+    const totalLW = leadsLastWeek.length;
+    const mqlLW = leadsLastWeek.filter(lead => lead.status?.toLowerCase() === 'mql').length;
+    const sqlLW = leadsLastWeek.filter(lead => lead.status?.toLowerCase() === 'sql').length;
+    const emailsLW = leadsLastWeek.filter(lead => lead.status?.toLowerCase() === 'emails').length;
+    const conversionsLW = leadsLastWeek.filter(lead => lead.status?.toLowerCase() === 'converted').length;
+    const disqualifiedLW = leadsLastWeek.filter(lead => lead.status?.toLowerCase() === 'disqualified').length;
+
+    // Helper to calculate percent change
+    const percentChange = (current: number, previous: number) => {
+      if (previous === 0) return current === 0 ? 0 : 100;
+      return Math.round(((current - previous) / previous) * 100);
+    };
+
+    return [
+      { data: total.toString(), title: 'TOTAL LEADS', color: '#1fedc3', progress: percentChange(total, totalLW) },
+      { data: mql.toString(), title: 'MQLs', color: '#edce1f', progress: percentChange(mql, mqlLW) },
+      { data: sql.toString(), title: 'SQLs', color: '#1fafed', progress: percentChange(sql, sqlLW) },
+      { data: emails.toString(), title: 'EMAILS', color: '#1fe4c3', progress: percentChange(emails, emailsLW) },
+      { data: conversions.toString(), title: 'CONVERSIONS', color: '#1fe41f', progress: percentChange(conversions, conversionsLW) },
+      { data: disqualified.toString(), title: 'DISQUALIFIED', color: '#e41f1f', progress: percentChange(disqualified, disqualifiedLW) }
+    ];
   }
 }

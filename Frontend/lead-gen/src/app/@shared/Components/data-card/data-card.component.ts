@@ -11,6 +11,6 @@ import { MatIconModule } from '@angular/material/icon'
 export class DataCardComponent {
   @Input() title: string = '';
   @Input() data: string = '';
-  @Input() progressBar: [] = [];
+  @Input() progress: number = 0;
   @Input() color: string = '';
 }
