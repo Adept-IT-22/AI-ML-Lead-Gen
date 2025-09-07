@@ -14,9 +14,20 @@
       <tbody>
         <tr *ngFor="let row of data">
           <td *ngFor="let column of columns">
+
             <!-- Check if this is the 'Action' column -->
             <ng-container *ngIf="column.header !== 'Action'; else actionButtons">
-              {{ row[column.key] }}
+              <span *ngIf="column.key === 'status' || column.key === 'company_data_source'; else normalText">
+                {{row [column.key] | titlecase }}
+              </span>
+              <ng-template #normalText>
+                <span *ngIf="column.key === 'industries'; else regularText">
+                  {{row [column.key][0] | titlecase}}
+                </span>
+                <ng-template #regularText>
+                  {{row[column.key]}}
+                </ng-template>
+              </ng-template>
             </ng-container>
 
             <!-- Template for Action column -->

@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { ButtonComponent } from '../button/button.component';
 import { RouterModule } from '@angular/router'; 
+import { CompaniesService } from '../../Services/companies.service';
 export interface Column {
   key: string;
   header: string;
@@ -14,7 +15,7 @@ export interface Column {
   styleUrls: ['./leads.component.scss']
 })
 
-export class LeadsTableComponent {
+export class LeadsTableComponent implements OnInit{
   @Input()title: string = "";
   @Input()columns: Column[] = [];
   @Input()data: any[] = [];
@@ -24,6 +25,23 @@ export class LeadsTableComponent {
   @Input() filters: { [key: string]: string } = {};
   selectedOption: string = '';
   selectedRow: any = null; 
+
+  constructor(private companiesService:CompaniesService){}
+
+  ngOnInit(): void {
+      this.fetchCompanies()
+  }
+
+  fetchCompanies(): void{
+    this.companiesService.fetch_companies().subscribe({
+      next: (companies) => {
+        this.data = companies;
+      },
+      error: (err) => {
+        console.error('Error while fetching companies from backend', err)
+      }
+    })
+  }
 
   onSelect(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;

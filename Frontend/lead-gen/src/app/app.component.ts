@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './@shared/Components/navbar/navbar.component';
 import { CompanyDetailsComponent } from './@shared/Components/company-details/company-details.component';
-import { FetchComponent } from './@shared/Components/fetch/fetch.component';
 
 @Component({
   selector: 'app-root',
@@ -12,5 +11,5 @@ import { FetchComponent } from './@shared/Components/fetch/fetch.component';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'Leadd Gen';
+  title = 'Lead Gen';
 }
