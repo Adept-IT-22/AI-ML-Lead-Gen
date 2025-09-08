@@ -79,6 +79,25 @@ async def fetch_people()->List[Dict[str, Any]]:
         logger.error(f"An unexpected error occured: {str(e)}")
         return []
 
+#Fetch company by ID
+async def fetch_company_details(id: int)->List[Dict[str, any]]:
+    logger.info(f"Fetching company with ID: {id}")
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL) 
+        company_details_query = "SELECT * FROM companies WHERE id = $1"
+        results = await conn.fetch(company_details_query, id)
+        await conn.close()
+
+        return [dict(result) for result in results ]
+
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error occured: {str(e)}")
+        return {}
+
+    except Exception as e:
+        logger.error(f"Failed to fetch company details for company ID {id}")
+        return {}
+
 #Store company data to database
 async def store_to_db(
         data_to_store: List[Tuple[Any]],
@@ -130,6 +149,6 @@ async def is_company_in_db(company_name: str)->bool:
 
 if __name__ == "__main__":
     async def main():
-        await fetch_companies()
+        await fetch_company_details(8)
 
     asyncio.run(main())

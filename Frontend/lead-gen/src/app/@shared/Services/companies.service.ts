@@ -15,4 +15,9 @@ export class CompaniesService {
     console.log("Fetching company data from backend...")
     return this.http.get<ICompany[]>(`${this.backend_url}/fetch-companies`)
   }
+
+  getCompanyDetails(id: number): Observable<ICompany[]>{
+    console.log(`Fetching company with ID ${id}`);
+    return this.http.get<ICompany[]>(`${this.backend_url}/fetch-company-details/${id}`)
+  }
 }

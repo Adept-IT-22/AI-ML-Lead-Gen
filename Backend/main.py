@@ -421,6 +421,14 @@ async def fetch_people_data():
         return jsonify({"Error": "No company data found"}), 404
     return jsonify(people_data), 200
 
+#Database API for fetching company details
+@app.route('/fetch-company-details/<id>', methods=["GET"])
+async def fetch_company_details_data(id):
+    company_details = await fetch_company_details(int(id))
+    if not company_details:
+        return jsonify({'Error': 'No company details found'}), 404
+    return jsonify(company_details), 200
+
 #Receive phone numbers from Apollo's People Enrichment API
 #This method is dormant and not yet working.
 @app.route('/apollo-phone-webhook', methods=["POST"])
