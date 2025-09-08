@@ -25,10 +25,14 @@
   border: 1px solid white;
 }
 
-.card-item {
-  margin-bottom: 8px;
+
+  .card-item {
+  display: flex;
+  align-items: baseline; /* keeps label and text aligned nicely */
+  margin: 6px 0;
   color: white;
 }
+
 
 .header{
     font-family: var(--font-family-base);
@@ -57,4 +61,60 @@
 
 a{
   color: white;
+}
+
+.company-details {
+  padding: 1rem;
+}
+
+.sections-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  gap: 1rem;
+}
+
+.section-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.section-title {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.3rem;
+}
+
+.fields-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.fields-list li {
+  margin-bottom: 0.4rem;
+}
+
+.value {
+  flex: 1;
+  color: var(--color-white);
+  font-family: var(--font-family-base);
+  text-transform: capitalize;
+}
+
+.read-more {
+  margin-left: 8px;
+  font-size: 0.85rem;
+  color: var(--color-yellow);
+  cursor: pointer;
+  
+}
+.title{
+  color: var(--color-yellow);
+  text-align: center;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-header);
 }
