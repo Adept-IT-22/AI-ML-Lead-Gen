@@ -1,12 +1,35 @@
-<div>
-  <mat-card class="company-card">
-    <mat-card-header>
-    </mat-card-header>
-    <mat-card-content>
-    </mat-card-content>
-  </mat-card>
+
+
+<div *ngIf="companyDetails; else noData" class="company-details-component ">
+  <div class="action-button">
+    <app-button 
+      [buttonText]="'ACTION'">
+    </app-button>
+  </div>
+  <div class="cards-container">
+    <mat-card *ngFor="let section of companyDetails" class="company-card">
+      <mat-card-header>
+        <mat-card-title class="header"><u>{{ section.name }}</u></mat-card-title>
+         </mat-card-header>
+
+        <mat-card-content>
+          <div class="card-item">
+            <p class="label">Status: {{ section.contacted_status | titlecase}}</p>
+            <p class="label">{{ section.apollo_id }}</p>
+            <p class="label">{{ section.city }}</p>
+            <p class="label">{{ section.company_data_source | titlecase }}</p>
+          </div>
+        </mat-card-content>
+        <mat-card-content>
+          <div class="card-item">
+            <p class="label">{{ section.country }}</p>
+            <p class="label">{{ section.founded_year }}</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+  </div>
 </div>
 
 <ng-template #noData>
-  <p>No details found for this company.</p>
+  <p style="color:white">No company details available.</p>
 </ng-template>
