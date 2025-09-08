@@ -286,6 +286,10 @@ async def main():
 
                 #Get necessary data from bulk enriched orgs
                 apollo_id = bulk_enriched_org.get("id", "")
+                #Check if org is in DB
+                company_id_in_db = await is_company_id_in_db(apollo_id)
+                if company_id_in_db:
+                    continue
                 company_name = bulk_enriched_org.get("name", "")
                 website_url = bulk_enriched_org.get("website_url", "")
                 linkedin_url = bulk_enriched_org.get("linkedin_url", "")
@@ -337,7 +341,7 @@ async def main():
 
     #Store company data in "companies" database
     if company_data_to_store:
-        await store_to_db(data_to_store=company_data_to_store, query=company_query, company_or_people="company")
+            await store_to_db(data_to_store=company_data_to_store, query=company_query, company_or_people="company")
     else:
         logger.warning("No companies to store ❌")
 
@@ -391,6 +395,10 @@ async def main():
     else: 
         logger.error("No people data to store in db ❌")
 
+    #==============5. EMAIL================
+    logger.info("Sending emails")
+    
+    
     return jsonify({"success": "Main function done"}), 200
 
 #Profiling Code

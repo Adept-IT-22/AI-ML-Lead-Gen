@@ -120,7 +120,7 @@ async def store_to_db(
         logger.error(f"Failed to store {company_or_people} data: {str(e)}")
         return False
 
-#Check if company exists in db
+#Check if company exists in db based on name
 async def is_company_in_db(company_name: str)->bool:
     logger.info(f"Checking if {company_name} is in DB")
     query = f"SELECT 1 FROM companies WHERE LOWER(name) = LOWER($1) LIMIT 1"
@@ -145,8 +145,34 @@ async def is_company_in_db(company_name: str)->bool:
 
     return False
 
+#Check if company exists in db based on ID
+async def is_company_id_in_db(company_apollo_id: str)->bool:
+    logger.info(f"Checking if {company_apollo_id} is in DB")
+    query = f"SELECT 1 FROM companies WHERE apollo_id = $1 LIMIT 1"
+
+    try:
+        #Create a connection pool to avoid creating repeated tcp connections
+        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+            async with pool.acquire() as conn:
+                results = await conn.fetchrow(query, company_apollo_id)
+
+            if results:
+                logger.info(f"{company_apollo_id} found")
+                return True
+            else: 
+                logger.info(f"{company_apollo_id} not found")
+                return False
+
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while fetching {company_apollo_id} from DB: {str(e)}")
+    except Exception as e:
+        logger.error(f"Failed to fetch {company_apollo_id} from DB: {str(e)}")
+
+    return False
+
+
 if __name__ == "__main__":
     async def main():
-        await fetch_company_details(8)
+        await is_company_id_in_db("5e573c3f97be2d00013ec3b7")
 
     asyncio.run(main())
