@@ -1,55 +1,55 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute } from '@angular/router';
-import { CompaniesService } from '../../Services/companies.service';
-import { ICompany } from '../../../Libs/interfaces/company.interface';
-import { ButtonComponent } from '../button/button.component';
+import { CompaniesService, CompanySection } from '../../Services/companies.service';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card'; 
 
 @Component({
   selector: 'app-company-details',
+  imports: [CommonModule, MatCardModule],
   standalone: true,
-  imports: [CommonModule, MatCardModule, ButtonComponent],
   templateUrl: './company-details.component.html',
   styleUrls: ['./company-details.component.scss']
 })
 export class CompanyDetailsComponent implements OnInit {
-  companyDetails: ICompany[] | null = null;
-  constructor(
-    private route: ActivatedRoute,
-    private companiesService: CompaniesService
-  ) {}
+  companyId!: number;
+  companyDetails: CompanySection[] | null = null;
+
+  expandedFields: { [key: string]: boolean } = {};
+
+  constructor(private route: ActivatedRoute, private companiesService: CompaniesService) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const companyId = params.get('id'); // <-- comes from /company/:id
-      console.log('Incoming companyId:', companyId);
+    this.companyId = Number(this.route.snapshot.paramMap.get('id'));
 
-      if (companyId) {
-        this.companiesService.getCompanyDetails(Number(companyId)).subscribe({
-          next:(companyDetailsData: any) => {
-            this.companyDetails = companyDetailsData
-          },
-          error: (err: any) => {
-            console.error(`Error fetching company ID: ${companyId}`, err)
-          }
-        })
-        console.log('Fetched details:', this.companyDetails);
+    this.companiesService.getCompanyDetails(this.companyId).subscribe({
+      next: (details) => {
+        this.companyDetails = details;
+      },
+      error: (err) => {
+        console.error('Error fetching company details:', err);
       }
     });
   }
-  isLink(value: string): boolean {
-  return value.startsWith('http') || value.includes('www.');
-}
 
-formatUrl(value: string): string {
-  if (!/^https?:\/\//i.test(value)) {
-    return 'https://' + value;
+  // ✅ Toggle read more/less
+  toggleField(label: string): void {
+    this.expandedFields[label] = !this.expandedFields[label];
   }
-  return value;
+
+  // ✅ Truncate long text to first 120 chars
+  truncate(value: string, maxLength: number = 120): string {
+    if (!value) return 'N/A';
+    return value.length > maxLength ? value.substring(0, maxLength) + '...' : value;
+  }
+
+  isExpanded(label: string): boolean {
+    return !!this.expandedFields[label];
+  }
+
+  isLink(value: any): boolean {
+  if (!value) return false;
+  return typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'));
 }
 
-isEmail(value: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
 }
