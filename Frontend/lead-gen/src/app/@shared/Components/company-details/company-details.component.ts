@@ -26,7 +26,7 @@ export class CompanyDetailsComponent implements OnInit {
       next: (details) => {
         this.companyDetails = details;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error fetching company details:', err);
       }
     });
