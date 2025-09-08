@@ -305,16 +305,19 @@ async def main():
                 technology_names = single_enriched_organization.get("technology_names", [])
                 annual_revenue_printed = single_enriched_organization.get("annual_revenue", "")
                 funding_events_list = single_enriched_organization.get("funding_events", [])
-                latest_funding_round = funding_events_list[0].get("type")
-                unclean_latest_funding_amount = funding_events_list[0].get("amount")
-                latest_funding_amount = normalize_amount_raised(unclean_latest_funding_amount)
-                latest_funding_currency = funding_events_list[0].get("currency")
+                latest_funding_round = funding_events_list[0].get("type") if funding_events_list else None
+                unclean_latest_funding_amount = funding_events_list[0].get("amount") if funding_events_list else None
+                latest_funding_amount = normalize_amount_raised(unclean_latest_funding_amount) if unclean_latest_funding_amount else None
+                latest_funding_currency = funding_events_list[0].get("currency") if funding_events_list else None
 
                 #Get data source (funding, events, hiring) from normalized data
+                company_data_source = None
                 for normalized_company_info in all_normalized_data:
-                    normalized_company_name_list = normalized_company_info.get("company_name")
-                    for normalized_company_name_list in normalized_company_name_list:
-                        company_data_source = normalized_company_info.get("type")
+                    normalized_names = normalized_company_info.get("company_name", [])
+                    for normalized_name in normalized_names:
+                        if normalized_name.lower() in company_name.lower() or company_name.lower() in normalized_name.lower():
+                            company_data_source = normalized_company_info.get("type")
+                            break
 
                 company_row = (
                     apollo_id, company_name, website_url, linkedin_url, phone, safe_int(founded_year),

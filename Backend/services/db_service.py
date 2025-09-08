@@ -83,12 +83,10 @@ async def fetch_people()->List[Dict[str, Any]]:
 async def fetch_company_details(id: int)->List[Dict[str, any]]:
     logger.info(f"Fetching company with ID: {id}")
     try:
-        conn = await asyncpg.connect(dsn=DB_URL) 
-        company_details_query = "SELECT * FROM companies WHERE id = $1"
-        results = await conn.fetch(company_details_query, id)
-        await conn.close()
-
-        return [dict(result) for result in results ]
+        all_companies = await fetch_companies()
+        for company in all_companies:
+            if company.get("id") == id:
+                return company
 
     except asyncpg.PostgresError as e:
         logger.error(f"Database error occured: {str(e)}")
