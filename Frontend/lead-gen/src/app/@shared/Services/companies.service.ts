@@ -26,16 +26,10 @@ export class CompaniesService {
     return this.http.get<ICompany[]>(`${this.backend_url}/fetch-companies`);
   }
 
-  getCompanyDetails(id: number): Observable<CompanySection[]> {
+  getCompanyDetails(id: number): Observable<ICompany> {
     console.log(`Fetching company with ID ${id}`);
     return this.http
-      .get<ICompany[]>(`${this.backend_url}/fetch-company-details/${id}`)
-      .pipe(
-        map((companies) => {
-          const company = companies[0]; // ✅ unwrap first object
-          return this.mapCompanyToSections(company);
-        })
-      );
+      .get<ICompany>(`${this.backend_url}/fetch-company-details/${id}`)
   }
 
   // 🔥 Mapper function with extended fields

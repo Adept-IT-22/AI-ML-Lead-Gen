@@ -1,45 +1,22 @@
 <div *ngIf="companyDetails; else noData" class="company-details-component">
   <div class="cards-container">
-    <mat-card *ngFor="let section of companyDetails" class="company-card">
-      <div class="title">
-        <mat-card-header>
-          <mat-card-title><u>{{ section.section }}</u></mat-card-title>
-        </mat-card-header>
-      </div>
+    <h2 style="color: var(--color-yellow)">{{companyDetails.name}}</h2>
+    <div *ngFor="let section of companySections" class="company-section" style="border: 1px solid white;">
+      <h3 style="color: var(--color-yellow)">{{ section.title }}</h3>
+      <mat-card >
+        <mat-card-content>
+          <div *ngFor="let entry of section.entries" style="display:flex; line-height: 1.5em;">
+            <b style="color: var(--color-yellow)">{{ entry.key }}:</b>
+            <span *ngIf="!isLink(entry.value)" style="color: white">{{ entry.value || 'N/A' }}</span>
+            <a *ngIf="isLink(entry.value)" [href]="entry.value" target="_blank">{{ entry.value }}</a>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
 
-      <mat-card-content>
-        <div *ngFor="let field of section.fields" class="card-item">
-          <div class="label"><b>{{ field.label }}:</b></div>
-
-          <!-- ✅ For Description, Keywords, Technologies with toggle -->
-          <ng-container *ngIf="field.label === 'Description' || field.label === 'Keywords' || field.label=== 'Technologies Used'; else normalField">
-            <div class="value">
-              {{ isExpanded(field.label) ? field.value : truncate(field.value.toString()) }}
-              <a href="javascript:void(0)" class="read-more" (click)="toggleField(field.label)">
-                {{ isExpanded(field.label) ? 'Read less' : 'Read more' }}
-              </a>
-            </div>
-          </ng-container>
-
-          <!-- ✅ Normal fields (make links clickable) -->
-          <ng-template #normalField>
-            <div class="value">
-              <ng-container *ngIf="isLink(field.value); else plainText">
-                <a [href]="field.value" target="_blank" rel="noopener noreferrer">
-                  {{ field.value }}
-                </a>
-              </ng-container>
-              <ng-template #plainText>
-                {{ field.value }}
-              </ng-template>
-            </div>
-          </ng-template>
-        </div>
-      </mat-card-content>
-    </mat-card>
   </div>
 </div>
 
 <ng-template #noData>
-  <p style="background-color: white;">No company details available.</p>
+  <p style="color: var(--color-yellow);">No company details available.</p>
 </ng-template>
