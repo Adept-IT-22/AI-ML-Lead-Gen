@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit{
     const mql = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'mql').length;
     const sql = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'sql').length;
     const emails = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'emails').length;
-    const conversions = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'converted').length;
+    const opened = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'converted').length;
     const disqualified = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'disqualified').length;
 
     return [
@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit{
       { data: mql.toString(), title: 'MQLs', color: '#edce1f' },
       { data: sql.toString(), title: 'SQLs', color: '#1fafed' },
       { data: emails.toString(), title: 'EMAILS', color: '#1fe4c3' },
-      { data: conversions.toString(), title: 'CONVERSIONS', color: '#1fe41f' },
+      { data: opened.toString(), title: 'OPENED', color: '#1fe41f' },
       { data: disqualified.toString(), title: 'DISQUALIFIED', color: '#e41f1f' }
     ];
   }
@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit{
     const mql = leadsThisWeek.filter(lead => lead.status?.toLowerCase() === 'mql').length;
     const sql = leadsThisWeek.filter(lead => lead.status?.toLowerCase() === 'sql').length;
     const emails = leadsThisWeek.filter(lead => lead.status?.toLowerCase() === 'emails').length;
-    const conversions = leadsThisWeek.filter(lead => lead.status?.toLowerCase() === 'converted').length;
+    const opened = leadsThisWeek.filter(lead => lead.status?.toLowerCase() === 'converted').length;
     const disqualified = leadsThisWeek.filter(lead => lead.status?.toLowerCase() === 'disqualified').length;
 
     return [
@@ -80,7 +80,7 @@ export class HomeComponent implements OnInit{
       { data: mql.toString(), title: 'MQLs THIS WEEK', color: '#edce1f' },
       { data: sql.toString(), title: 'SQLs THIS WEEK', color: '#1fafed' },
       { data: emails.toString(), title: 'EMAILS THIS WEEK', color: '#1fe4c3' },
-      { data: conversions.toString(), title: 'CONVERSIONS THIS WEEK', color: '#1fe41f' },
+      { data: opened.toString(), title: 'OPENED THIS WEEK', color: '#1fe41f' },
       { data: disqualified.toString(), title: 'DISQUALIFIED THIS WEEK', color: '#e41f1f' }
     ];
   }
@@ -181,7 +181,7 @@ export class HomeComponent implements OnInit{
     const mql = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'mql').length;
     const sql = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'sql').length;
     const emails = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'emails').length;
-    const conversions = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'converted').length;
+    const opened = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'converted').length;
     const disqualified = this.filteredLeads.filter(lead => lead.status?.toLowerCase() === 'disqualified').length;
 
     // Calculate last week's stats
@@ -203,7 +203,7 @@ export class HomeComponent implements OnInit{
     const mqlLW = leadsLastWeek.filter(lead => lead.status?.toLowerCase() === 'mql').length;
     const sqlLW = leadsLastWeek.filter(lead => lead.status?.toLowerCase() === 'sql').length;
     const emailsLW = leadsLastWeek.filter(lead => lead.status?.toLowerCase() === 'emails').length;
-    const conversionsLW = leadsLastWeek.filter(lead => lead.status?.toLowerCase() === 'converted').length;
+    const openedLW = leadsLastWeek.filter(lead => lead.status?.toLowerCase() === 'converted').length;
     const disqualifiedLW = leadsLastWeek.filter(lead => lead.status?.toLowerCase() === 'disqualified').length;
 
     // Helper to calculate percent change
@@ -217,7 +217,7 @@ export class HomeComponent implements OnInit{
       { data: mql.toString(), title: 'MQLs', color: '#edce1f', progress: percentChange(mql, mqlLW) },
       { data: sql.toString(), title: 'SQLs', color: '#1fafed', progress: percentChange(sql, sqlLW) },
       { data: emails.toString(), title: 'EMAILS', color: '#1fe4c3', progress: percentChange(emails, emailsLW) },
-      { data: conversions.toString(), title: 'CONVERSIONS', color: '#1fe41f', progress: percentChange(conversions, conversionsLW) },
+      { data: opened.toString(), title: 'OPENED', color: '#1fe41f', progress: percentChange(opened, openedLW) },
       { data: disqualified.toString(), title: 'DISQUALIFIED', color: '#e41f1f', progress: percentChange(disqualified, disqualifiedLW) }
     ];
   }
