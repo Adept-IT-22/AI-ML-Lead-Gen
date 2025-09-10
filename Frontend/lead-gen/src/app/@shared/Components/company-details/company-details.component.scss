@@ -118,3 +118,15 @@ a{
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-header);
 }
+
+.company-sections-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1em;
+  color: white;
+}
+
+.company-section {
+  border: 1px solid white;
+  padding: 8px;
+}

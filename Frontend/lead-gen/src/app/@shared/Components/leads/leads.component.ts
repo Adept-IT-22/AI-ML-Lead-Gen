@@ -3,6 +3,8 @@ import { CommonModule, NgFor } from '@angular/common';
 import { ButtonComponent } from '../button/button.component';
 import { RouterModule } from '@angular/router'; 
 import { CompaniesService } from '../../Services/companies.service';
+import { ICompany } from '../../../Libs/interfaces/company.interface';
+import { SearchService } from '../../Services/search.service';
 export interface Column {
   key: string;
   header: string;
@@ -26,21 +28,10 @@ export class LeadsTableComponent implements OnInit{
   selectedOption: string = '';
   selectedRow: any = null; 
 
-  constructor(private companiesService:CompaniesService){}
+  constructor(private companiesService:CompaniesService, private searchService: SearchService){}
+  
 
   ngOnInit(): void {
-      this.fetchCompanies()
-  }
-
-  fetchCompanies(): void{
-    this.companiesService.fetch_companies().subscribe({
-      next: (companies) => {
-        this.data = companies;
-      },
-      error: (err) => {
-        console.error('Error while fetching companies from backend', err)
-      }
-    })
   }
 
   onSelect(event: Event): void {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CompaniesService, CompanySection } from '../../Services/companies.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card'; 
 import { ICompany } from '../../../Libs/interfaces/company.interface';
 
@@ -23,7 +23,7 @@ export class CompanyDetailsComponent implements OnInit {
   companyEntries: { key: string, value: any }[] = [];
   companySections: {
     title: string;
-    entries: { key: string; value: any }[];
+    entries: { key: string; value: any; expandable?: boolean}[];
   }[] = [];
 
   ngOnInit(): void {
@@ -35,62 +35,62 @@ export class CompanyDetailsComponent implements OnInit {
         this.companiesService.getCompanyDetails(this.companyId).subscribe({
           next: (details) => {
             this.companyDetails = details;
-
             this.companySections = [
               {
-                title: 'Basic Info',
+                title: 'Identity',
                 entries: [
-                  { key: 'Name', value: details.name },
-                  { key: 'Description', value: details.short_description },
+                  { key: 'Company Name', value: details.name },
+                  { key: 'Description', value: details.short_description, expandable: true },
+                  { key: 'Industry', value: details.industries?.join(', ') },
+                  { key: 'Location', value: `${details.city}, ${details.state}, ${details.country}` }
+                ]
+              },
+              {
+                title: 'Online Presence',
+                entries: [
                   { key: 'Website', value: details.website_url },
-                  { key: 'LinkedIn', value: details.linkedin_url },
-                  { key: 'Phone', value: details.phone },
-                  { key: 'Location', value: `${details.city}, ${details.state}, ${details.country}` },
-                  { key: 'Founded', value: details.founded_year },
-                  { key: 'Industries', value: details.industries?.join(', ') }
+                  { key: 'LinkedIn', value: details.linkedin_url }
                 ]
               },
               {
-                title: 'Growth & Funding',
+                title: 'Company Profile',
                 entries: [
-                  { key: 'Funding Round', value: details.latest_funding_round },
-                  { key: 'Funding Amount', value: details.latest_funding_amount },
-                  { key: 'Currency', value: details.latest_funding_currency },
-                  { key: 'Total Funding', value: details.total_funding },
-                  { key: 'Market Cap', value: details.market_cap },
-                  { key: 'Employees', value: details.estimated_num_employees },
-                  { key: '6-Month Growth', value: details.organization_headcount_six_month_growth },
-                  { key: '12-Month Growth', value: details.organization_headcount_twelve_month_growth }
+                  { key: 'Year Founded', value: details.founded_year },
+                  { key: 'Number of Employees', value: details.estimated_num_employees },
+                  { key: 'Total Funding', value: this.formatNumber(details.total_funding) },
+                  { key: 'Annual Revenue', value: this.formatNumber(details.annual_revenue) }
                 ]
               },
               {
-                title: 'People',
-                entries: details.people?.map((p: any) => ({
-                  key: p.full_name,
-                  value: `${p.full_name}\n (${p.email})`
-                })) || []
-              },
-              {
-                title: 'Technologies & Keywords',
+                title: 'Contacts',
                 entries: [
-                  { key: 'Technologies', value: details.technology_names?.join(', ') },
-                  { key: 'Keywords', value: details.keywords?.join(', ') }
+                  ...(details.people?.map((p: any) => ({
+                  key: p.title,
+                  value: `${p.full_name} (${p.email})`
+                })) || []), 
+                  {key: 'Company Phone', value: details.phone}
                 ]
               },
               {
-                title: 'Meta / Status',
+                title: 'Funding, Scores & Metrics',
                 entries: [
-                  { key: 'ID', value: details.id },
-                  { key: 'Status', value: details.status },
-                  { key: 'Source', value: details.company_data_source },
-                  { key: 'Contacted', value: details.contacted_status },
                   { key: 'ICP Score', value: details.icp_score },
-                  { key: 'Created At', value: details.created_at },
-                  { key: 'Updated At', value: details.updated_at },
-                  { key: 'Notes', value: details.notes }
+                  { key: 'Latest Funding Round', value: details.latest_funding_round},
+                  { key: 'Latest Funding Amount', value: this.formatNumber(details.latest_funding_amount)},
+                  { key: 'Latest Funding Currency', value: details.latest_funding_currency},
+                  { key: 'Head-count growth in 6 Months', value: details.organization_headcount_six_month_growth },
+                  { key: 'Head-count growth in 12 Months', value: details.organization_headcount_twelve_month_growth }
+                ]
+              },
+              {
+                title: 'Technologies',
+                entries: [
+                  { key: 'Technologies Used', value: this.truncateArray(details.technology_names, 10), expandable: true },
+                  { key: 'Keywords', value: this.truncateArray(details.keywords, 10), expandable: true }
                 ]
               }
             ];
+
           }
         });
         this.companyEntries = Object.entries(details).map(([key, value]) => ({ key, value }));
@@ -121,4 +121,20 @@ export class CompanyDetailsComponent implements OnInit {
   return typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'));
 }
 
+// Truncate arrays to first N items
+truncateArray(arr: string[] | null | undefined, maxItems: number = 10): string {
+  if (!arr || arr.length === 0) return 'N/A';
+
+  if (arr.length > maxItems) {
+    const visible = arr.slice(0, maxItems).join(', ');
+    return `${visible}, ... (+${arr.length - maxItems} more)`;
+  }
+
+  return arr.join(', ');
+}
+
+formatNumber(value: any): string {
+  if (value == null) return 'N/A';
+  return Number(value).toLocaleString(); // 14000000 → "14,000,000"
+}
 }

@@ -32,5 +32,6 @@ export interface ICompany {
   total_funding: string | null;
   updated_at: string | null;
   website_url: string | null;
+  [key: string]: any;
 }
 

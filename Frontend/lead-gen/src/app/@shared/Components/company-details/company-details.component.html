@@ -1,19 +1,31 @@
 <div *ngIf="companyDetails; else noData" class="company-details-component">
-  <div class="cards-container">
-    <h2 style="color: var(--color-yellow)">{{companyDetails.name}}</h2>
-    <div *ngFor="let section of companySections" class="company-section" style="border: 1px solid white;">
+  <h2 style="color: var(--color-yellow)">{{ companyDetails.name }}</h2>
+
+  <div class="company-sections-grid">
+    <div *ngFor="let section of companySections" class="company-section">
       <h3 style="color: var(--color-yellow)">{{ section.title }}</h3>
-      <mat-card >
+      <mat-card>
         <mat-card-content>
-          <div *ngFor="let entry of section.entries" style="display:flex; line-height: 1.5em;">
-            <b style="color: var(--color-yellow)">{{ entry.key }}:</b>
-            <span *ngIf="!isLink(entry.value)" style="color: white">{{ entry.value || 'N/A' }}</span>
-            <a *ngIf="isLink(entry.value)" [href]="entry.value" target="_blank">{{ entry.value }}</a>
+          <div *ngFor="let entry of section.entries" style="line-height: 1.5em;">
+            <strong style="color: var(--color-yellow);">{{ entry.key }}:</strong>
+            
+            <ng-container *ngIf="entry.expandable && !isExpanded(entry.key)">
+              {{ truncate(entry.value, 120) }} 
+              <a style="color: var(--color-green);" href="#" (click)="toggleField(entry.key); $event.preventDefault()">Read more</a>
+            </ng-container>
+
+            <ng-container *ngIf="entry.expandable && isExpanded(entry.key)">
+              {{ entry.value }}
+              <a style="color: var(--color-green);" href="#" (click)="toggleField(entry.key); $event.preventDefault()">Show less</a>
+            </ng-container>
+
+            <ng-container *ngIf="!entry.expandable">
+              {{ entry.value || 'N/A' }}
+            </ng-container>
           </div>
         </mat-card-content>
       </mat-card>
     </div>
-
   </div>
 </div>
 
