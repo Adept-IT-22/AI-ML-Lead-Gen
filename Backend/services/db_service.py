@@ -170,6 +170,30 @@ async def is_company_id_in_db(company_apollo_id: str)->bool:
 
     return False
 
+#Check if person exists in db based on apollo id
+async def is_person_in_db(apollo_id: str)->bool:
+    logger.info(f"Checking if {apollo_id} is in DB")
+    query = f"SELECT 1 FROM people WHERE apollo_id = $1 LIMIT 1"
+
+    try:
+        #Create a connection pool to avoid creating repeated tcp connections
+        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+            async with pool.acquire() as conn:
+                results = await conn.fetchrow(query, apollo_id)
+
+            if results:
+                logger.info(f"{apollo_id} found")
+                return True
+            else: 
+                logger.info(f"{apollo_id} not found")
+                return False
+
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while fetching {apollo_id} from DB: {str(e)}")
+    except Exception as e:
+        logger.error(f"Failed to fetch {apollo_id} from DB: {str(e)}")
+
+    return False
 
 if __name__ == "__main__":
     async def main():

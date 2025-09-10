@@ -384,7 +384,12 @@ async def main():
                                 None, #notes
                             ) 
 
-                people_data_to_store.append(people_row)
+                #Check if person already exists in database
+                person_is_in_db = await is_person_in_db(apollo_id=apollo_user_id)
+                if person_is_in_db:
+                    continue
+                else:
+                    people_data_to_store.append(people_row)
 
             except Exception as e:
                 logger.error(f"Failed to process people data for storage: {str(e)}")

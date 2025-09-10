@@ -45,10 +45,10 @@ export class LeadsTableComponent implements OnInit{
     this.selectedRow = row; // ✅ open modal with row data
   } 
 
-onUpdate(row: any): void {
-  console.log('Update clicked', row);
-  // handle update logic
-}
+  onUpdate(row: any): void {
+    console.log('Update clicked', row);
+    // handle update logic
+  }
 
 closeModal() {
     this.selectedRow = null; // ✅ close modal
