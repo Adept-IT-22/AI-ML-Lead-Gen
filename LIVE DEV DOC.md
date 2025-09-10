@@ -134,4 +134,5 @@ This section is a to-do list for me as the programmer.
 + See if I can get event attendees on eventbrite
 + Fetch from google news
 + Create normalization DB
-+ Check if company/people are in DB before enriching.
++ Create mock DB for emails
++ Show articles leads came from

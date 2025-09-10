@@ -15,3 +15,26 @@ people_query = """
                 number, notes) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
                     $11, $12, $13, $14, $15, $16)
             """
+
+normalized_master_query = """
+        INSERT INTO normalized_master (type, source, link, title, city, country, tags) 
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
+                """
+
+normalized_funding_query = """
+        INSERT INTO normalized_funding (company_name, company_decision_makers,
+                company_decision_makers_position, funding_round, amount_raised,
+                currency, investor_companies, investor_people) VALUES ($1, $2, $3,
+                $4, $5, $6, $7, $8)
+                """
+
+normalized_hiring_query = """
+        INSERT INTO normalized_hiring (company_name, company_decision_makers,
+                company_decision_makers_position, job_roles, hiring_reasons)
+                VALUES ($1, $2, $3, $4, $5)
+                """ 
+
+normalized_events_query = """
+        INSERT INTO normalized_events (event_id, event_summary, event_is_online,
+                event_organizer_id) VALUES ($1, $2, $3, $4)
+                """

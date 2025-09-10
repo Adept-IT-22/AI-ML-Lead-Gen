@@ -1,4 +1,6 @@
 import os
+from enum import Enum
+from typing import List
 from dotenv import load_dotenv
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import *
@@ -8,7 +10,7 @@ load_dotenv(override=True)
 
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
 EMAIL_SEND_API = "https://api.sendgrid.com/v3/mail/send"
-EMAIL_FROM = "mark.mathenge@adept-techno.com"
+EMAIL_FROM = "mark.mathenge@adept-techno.com" #To be changed!
 
 email_headers = {
     "Authorization": f"Bearer {SENDGRID_API_KEY}"
@@ -19,9 +21,7 @@ def send_email(
         email_to: str,
         first_name: str,
         company_name: str,
-        funding_round = None,
-        hiring_area = None,
-        event_name = None,
+        extra_info: str, #Funding info, hiring area or event name
         email_from = EMAIL_FROM
 ):
     sendgrid_client = SendGridAPIClient(SENDGRID_API_KEY)
@@ -32,7 +32,7 @@ def send_email(
         content = funding_data.get('content').format(
             first_name = first_name.title(),
             company_name = company_name.title(),
-            funding_round = funding_round.title(),
+            funding_round = extra_info.title(),
         )
     elif data_source == 'hiring':
         hiring_data = email_prompts.get('hiring')
@@ -40,7 +40,7 @@ def send_email(
         content = hiring_data.get('content').format(
             first_name = first_name.title(),
             company_name = company_name.title(),
-            hiring_area = hiring_area.title()
+            hiring_area = extra_info.title()
         )
     elif data_source == 'events':
         hiring_data = email_prompts.get('hiring')
@@ -48,7 +48,7 @@ def send_email(
         content = hiring_data.get('content').format(
             first_name = first_name.title(),
             company_name = company_name.title(),
-            event_name = event_name.title()
+            event_name = extra_info.title()
         )
 
     email = Mail(
@@ -64,12 +64,10 @@ def send_email(
 if __name__ == "__main__":
     response = send_email(
         data_source='funding',
-        subject=subject,
         email_to = 'm10mathenge@gmail.com',
         first_name = 'Mark',
         company_name='Adept',
-        funding_round='Series A',
-        email_from=EMAIL_FROM
+        extra_info = "Series A"
     )
     print(response.status_code)
     print(response.body)
