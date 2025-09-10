@@ -1,7 +1,7 @@
 <div class="leads-component">
   <div class="lead-table-title">{{ title }}</div>
 
-  <div class="lead-table">
+  <div class="lead-table" [ngClass]="{ 'preview': !fullTable, 'full': fullTable }">
     <table>
       <thead>
         <tr>
@@ -58,4 +58,14 @@
     </table>
   </div>
 </div>
+
+ <!-- ✅ Modal -->
+  <div class="modal" *ngIf="selectedRow">
+    <div class="modal-content">
+      <h3>Lead Details</h3>
+      <pre>{{ selectedRow | json }}</pre>
+      <app-button [buttonText]="'Close'" (click)="closeModal()"></app-button>
+    </div>
+  </div>
+
 

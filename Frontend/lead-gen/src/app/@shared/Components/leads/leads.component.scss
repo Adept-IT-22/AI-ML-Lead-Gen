@@ -3,10 +3,18 @@
   border: 2px solid #f9f9f9;
 
   .lead-table {
-    width: 100%;
-    /* adjust height for ~5 rows */
-    max-height: 250px;
-    overflow-y: auto;
+  width: 100%;
+}
+
+.lead-table.preview {
+  max-height: 250px; /* only in preview (home) */
+  overflow-y: auto;
+}
+
+.lead-table.full {
+  max-height: none;  /* show all rows */
+  overflow-y: visible;
+}
 
     table {
       width: 100%;
@@ -47,7 +55,7 @@
       }
       }
     }
-  }
+  
 
   .lead-table-title {
     padding: 10px 10px;

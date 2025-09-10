@@ -25,6 +25,7 @@ export class LeadsTableComponent implements OnInit{
   @Input() selectTitle: string = "";
   @Input() selectOptions: string[] = [];
   @Input() filters: { [key: string]: string } = {};
+  @Input() fullTable: boolean = false; // default = preview mode
   selectedOption: string = '';
   selectedRow: any = null; 
 

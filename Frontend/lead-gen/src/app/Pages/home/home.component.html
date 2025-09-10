@@ -27,6 +27,7 @@
             [title]="'LEAD LIST'"
             [columns]="leadColumns"
             [data]="filteredLeads"
+            [fullTable]="false">
             [buttons]="['View', 'Update']"
             
         ></app-leads>
@@ -39,5 +40,10 @@
         [data]="news_feed"
         >
         </app-data-feed>
+
+        <app-data-feed
+        [title]="'RECENT ACTIVITY'"
+        [data]="activity_feed"
+        ></app-data-feed>
     </div>        
 </div>
