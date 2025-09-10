@@ -1,10 +1,19 @@
 <div class="search-component">
-    <input class="search-bar" type="text" matInput placeholder="SEARCH HERE: ">
+    <input 
+        class="search-bar" 
+        type="text" 
+        matInput 
+        placeholder="SEARCH HERE: "
+        [(ngModel)]="query"
+        (keyup.enter)="onSearch()"
+        />
+
     <div class="button-container">
         <app-button
         [icon]="'search'"
         [iconPosition]="'left'"
         [buttonText]="'GO'"
         [buttonStyleClass]="'btn-search-bar'"
+        (click)="onSearch()"
         ></app-button>
 </div>

@@ -5,6 +5,7 @@
     <table>
       <thead>
         <tr>
+          <th>ID</th>
           <th *ngFor="let column of columns">
             {{ column.header }}
           </th>
@@ -12,7 +13,8 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let row of data">
+        <tr *ngFor="let row of data; let i = index">
+          <td>{{i+1}}</td>
           <td *ngFor="let column of columns">
 
             <!-- Check if this is the 'Action' column -->
@@ -22,10 +24,10 @@
               </span>
               <ng-template #normalText>
                 <span *ngIf="column.key === 'industries'; else regularText">
-                  {{row [column.key][0] | titlecase}}
+                  {{row [column.key]?.[0] | titlecase}}
                 </span>
                 <ng-template #regularText>
-                  {{row[column.key]}}
+                  {{(row)[column.key]}}
                 </ng-template>
               </ng-template>
             </ng-container>

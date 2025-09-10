@@ -106,7 +106,6 @@ export class HomeComponent implements OnInit{
 
   // Define the columns for the lead data table
   leadColumns = [
-    { key: 'id', header: 'ID' },
     { key: 'name', header: 'Company Name' },
     { key: 'status', header: 'Status' },
     { key: 'updated_at', header: 'Date Updated' },
