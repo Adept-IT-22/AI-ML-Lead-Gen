@@ -17,6 +17,7 @@ from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 from utils.db_queries import *
 from utils.data_normalization import *
 from services.db_service import *
+from services.email_sending import *
 from normalization_module.event_normalization import normalize_event_data
 from normalization_module.funding_normalization import normalize_funding_data
 from normalization_module.hiring_normalization import normalize_hiring_data
@@ -29,6 +30,9 @@ from helpers.helpers import *
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+#DB_URL = os.getenv("DATABASE_URL")
+DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
 
 #Create Flask App
 app = Flask(__name__)
@@ -116,17 +120,69 @@ async def main():
 
     #2.2 ==========Normalize data ===============
         data_type = data.get("type")
-        if isinstance(data, dict) and data_type == "event": 
-            normalized_data= await normalize_event_data(data)
+        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+            if isinstance(data, dict) and data_type == "event": 
+                normalized_data= await normalize_event_data(data)
 
-        elif isinstance(data, dict) and data_type == "funding":
-            normalized_data = await normalize_funding_data(data)
+                event_event_id = normalized_data.get("event_id", "")
+                event_event_summary = normalized_data.get("event_summary", "")
+                event_event_is_online = normalized_data.get("event_is_online", "")
+                event_event_organizer_id = normalized_data.get("event_organizer_id", "")
 
-        elif isinstance(data, dict) and data_type == "hiring":
-            normalized_data = await normalize_hiring_data(data)
+                event_data_to_store = [event_event_id, event_event_summary, event_event_is_online,
+                                       event_event_organizer_id]                
 
-        all_normalized_data.append(normalized_data)
-        logger.info(f"Normalized {data_type} data from {name}")
+                await store_in_normalized_events(event_data_to_store, pool)
+
+            elif isinstance(data, dict) and data_type == "funding":
+                normalized_data = await normalize_funding_data(data)
+
+                funding_company_name = normalized_data.get("company_name", "")
+                funding_decision_makers = normalized_data.get("company_decision_makers", [])
+                funding_decision_makers_position = normalized_data.get("company_decision_makers_position", [])
+                funding_funding_round = normalized_data.get("funding_round", "")
+                funding_amount_raised = normalized_data.get("amount_raised", "")
+                funding_currency  = normalized_data.get("currency", "")
+                funding_investor_companies = normalized_data.get("investor_companies", [])
+                funding_investor_people = normalized_data.get("investor_people", [])
+
+                funding_data_to_store = [funding_company_name, funding_decision_makers, funding_decision_makers_position,
+                                        funding_funding_round, funding_amount_raised, funding_currency,
+                                        funding_investor_companies, funding_investor_people]
+
+                await store_in_normalized_funding(funding_data_to_store, pool)
+
+            elif isinstance(data, dict) and data_type == "hiring":
+                normalized_data = await normalize_hiring_data(data)
+
+                hiring_company_name = normalized_data.get("company_name", "")
+                hiring_decision_makers = normalized_data.get("company_decision_makers", [])
+                hiring_decision_makers_position = normalized_data.get("company_decision_makers_position", [])
+                hiring_job_roles = normalized_data.get("job_roles", [])
+                hiring_hiring_reasons = normalized_data.get("hiring_reasons", [])
+
+                hiring_data_to_store = [hiring_company_name, hiring_decision_makers,hiring_decision_makers_position, 
+                                        hiring_job_roles, hiring_hiring_reasons
+                                        ]
+
+                await store_in_normalized_hiring(hiring_data_to_store, pool)
+
+            normalized_type = normalized_data.get("type", "")
+            normalized_source = normalized_data.get("source", "")
+            normalized_link = normalized_data.get("link", "")
+            normalized_title = normalized_data.get("title", "")
+            normalized_city = normalized_data.get("city", "")
+            normalized_country = normalized_data.get("country", "")
+            normalized_tags = normalized_data.get("tags", [])
+
+            normalized_master_data_to_store = [normalized_type, normalized_source,
+                                normalized_link, normalized_title, normalized_city,
+                                normalized_country, normalized_tags]
+
+            await store_in_normalized_master(normalized_master_data_to_store, pool)
+
+            all_normalized_data.append(normalized_data)
+            logger.info(f"Normalized {data_type} data from {name}")
 
     async with aiofiles.open("normalized.txt", "a") as file:
         await file.write(json.dumps(all_normalized_data, indent=2))
@@ -401,8 +457,34 @@ async def main():
         logger.error("No people data to store in db ❌")
 
     #==============5. EMAIL================
-    logger.info("Sending emails")
-    
+    logger.info("Sending emails...")
+    list_of_people_in_db = await fetch_people()
+
+    for person in list_of_people_in_db:
+        contacted_status = person.get("contacted_status", "")
+        persons_email = person.get("email", "")
+
+        if contacted_status == "uncontacted" and persons_email:
+            persons_company_apollo_id = person.get("organization_id", "")
+            persons_company = fetch_company_by_apollo_id(persons_company_apollo_id)
+            data_source = persons_company.get("company_data_source", "")
+            email_to = persons_email
+            first_name = person.first_name
+            company_name = persons_company.get("name")
+
+            if data_source == "funding":
+                funding_round = persons_company.get("latest_funding_round")
+                extra_info = funding_round if funding_round else "latest"
+            elif data_source == "hiring":
+
+
+            response = send_email(
+                data_source=data_source,
+                email_to=email_to,
+                first_name=first_name,
+                company_name=company_name,
+                
+            )
     
     return jsonify({"success": "Main function done"}), 200
 

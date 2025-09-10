@@ -1,12 +1,19 @@
 import os
+import json
 import logging
 import asyncio
 import asyncpg
 from typing import List, Any, Tuple, Dict
 from dotenv import load_dotenv
+from utils.db_queries import *
 
 load_dotenv(verbose=True, override=True)
-DB_URL = os.getenv("DATABASE_URL")
+
+#When running the backend locally I use the 2nd DB_URL. When using docker, I use the 1st.
+#=======================================================================================
+
+#DB_URL = os.getenv("DATABASE_URL")
+DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -94,6 +101,26 @@ async def fetch_company_details(id: int)->List[Dict[str, any]]:
 
     except Exception as e:
         logger.error(f"Failed to fetch company details for company ID {id}")
+        return {}
+
+#Fetch company by apollo id
+async def fetch_company_by_apollo_id(apollo_id: str)->Dict:
+    logger.info(f"Fetching company with apollo ID {apollo_id}")
+    query = "SELECT * FROM companies WHERE apollo_id = $1 LIMIT 1"
+
+    try:
+        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+            async with pool.acquire() as conn:
+                results = await conn.fetchrow(query, apollo_id)
+                if results:
+                    logger.info("Company found")
+                    json_serializable_results = dict(results)
+                    return json_serializable_results 
+                else:
+                    logger.error("No company found")
+                    return {}
+    except Exception as e:
+        logger.error(f"Failed to find company via ID: {str(e)}")
         return {}
 
 #Store company data to database
@@ -195,8 +222,89 @@ async def is_person_in_db(apollo_id: str)->bool:
 
     return False
 
+#Store normalized funding data in normalized_funding table
+async def store_in_normalized_funding(funding_data_to_store: List[any], pool: asyncpg.pool)->bool:
+    logger.info("Storing normalized funding data")
+    query = normalized_funding_query
+
+    try:
+        async with pool.acquire() as conn:
+            await conn.execute(query, *funding_data_to_store)
+
+        logger.info("Funding data stored")
+        return True
+
+    except Exception as e: 
+        logger.error(f"Error storing funding data: {str(e)}")
+        return False
+
+#Store normalized hiring data in normalized_hiring table
+async def store_in_normalized_hiring(hiring_data_to_store: List[any], pool: asyncpg.pool)->bool:
+    logger.info("Storing normalized hiring data")
+    query = normalized_hiring_query
+
+    try:
+        async with pool.acquire() as conn:
+            await conn.execute(query, *hiring_data_to_store)
+
+        logger.info("Hiring data stored")
+        return True
+
+    except Exception as e: 
+        logger.error(f"Error storing hiring data: {str(e)}")
+        return False
+
+#Store normalized events data in normalized_events table
+async def store_in_normalized_events(events_data_to_store: List[any], pool: asyncpg.pool)->bool:
+    logger.info("Storing normalized events data")
+    query = normalized_events_query
+
+    try:
+        async with pool.acquire() as conn:
+            await conn.execute(query, *events_data_to_store)
+
+        logger.info("Events data stored")
+        return True
+
+    except Exception as e: 
+        logger.error(f"Error storing events data: {str(e)}")
+        return False
+
+#Store normalized data in normalized_master table
+async def store_in_normalized_master(normalized_master_data_to_store: List[any], pool: asyncpg.pool)->bool:
+    logger.info("Storing normalized master data")
+    query = normalized_master_query
+
+    try:
+        async with pool.acquire() as conn:
+            await conn.execute(query, *normalized_master_data_to_store)
+
+        logger.info("Normalization master data stored")
+        return True
+
+    except Exception as e: 
+        logger.error(f"Error storing normalization master data: {str(e)}")
+        return False
+
 if __name__ == "__main__":
     async def main():
-        await is_company_id_in_db("5e573c3f97be2d00013ec3b7")
+        logger.info(f"THE DB URL IS: {DB_URL}")
+        funding_data_to_store = [
+            "NeuroTech AI",                                    # company_name
+            ["Alice Johnson", "Bob Smith"],                    # decision_makers
+            ["CEO", "CTO"],                                    # decision_makers_position
+            "Series A",                                        # funding_round
+            5000000,                                           # amount_raised
+            "US Dollars",                                      # currency
+            ["Sequoia Capital", "Andreessen Horowitz"],        # investor_companies
+            ["Jane Doe", "Michael Chan"]                       # investor_people
+        ]
+        try:
+            logger.info("Storing funding data...")
+            async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+                await store_in_normalized_funding(funding_data_to_store, pool)
+            logger.info("Storing successful")
+        except Exception as e:
+            logger.error("Failed storing funding data: {str(e)}")
 
     asyncio.run(main())

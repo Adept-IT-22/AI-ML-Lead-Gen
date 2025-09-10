@@ -118,12 +118,12 @@ async def process_articles_batch(batch: Dict[str, List[Any]])->Dict[str, List[An
 
     return_data = {
         "type": "news",
-        "article_title": [],
-        "article_link": [],
+        "title": [],
+        "link": [],
         "article_date": [],
         "company_name": [],
-        "company_city": [],
-        "company_country": [],
+        "city": [],
+        "country": [],
         "company_decision_makers": [],
         "funding_round": [],
         "amount_raised": [],
