@@ -1,22 +1,22 @@
 .navbar-component{
-    display: flex;
-    gap: 16rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     top: 0%;
     left: 0%;
     border: 2px solid #f9f9f9;
+    
 }
 
 .navbar-menu{
     display: flex;
     align-items: center;
-    gap: 8rem;
+    gap: 4rem;
 }
 
 .app-logo{
     display:flex;
     align-items: center;
     padding-left: 0.5rem;
-    
 }
 
 .search-bar{

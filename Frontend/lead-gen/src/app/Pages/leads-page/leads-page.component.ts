@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CompaniesService } from '../../Services/companies.service';
-import { ICompany } from '../../../Libs/interfaces/company.interface';
-import { LeadsTableComponent } from '../leads/leads.component';
+import { CompaniesService } from '../../@shared/Services/companies.service';
+import { ICompany } from '../../Libs/interfaces/company.interface';
+import { LeadsTableComponent } from '../../@shared/Components/leads/leads.component';
 
 @Component({
   standalone: true,
