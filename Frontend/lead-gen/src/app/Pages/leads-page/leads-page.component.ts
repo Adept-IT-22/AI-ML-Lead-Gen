@@ -19,7 +19,8 @@ export class LeadsPageComponent implements OnInit {
     { header: 'ICP Score', key: 'icp_score' },
     { header: 'Source', key: 'company_data_source' },
     { header: 'Industry', key: 'industries' },
-    { header: 'Action', key: 'action' }
+    { header: 'Action', key: 'action' },
+    { header: 'Contact Status', key: 'contacted_status' }
   ];
   data: ICompany[] = [];
 

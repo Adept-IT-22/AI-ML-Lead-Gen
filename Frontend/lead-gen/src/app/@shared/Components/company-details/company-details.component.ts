@@ -122,7 +122,7 @@ export class CompanyDetailsComponent implements OnInit {
 }
 
 // Truncate arrays to first N items
-truncateArray(arr: string[] | null | undefined, maxItems: number = 10): string {
+truncateArray(arr: string[] | null | undefined, maxItems: number = 100): string {
   if (!arr || arr.length === 0) return 'N/A';
 
   if (arr.length > maxItems) {
