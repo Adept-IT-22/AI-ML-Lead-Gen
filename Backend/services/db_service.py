@@ -229,7 +229,7 @@ async def store_in_normalized_funding(funding_data_to_store: List[any], pool: as
 
     try:
         async with pool.acquire() as conn:
-            await conn.execute(query, *funding_data_to_store)
+            await conn.executemany(query, *funding_data_to_store)
 
         logger.info("Funding data stored")
         return True
@@ -245,7 +245,7 @@ async def store_in_normalized_hiring(hiring_data_to_store: List[any], pool: asyn
 
     try:
         async with pool.acquire() as conn:
-            await conn.execute(query, *hiring_data_to_store)
+            await conn.executemany(query, *hiring_data_to_store)
 
         logger.info("Hiring data stored")
         return True
@@ -261,7 +261,7 @@ async def store_in_normalized_events(events_data_to_store: List[any], pool: asyn
 
     try:
         async with pool.acquire() as conn:
-            await conn.execute(query, *events_data_to_store)
+            await conn.executemany(query, *events_data_to_store)
 
         logger.info("Events data stored")
         return True
@@ -270,21 +270,46 @@ async def store_in_normalized_events(events_data_to_store: List[any], pool: asyn
         logger.error(f"Error storing events data: {str(e)}")
         return False
 
-#Store normalized data in normalized_master table
-async def store_in_normalized_master(normalized_master_data_to_store: List[any], pool: asyncpg.pool)->bool:
+#Store normalized data in normalized_master table and return ID
+async def store_in_normalized_master(normalized_master_data_to_store: List[any], pool: asyncpg.pool)->int:
     logger.info("Storing normalized master data")
     query = normalized_master_query
 
     try:
         async with pool.acquire() as conn:
-            await conn.execute(query, *normalized_master_data_to_store)
+            normalization_id = await conn.fetchval(query, *normalized_master_data_to_store)
 
         logger.info("Normalization master data stored")
-        return True
+        return normalization_id
 
     except Exception as e: 
         logger.error(f"Error storing normalization master data: {str(e)}")
-        return False
+        return 0
+
+#Check if data already exists in normalization table
+#THIS IS WRONG. CHECK IF IT EXISTS IN MASTER THEN CHECK NORMALIZATION ID IN THE OTHERS!!
+async def is_data_in_db(table_name: str, pool: asyncpg.pool, company_or_event_name: str = None)->bool:
+
+    logger.ifno(f"Checking if {company_or_event_name} exists in table {table_name}")
+    query = f"SELECT 1 FROM {table_name} WHERE name = $1 LIMIT 1"
+
+    try:
+        async with pool.acquire() as conn:
+            results = await conn.fetch(query)
+        
+        if results:
+            logger.info(f"{company_or_event_name} exists in {table_name}")
+            return True
+        else: 
+            logger.error(f"{company_or_event_name} not found.")
+            return False
+
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while checking if {company_or_event_name} is in {table_name}")
+        return True
+    except Exception as e:
+        logger.error(f"Error while chekcing if {company_or_event_name} is in {table_name}")
+        return True
 
 if __name__ == "__main__":
     async def main():

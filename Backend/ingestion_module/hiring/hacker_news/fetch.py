@@ -84,6 +84,7 @@ def dict_of_lists(all_jobs: List[Dict])->Dict[str, List[Any]]:
 
 async def main():
     start_time = time.perf_counter()
+    urls = []
     async with httpx.AsyncClient() as client:
         job_ids = await fetch_hackernews_jobs(url=URL, client=client)
         job_details = await get_all_job_details(client=client, ids=job_ids, url=URL)
@@ -93,6 +94,7 @@ async def main():
         ids_urls_titles = {}
         ids_urls_titles["ids"] = jobs_arranged_and_filtered.get("id", "")
         ids_urls_titles["urls"] = jobs_arranged_and_filtered.get("url", "")
+        urls.append(jobs_arranged_and_filtered.get("url", ""))
         ids_urls_titles["titles"] = jobs_arranged_and_filtered.get("title", "")
         
         #feed to llm
@@ -114,6 +116,7 @@ async def main():
         #"by" in jobs_arranged_and_filtered = "company_decision_makers" in llm_results
         llm_results["company_decision_makers"].extend(jobs_arranged_and_filtered["by"])
         llm_results["source"] = "HackerNews"
+        llm_results["link"] = urls[0]
 
     else:
         logger.warning("AI extraction for HackerNews returned no data. No logging will happen")
