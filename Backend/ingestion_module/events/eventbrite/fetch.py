@@ -26,7 +26,7 @@ async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str
     logger.info("Fetching Eventbrite events....")
     logger.info(f"The url is : {url}")
     event_data = {
-        "type": "events",
+        "type": "event",
         "source": "",
         "event_title": [],
         "event_link": [],

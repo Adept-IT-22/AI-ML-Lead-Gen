@@ -40,7 +40,7 @@ async def normalize_event_data(ingested_data: Dict[str, List[Any]]) -> Dict[str,
         "city": [normalize_city(city) for city in ingested_data.get("city", [])],
         "event_id": [eid.strip() for eid in ingested_data.get("event_id", [])],
         "event_summary": [summary.strip() for summary in ingested_data.get("event_summary", [])],
-        "event_is_online": [str(status) for status in ingested_data.get("event_is_online", [])],
+        "event_is_online": [str_to_bool(status) for status in ingested_data.get("event_is_online", [])],
         "tags": [normalize_tags(tag) for tag in ingested_data.get("event_tags")]
     })
 

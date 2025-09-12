@@ -12,6 +12,15 @@ OVERRIDES = {
     "united states of america": "America",
 }
 
+def str_to_bool(string: str)->bool:
+    if isinstance(string, str):
+        if string.lower() in ("true", "yes"):
+            return True
+        elif string.lower() in ("false", "no"):
+            return False
+        else:
+            return None
+
 def normalize_country(country: str) -> str:
     if not country:
         return ""

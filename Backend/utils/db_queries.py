@@ -23,19 +23,19 @@ normalized_master_query = """
                 """
 
 normalized_funding_query = """
-        INSERT INTO normalized_funding (normalization_id, company_name, company_decision_makers,
+        INSERT INTO normalized_funding (master_id, company_name, company_decision_makers,
                 company_decision_makers_position, funding_round, amount_raised,
                 currency, investor_companies, investor_people) VALUES ($1, $2, $3,
                 $4, $5, $6, $7, $8, $9)
                 """
 
 normalized_hiring_query = """
-        INSERT INTO normalized_hiring (normalization_id, company_name, company_decision_makers,
+        INSERT INTO normalized_hiring (master_id, company_name, company_decision_makers,
                 company_decision_makers_position, job_roles, hiring_reasons)
                 VALUES ($1, $2, $3, $4, $5, $6)
                 """ 
 
 normalized_events_query = """
-        INSERT INTO normalized_events (normalization_id, event_id, event_summary, event_is_online,
+        INSERT INTO normalized_events (master_id, event_id, event_summary, event_is_online,
                 event_organizer_id) VALUES ($1, $2, $3, $4, $5)
                 """
