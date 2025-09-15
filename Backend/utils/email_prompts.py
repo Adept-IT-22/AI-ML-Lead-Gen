@@ -14,7 +14,7 @@ email_prompts = {
                     <p>Would you be open to a quick chat this week to explore how we can support <strong>{company_name}</strong>’s next phase of growth?</p>
                     
                     <p>For more information on Adept Technologies, kindly visit 
-                        <a href="https://www.adept-techno.com" target="_blank">www.adept-techno.com</a>
+                        <a href="https://www.adept-techno.com" target="_blank"><strong>Our Website</strong></a>
                     </p>
                     
                     <p>Regards,<br>
@@ -40,7 +40,7 @@ email_prompts = {
                     <p>Is it worth exploring how we could support <strong>{company_name}</strong> during this scaling phase?</p>
                     
                     <p>For more information on Adept Technologies, kindly visit 
-                        <a href="https://www.adept-techno.com" target="_blank">www.adept-techno.com</a>
+                        <a href="https://www.adept-techno.com" target="_blank"><strong>Our Website</strong></a>
                     </p>
                     
                     <p>Regards,<br>
@@ -66,7 +66,7 @@ email_prompts = {
                     Would a 15-min call later this week work?</p>
                     
                     <p>For more information on Adept Technologies, kindly visit 
-                        <a href="https://www.adept-techno.com" target="_blank">www.adept-techno.com</a>
+                        <a href="https://www.adept-techno.com" target="_blank"><strong>Our Website</strong></a>
                     </p>
                     
                     <p>Regards,<br>
