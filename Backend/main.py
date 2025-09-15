@@ -493,18 +493,27 @@ async def main():
             #first_name = person.first_name
             #company_name = persons_company.get("name")
 
-            #if data_source == "funding":
-                #funding_round = persons_company.get("latest_funding_round")
-                #extra_info = funding_round if funding_round else "latest"
-            #elif data_source == "hiring":
+            #async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size = 10) as pool:
+                #if data_source == "funding":
+                    #funding_round = persons_company.get("latest_funding_round")
+                    #extra_info = funding_round if funding_round else "latest"
+                #elif data_source == "hiring":
+                    #hiring_area = await get_hiring_area(company_name, pool) 
+                    #extra_info = hiring_area
 
+                #response = send_email(
+                    #data_source=data_source,
+                    #email_to=email_to,
+                    #first_name=first_name,
+                    #company_name=company_name,
+                    #extra_info=extra_info
+                #)
 
-            #response = send_email(
-                #data_source=data_source,
-                #email_to=email_to,
-                #first_name=first_name,
-                #company_name=company_name,
-            #)
+                ##Change contacted_status in database
+                # persons_apollo_id = person.get("apollo_id", "")
+                # await change_person_contacted_status(persons_apollo_id, pool)
+        #else:
+            #logger.info(f"Contacted Status: {contacted_status}\nPerson's email: {persons_email}")
     
     return jsonify({"success": "Main function done"}), 200
 
