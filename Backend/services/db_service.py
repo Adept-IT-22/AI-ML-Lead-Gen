@@ -115,6 +115,7 @@ async def fetch_company_by_apollo_id(apollo_id: str)->Dict:
                 if results:
                     logger.info("Company found")
                     json_serializable_results = dict(results)
+                    print(json_serializable_results)
                     return json_serializable_results 
                 else:
                     logger.error("No company found")
@@ -297,10 +298,10 @@ async def is_data_in_db(pool: asyncpg.pool, company_or_event_link: str = None)->
             results = await conn.fetch(query, company_or_event_link)
         
         if results:
-            logger.info(f"{company_or_event_link} exists in normalized_master")
+            logger.warning(f"{company_or_event_link} exists in normalized_master")
             return True
         else: 
-            logger.error(f"{company_or_event_link} not found.")
+            logger.info(f"{company_or_event_link} not found.")
             return False
 
     except asyncpg.PostgresError as e:
@@ -310,12 +311,68 @@ async def is_data_in_db(pool: asyncpg.pool, company_or_event_link: str = None)->
         logger.error(f"Error while chekcing if {company_or_event_link} is in normalization_master: {str(e)}")
         return True
 
+#Change person contacted_status from uncontacted to contacted
+async def change_person_contacted_status(apollo_id: str, pool):
+    logger.info(f"Changing {apollo_id}'s contacted status...")
+    query = "UPDATE people SET contacted_status = 'contacted' WHERE apollo_id = $1 RETURNING organization_id"
+
+    try:
+        async with pool.acquire() as conn:
+            organization_id = await conn.fetch(query, apollo_id)
+            org_id_json_list = [dict(org_id) for org_id in organization_id]
+            org_id = org_id_json_list[0].get("organization_id")
+
+            #Change contacted_status for person's company
+            await change_company_contacted_status(apollo_id=str(org_id), pool=pool)
+
+            logger.info(f"Contacted_status update done for person {apollo_id}")
+            return 
+    except Exception as e:
+        logger.info(f"Failed to update contacted_status: {str(e)}")
+        return 
+
+#Change company contacted_status from uncontacted to contacted
+async def change_company_contacted_status(apollo_id: str, pool):
+    logger.info(f"Changing company {apollo_id}'s contacted status...")
+    query = "UPDATE companies SET contacted_status = 'contacted' WHERE apollo_id = $1"
+
+    try:
+        async with pool.acquire() as conn:
+            await conn.execute(query, apollo_id)
+            logger.info(f"Contacted_status update done for company {apollo_id}")
+            return 
+    except Exception as e:
+        logger.info(f"Failed to update contacted_status: {str(e)}")
+        return 
+
 async def check_master_normalization(pool: asyncpg.pool):
     async with pool.acquire() as conn:
         query = "SELECT * FROM normalized_master"
         results = await conn.execute(query)
     print(results)
     return results
+
+#Get company from normalization_hiring table and return hiring area
+async def get_hiring_area(company_name: str, pool)->str:
+    logger.info(f"Get hiring area for {company_name}")
+
+    try:
+        query = "SELECT * FROM normalized_hiring WHERE LOWER(company_name) = $1 LIMIT 1"
+        async with pool.acquire() as conn:
+            results = await conn.fetch(query, company_name.lower())
+            company_json_list = [dict(result) for result in results]
+            company_json = company_json_list[0] 
+
+            job_roles = company_json.get("job_roles")
+            hiring_area = job_roles[0] if job_roles else "various areas"
+            logger.info(hiring_area)
+
+            return hiring_area
+
+    except Exception as e:
+        logger.error(f"Couldn't get hiring area for {company_name}: {str(e)}")
+        return ""
+
 
 if __name__ == "__main__":
     async def main():
@@ -330,12 +387,8 @@ if __name__ == "__main__":
             #["Sequoia Capital", "Andreessen Horowitz"],        # investor_companies
             #["Jane Doe", "Michael Chan"]                       # investor_people
         #]
-        try:
-            logger.info("Checking master normalization...")
-            async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-                await check_master_normalization(pool)
-            logger.info("Check done")
-        except Exception as e:
-            logger.error(f"Failed chekcing master normalization: {str(e)}")
+
+        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+            await get_hiring_area("Bild AI", pool)
 
     asyncio.run(main())
