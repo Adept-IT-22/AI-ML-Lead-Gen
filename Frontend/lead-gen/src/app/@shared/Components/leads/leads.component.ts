@@ -48,6 +48,11 @@ export class LeadsTableComponent implements OnInit {
     });
   }
 
+  ngOnChanges():void {
+    this.filteredData = [...this.data];
+    this.applyFiltersAndSearch();
+  }
+
   /** Called when a filter dropdown changes */
   onSelect(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
