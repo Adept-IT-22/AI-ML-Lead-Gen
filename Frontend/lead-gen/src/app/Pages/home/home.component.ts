@@ -112,6 +112,7 @@ export class HomeComponent implements OnInit{
     { key: 'icp_score', header: 'ICP Score' },
     { key: 'company_data_source', header: 'Source' },
     { key: 'industries', header: 'Industry' },
+    {key: 'contacted_status', header: 'Contact Status'},
     { key: 'action', header: 'Action' },
   ];
 

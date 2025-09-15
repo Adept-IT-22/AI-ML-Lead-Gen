@@ -68,7 +68,8 @@ export class CompanyDetailsComponent implements OnInit {
                   key: p.title,
                   value: `${p.full_name} (${p.email})`
                 })) || []), 
-                  {key: 'Company Phone', value: details.phone}
+                  {key: 'Company Phone', value: details.phone},
+                  {key: 'Contacted Status', value: details.contacted_status}
                 ]
               },
               {
