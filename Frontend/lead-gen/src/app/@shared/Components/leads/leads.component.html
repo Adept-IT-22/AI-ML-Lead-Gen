@@ -1,3 +1,5 @@
+
+
 <div class="leads-component">
   <div class="lead-table-title">{{ title }}</div>
 
@@ -13,7 +15,7 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let row of data; let i = index">
+        <tr *ngFor="let row of filteredData; let i = index">
           <td>{{i+1}}</td>
           <td *ngFor="let column of columns">
 

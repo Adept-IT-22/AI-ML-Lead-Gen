@@ -1,22 +1,31 @@
-import { Component, Output } from '@angular/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { SearchService } from '../../Services/search.service';
+import { ButtonComponent } from '../button/button.component';
 import { MatInputModule } from '@angular/material/input';
-import { ButtonComponent } from "../button/button.component";
-import { FormsModule, NgModel } from '@angular/forms';
-import { EventEmitter } from '@angular/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-search-bar',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, ButtonComponent, FormsModule],
+  imports: [CommonModule, ButtonComponent, MatInputModule, MatFormFieldModule],
   templateUrl: './search-bar.component.html',
-  styleUrl: './search-bar.component.scss'
+  styleUrls: ['./search-bar.component.scss']
 })
 export class SearchBarComponent {
-  query: string = '';
-  @Output() search = new EventEmitter()
+  searchText: string = '';
 
-  onSearch() {
-    this.search.emit(this.query.trim())
+  constructor(private searchService: SearchService) {}
+
+  /** Triggered while typing */
+  onSearchChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.searchText = input.value;
+    this.searchService.setSearchTerm(this.searchText.trim());
+  }
+
+  /** Triggered when clicking GO button */
+  onSearch(): void {
+    this.searchService.setSearchTerm(this.searchText.trim());
   }
 }
