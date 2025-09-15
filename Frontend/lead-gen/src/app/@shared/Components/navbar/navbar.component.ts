@@ -12,14 +12,13 @@ import { SearchService } from '../../Services/search.service';
 })
 
 export class NavbarComponent {
-  @Input() menuItems: string[] = [
-    "HOME", "ANALYTICS"
-  ];
+   searchText: string = '';
 
-  constructor(private searchService: SearchService){}
+  constructor(private searchService: SearchService) {}
 
-  onSearch(query: string){
-    this.searchService.updateQuery(query);
+  onSearchChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.searchText = input.value;
+    this.searchService.setSearchTerm(this.searchText.trim());
   }
-
 }

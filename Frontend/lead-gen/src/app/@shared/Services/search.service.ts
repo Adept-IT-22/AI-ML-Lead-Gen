@@ -5,13 +5,19 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class SearchService {
+  // Holds the latest search term (default empty string)
+  private searchTermSubject = new BehaviorSubject<string>('');
+  
+  // Observable that components can subscribe to
+  searchTerm$ = this.searchTermSubject.asObservable();
 
-  constructor() { }
+  /** Update the search term (called from Navbar or any other component) */
+  setSearchTerm(term: string): void {
+    this.searchTermSubject.next(term);
+  }
 
-   private querySource = new BehaviorSubject<string>('');
-  query$ = this.querySource.asObservable();
-
-  updateQuery(query: string) {
-    this.querySource.next(query);
+  /** Get the current search term without subscribing */
+  getSearchTerm(): string {
+    return this.searchTermSubject.getValue();
   }
 }
