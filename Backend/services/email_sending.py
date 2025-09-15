@@ -50,9 +50,9 @@ async def send_email(
             hiring_area = extra_info.title()
         )
     elif data_source == 'events':
-        hiring_data = email_prompts.get('events')
-        subject = hiring_data.get('subject')
-        content = hiring_data.get('content').format(
+        event_data = email_prompts.get('events')
+        subject = event_data.get('subject')
+        content = event_data.get('content').format(
             first_name = first_name.title(),
             company_name = company_name.title(),
             event_name = extra_info.title()
@@ -101,11 +101,11 @@ async def send_email(
 if __name__ == "__main__":
     async def main():
         response = await send_email(
-            data_source='funding',
+            data_source='hiring',
             email_to = 'm10mathenge@gmail.com',
-            first_name = 'Antony',
-            company_name='Antech',
-            extra_info = "Series A"
+            first_name = 'Mark',
+            company_name='Kiongozi Ltd',
+            extra_info = "Software Dev"
         )
         print(response.status_code)
         print(response.body)
