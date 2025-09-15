@@ -147,6 +147,7 @@ async def main():
                     llm_results[key] = value_list
                     
             llm_results["source"] = "TechCrunch"
+            llm_results["link"] = article_links
 
         else:
             logger.warning("AI extraction for TechCrunch returned no data. No logging will happen")

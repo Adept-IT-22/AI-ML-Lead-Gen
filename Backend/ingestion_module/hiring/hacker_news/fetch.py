@@ -36,7 +36,7 @@ async def get_all_job_details(client: httpx.AsyncClient, ids: List, url: str)->L
     try:
         tasks = [get_individual_job_details(client, id, url) for id in ids]
         all_jobs = []
-        async for job in asyncio.as_completed(tasks):
+        for job in asyncio.as_completed(tasks):
             unwrapped_job = await job
             all_jobs.append(unwrapped_job)
         logger.info("Done getting all jobs' details")
@@ -51,7 +51,8 @@ async def get_individual_job_details(client: httpx.AsyncClient, id: int, url: st
     try:
         response = await client.get(f"{url}item/{id}.json?print=pretty")
         logger.info("Done fetching individual job details")
-        return response.json()
+        data = response.json()
+        return data
         
     except Exception as e:
         logger.error(f"Couldn't fetch individual job details: {str(e)}")
@@ -61,7 +62,7 @@ def dict_of_lists(all_jobs: List[Dict])->Dict[str, List[Any]]:
     logger.info("Converting a list of dictionaries into a dictionary of lists")
 
     all_jobs_well_arranged = {
-        "type": "job",
+        "type": "hiring",
         "by": [],
         "id": [],
         "score": [],
@@ -114,6 +115,10 @@ async def main():
         #"by" in jobs_arranged_and_filtered = "company_decision_makers" in llm_results
         llm_results["company_decision_makers"].extend(jobs_arranged_and_filtered["by"])
         llm_results["source"] = "HackerNews"
+        llm_results["link"] = jobs_arranged_and_filtered.get("url", [])
+
+        for by_value in jobs_arranged_and_filtered["by"]:
+            llm_results["company_decision_makers"].append([by_value])
 
     else:
         logger.warning("AI extraction for HackerNews returned no data. No logging will happen")

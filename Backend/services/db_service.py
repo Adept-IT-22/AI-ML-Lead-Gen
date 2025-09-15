@@ -270,41 +270,72 @@ async def store_in_normalized_events(events_data_to_store: List[any], pool: asyn
         logger.error(f"Error storing events data: {str(e)}")
         return False
 
-#Store normalized data in normalized_master table
-async def store_in_normalized_master(normalized_master_data_to_store: List[any], pool: asyncpg.pool)->bool:
+#Store normalized data in normalized_master table and return ID
+async def store_in_normalized_master(normalized_master_data_to_store: List[any], pool: asyncpg.pool)->int:
     logger.info("Storing normalized master data")
     query = normalized_master_query
 
     try:
         async with pool.acquire() as conn:
-            await conn.execute(query, *normalized_master_data_to_store)
+            master_id = await conn.fetchval(query, *normalized_master_data_to_store)
 
         logger.info("Normalization master data stored")
-        return True
+        return master_id
 
     except Exception as e: 
         logger.error(f"Error storing normalization master data: {str(e)}")
-        return False
+        return 0
+
+#Check if data already exists in normalization table
+async def is_data_in_db(pool: asyncpg.pool, company_or_event_link: str = None)->bool:
+
+    logger.info(f"Checking if {company_or_event_link} exists in normalized_master table")
+    query = f"SELECT 1 FROM normalized_master WHERE link = $1 LIMIT 1"
+
+    try:
+        async with pool.acquire() as conn:
+            results = await conn.fetch(query, company_or_event_link)
+        
+        if results:
+            logger.info(f"{company_or_event_link} exists in normalized_master")
+            return True
+        else: 
+            logger.error(f"{company_or_event_link} not found.")
+            return False
+
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while checking if {company_or_event_link} is in normalization_master: {str(e)}")
+        return True
+    except Exception as e:
+        logger.error(f"Error while chekcing if {company_or_event_link} is in normalization_master: {str(e)}")
+        return True
+
+async def check_master_normalization(pool: asyncpg.pool):
+    async with pool.acquire() as conn:
+        query = "SELECT * FROM normalized_master"
+        results = await conn.execute(query)
+    print(results)
+    return results
 
 if __name__ == "__main__":
     async def main():
         logger.info(f"THE DB URL IS: {DB_URL}")
-        funding_data_to_store = [
-            "NeuroTech AI",                                    # company_name
-            ["Alice Johnson", "Bob Smith"],                    # decision_makers
-            ["CEO", "CTO"],                                    # decision_makers_position
-            "Series A",                                        # funding_round
-            5000000,                                           # amount_raised
-            "US Dollars",                                      # currency
-            ["Sequoia Capital", "Andreessen Horowitz"],        # investor_companies
-            ["Jane Doe", "Michael Chan"]                       # investor_people
-        ]
+        #funding_data_to_store = [
+            #"NeuroTech AI",                                    # company_name
+            #["Alice Johnson", "Bob Smith"],                    # decision_makers
+            #["CEO", "CTO"],                                    # decision_makers_position
+            #"Series A",                                        # funding_round
+            #5000000,                                           # amount_raised
+            #"US Dollars",                                      # currency
+            #["Sequoia Capital", "Andreessen Horowitz"],        # investor_companies
+            #["Jane Doe", "Michael Chan"]                       # investor_people
+        #]
         try:
-            logger.info("Storing funding data...")
+            logger.info("Checking master normalization...")
             async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-                await store_in_normalized_funding(funding_data_to_store, pool)
-            logger.info("Storing successful")
+                await check_master_normalization(pool)
+            logger.info("Check done")
         except Exception as e:
-            logger.error("Failed storing funding data: {str(e)}")
+            logger.error(f"Failed chekcing master normalization: {str(e)}")
 
     asyncio.run(main())

@@ -114,75 +114,90 @@ async def main():
     logger.info("Normalizing ingested data....")
     all_normalized_data = []
 
-    while not ingestion_to_normalization_queue.empty():
-        name, data = await ingestion_to_normalization_queue.get()
-        logger.info(f"Fetched data from {name}. Queue size is now: {ingestion_to_normalization_queue.qsize()}")
+    async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+        while not ingestion_to_normalization_queue.empty():
+            name, data = await ingestion_to_normalization_queue.get()
+            logger.info(f"Fetched data from {name}. Queue size is now: {ingestion_to_normalization_queue.qsize()}")
+            logger.info(f"===========================\n{data}")
 
-    #2.2 ==========Normalize data ===============
-        data_type = data.get("type")
-        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-            if isinstance(data, dict) and data_type == "event": 
-                normalized_data= await normalize_event_data(data)
+            # 2.2 ========== Normalize data ===============
+            data_type = data.get("type")
 
-                event_event_id = normalized_data.get("event_id", "")
-                event_event_summary = normalized_data.get("event_summary", "")
-                event_event_is_online = normalized_data.get("event_is_online", "")
-                event_event_organizer_id = normalized_data.get("event_organizer_id", "")
-
-                event_data_to_store = [event_event_id, event_event_summary, event_event_is_online,
-                                       event_event_organizer_id]                
-
-                await store_in_normalized_events(event_data_to_store, pool)
-
-            elif isinstance(data, dict) and data_type == "funding":
+            # Step 1: Normalize
+            if data_type == "event":
+                normalized_data = await normalize_event_data(data)
+            elif data_type == "funding":
                 normalized_data = await normalize_funding_data(data)
-
-                funding_company_name = normalized_data.get("company_name", "")
-                funding_decision_makers = normalized_data.get("company_decision_makers", [])
-                funding_decision_makers_position = normalized_data.get("company_decision_makers_position", [])
-                funding_funding_round = normalized_data.get("funding_round", "")
-                funding_amount_raised = normalized_data.get("amount_raised", "")
-                funding_currency  = normalized_data.get("currency", "")
-                funding_investor_companies = normalized_data.get("investor_companies", [])
-                funding_investor_people = normalized_data.get("investor_people", [])
-
-                funding_data_to_store = [funding_company_name, funding_decision_makers, funding_decision_makers_position,
-                                        funding_funding_round, funding_amount_raised, funding_currency,
-                                        funding_investor_companies, funding_investor_people]
-
-                await store_in_normalized_funding(funding_data_to_store, pool)
-
-            elif isinstance(data, dict) and data_type == "hiring":
+            elif data_type == "hiring":
                 normalized_data = await normalize_hiring_data(data)
+            else:
+                logger.warning(f"Unknown data type: {data_type}")
+                return
 
-                hiring_company_name = normalized_data.get("company_name", "")
-                hiring_decision_makers = normalized_data.get("company_decision_makers", [])
-                hiring_decision_makers_position = normalized_data.get("company_decision_makers_position", [])
-                hiring_job_roles = normalized_data.get("job_roles", [])
-                hiring_hiring_reasons = normalized_data.get("hiring_reasons", [])
+            # Step 2: Insert master (one row per dataset)
+            for i, normalized_link in enumerate(normalized_data.get("link")):
+                normalized_master_data_to_store = [
+                    normalized_data.get("type", ""),
+                    normalized_data.get("source", ""),
+                    normalized_link,
+                    normalized_data.get("title")[i] if normalized_data.get("title") else None,
+                    normalized_data.get("city")[i] if normalized_data.get("city") else None,
+                    normalized_data.get("country")[i] if normalized_data.get("country") else None,
+                    normalized_data.get("tags")[i] if normalized_data.get("tags") else []
+                ]
+                data_is_in_db = await is_data_in_db(pool, normalized_link)
+                if data_is_in_db:
+                    continue
+                master_id = await store_in_normalized_master(normalized_master_data_to_store, pool)
 
-                hiring_data_to_store = [hiring_company_name, hiring_decision_makers,hiring_decision_makers_position, 
-                                        hiring_job_roles, hiring_hiring_reasons
-                                        ]
+                # Step 3: Insert children
+                if data_type == "event":
+                    event_data_to_store = [
+                        master_id,
+                        normalized_data.get("event_id")[i] if normalized_data.get("event_id") else None,
+                        normalized_data.get("event_summary")[i] if normalized_data.get("event_summary") else None,
+                        normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online") else None,
+                        normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id") else None
+                    ]
+                    try:
+                        await store_in_normalized_events(event_data_to_store, pool)
+                    except Exception as e:
+                        logger.error(f"Failed to store normalized events: {str(e)}")
 
-                await store_in_normalized_hiring(hiring_data_to_store, pool)
+                elif data_type == "funding":
+                    funding_data_to_store = [
+                        master_id,
+                        normalized_data.get("company_name")[i] if normalized_data.get("company_name") else None,
+                        normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers") else [],
+                        normalized_data.get("company_decision_makers_position")[i]if normalized_data.get("company_decision_makers_position") else [] ,
+                        normalized_data.get("funding_round")[i] if normalized_data.get("funding_round") else None,
+                        normalized_data.get("amount_raised")[i] if normalized_data.get("amount_raised") else None,
+                        normalized_data.get("currency")[i] if normalized_data.get("currency") else None,
+                        normalized_data.get("investor_companies")[i] if normalized_data.get("investor_companies") else [],
+                        normalized_data.get("investor_people")[i] if normalized_data.get("investor_people") else [],
+                    ]
 
-            normalized_type = normalized_data.get("type", "")
-            normalized_source = normalized_data.get("source", "")
-            normalized_link = normalized_data.get("link", "")
-            normalized_title = normalized_data.get("title", "")
-            normalized_city = normalized_data.get("city", "")
-            normalized_country = normalized_data.get("country", "")
-            normalized_tags = normalized_data.get("tags", [])
+                    try:
+                        await store_in_normalized_funding(funding_data_to_store, pool)
+                    except Exception as e:
+                        logger.error(f"Failed to store normalized funding data: {str(e)}")
 
-            normalized_master_data_to_store = [normalized_type, normalized_source,
-                                normalized_link, normalized_title, normalized_city,
-                                normalized_country, normalized_tags]
+                elif data_type == "hiring":
+                    hiring_data_to_store = [
+                        master_id,
+                        normalized_data.get("company_name")[i] if normalized_data.get("company_name") else None,
+                        normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers") else [],
+                        normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position") else [],
+                        normalized_data.get("job_roles")[i] if normalized_data.get("job_roles") else [],
+                        normalized_data.get("hiring_reasons")[i] if normalized_data.get("hiring_reasons") else []
+                    ]
+                    try:
+                        await store_in_normalized_hiring(hiring_data_to_store, pool)
+                    except Exception as e:
+                        logger.error(f"Failed to store normalized hiring data: {str(e)}")
 
-            await store_in_normalized_master(normalized_master_data_to_store, pool)
-
-            all_normalized_data.append(normalized_data)
-            logger.info(f"Normalized {data_type} data from {name}")
+                all_normalized_data.append(normalized_data)
+                logger.info(f"Normalized {data_type} data from {name}")
 
     async with aiofiles.open("normalized.txt", "a") as file:
         await file.write(json.dumps(all_normalized_data, indent=2))
@@ -268,11 +283,17 @@ async def main():
     #2.4 ========Single Org Enrichment===========
             logger.info("Single Org Enrichment started...")
 
-            single_enriched_orgs = []
-            for single_org in bulk_enriched_orgs[0].get("organizations"):
-                org_domain = single_org.get("primary_domain")
-                single_enriched_org = await single_org_enrichment(client=client, company_website=org_domain)
-                single_enriched_orgs.append(single_enriched_org)
+            try:
+                single_enriched_orgs = []
+                if not bulk_enriched_orgs:
+                    logger.error("No bulk enriched orgs")
+                    return jsonify({"Error": "No bulk enriched orgs"})
+                for single_org in bulk_enriched_orgs[0].get("organizations"):
+                    org_domain = single_org.get("primary_domain")
+                    single_enriched_org = await single_org_enrichment(client=client, company_website=org_domain)
+                    single_enriched_orgs.append(single_enriched_org)
+            except Exception as e:
+                logger.error(f"Single enrichment failed: {str(e)}")
                 
             async with aiofiles.open("single_org_enrichment.txt", "w") as single_org_enrichment_file:
                 await single_org_enrichment_file.write(json.dumps(single_enriched_orgs, indent=2))
@@ -457,34 +478,33 @@ async def main():
         logger.error("No people data to store in db ❌")
 
     #==============5. EMAIL================
-    logger.info("Sending emails...")
-    list_of_people_in_db = await fetch_people()
+    #logger.info("Sending emails...")
+    #list_of_people_in_db = await fetch_people()
 
-    for person in list_of_people_in_db:
-        contacted_status = person.get("contacted_status", "")
-        persons_email = person.get("email", "")
+    #for person in list_of_people_in_db:
+        #contacted_status = person.get("contacted_status", "")
+        #persons_email = person.get("email", "")
 
-        if contacted_status == "uncontacted" and persons_email:
-            persons_company_apollo_id = person.get("organization_id", "")
-            persons_company = fetch_company_by_apollo_id(persons_company_apollo_id)
-            data_source = persons_company.get("company_data_source", "")
-            email_to = persons_email
-            first_name = person.first_name
-            company_name = persons_company.get("name")
+        #if contacted_status == "uncontacted" and persons_email:
+            #persons_company_apollo_id = person.get("organization_id", "")
+            #persons_company = fetch_company_by_apollo_id(persons_company_apollo_id)
+            #data_source = persons_company.get("company_data_source", "")
+            #email_to = persons_email
+            #first_name = person.first_name
+            #company_name = persons_company.get("name")
 
-            if data_source == "funding":
-                funding_round = persons_company.get("latest_funding_round")
-                extra_info = funding_round if funding_round else "latest"
-            elif data_source == "hiring":
+            #if data_source == "funding":
+                #funding_round = persons_company.get("latest_funding_round")
+                #extra_info = funding_round if funding_round else "latest"
+            #elif data_source == "hiring":
 
 
-            response = send_email(
-                data_source=data_source,
-                email_to=email_to,
-                first_name=first_name,
-                company_name=company_name,
-                
-            )
+            #response = send_email(
+                #data_source=data_source,
+                #email_to=email_to,
+                #first_name=first_name,
+                #company_name=company_name,
+            #)
     
     return jsonify({"success": "Main function done"}), 200
 

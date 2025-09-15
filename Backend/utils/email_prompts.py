@@ -8,7 +8,7 @@ email_prompts = {
             We work with fast-growing AI/ML companies like yours to help scale operations by taking on core but time-consuming tasks e.g., data annotation. This lets your team stay focused on building while we handle the rest.  
             Would you be open to a quick chat this week to explore how we can support {company_name}’s next phase of growth?  
             Regards,  
-            Mark Mathenge, 
+            Antony Ngatia, 
             Sales, Adept Technologies 
         """
 
@@ -22,7 +22,7 @@ email_prompts = {
             As you grow, some tasks can start pulling focus from your core engineering/product roadmap. We specialize in supporting AI/ML companies with services like data annotation, customer engagement, and analytics — helping teams like yours move faster without the growing pains.  
             Is it worth exploring how we could support {company_name} during this scaling phase?  
             Regards,  
-            Mark Mathenge, 
+            Antony Ngatia, 
             Sales, Adept Technologies 
         """
     },
@@ -36,7 +36,7 @@ email_prompts = {
             Would love to connect and share how we could complement what your team is doing.  
             Would a 15-min call later this week work?  
             Regards,  
-            Mark Mathenge, 
+            Antony Ngatia, 
             Sales, Adept Technologies 
         """
     }

@@ -103,6 +103,8 @@ async def main():
                 llm_results[key] = value_list
 
         llm_results["source"] = "Tech.eu"
+        urls = links_and_paragraphs.get("urls")
+        llm_results["link"] = urls
 
     else:
         logger.warning("AI extraction for Tech_eu returned no data. No logging will happen")
