@@ -16,9 +16,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
 EMAIL_SEND_API = "https://api.sendgrid.com/v3/mail/send"
-EMAIL_FROM = "mark.mathenge@adept-techno.com" 
-REPLY_TO_EMAIL = "mark.mathenge@adept-techno.com"
-REPLY_TO_NAME = "Mark Mathenge"
+EMAIL_FROM = "mark.mathenge@adept-techno.com" #Change to "antony@adepttechnologieskenya.com" 
+REPLY_TO_EMAIL = "mark.mathenge@adept-techno.com" #Change to "antony@adepttechnologieskenya.com" 
+REPLY_TO_NAME = "Mark Mathenge" #Change to Antony Ngatia
 
 email_headers = {
     "Authorization": f"Bearer {SENDGRID_API_KEY}"

@@ -115,7 +115,6 @@ async def fetch_company_by_apollo_id(apollo_id: str)->Dict:
                 if results:
                     logger.info("Company found")
                     json_serializable_results = dict(results)
-                    print(json_serializable_results)
                     return json_serializable_results 
                 else:
                     logger.error("No company found")
@@ -389,6 +388,7 @@ if __name__ == "__main__":
         #]
 
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-            await get_hiring_area("Bild AI", pool)
+            result = await is_data_in_db(pool=pool, company_or_event_link="https://www.finsmes.com/2025/08/zipline-ai-raises-7m-in-seed-funding.htm")
+            print(result)
 
     asyncio.run(main())

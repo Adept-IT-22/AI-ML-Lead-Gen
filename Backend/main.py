@@ -29,7 +29,13 @@ from enrichment_module.people_enrichment import people_enrichment
 from helpers.helpers import *
 
 logger = logging.getLogger()
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, 
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    filename="main_log.log",
+    encoding="utf-8",
+    filemode="a"
+    )
 
 #DB_URL = os.getenv("DATABASE_URL")
 DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
@@ -118,7 +124,6 @@ async def main():
         while not ingestion_to_normalization_queue.empty():
             name, data = await ingestion_to_normalization_queue.get()
             logger.info(f"Fetched data from {name}. Queue size is now: {ingestion_to_normalization_queue.qsize()}")
-            logger.info(f"===========================\n{data}")
 
             # 2.2 ========== Normalize data ===============
             data_type = data.get("type")
@@ -134,67 +139,67 @@ async def main():
                 logger.warning(f"Unknown data type: {data_type}")
                 return
 
-            ## Step 2: Insert master (one row per dataset)
-            #for i, normalized_link in enumerate(normalized_data.get("link")):
-                #normalized_master_data_to_store = [
-                    #normalized_data.get("type", ""),
-                    #normalized_data.get("source", ""),
-                    #normalized_link,
-                    #normalized_data.get("title")[i] if normalized_data.get("title")[i] else None,
-                    #normalized_data.get("city")[i] if normalized_data.get("city")[i] else None,
-                    #normalized_data.get("country")[i] if normalized_data.get("country")[i] else None,
-                    #normalized_data.get("tags")[i] if normalized_data.get("tags")[i] else []
-                #]
-                #data_is_in_db = await is_data_in_db(pool, normalized_link)
-                #if data_is_in_db:
-                    #continue
-                #master_id = await store_in_normalized_master(normalized_master_data_to_store, pool)
+            # Step 2: Insert master (one row per dataset)
+            for i, normalized_link in enumerate(normalized_data.get("link")):
+                normalized_master_data_to_store = [
+                    normalized_data.get("type", ""),
+                    normalized_data.get("source", ""),
+                    normalized_link,
+                    normalized_data.get("title")[i] if normalized_data.get("title")[i] else None,
+                    normalized_data.get("city")[i] if normalized_data.get("city")[i] else None,
+                    normalized_data.get("country")[i] if normalized_data.get("country")[i] else None,
+                    normalized_data.get("tags")[i] if normalized_data.get("tags")[i] else []
+                ]
+                data_is_in_db = await is_data_in_db(pool, normalized_link)
+                if data_is_in_db:
+                    continue
+                master_id = await store_in_normalized_master(normalized_master_data_to_store, pool)
 
-                ## Step 3: Insert children
-                #if data_type == "event":
-                    #event_data_to_store = [
-                        #master_id,
-                        #normalized_data.get("event_id")[i] if normalized_data.get("event_id")[i] else None,
-                        #normalized_data.get("event_summary")[i] if normalized_data.get("event_summary")[i] else None,
-                        #normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online")[i] else None,
-                        #normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id")[i] else None
-                    #]
-                    #try:
-                        #await store_in_normalized_events(event_data_to_store, pool)
-                    #except Exception as e:
-                        #logger.error(f"Failed to store normalized events: {str(e)}")
+                # Step 3: Insert children
+                if data_type == "event":
+                    event_data_to_store = [
+                        master_id,
+                        normalized_data.get("event_id")[i] if normalized_data.get("event_id")[i] else None,
+                        normalized_data.get("event_summary")[i] if normalized_data.get("event_summary")[i] else None,
+                        normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online")[i] else None,
+                        normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id")[i] else None
+                    ]
+                    try:
+                        await store_in_normalized_events(event_data_to_store, pool)
+                    except Exception as e:
+                        logger.error(f"Failed to store normalized events: {str(e)}")
 
-                #elif data_type == "funding":
-                    #funding_data_to_store = [
-                        #master_id,
-                        #normalized_data.get("company_name")[i] if normalized_data.get("company_name")[i] else None,
-                        #normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers")[i] else [],
-                        #normalized_data.get("company_decision_makers_position")[i]if normalized_data.get("company_decision_makers_position")[i] else [] ,
-                        #normalized_data.get("funding_round")[i] if normalized_data.get("funding_round")[i] else None,
-                        #normalized_data.get("amount_raised")[i] if normalized_data.get("amount_raised")[i] else None,
-                        #normalized_data.get("currency")[i] if normalized_data.get("currency")[i] else None,
-                        #normalized_data.get("investor_companies")[i] if normalized_data.get("investor_companies")[i] else [],
-                        #normalized_data.get("investor_people")[i] if normalized_data.get("investor_people")[i] else [],
-                    #]
+                elif data_type == "funding":
+                    funding_data_to_store = [
+                        master_id,
+                        normalized_data.get("company_name")[i] if normalized_data.get("company_name")[i] else None,
+                        normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers")[i] else [],
+                        normalized_data.get("company_decision_makers_position")[i]if normalized_data.get("company_decision_makers_position")[i] else [] ,
+                        normalized_data.get("funding_round")[i] if normalized_data.get("funding_round")[i] else None,
+                        normalized_data.get("amount_raised")[i] if normalized_data.get("amount_raised")[i] else None,
+                        normalized_data.get("currency")[i] if normalized_data.get("currency")[i] else None,
+                        normalized_data.get("investor_companies")[i] if normalized_data.get("investor_companies")[i] else [],
+                        normalized_data.get("investor_people")[i] if normalized_data.get("investor_people")[i] else [],
+                    ]
 
-                    #try:
-                        #await store_in_normalized_funding(funding_data_to_store, pool)
-                    #except Exception as e:
-                        #logger.error(f"Failed to store normalized funding data: {str(e)}")
+                    try:
+                        await store_in_normalized_funding(funding_data_to_store, pool)
+                    except Exception as e:
+                        logger.error(f"Failed to store normalized funding data: {str(e)}")
 
-                #elif data_type == "hiring":
-                    #hiring_data_to_store = [
-                        #master_id,
-                        #normalized_data.get("company_name")[i] if normalized_data.get("company_name")[i] else None,
-                        #normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers")[i] else [],
-                        #normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position")[i] else [],
-                        #normalized_data.get("job_roles")[i] if normalized_data.get("job_roles")[i] else [],
-                        #normalized_data.get("hiring_reasons")[i] if normalized_data.get("hiring_reasons")[i] else []
-                    #]
-                    #try:
-                        #await store_in_normalized_hiring(hiring_data_to_store, pool)
-                    #except Exception as e:
-                        #logger.error(f"Failed to store normalized hiring data: {str(e)}")
+                elif data_type == "hiring":
+                    hiring_data_to_store = [
+                        master_id,
+                        normalized_data.get("company_name")[i] if normalized_data.get("company_name")[i] else None,
+                        normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers")[i] else [],
+                        normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position")[i] else [],
+                        normalized_data.get("job_roles")[i] if normalized_data.get("job_roles")[i] else [],
+                        normalized_data.get("hiring_reasons")[i] if normalized_data.get("hiring_reasons")[i] else []
+                    ]
+                    try:
+                        await store_in_normalized_hiring(hiring_data_to_store, pool)
+                    except Exception as e:
+                        logger.error(f"Failed to store normalized hiring data: {str(e)}")
 
             all_normalized_data.append(normalized_data)
             logger.info(f"Normalized {data_type} data from {name}")
@@ -473,28 +478,35 @@ async def main():
     #==============5. EMAIL================
     #logger.info("Sending emails...")
     #list_of_people_in_db = await fetch_people()
-
+    
     #for person in list_of_people_in_db:
         #contacted_status = person.get("contacted_status", "")
         #persons_email = person.get("email", "")
 
         #if contacted_status == "uncontacted" and persons_email:
             #persons_company_apollo_id = person.get("organization_id", "")
-            #persons_company = fetch_company_by_apollo_id(persons_company_apollo_id)
+            #persons_company = await fetch_company_by_apollo_id(persons_company_apollo_id)
             #data_source = persons_company.get("company_data_source", "")
             #email_to = persons_email
-            #first_name = person.first_name
+            #first_name = person.get("first_name")
             #company_name = persons_company.get("name")
+            #logger.info(f"Company about is: {company_name}, {first_name}, {email_to}, {data_source}")
 
             #async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size = 10) as pool:
                 #if data_source == "funding":
                     #funding_round = persons_company.get("latest_funding_round")
-                    #extra_info = funding_round if funding_round else "latest"
+                    #if funding_round:
+                        #extra_info = str(funding_round)
+                    #else:
+                        #extra_info = "latest"
                 #elif data_source == "hiring":
                     #hiring_area = await get_hiring_area(company_name, pool) 
-                    #extra_info = hiring_area
+                    #if hiring_area:
+                        #extra_info = str(hiring_area)
+                    #else:
+                        #extra_info = "various areas"
 
-                #response = send_email(
+                #response = await send_email(
                     #data_source=data_source,
                     #email_to=email_to,
                     #first_name=first_name,
@@ -502,9 +514,12 @@ async def main():
                     #extra_info=extra_info
                 #)
 
-                ##Change contacted_status in database
-                # persons_apollo_id = person.get("apollo_id", "")
-                # await change_person_contacted_status(persons_apollo_id, pool)
+                #logger.info(f"The response is: {response}")
+
+                #Change contacted_status in database
+                #persons_apollo_id = person.get("apollo_id", "")
+                #await change_person_contacted_status(persons_apollo_id, pool)
+            #logger.info("Email sending done")
         #else:
             #logger.info(f"Contacted Status: {contacted_status}\nPerson's email: {persons_email}")
     
