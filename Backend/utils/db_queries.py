@@ -21,8 +21,8 @@ people_query = """
 normalized_master_query = """
         INSERT INTO normalized_master (type, source, link, title, city, country, tags) 
                 VALUES ($1, $2, $3, $4, $5, $6, $7)
-                RETURNING id
                 ON CONFLICT (link) DO NOTHING
+                RETURNING id
                 """
 
 normalized_funding_query = """
