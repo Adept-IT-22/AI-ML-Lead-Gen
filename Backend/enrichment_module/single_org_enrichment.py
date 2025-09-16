@@ -49,9 +49,8 @@ if __name__ == "__main__":
     async def main():
         start_time = time.perf_counter()
         async with httpx.AsyncClient(timeout=10.0) as client:
-            results = await single_org_enrichment(client=client, company_website="coloop.ai")
-            async with aiofiles.open("single_org_enrichment", "w") as file:
-                await file.write(json.dumps(results, indent=2))
+            results = await single_org_enrichment(client=client, company_website="reveng.ai")
+            print(results)
 
         duration = time.perf_counter() - start_time
         logger.info(f"This task took {duration:.2f} seconds")
