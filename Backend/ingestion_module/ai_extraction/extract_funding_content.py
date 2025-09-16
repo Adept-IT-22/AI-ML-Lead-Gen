@@ -103,7 +103,7 @@ async def _call_gemini_api_with_retry(prompt: str) -> types.GenerateContentRespo
             contents=prompt,
             generation_config=types.GenerationConfig(
                 response_mime_type="application/json",
-                temperature=0.5,
+                temperature=0,
             )
         )
         logger.info("Gemini API call for funding successful.")
@@ -117,7 +117,7 @@ async def process_articles_batch(batch: Dict[str, List[Any]])->Dict[str, List[An
     logger.info("AI funding information extraction beginning...")
 
     return_data = {
-        "type": "news",
+        "type": "funding",
         "title": [],
         "link": [],
         "article_date": [],
@@ -189,6 +189,7 @@ async def finalize_ai_extraction(links_and_paragraphs: Dict[str, List[str]])->Di
         logger.info("Finalizing AI extraction...")
         list_of_batches = split_into_batches(links_and_paragraphs, BATCH_SIZE)
         tasks = [safe_process_articles_batch(batch) for batch in list_of_batches]
+        await asyncio.sleep(3)
         results = await asyncio.gather(*tasks)
 
         #Add results from each batch into final_results. 

@@ -51,7 +51,7 @@ async def traverse_sitemap(client:httpx.AsyncClient, url: str)->Dict[str, List[A
             article_link = url.find('ns:loc', namespaces).text
             logger.info(f"The article link is {article_link}")
 
-            if article_link is not None and ("ai-" in article_link and "raise" in article_link):
+            if article_link is not None and ("ai-" in article_link and ("funding" in article_link or "-raises" in article_link or "-closes" in article_link or "-nets" in article_link or "-secures" in article_link)):
                 article_data["article_link"].append(article_link)
 
                 article_date_and_time = url.find('news:news/news:publication_date', namespaces).text

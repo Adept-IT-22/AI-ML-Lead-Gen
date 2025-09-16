@@ -39,7 +39,7 @@ async def fetch_tech_eu_data()->Dict[str, List[str]]:
                 article_link = url.find('ns:loc', namespaces).text
 
                 #=======APPEND LINK IF AI RELATED============
-                if ("-ai" in article_link or "ai-" in article_link) and "-raises" in article_link:
+                if ("-ai" in article_link or "ai-" in article_link) and ("funding" in article_link or "-raises" in article_link or "-closes" in article_link or "-nets" in article_link or "-secures" in article_link):
                     article_links.append(article_link)
 
             #=========OPEN LINK TO GET PARAGRAPHS============
@@ -112,6 +112,7 @@ async def main():
     duration = time.perf_counter() - start_time
     logger.info(f"This task took {duration:.2f} seconds")
 
+    print(llm_results)
     return llm_results
 
 if __name__ == "__main__":

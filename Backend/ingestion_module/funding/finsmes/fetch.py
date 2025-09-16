@@ -6,6 +6,7 @@ import httpx
 import asyncio
 import logging
 import aiofiles
+import cloudscraper
 from lxml import etree, html
 from typing import Dict, List
 from services.request_headers import get_header
@@ -35,15 +36,19 @@ namespace = {
 Since the sitemaps are organized from 1 to the latest, we only
 need the latest one. The method below finds the latest sidemap.
 """
-async def find_newest_sitemap(client: httpx.AsyncClient, url: str)->str:
+async def fetch_sync(client: cloudscraper.CloudScraper, url: str):
+    """Run blocking cloudscraper.get in a thread."""
+    return await asyncio.to_thread(client.get, url)
+
+async def find_newest_sitemap(client: cloudscraper.CloudScraper, url: str)->str:
     logger.info("Fetching latest sitemap...")
 
     #Regex to search for posts only
     pattern = re.compile(r'-post-(\d+)\.xml')
     
     try:
-        #Fetching w/error handling
-        response = await client.get(url)
+        #Fetching 
+        response = await fetch_sync(client, url)
         response.raise_for_status()
 
         #Parse XML
@@ -72,11 +77,11 @@ async def find_newest_sitemap(client: httpx.AsyncClient, url: str)->str:
         return
 
 #Extract all ai funding article links from the latest sitemap
-async def fetch_ai_funding_article_links(client: httpx.AsyncClient, url: str)->list:
+async def fetch_ai_funding_article_links(client: cloudscraper.CloudScraper, url: str)->list:
     logger.info(f"Fetching AI specific urls...")
     try:
         #=======FETCH DATA==========
-        response = await client.get(url)
+        response = await fetch_sync(client, url)
         response.raise_for_status()
 
         root = etree.fromstring(response.content) #type: ignore         
@@ -86,7 +91,7 @@ async def fetch_ai_funding_article_links(client: httpx.AsyncClient, url: str)->l
         urls = root.findall("sitemap:url", namespace)
         for url in urls:
             article_link = url.find("sitemap:loc", namespace).text
-            if "-ai-" in article_link and ("funding" in article_link or "raises" in article_link):
+            if "-ai-" in article_link and ("funding" in article_link or "raises" in article_link or "-closes" in article_link or "-nets" in article_link or "-secures" in article_link):
                 ai_funding_articles.append(article_link)
 
         logger.info("Feching AI specific urls done")
@@ -99,7 +104,7 @@ async def fetch_ai_funding_article_links(client: httpx.AsyncClient, url: str)->l
 """
 Now we open the links and extract the necessary paragraphs before feeding it to the LLM
 """
-async def get_paragraphs(client: httpx.AsyncClient, urls: list) -> Dict[str, List[str]]:
+async def get_paragraphs(client: cloudscraper.CloudScraper, urls: list) -> Dict[str, List[str]]:
     logger.info("Getting paragraphs from urls...")
     if not urls:
         logger.error("List of AI specific Urls Not Found")
@@ -128,10 +133,10 @@ async def get_paragraphs(client: httpx.AsyncClient, urls: list) -> Dict[str, Lis
     return {"": [""]}
             
 #Function that does the actual extraction
-async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, list[str]]:
+async def extract_paragraphs(client: cloudscraper.CloudScraper, url: str)->tuple[str, list[str]]:
     logger.info(f"Fetching paragraphs from {url}...")
     try:
-        response = await client.get(url)
+        response = await fetch_sync(client, url)
         response.raise_for_status()
 
         root = html.fromstring(response.text)
@@ -154,14 +159,13 @@ async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, li
 async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronously to avoid blocking
     logger.info("Fetching from FinSMEs...")
     current_time = time.perf_counter()
-    headers = get_header()
 
-    async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, headers=headers) as client:
-        newest_sitemap = await find_newest_sitemap(client, URL)
-        if newest_sitemap:
-            ai_urls = await fetch_ai_funding_article_links(client, newest_sitemap)
-            if ai_urls:
-                results = await get_paragraphs(client, ai_urls)
+    client = cloudscraper.create_scraper()
+    newest_sitemap = await find_newest_sitemap(client, URL)
+    if newest_sitemap:
+        ai_urls = await fetch_ai_funding_article_links(client, newest_sitemap)
+        if ai_urls:
+            results = await get_paragraphs(client, ai_urls)
 
     #Check if results has urls in the first place
     if results["urls"]:
@@ -184,6 +188,7 @@ async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronousl
                     llm_results[key] = value_list
 
             llm_results["source"] = "FinSMEs"
+            llm_results["link"].extend(results["urls"])
 
         else:
             logger.warning("AI extraction for FinSMEs returned no data. No logging will happen")

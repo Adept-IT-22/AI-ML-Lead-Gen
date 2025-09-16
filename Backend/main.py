@@ -134,70 +134,70 @@ async def main():
                 logger.warning(f"Unknown data type: {data_type}")
                 return
 
-            # Step 2: Insert master (one row per dataset)
-            for i, normalized_link in enumerate(normalized_data.get("link")):
-                normalized_master_data_to_store = [
-                    normalized_data.get("type", ""),
-                    normalized_data.get("source", ""),
-                    normalized_link,
-                    normalized_data.get("title")[i] if normalized_data.get("title") else None,
-                    normalized_data.get("city")[i] if normalized_data.get("city") else None,
-                    normalized_data.get("country")[i] if normalized_data.get("country") else None,
-                    normalized_data.get("tags")[i] if normalized_data.get("tags") else []
-                ]
-                data_is_in_db = await is_data_in_db(pool, normalized_link)
-                if data_is_in_db:
-                    continue
-                master_id = await store_in_normalized_master(normalized_master_data_to_store, pool)
+            ## Step 2: Insert master (one row per dataset)
+            #for i, normalized_link in enumerate(normalized_data.get("link")):
+                #normalized_master_data_to_store = [
+                    #normalized_data.get("type", ""),
+                    #normalized_data.get("source", ""),
+                    #normalized_link,
+                    #normalized_data.get("title")[i] if normalized_data.get("title")[i] else None,
+                    #normalized_data.get("city")[i] if normalized_data.get("city")[i] else None,
+                    #normalized_data.get("country")[i] if normalized_data.get("country")[i] else None,
+                    #normalized_data.get("tags")[i] if normalized_data.get("tags")[i] else []
+                #]
+                #data_is_in_db = await is_data_in_db(pool, normalized_link)
+                #if data_is_in_db:
+                    #continue
+                #master_id = await store_in_normalized_master(normalized_master_data_to_store, pool)
 
-                # Step 3: Insert children
-                if data_type == "event":
-                    event_data_to_store = [
-                        master_id,
-                        normalized_data.get("event_id")[i] if normalized_data.get("event_id") else None,
-                        normalized_data.get("event_summary")[i] if normalized_data.get("event_summary") else None,
-                        normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online") else None,
-                        normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id") else None
-                    ]
-                    try:
-                        await store_in_normalized_events(event_data_to_store, pool)
-                    except Exception as e:
-                        logger.error(f"Failed to store normalized events: {str(e)}")
+                ## Step 3: Insert children
+                #if data_type == "event":
+                    #event_data_to_store = [
+                        #master_id,
+                        #normalized_data.get("event_id")[i] if normalized_data.get("event_id")[i] else None,
+                        #normalized_data.get("event_summary")[i] if normalized_data.get("event_summary")[i] else None,
+                        #normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online")[i] else None,
+                        #normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id")[i] else None
+                    #]
+                    #try:
+                        #await store_in_normalized_events(event_data_to_store, pool)
+                    #except Exception as e:
+                        #logger.error(f"Failed to store normalized events: {str(e)}")
 
-                elif data_type == "funding":
-                    funding_data_to_store = [
-                        master_id,
-                        normalized_data.get("company_name")[i] if normalized_data.get("company_name") else None,
-                        normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers") else [],
-                        normalized_data.get("company_decision_makers_position")[i]if normalized_data.get("company_decision_makers_position") else [] ,
-                        normalized_data.get("funding_round")[i] if normalized_data.get("funding_round") else None,
-                        normalized_data.get("amount_raised")[i] if normalized_data.get("amount_raised") else None,
-                        normalized_data.get("currency")[i] if normalized_data.get("currency") else None,
-                        normalized_data.get("investor_companies")[i] if normalized_data.get("investor_companies") else [],
-                        normalized_data.get("investor_people")[i] if normalized_data.get("investor_people") else [],
-                    ]
+                #elif data_type == "funding":
+                    #funding_data_to_store = [
+                        #master_id,
+                        #normalized_data.get("company_name")[i] if normalized_data.get("company_name")[i] else None,
+                        #normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers")[i] else [],
+                        #normalized_data.get("company_decision_makers_position")[i]if normalized_data.get("company_decision_makers_position")[i] else [] ,
+                        #normalized_data.get("funding_round")[i] if normalized_data.get("funding_round")[i] else None,
+                        #normalized_data.get("amount_raised")[i] if normalized_data.get("amount_raised")[i] else None,
+                        #normalized_data.get("currency")[i] if normalized_data.get("currency")[i] else None,
+                        #normalized_data.get("investor_companies")[i] if normalized_data.get("investor_companies")[i] else [],
+                        #normalized_data.get("investor_people")[i] if normalized_data.get("investor_people")[i] else [],
+                    #]
 
-                    try:
-                        await store_in_normalized_funding(funding_data_to_store, pool)
-                    except Exception as e:
-                        logger.error(f"Failed to store normalized funding data: {str(e)}")
+                    #try:
+                        #await store_in_normalized_funding(funding_data_to_store, pool)
+                    #except Exception as e:
+                        #logger.error(f"Failed to store normalized funding data: {str(e)}")
 
-                elif data_type == "hiring":
-                    hiring_data_to_store = [
-                        master_id,
-                        normalized_data.get("company_name")[i] if normalized_data.get("company_name") else None,
-                        normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers") else [],
-                        normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position") else [],
-                        normalized_data.get("job_roles")[i] if normalized_data.get("job_roles") else [],
-                        normalized_data.get("hiring_reasons")[i] if normalized_data.get("hiring_reasons") else []
-                    ]
-                    try:
-                        await store_in_normalized_hiring(hiring_data_to_store, pool)
-                    except Exception as e:
-                        logger.error(f"Failed to store normalized hiring data: {str(e)}")
+                #elif data_type == "hiring":
+                    #hiring_data_to_store = [
+                        #master_id,
+                        #normalized_data.get("company_name")[i] if normalized_data.get("company_name")[i] else None,
+                        #normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers")[i] else [],
+                        #normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position")[i] else [],
+                        #normalized_data.get("job_roles")[i] if normalized_data.get("job_roles")[i] else [],
+                        #normalized_data.get("hiring_reasons")[i] if normalized_data.get("hiring_reasons")[i] else []
+                    #]
+                    #try:
+                        #await store_in_normalized_hiring(hiring_data_to_store, pool)
+                    #except Exception as e:
+                        #logger.error(f"Failed to store normalized hiring data: {str(e)}")
 
-                all_normalized_data.append(normalized_data)
-                logger.info(f"Normalized {data_type} data from {name}")
+            all_normalized_data.append(normalized_data)
+            logger.info(f"Normalized {data_type} data from {name}")
 
     async with aiofiles.open("normalized.txt", "a") as file:
         await file.write(json.dumps(all_normalized_data, indent=2))
@@ -218,7 +218,7 @@ async def main():
     
     #2.2 =======Organization Search to Get Org Website=========
         async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
-            orgs_to_search = []
+            set_of_orgs_to_search = set()
             searched_orgs = []
 
             for normalized_company in data_to_enrich_list:
@@ -229,10 +229,11 @@ async def main():
                     lowercase_company = each_company.lower()
                     company_is_in_db = await is_company_in_db(company_name=lowercase_company)
                     if not company_is_in_db:
-                        orgs_to_search.append(each_company)
+                        set_of_orgs_to_search.add(each_company)
 
             logger.info("Organizational search started...")
 
+            orgs_to_search = list(set_of_orgs_to_search)
             searched_tasks = [apollo_org_search(client=client, company_name=name) for name in orgs_to_search]
             search_results = await asyncio.gather(*searched_tasks, return_exceptions=True)
             
@@ -349,13 +350,13 @@ async def main():
     #=============Company Data Storage=============
     company_data_to_store = []
 
-    searched_organizations = [dictionary.get("organizations")[0] for dictionary in searched_orgs]
+    searched_organizations = [orgs[0] for dictionary in searched_orgs if (orgs := dictionary.get("organizations"))]
     bulk_enriched_organizations = bulk_enriched_orgs[0].get("organizations", [])
     single_enriched_organizations = [item.get("organization", []) for item in single_enriched_orgs]
 
     #Iterate over orgs. Zip will stop when shortest list ends preventing errors
     if searched_organizations and bulk_enriched_organizations and single_enriched_organizations:
-        for searched_org, bulk_enriched_org, single_enriched_organization in zip(searched_organizations, bulk_enriched_organizations, single_enriched_organizations, strict=True):
+        for searched_org, bulk_enriched_org, single_enriched_organization in zip(searched_organizations, bulk_enriched_organizations, single_enriched_organizations, strict=False):
             try:
                 #Get necessary data from org search 
                 headcount_six_month_growth = searched_org.get("organization_headcount_six_month_growth", "")
@@ -364,9 +365,6 @@ async def main():
                 #Get necessary data from bulk enriched orgs
                 apollo_id = bulk_enriched_org.get("id", "")
                 #Check if org is in DB
-                company_id_in_db = await is_company_id_in_db(apollo_id)
-                if company_id_in_db:
-                    continue
                 company_name = bulk_enriched_org.get("name", "")
                 website_url = bulk_enriched_org.get("website_url", "")
                 linkedin_url = bulk_enriched_org.get("linkedin_url", "")
@@ -461,12 +459,7 @@ async def main():
                                 None, #notes
                             ) 
 
-                #Check if person already exists in database
-                person_is_in_db = await is_person_in_db(apollo_id=apollo_user_id)
-                if person_is_in_db:
-                    continue
-                else:
-                    people_data_to_store.append(people_row)
+                people_data_to_store.append(people_row)
 
             except Exception as e:
                 logger.error(f"Failed to process people data for storage: {str(e)}")

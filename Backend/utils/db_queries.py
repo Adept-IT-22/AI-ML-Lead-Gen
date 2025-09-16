@@ -6,6 +6,7 @@ company_query = """
                     total_funding, technology_names, icp_score, notes, company_data_source, latest_funding_round,
                     latest_funding_amount, latest_funding_currency) VALUES ($1, $2, $3, $4, $5, $6, $7, 
                     $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25) 
+                ON CONFLICT (apollo_id) DO NOTHING
             """
 
 people_query = """
@@ -14,12 +15,14 @@ people_query = """
                 seniority, departments, subdepartments, functions, email,
                 number, notes) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
                     $11, $12, $13, $14, $15, $16)
+                ON CONFLICT (apollo_id) DO NOTHING
             """
 
 normalized_master_query = """
         INSERT INTO normalized_master (type, source, link, title, city, country, tags) 
                 VALUES ($1, $2, $3, $4, $5, $6, $7)
                 RETURNING id
+                ON CONFLICT (link) DO NOTHING
                 """
 
 normalized_funding_query = """
