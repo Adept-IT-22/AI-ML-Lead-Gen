@@ -490,15 +490,16 @@ async def main():
             #email_to = persons_email
             #first_name = person.get("first_name")
             #company_name = persons_company.get("name")
-            #logger.info(f"Company about is: {company_name}, {first_name}, {email_to}, {data_source}")
+            #logger.info(f"Sending email to {first_name} from {company_name} on {email_to}")
 
             #async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size = 10) as pool:
                 #if data_source == "funding":
                     #funding_round = persons_company.get("latest_funding_round")
-                    #if funding_round:
-                        #extra_info = str(funding_round)
-                    #else:
+                    #if not funding_round or funding_round == "Other":
                         #extra_info = "latest"
+                    #else:
+                        #extra_info = str(funding_round)
+                        
                 #elif data_source == "hiring":
                     #hiring_area = await get_hiring_area(company_name, pool) 
                     #if hiring_area:
@@ -514,12 +515,12 @@ async def main():
                     #extra_info=extra_info
                 #)
 
-                #logger.info(f"The response is: {response}")
+                #logger.info(f"The response status code is: {response.status_code}")
 
                 #Change contacted_status in database
                 #persons_apollo_id = person.get("apollo_id", "")
                 #await change_person_contacted_status(persons_apollo_id, pool)
-            #logger.info("Email sending done")
+            #logger.info("Email sent")
         #else:
             #logger.info(f"Contacted Status: {contacted_status}\nPerson's email: {persons_email}")
     
