@@ -26,6 +26,7 @@ export interface ICompany {
   people?: IPeople[];
   phone: string | null;
   short_description: string | null;
+  source_link: string | null;
   state: string | null;
   status: string | null;
   technology_names: string[] | null;

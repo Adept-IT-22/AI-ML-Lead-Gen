@@ -4,8 +4,8 @@ company_query = """
                     estimated_num_employees, keywords, organization_headcount_six_month_growth,
                     organization_headcount_twelve_month_growth, city, state, country, short_description,
                     total_funding, technology_names, icp_score, notes, company_data_source, latest_funding_round,
-                    latest_funding_amount, latest_funding_currency) VALUES ($1, $2, $3, $4, $5, $6, $7, 
-                    $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25) 
+                    latest_funding_amount, latest_funding_currency, source_link) VALUES ($1, $2, $3, $4, $5, $6, $7, 
+                    $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26) 
                 ON CONFLICT (apollo_id) DO NOTHING
             """
 
@@ -42,3 +42,25 @@ normalized_events_query = """
         INSERT INTO normalized_events (master_id, event_id, event_summary, event_is_online,
                 event_organizer_id) VALUES ($1, $2, $3, $4, $5)
                 """
+
+fetch_link_query = """
+        SELECT nm.link
+        FROM normalized_master nm
+        JOIN normalized_funding nf ON nf.master_id = nm.id
+        WHERE LOWER(nf.company_name) = $1
+
+        UNION
+
+        SELECT nm.link
+        FROM normalized_master nm
+        JOIN normalized_hiring nh ON nh.master_id = nm.id
+        WHERE LOWER(nh.company_name) = $1
+
+        UNION
+
+        SELECT nm.link
+        FROM normalized_master nm
+        JOIN normalized_events ne ON ne.master_id = nm.id
+        WHERE LOWER(ne.company_name) = $1;
+
+        """

@@ -407,6 +407,25 @@ async def return_companies_with_no_funding_details(pool: asyncpg.Pool)->List:
     except Exception as e:
         logger.info(f"Failed fetching companies: {str(e)}") 
 
+#Get link for funding, hiring, events source
+async def fetch_source_link(pool: asyncpg.Pool, company_name: str)->Dict:
+    logger.info(f"Fetching link for {company_name}...")
+    query = fetch_link_query
+
+    try:
+        async with pool.acquire() as conn:
+            results = await conn.fetch(query, company_name.lower())
+            final_result = [dict(result) for result in results][0]
+            logger.info(final_result)
+            logger.info("Done fetching link")
+            if final_result:
+                return final_result
+            else:
+                return {}
+    except Exception as e:
+        logger.error(f"Failed to fetch link for {company_name}: {str(e)}")
+        return {}
+
 if __name__ == "__main__":
     async def main():
         logger.info(f"THE DB URL IS: {DB_URL}")
@@ -422,6 +441,6 @@ if __name__ == "__main__":
         #]
 
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-            await return_companies_with_no_funding_details(pool)
+            await fetch_source_link(pool, "Geniez AI")
 
     asyncio.run(main())

@@ -16,7 +16,7 @@ async def main():
     "departments": [
       "product"
     ],
-    "email": "codeinekaepernick@gmail.com",
+    "email": "m10mathenge@gmail.com",
     "email_status": "verified",
     "first_name": "Charlie",
     "full_name": "Charlie Murphy",
