@@ -49,7 +49,8 @@ export class CompanyDetailsComponent implements OnInit {
                 title: 'Online Presence',
                 entries: [
                   { key: 'Website', value: details.website_url },
-                  { key: 'LinkedIn', value: details.linkedin_url }
+                  { key: 'LinkedIn', value: details.linkedin_url },
+                  { key: 'Source Article', value: details.source_link}
                 ]
               },
               {

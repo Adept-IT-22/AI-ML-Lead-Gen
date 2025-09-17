@@ -1,54 +1,57 @@
-#Check if company has funding details. if not, put data from normalized_funding
-from services.db_service import *
 import asyncio
 import asyncpg
 
 DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
 
-#Check if companies have funding_details
-async def get_companies_with_no_funding_details(pool):
-    companies_with_no_funding_details = await return_companies_with_no_funding_details(pool)
-    print(companies_with_no_funding_details)
-
-    #Get funding details from normalized_data
-    for company in companies_with_no_funding_details:
-        funding_details = await fetch_funding_details(pool, company)
-
-        #Store in companeies db
-        if funding_details:
-            await store_funding_data_in_companies_db(pool, company, funding_details)
-        else:
-            continue
-
-async def store_funding_data_in_companies_db(pool, company_name, funding_details):
-    print(f"Storing for {company_name}")
-    query = "UPDATE companies SET latest_funding_round = $1, latest_funding_amount = $2, latest_funding_currency = $3 WHERE name = $4"
+#Fetch companies from companies where company_data_source is funding
+async def fetch_companies(pool)->list:
+    query = "SELECT name FROM companies WHERE company_data_source = 'funding'"
 
     try:
         async with pool.acquire() as conn:
-            latest_funding_round = funding_details.get("funding_round", None)
-            latest_funding_amount = funding_details.get("amount_raised", None)
-            latest_funding_currency = funding_details.get("currency", None)
-            response = await conn.execute(
-                query, 
-                latest_funding_round, 
-                latest_funding_amount, 
-                latest_funding_currency, 
-                company_name
-                )
-            print(f"{company_name} stored. Reponse is {response}")
+            results = await conn.fetch(query)
+            result_list = [dict(result) for result in results]
+            final_results = []
+            for result in result_list:
+                name = result.get("name", "")
+                final_results.append(name)
 
+            print(final_results)
+            print("=============")
+        return final_results
+            
     except Exception as e:
-        print(f"Failed to store: {str(e)}")
+        print(e)
+        return []
 
+#Check those companies in normalized_funding
+async def check_in_normalized_funding(company_list, pool):
+    # Get master_id from normalized_funding and then link from normalized_master
+    funding_query = "SELECT master_id FROM normalized_funding WHERE company_name = $1"
+    link_query = "SELECT link FROM normalized_master WHERE id = $1"
+    update_query = "UPDATE companies SET source_link = $1 WHERE name = $2"
+
+    try:
+        async with pool.acquire() as conn:
+            for company in company_list:
+                print(company)
+                master_id = await conn.fetchval(funding_query, company.lower())
+                if master_id:
+                    print(master_id)
+                    link = await conn.fetchval(link_query, master_id)
+                    if link:
+                        await conn.execute(update_query, link, company)
+                        print(link)
+                        print(f"Updated {company} with link {link}")
+    except Exception as e:
+        print("Error:", e)
+        return []
 
 
 if __name__ == "__main__":
     async def main():
-        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-            print("....")
-            await get_companies_with_no_funding_details(pool)
+        async with asyncpg.create_pool(dsn=DB_URL) as pool:
+            company_list = await fetch_companies(pool)
+            await check_in_normalized_funding(company_list, pool)
 
     asyncio.run(main())
-
-

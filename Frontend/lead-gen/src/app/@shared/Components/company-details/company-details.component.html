@@ -20,7 +20,11 @@
             </ng-container>
 
             <ng-container *ngIf="!entry.expandable">
-              {{ entry.value || 'N/A' }}
+              <ng-container *ngIf="isLink(entry.value)">
+                <a [href]="entry.value" target="_blank" rel="noopener noreferrer" style="color:var(--color-green)">
+                  {{entry.value || 'N/A'}}
+                </a>
+              </ng-container>
             </ng-container>
           </div>
         </mat-card-content>

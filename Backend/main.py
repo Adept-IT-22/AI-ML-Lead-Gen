@@ -409,6 +409,10 @@ async def main():
                             company_data_source = normalized_company_info.get("type")
                             break
 
+                #Add link from which source came from
+                source_link_details = fetch_source_link(pool, company_name)
+                source_link = source_link_details.get("link")
+
                 company_row = (
                     apollo_id, company_name, website_url, linkedin_url, phone, safe_int(founded_year),
                     safe_decimal(market_cap), safe_decimal(annual_revenue_printed), industries, safe_int(estimated_num_employees), 
@@ -416,7 +420,7 @@ async def main():
                     state, country, short_description, safe_decimal(total_funding), technology_names,
                     None, #icp score placeholder
                     None, #notes
-                    company_data_source, latest_funding_round, latest_funding_amount, latest_funding_currency
+                    company_data_source, latest_funding_round, latest_funding_amount, latest_funding_currency, source_link
                 )
 
                 company_data_to_store.append(company_row)
