@@ -145,10 +145,10 @@ async def main():
                     normalized_data.get("type", ""),
                     normalized_data.get("source", ""),
                     normalized_link,
-                    normalized_data.get("title")[i] if normalized_data.get("title")[i] else None,
-                    normalized_data.get("city")[i] if normalized_data.get("city")[i] else None,
-                    normalized_data.get("country")[i] if normalized_data.get("country")[i] else None,
-                    normalized_data.get("tags")[i] if normalized_data.get("tags")[i] else []
+                    normalized_data.get("title")[i] if normalized_data.get("title") and i < len(normalized_data.get("title", [])) else None,
+                    normalized_data.get("city")[i] if normalized_data.get("city") and i < len(normalized_data.get("city", [])) else None,
+                    normalized_data.get("country")[i] if normalized_data.get("country") and i < len(normalized_data.get("country", [])) else None,
+                    normalized_data.get("tags")[i] if normalized_data.get("tags") and i < len(normalized_data.get("tags", [])) else []
                 ]
                 data_is_in_db = await is_data_in_db(pool, normalized_link)
                 if data_is_in_db:
@@ -159,10 +159,10 @@ async def main():
                 if data_type == "event":
                     event_data_to_store = [
                         master_id,
-                        normalized_data.get("event_id")[i] if normalized_data.get("event_id")[i] else None,
-                        normalized_data.get("event_summary")[i] if normalized_data.get("event_summary")[i] else None,
-                        normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online")[i] else None,
-                        normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id")[i] else None
+                        normalized_data.get("event_id")[i] if normalized_data.get("event_id") and i < len(normalized_data.get("event_id", [])) else None,
+                        normalized_data.get("event_summary")[i] if normalized_data.get("event_summary") and i < len(normalized_data.get("event_summary", [])) else None,
+                        normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online") and i < len(normalized_data.get("event_is_online", [])) else None,
+                        normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id") and i < len(normalized_data.get("event_organizer_id", [])) else None
                     ]
                     try:
                         await store_in_normalized_events(event_data_to_store, pool)
@@ -172,20 +172,33 @@ async def main():
                 elif data_type == "funding":
                     funding_data_to_store = [
                         master_id,
-                        normalized_data.get("company_name")[i] if normalized_data.get("company_name")[i] else None,
-                        normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers")[i] else [],
-                        normalized_data.get("company_decision_makers_position")[i]if normalized_data.get("company_decision_makers_position")[i] else [] ,
-                        normalized_data.get("funding_round")[i] if normalized_data.get("funding_round")[i] else None,
-                        normalized_data.get("amount_raised")[i] if normalized_data.get("amount_raised")[i] else None,
-                        normalized_data.get("currency")[i] if normalized_data.get("currency")[i] else None,
-                        normalized_data.get("investor_companies")[i] if normalized_data.get("investor_companies")[i] else [],
-                        normalized_data.get("investor_people")[i] if normalized_data.get("investor_people")[i] else [],
+                        normalized_data.get("company_name")[i] if normalized_data.get("company_name") and i < len(normalized_data.get("company_name", [])) else None,
+                        normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers") and i < len(normalized_data.get("company_decision_makers", [])) else [],
+                        normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position") and i < len(normalized_data.get("company_decision_makers_position", [])) else [],
+                        normalized_data.get("funding_round")[i] if normalized_data.get("funding_round") and i < len(normalized_data.get("funding_round", [])) else None,
+                        normalized_data.get("amount_raised")[i] if normalized_data.get("amount_raised") and i < len(normalized_data.get("amount_raised", [])) else None,
+                        normalized_data.get("currency")[i] if normalized_data.get("currency") and i < len(normalized_data.get("currency", [])) else None,
+                        normalized_data.get("investor_companies")[i] if normalized_data.get("investor_companies") and i < len(normalized_data.get("investor_companies", [])) else [],
+                        normalized_data.get("investor_people")[i] if normalized_data.get("investor_people") and i < len(normalized_data.get("investor_people", [])) else [],
                     ]
 
                     try:
                         await store_in_normalized_funding(funding_data_to_store, pool)
                     except Exception as e:
-                        logger.error(f"Failed to store normalized funding data: {str(e)}")
+                        logger.error(f"Failed to store normalized funding: {str(e)}")
+
+                elif data_type == "event":
+                    event_data_to_store = [
+                        master_id,
+                        normalized_data.get("event_id")[i] if normalized_data.get("event_id") and i < len(normalized_data.get("event_id", [])) else None,
+                        normalized_data.get("event_summary")[i] if normalized_data.get("event_summary") and i < len(normalized_data.get("event_summary", [])) else None,
+                        normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online") and i < len(normalized_data.get("event_is_online", [])) else None,
+                        normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id") and i < len(normalized_data.get("event_organizer_id", [])) else None
+                    ]
+                    try:
+                        await store_in_normalized_events(event_data_to_store, pool)
+                    except Exception as e:
+                        logger.error(f"Failed to store normalized events: {str(e)}")
 
                 elif data_type == "hiring":
                     hiring_data_to_store = [
@@ -395,7 +408,7 @@ async def main():
                     latest_funding_amount = normalize_amount_raised(unclean_latest_funding_amount) if unclean_latest_funding_amount else None
                     latest_funding_currency = funding_events_list[0].get("currency") 
                 else:
-                    normalized_funding_data = fetch_funding_details(pool, company_name)
+                    normalized_funding_data = await fetch_funding_details(pool, company_name)
                     latest_funding_round = normalized_funding_data.get("funding_round", "")
                     latest_funding_amount = int(normalized_funding_data.get("amount_raised", ""))
                     latest_funding_currency = normalized_funding_data.get("currency", "")
@@ -486,53 +499,55 @@ async def main():
         logger.error("No people data to store in db ❌")
 
     #==============5. EMAIL================
-    #logger.info("Sending emails...")
-    #list_of_people_in_db = await fetch_people()
+    logger.info("Sending emails...")
+    list_of_people_in_db = await fetch_people()
     
-    #for person in list_of_people_in_db:
-        #contacted_status = person.get("contacted_status", "")
-        #persons_email = person.get("email", "")
+    for person in list_of_people_in_db:
+        contacted_status = person.get("contacted_status", "")
+        persons_email = person.get("email", "")
 
-        #if contacted_status == "uncontacted" and persons_email:
-            #persons_company_apollo_id = person.get("organization_id", "")
-            #persons_company = await fetch_company_by_apollo_id(persons_company_apollo_id)
-            #data_source = persons_company.get("company_data_source", "")
-            #email_to = persons_email
-            #first_name = person.get("first_name")
-            #company_name = persons_company.get("name")
-            #logger.info(f"Sending email to {first_name} from {company_name} on {email_to}")
+        if contacted_status == "uncontacted" and persons_email:
+            persons_company_apollo_id = person.get("organization_id", "")
+            persons_company = await fetch_company_by_apollo_id(persons_company_apollo_id)
+            if not persons_company:
+                continue
+            data_source = persons_company.get("company_data_source", "")
+            email_to = persons_email
+            first_name = person.get("first_name")
+            company_name = persons_company.get("name")
+            logger.info(f"Sending email to {first_name} from {company_name} on {email_to}")
 
-            #async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size = 10) as pool:
-                #if data_source == "funding":
-                    #funding_round = persons_company.get("latest_funding_round")
-                    #if not funding_round or funding_round == "Other":
-                        #extra_info = "latest"
-                    #else:
-                        #extra_info = str(funding_round)
+            async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size = 10) as pool:
+                if data_source == "funding":
+                    funding_round = persons_company.get("latest_funding_round")
+                    if not funding_round or funding_round == "Other":
+                        extra_info = "latest"
+                    else:
+                        extra_info = str(funding_round)
                         
-                #elif data_source == "hiring":
-                    #hiring_area = await get_hiring_area(company_name, pool) 
-                    #if hiring_area:
-                        #extra_info = str(hiring_area)
-                    #else:
-                        #extra_info = "various areas"
+                elif data_source == "hiring":
+                    hiring_area = await get_hiring_area(company_name, pool) 
+                    if hiring_area:
+                        extra_info = str(hiring_area)
+                    else:
+                        extra_info = "various areas"
 
-                #response = await send_email(
-                    #data_source=data_source,
-                    #email_to=email_to,
-                    #first_name=first_name,
-                    #company_name=company_name,
-                    #extra_info=extra_info
-                #)
+                response = await send_email(
+                    data_source=data_source,
+                    email_to=email_to,
+                    first_name=first_name,
+                    company_name=company_name,
+                    extra_info=extra_info
+                )
 
-                #logger.info(f"The response status code is: {response.status_code}")
+                logger.info(f"The response status code is: {response.status_code}")
 
                 #Change contacted_status in database
-                #persons_apollo_id = person.get("apollo_id", "")
-                #await change_person_contacted_status(persons_apollo_id, pool)
-            #logger.info("Email sent")
-        #else:
-            #logger.info(f"Contacted Status: {contacted_status}\nPerson's email: {persons_email}")
+                persons_apollo_id = person.get("apollo_id", "")
+                await change_person_contacted_status(persons_apollo_id, pool)
+            logger.info("Email sent")
+        else:
+            logger.info(f"Contacted Status: {contacted_status}\nPerson's email: {persons_email}")
     
     return jsonify({"success": "Main function done"}), 200
 
