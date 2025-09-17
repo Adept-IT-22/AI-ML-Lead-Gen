@@ -389,10 +389,16 @@ async def main():
                 technology_names = single_enriched_organization.get("technology_names", [])
                 annual_revenue_printed = single_enriched_organization.get("annual_revenue", "")
                 funding_events_list = single_enriched_organization.get("funding_events", [])
-                latest_funding_round = funding_events_list[0].get("type") if funding_events_list else None
-                unclean_latest_funding_amount = funding_events_list[0].get("amount") if funding_events_list else None
-                latest_funding_amount = normalize_amount_raised(unclean_latest_funding_amount) if unclean_latest_funding_amount else None
-                latest_funding_currency = funding_events_list[0].get("currency") if funding_events_list else None
+                if funding_events_list:
+                    latest_funding_round = funding_events_list[0].get("type") 
+                    unclean_latest_funding_amount = funding_events_list[0].get("amount") 
+                    latest_funding_amount = normalize_amount_raised(unclean_latest_funding_amount) if unclean_latest_funding_amount else None
+                    latest_funding_currency = funding_events_list[0].get("currency") 
+                else:
+                    normalized_funding_data = fetch_funding_details(pool, company_name)
+                    latest_funding_round = normalized_funding_data.get("funding_round", "")
+                    latest_funding_amount = int(normalized_funding_data.get("amount_raised", ""))
+                    latest_funding_currency = normalized_funding_data.get("currency", "")
 
                 #Get data source (funding, events, hiring) from normalized data
                 company_data_source = None

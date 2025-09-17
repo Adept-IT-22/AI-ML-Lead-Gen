@@ -371,7 +371,41 @@ async def get_hiring_area(company_name: str, pool)->str:
     except Exception as e:
         logger.error(f"Couldn't get hiring area for {company_name}: {str(e)}")
         return ""
+    
+#Get company funding details from normalized_funding
+async def fetch_funding_details(pool: asyncpg.Pool, company_name: str)->Dict:
+    logger.info(f"Fetching funding details for {company_name}")
+    query = "SELECT funding_round, amount_raised, currency FROM normalized_funding WHERE LOWER(company_name) = $1"
 
+    try:
+        async with pool.acquire() as conn:
+            response = await conn.fetch(query, company_name.lower())
+            response_list = [dict(result) for result in response]
+            logger.info(f"Company: {response_list}")
+            response_dict = response_list[0]
+            logger.info("Funding data found")
+            return response_dict
+    except Exception as e:
+        logger.error(f"Failed to fetch funding details for {company_name}: {str(e)}")
+        return {}
+
+#Get companies with no funding details
+async def return_companies_with_no_funding_details(pool: asyncpg.Pool)->List:
+    logger.info("Fetching companies with null funding details")
+    query = "SELECT name FROM companies WHERE latest_funding_round IS NULL AND latest_funding_amount IS NULL AND latest_funding_currency IS NULL"
+    companies = []
+
+    try:
+        async with pool.acquire() as conn:
+            results = await conn.fetch(query)
+            results_list = [dict(result) for result in results]
+            for each_dict in results_list:
+                name = each_dict.get("name", "")
+                companies.append(name)
+        logger.info("Done fetching companies")
+        return companies
+    except Exception as e:
+        logger.info(f"Failed fetching companies: {str(e)}") 
 
 if __name__ == "__main__":
     async def main():
@@ -388,7 +422,6 @@ if __name__ == "__main__":
         #]
 
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-            result = await is_data_in_db(pool=pool, company_or_event_link="https://www.finsmes.com/2025/08/zipline-ai-raises-7m-in-seed-funding.htm")
-            print(result)
+            await return_companies_with_no_funding_details(pool)
 
     asyncio.run(main())
