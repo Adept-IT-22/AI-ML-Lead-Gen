@@ -141,79 +141,79 @@ async def main():
                 return
 
             # Step 2: Insert master (one row per dataset)
-            for i, normalized_link in enumerate(normalized_data.get("link")):
-                normalized_master_data_to_store = [
-                    normalized_data.get("type", ""),
-                    normalized_data.get("source", ""),
-                    normalized_link,
-                    normalized_data.get("title")[i] if normalized_data.get("title") and i < len(normalized_data.get("title", [])) else None,
-                    normalized_data.get("city")[i] if normalized_data.get("city") and i < len(normalized_data.get("city", [])) else None,
-                    normalized_data.get("country")[i] if normalized_data.get("country") and i < len(normalized_data.get("country", [])) else None,
-                    normalized_data.get("tags")[i] if normalized_data.get("tags") and i < len(normalized_data.get("tags", [])) else []
-                ]
-                data_is_in_db = await is_data_in_db(pool, normalized_link)
-                if data_is_in_db:
-                    continue
-                master_id = await store_in_normalized_master(normalized_master_data_to_store, pool)
+            #for i, normalized_link in enumerate(normalized_data.get("link")):
+                #normalized_master_data_to_store = [
+                    #normalized_data.get("type", ""),
+                    #normalized_data.get("source", ""),
+                    #normalized_link,
+                    #normalized_data.get("title")[i] if normalized_data.get("title") and i < len(normalized_data.get("title", [])) else None,
+                    #normalized_data.get("city")[i] if normalized_data.get("city") and i < len(normalized_data.get("city", [])) else None,
+                    #normalized_data.get("country")[i] if normalized_data.get("country") and i < len(normalized_data.get("country", [])) else None,
+                    #normalized_data.get("tags")[i] if normalized_data.get("tags") and i < len(normalized_data.get("tags", [])) else []
+                #]
+                #data_is_in_db = await is_data_in_db(pool, normalized_link)
+                #if data_is_in_db:
+                    #continue
+                #master_id = await store_in_normalized_master(normalized_master_data_to_store, pool)
 
-                # Step 3: Insert children
-                if data_type == "event":
-                    event_data_to_store = [
-                        master_id,
-                        normalized_data.get("event_id")[i] if normalized_data.get("event_id") and i < len(normalized_data.get("event_id", [])) else None,
-                        normalized_data.get("event_summary")[i] if normalized_data.get("event_summary") and i < len(normalized_data.get("event_summary", [])) else None,
-                        normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online") and i < len(normalized_data.get("event_is_online", [])) else None,
-                        normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id") and i < len(normalized_data.get("event_organizer_id", [])) else None
-                    ]
-                    try:
-                        await store_in_normalized_events(event_data_to_store, pool)
-                    except Exception as e:
-                        logger.error(f"Failed to store normalized events: {str(e)}")
+                ## Step 3: Insert children
+                #if data_type == "event":
+                    #event_data_to_store = [
+                        #master_id,
+                        #normalized_data.get("event_id")[i] if normalized_data.get("event_id") and i < len(normalized_data.get("event_id", [])) else None,
+                        #normalized_data.get("event_summary")[i] if normalized_data.get("event_summary") and i < len(normalized_data.get("event_summary", [])) else None,
+                        #normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online") and i < len(normalized_data.get("event_is_online", [])) else None,
+                        #normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id") and i < len(normalized_data.get("event_organizer_id", [])) else None
+                    #]
+                    #try:
+                        #await store_in_normalized_events(event_data_to_store, pool)
+                    #except Exception as e:
+                        #logger.error(f"Failed to store normalized events: {str(e)}")
 
-                elif data_type == "funding":
-                    funding_data_to_store = [
-                        master_id,
-                        normalized_data.get("company_name")[i] if normalized_data.get("company_name") and i < len(normalized_data.get("company_name", [])) else None,
-                        normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers") and i < len(normalized_data.get("company_decision_makers", [])) else [],
-                        normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position") and i < len(normalized_data.get("company_decision_makers_position", [])) else [],
-                        normalized_data.get("funding_round")[i] if normalized_data.get("funding_round") and i < len(normalized_data.get("funding_round", [])) else None,
-                        normalized_data.get("amount_raised")[i] if normalized_data.get("amount_raised") and i < len(normalized_data.get("amount_raised", [])) else None,
-                        normalized_data.get("currency")[i] if normalized_data.get("currency") and i < len(normalized_data.get("currency", [])) else None,
-                        normalized_data.get("investor_companies")[i] if normalized_data.get("investor_companies") and i < len(normalized_data.get("investor_companies", [])) else [],
-                        normalized_data.get("investor_people")[i] if normalized_data.get("investor_people") and i < len(normalized_data.get("investor_people", [])) else [],
-                    ]
+                #elif data_type == "funding":
+                    #funding_data_to_store = [
+                        #master_id,
+                        #normalized_data.get("company_name")[i] if normalized_data.get("company_name") and i < len(normalized_data.get("company_name", [])) else None,
+                        #normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers") and i < len(normalized_data.get("company_decision_makers", [])) else [],
+                        #normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position") and i < len(normalized_data.get("company_decision_makers_position", [])) else [],
+                        #normalized_data.get("funding_round")[i] if normalized_data.get("funding_round") and i < len(normalized_data.get("funding_round", [])) else None,
+                        #normalized_data.get("amount_raised")[i] if normalized_data.get("amount_raised") and i < len(normalized_data.get("amount_raised", [])) else None,
+                        #normalized_data.get("currency")[i] if normalized_data.get("currency") and i < len(normalized_data.get("currency", [])) else None,
+                        #normalized_data.get("investor_companies")[i] if normalized_data.get("investor_companies") and i < len(normalized_data.get("investor_companies", [])) else [],
+                        #normalized_data.get("investor_people")[i] if normalized_data.get("investor_people") and i < len(normalized_data.get("investor_people", [])) else [],
+                    #]
 
-                    try:
-                        await store_in_normalized_funding(funding_data_to_store, pool)
-                    except Exception as e:
-                        logger.error(f"Failed to store normalized funding: {str(e)}")
+                    #try:
+                        #await store_in_normalized_funding(funding_data_to_store, pool)
+                    #except Exception as e:
+                        #logger.error(f"Failed to store normalized funding: {str(e)}")
 
-                elif data_type == "event":
-                    event_data_to_store = [
-                        master_id,
-                        normalized_data.get("event_id")[i] if normalized_data.get("event_id") and i < len(normalized_data.get("event_id", [])) else None,
-                        normalized_data.get("event_summary")[i] if normalized_data.get("event_summary") and i < len(normalized_data.get("event_summary", [])) else None,
-                        normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online") and i < len(normalized_data.get("event_is_online", [])) else None,
-                        normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id") and i < len(normalized_data.get("event_organizer_id", [])) else None
-                    ]
-                    try:
-                        await store_in_normalized_events(event_data_to_store, pool)
-                    except Exception as e:
-                        logger.error(f"Failed to store normalized events: {str(e)}")
+                #elif data_type == "event":
+                    #event_data_to_store = [
+                        #master_id,
+                        #normalized_data.get("event_id")[i] if normalized_data.get("event_id") and i < len(normalized_data.get("event_id", [])) else None,
+                        #normalized_data.get("event_summary")[i] if normalized_data.get("event_summary") and i < len(normalized_data.get("event_summary", [])) else None,
+                        #normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online") and i < len(normalized_data.get("event_is_online", [])) else None,
+                        #normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id") and i < len(normalized_data.get("event_organizer_id", [])) else None
+                    #]
+                    #try:
+                        #await store_in_normalized_events(event_data_to_store, pool)
+                    #except Exception as e:
+                        #logger.error(f"Failed to store normalized events: {str(e)}")
 
-                elif data_type == "hiring":
-                    hiring_data_to_store = [
-                        master_id,
-                        normalized_data.get("company_name")[i] if normalized_data.get("company_name")[i] else None,
-                        normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers")[i] else [],
-                        normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position")[i] else [],
-                        normalized_data.get("job_roles")[i] if normalized_data.get("job_roles")[i] else [],
-                        normalized_data.get("hiring_reasons")[i] if normalized_data.get("hiring_reasons")[i] else []
-                    ]
-                    try:
-                        await store_in_normalized_hiring(hiring_data_to_store, pool)
-                    except Exception as e:
-                        logger.error(f"Failed to store normalized hiring data: {str(e)}")
+                #elif data_type == "hiring":
+                    #hiring_data_to_store = [
+                        #master_id,
+                        #normalized_data.get("company_name")[i] if normalized_data.get("company_name")[i] else None,
+                        #normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers")[i] else [],
+                        #normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position")[i] else [],
+                        #normalized_data.get("job_roles")[i] if normalized_data.get("job_roles")[i] else [],
+                        #normalized_data.get("hiring_reasons")[i] if normalized_data.get("hiring_reasons")[i] else []
+                    #]
+                    #try:
+                        #await store_in_normalized_hiring(hiring_data_to_store, pool)
+                    #except Exception as e:
+                        #logger.error(f"Failed to store normalized hiring data: {str(e)}")
 
             all_normalized_data.append(normalized_data)
             logger.info(f"Normalized {data_type} data from {name}")
@@ -364,175 +364,212 @@ async def main():
     #==============4. STORAGE================
     logger.info("Storing data....")
 
-    #Check LIVE DEV DOC for the "necessary data" mentioned below
+    async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+        #=============Company Data Storage=============
+        company_data_to_store = []
 
-    #=============Company Data Storage=============
-    company_data_to_store = []
+        searched_organizations = [orgs[0] for dictionary in searched_orgs if (orgs := dictionary.get("organizations"))]
+        bulk_enriched_organizations = bulk_enriched_orgs[0].get("organizations", [])
+        single_enriched_organizations = [item.get("organization", []) for item in single_enriched_orgs]
 
-    searched_organizations = [orgs[0] for dictionary in searched_orgs if (orgs := dictionary.get("organizations"))]
-    bulk_enriched_organizations = bulk_enriched_orgs[0].get("organizations", [])
-    single_enriched_organizations = [item.get("organization", []) for item in single_enriched_orgs]
+        #Iterate over orgs. Zip will stop when shortest list ends preventing errors
+        if searched_organizations and bulk_enriched_organizations and single_enriched_organizations:
+            for searched_org, bulk_enriched_org, single_enriched_organization in zip(searched_organizations, bulk_enriched_organizations, single_enriched_organizations, strict=False):
+                try:
+                    #Get necessary data from org search 
+                    headcount_six_month_growth = searched_org.get("organization_headcount_six_month_growth", "")
+                    headcount_twelve_month_growth = searched_org.get("organization_headcount_twelve_month_growth", "")
 
-    #Iterate over orgs. Zip will stop when shortest list ends preventing errors
-    if searched_organizations and bulk_enriched_organizations and single_enriched_organizations:
-        for searched_org, bulk_enriched_org, single_enriched_organization in zip(searched_organizations, bulk_enriched_organizations, single_enriched_organizations, strict=False):
-            try:
-                #Get necessary data from org search 
-                headcount_six_month_growth = searched_org.get("organization_headcount_six_month_growth", "")
-                headcount_twelve_month_growth = searched_org.get("organization_headcount_twelve_month_growth", "")
+                    #Get necessary data from bulk enriched orgs
+                    apollo_id = bulk_enriched_org.get("id", "")
+                    #Check if org is in DB
+                    company_name = bulk_enriched_org.get("name", "")
+                    website_url = bulk_enriched_org.get("website_url", "")
+                    linkedin_url = bulk_enriched_org.get("linkedin_url", "")
+                    phone = bulk_enriched_org.get("phone", "")
+                    founded_year = bulk_enriched_org.get("founded_year", "")
+                    market_cap = bulk_enriched_org.get("market_cap", "")
+                    industries = bulk_enriched_org.get("industries", [])
+                    estimated_num_employees = bulk_enriched_org.get("estimated_num_employees", "")
+                    keywords = bulk_enriched_org.get("keywords", [])
+                    city = bulk_enriched_org.get("city", "")
+                    state = bulk_enriched_org.get("state", "")
+                    country = bulk_enriched_org.get("country", "")
+                    short_description = bulk_enriched_org.get("short_description", "")
 
-                #Get necessary data from bulk enriched orgs
-                apollo_id = bulk_enriched_org.get("id", "")
-                #Check if org is in DB
-                company_name = bulk_enriched_org.get("name", "")
-                website_url = bulk_enriched_org.get("website_url", "")
-                linkedin_url = bulk_enriched_org.get("linkedin_url", "")
-                phone = bulk_enriched_org.get("phone", "")
-                founded_year = bulk_enriched_org.get("founded_year", "")
-                market_cap = bulk_enriched_org.get("market_cap", "")
-                industries = bulk_enriched_org.get("industries", [])
-                estimated_num_employees = bulk_enriched_org.get("estimated_num_employees", "")
-                keywords = bulk_enriched_org.get("keywords", [])
-                city = bulk_enriched_org.get("city", "")
-                state = bulk_enriched_org.get("state", "")
-                country = bulk_enriched_org.get("country", "")
-                short_description = bulk_enriched_org.get("short_description", "")
+                    #Get necessary data from single enriched orgs
+                    total_funding = single_enriched_organization.get("total_funding", "")
+                    technology_names = single_enriched_organization.get("technology_names", [])
+                    annual_revenue_printed = single_enriched_organization.get("annual_revenue", "")
+                    funding_events_list = single_enriched_organization.get("funding_events", [])
+                    if funding_events_list:
+                        latest_funding_round = funding_events_list[0].get("type") 
+                        unclean_latest_funding_amount = funding_events_list[0].get("amount") 
+                        latest_funding_amount = normalize_amount_raised(unclean_latest_funding_amount) if unclean_latest_funding_amount else None
+                        latest_funding_currency = funding_events_list[0].get("currency") 
+                    else:
+                        try:
+                            normalized_funding_data = await fetch_funding_details(pool, company_name)
+                            latest_funding_round = normalized_funding_data.get("funding_round", "")
+                            latest_funding_amount = safe_int(normalized_funding_data.get("amount_raised", "0"))
+                            latest_funding_currency = normalized_funding_data.get("currency", "")
+                        except Exception as e:
+                            logger.error(f"Failed to fetch funding details for {company_name}: {str(e)}")
+                            latest_funding_round = ""
+                            latest_funding_amount = None
+                            latest_funding_currency = ""
 
-                #Get necessary data from single enriched orgs
-                total_funding = single_enriched_organization.get("total_funding", "")
-                technology_names = single_enriched_organization.get("technology_names", [])
-                annual_revenue_printed = single_enriched_organization.get("annual_revenue", "")
-                funding_events_list = single_enriched_organization.get("funding_events", [])
-                if funding_events_list:
-                    latest_funding_round = funding_events_list[0].get("type") 
-                    unclean_latest_funding_amount = funding_events_list[0].get("amount") 
-                    latest_funding_amount = normalize_amount_raised(unclean_latest_funding_amount) if unclean_latest_funding_amount else None
-                    latest_funding_currency = funding_events_list[0].get("currency") 
-                else:
-                    normalized_funding_data = await fetch_funding_details(pool, company_name)
-                    latest_funding_round = normalized_funding_data.get("funding_round", "")
-                    latest_funding_amount = int(normalized_funding_data.get("amount_raised", ""))
-                    latest_funding_currency = normalized_funding_data.get("currency", "")
+                    #Get data source (funding, events, hiring) from normalized data
+                    company_data_source = None
+                    for normalized_company_info in all_normalized_data:
+                        normalized_names = normalized_company_info.get("company_name", [])
+                        for normalized_name in normalized_names:
+                            if normalized_name.lower() in company_name.lower() or company_name.lower() in normalized_name.lower():
+                                company_data_source = normalized_company_info.get("type")
+                                break
 
-                #Get data source (funding, events, hiring) from normalized data
-                company_data_source = None
-                for normalized_company_info in all_normalized_data:
-                    normalized_names = normalized_company_info.get("company_name", [])
-                    for normalized_name in normalized_names:
-                        if normalized_name.lower() in company_name.lower() or company_name.lower() in normalized_name.lower():
-                            company_data_source = normalized_company_info.get("type")
-                            break
+                    #Fix the source link fetch
+                    try:
+                        source_link_details = await fetch_source_link(pool, company_name)
+                        source_link = source_link_details.get("link", "")
+                    except Exception as e:
+                        logger.error(f"Failed to fetch source link for {company_name}: {str(e)}")
+                        source_link = ""
 
-                #Add link from which source came from
-                source_link_details = fetch_source_link(pool, company_name)
-                source_link = source_link_details.get("link")
+                    #Ensure all numeric values use safe_int() or safe_decimal()
+                    company_row = (
+                        apollo_id, 
+                        company_name, 
+                        website_url, 
+                        linkedin_url, 
+                        phone,
+                        safe_int(founded_year),
+                        safe_decimal(market_cap), 
+                        safe_decimal(annual_revenue_printed),
+                        industries,
+                        safe_int(estimated_num_employees),
+                        keywords,
+                        safe_decimal(headcount_six_month_growth),
+                        safe_decimal(headcount_twelve_month_growth),
+                        city,
+                        state,
+                        country,
+                        short_description,
+                        safe_decimal(total_funding),
+                        technology_names,
+                        None,  # icp score placeholder
+                        None,  # notes
+                        company_data_source,
+                        latest_funding_round,
+                        latest_funding_amount,
+                        latest_funding_currency,
+                        source_link
+                    )
 
-                company_row = (
-                    apollo_id, company_name, website_url, linkedin_url, phone, safe_int(founded_year),
-                    safe_decimal(market_cap), safe_decimal(annual_revenue_printed), industries, safe_int(estimated_num_employees), 
-                    keywords, safe_decimal(headcount_six_month_growth), safe_decimal(headcount_twelve_month_growth), city,
-                    state, country, short_description, safe_decimal(total_funding), technology_names,
-                    None, #icp score placeholder
-                    None, #notes
-                    company_data_source, latest_funding_round, latest_funding_amount, latest_funding_currency, source_link
-                )
+                    company_data_to_store.append(company_row)
 
-                company_data_to_store.append(company_row)
+                except Exception as e:
+                    logger.error(f"Failed to process company data for storage: {str(e)}")
+                    continue
 
-            except Exception as e:
-                logger.error(f"Failed to process company data for storage: {str(e)}")
-                continue #Skip this entry and move to the next
-
-    #Store company data in "companies" database
-    if company_data_to_store:
+        #Store company data in "companies" database
+        if company_data_to_store:
             await store_to_db(data_to_store=company_data_to_store, query=company_query, company_or_people="company")
-    else:
-        logger.warning("No companies to store ❌")
+        else:
+            logger.warning("No companies to store ❌")
 
-    #==============People Data Storage=================
-    people_data_to_store = []
+        #==============People Data Storage=================
+        people_data_to_store = []
 
-    people_search_data = searched_people.get("people", [])
-    people_enrichment_data = enriched_people
+        people_search_data = searched_people.get("people", [])
+        people_enrichment_data = enriched_people
 
-    if people_search_data and people_enrichment_data:
-        for person_search_data, person_enrichment_data in zip(people_search_data, people_enrichment_data):
-            try:
-                #From people search API
-                apollo_user_id = person_search_data.get("id", "")
-                user_first_name = person_search_data.get("first_name", "")
-                user_last_name = person_search_data.get("last_name", "")
-                user_full_name = person_search_data.get("name", "")
-                user_linkedin_url = person_search_data.get("linkedin_url")
-                user_title = person_search_data.get("title", "")
-                user_email_status = person_search_data.get("email_status", "")
-                user_headline = person_search_data.get("headline", "")
-                user_organization_id = person_search_data.get("organization_id", "")
-                user_seniority = person_search_data.get("seniority", "")
-                user_departments = person_search_data.get("departments", [])
-                user_subdepartments = person_search_data.get("subdepartments", [])
-                user_functions = person_search_data.get("functions", [])
+        if people_search_data and people_enrichment_data:
+            for person_search_data, person_enrichment_data in zip(people_search_data, people_enrichment_data):
+                try:
+                    #From people search API
+                    apollo_user_id = person_search_data.get("id", "")
+                    user_first_name = person_search_data.get("first_name", "")
+                    user_last_name = person_search_data.get("last_name", "")
+                    user_full_name = person_search_data.get("name", "")
+                    user_linkedin_url = person_search_data.get("linkedin_url")
+                    user_title = person_search_data.get("title", "")
+                    user_email_status = person_search_data.get("email_status", "")
+                    user_headline = person_search_data.get("headline", "")
+                    user_organization_id = person_search_data.get("organization_id", "")
+                    user_seniority = person_search_data.get("seniority", "")
+                    user_departments = person_search_data.get("departments", [])
+                    user_subdepartments = person_search_data.get("subdepartments", [])
+                    user_functions = person_search_data.get("functions", [])
 
-                #From people enrichment API
-                user_email = person_enrichment_data.get("person", {}).get("email", "")
-                user_phone_number = None
+                    #From people enrichment API
+                    user_email = person_enrichment_data.get("person", {}).get("email", "")
+                    user_phone_number = None
 
-                #user_phone_number_data = person_enrichment_data.get("phone_numbers", [])
-                #if user_phone_number_data:
-                    #user_phone_number = user_phone_number_data[0].get("sanitized_number", "")
+                    #user_phone_number_data = person_enrichment_data.get("phone_numbers", [])
+                    #if user_phone_number_data:
+                        #user_phone_number = user_phone_number_data[0].get("sanitized_number", "")
 
-                people_row = (apollo_user_id, user_first_name, user_last_name, user_full_name,
-                                user_linkedin_url, user_title, user_email_status, user_headline,
-                                user_organization_id, user_seniority, user_departments, 
-                                user_subdepartments, user_functions, user_email, user_phone_number,
-                                None, #notes
-                            ) 
+                    people_row = (apollo_user_id, user_first_name, user_last_name, user_full_name,
+                                    user_linkedin_url, user_title, user_email_status, user_headline,
+                                    user_organization_id, user_seniority, user_departments, 
+                                    user_subdepartments, user_functions, user_email, user_phone_number,
+                                    None, #notes
+                                ) 
 
-                people_data_to_store.append(people_row)
+                    people_data_to_store.append(people_row)
 
-            except Exception as e:
-                logger.error(f"Failed to process people data for storage: {str(e)}")
-                continue
+                except Exception as e:
+                    logger.error(f"Failed to process people data for storage: {str(e)}")
+                    continue
 
-    if people_data_to_store:
-        await store_to_db(data_to_store=people_data_to_store, query=people_query, company_or_people="people")
-    else: 
-        logger.error("No people data to store in db ❌")
+        if people_data_to_store:
+            await store_to_db(data_to_store=people_data_to_store, query=people_query, company_or_people="people")
+        else: 
+            logger.error("No people data to store in db ❌")
 
     #==============5. EMAIL================
     logger.info("Sending emails...")
     list_of_people_in_db = await fetch_people()
-    
-    for person in list_of_people_in_db:
-        contacted_status = person.get("contacted_status", "")
-        persons_email = person.get("email", "")
 
-        if contacted_status == "uncontacted" and persons_email:
-            persons_company_apollo_id = person.get("organization_id", "")
-            persons_company = await fetch_company_by_apollo_id(persons_company_apollo_id)
-            if not persons_company:
-                continue
-            data_source = persons_company.get("company_data_source", "")
-            email_to = persons_email
-            first_name = person.get("first_name")
-            company_name = persons_company.get("name")
-            logger.info(f"Sending email to {first_name} from {company_name} on {email_to}")
+    # Create one connection pool for all emails
+    async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+        for person in list_of_people_in_db:
+            try:
+                contacted_status = person.get("contacted_status", "")
+                persons_email = person.get("email", "")
 
-            async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size = 10) as pool:
+                if contacted_status != "uncontacted" or not persons_email:
+                    logger.info(f"Skipping {persons_email} - Status: {contacted_status}")
+                    continue
+
+                # Fetch company info
+                persons_company_apollo_id = person.get("organization_id", "")
+                persons_company = await fetch_company_by_apollo_id(persons_company_apollo_id)
+                if not persons_company:
+                    logger.warning(f"No company found for person {person.get('first_name')} with apollo ID {persons_company_apollo_id}")
+                    continue
+
+                # Prepare email data
+                data_source = persons_company.get("company_data_source", "")
+                email_to = persons_email
+                first_name = person.get("first_name")
+                company_name = persons_company.get("name")
+                
+                logger.info(f"Preparing email for {first_name} ({email_to}) at {company_name}")
+
+                # Get extra info based on data source
                 if data_source == "funding":
                     funding_round = persons_company.get("latest_funding_round")
-                    if not funding_round or funding_round == "Other":
-                        extra_info = "latest"
-                    else:
-                        extra_info = str(funding_round)
-                        
+                    extra_info = "latest" if not funding_round or funding_round == "Other" else str(funding_round)
                 elif data_source == "hiring":
-                    hiring_area = await get_hiring_area(company_name, pool) 
-                    if hiring_area:
-                        extra_info = str(hiring_area)
-                    else:
-                        extra_info = "various areas"
+                    hiring_area = await get_hiring_area(company_name, pool)
+                    extra_info = str(hiring_area) if hiring_area else "various areas"
+                else:
+                    logger.warning(f"Unknown data source {data_source} for {company_name}")
+                    continue
 
+                # Send individual email
                 response = await send_email(
                     data_source=data_source,
                     email_to=email_to,
@@ -541,11 +578,18 @@ async def main():
                     extra_info=extra_info
                 )
 
-                logger.info(f"The response status code is: {response.status_code}")
+                # Add delay between emails
+                if response and response.status_code == 202:
+                    logger.info(f"✅ Email sent successfully to {email_to}")
+                    await asyncio.sleep(1)  # Rate limiting - 1 second between emails
+                else:
+                    logger.error(f"❌ Failed to send email to {email_to} - Status: {response.status_code if response else 'No response'}")
 
-            logger.info("Email sent")
-        else:
-            logger.info(f"Contacted Status: {contacted_status}\nPerson's email: {persons_email}")
+            except Exception as e:
+                logger.error(f"Failed to process email for {person.get('first_name', 'Unknown')}: {str(e)}")
+                continue
+
+    logger.info("Email sending complete")
     
     return jsonify({"success": "Main function done"}), 200
 
