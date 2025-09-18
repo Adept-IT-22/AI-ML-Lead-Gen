@@ -27,7 +27,12 @@ export class HomeComponent implements OnInit{
     this.loading = true;
     this.companiesService.fetch_companies().subscribe({
       next: (companies) => {
-        this.leadData = companies;
+        //Sort companies by updated_at in descending order i.e. newest 1st
+        this.leadData = companies.sort((a, b) => {
+          const dateA = new Date(a.updated_at || '').getTime();
+          const dateB = new Date(b.updated_at || '').getTime();
+          return dateB - dateA;
+        });
         this.filteredLeads = companies;
         this.loading = false;
       },
@@ -50,7 +55,7 @@ export class HomeComponent implements OnInit{
       { data: total.toString(), title: 'TOTAL LEADS', color: '#1fedc3' },
       { data: mql.toString(), title: 'MQLs', color: '#edce1f' },
       { data: sql.toString(), title: 'SQLs', color: '#1fafed' },
-      { data: emails.toString(), title: 'CONTACTED', color: '#1fe4c3' },
+      { data: emails.toString(), title: 'EMAILS', color: '#1fe4c3' },
       { data: opened.toString(), title: 'OPENED', color: '#1fe41f' },
       { data: disqualified.toString(), title: 'DISQUALIFIED', color: '#e41f1f' }
     ];
@@ -100,7 +105,7 @@ export class HomeComponent implements OnInit{
   filters = [
   { optionType: 'BY DATE', options: ['All', 'Today', 'This Week', 'This Month'], key: 'updated_at' },
   { optionType: 'BY SCORE', options: ['All', '>80', '<80'], key: 'icp_score' },
-  { optionType: 'BY CONTACTED STATUS', options: ['All', 'Uncontacted', 'Contacted'], key: 'contacted_status' },
+  { optionType: 'BY CONTACTED STATUS', options: ['All', 'Uncontacted', 'Contacted'], key: 'status' },
   { optionType: 'BY SOURCE', options: ['All', 'Funding', 'Hiring', 'Events'], key: 'company_data_source' }
 ];
 
@@ -112,7 +117,7 @@ export class HomeComponent implements OnInit{
     { key: 'icp_score', header: 'ICP Score' },
     { key: 'company_data_source', header: 'Source' },
     { key: 'industries', header: 'Industry' },
-    { key: 'contacted_status', header: 'Contact Status'},
+    {key: 'contacted_status', header: 'Contact Status'},
     { key: 'action', header: 'Action' },
   ];
 

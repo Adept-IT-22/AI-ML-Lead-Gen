@@ -12,14 +12,6 @@ email_prompts = {
                     This lets your team stay focused on building while we handle the rest.</p>
                     
                     <p>Would you be open to a quick chat this week to explore how we can support <strong>{company_name}</strong>’s next phase of growth?</p>
-                    
-                    <p>For more information on Adept Technologies, kindly visit 
-                        <a href="https://www.adept-techno.com" target="_blank"><strong>Our Website</strong></a>
-                    </p>
-                    
-                    <p>Regards,<br>
-                    Antony Ngatia,<br>
-                    Sales, Adept Technologies</p>
                 </body>
             </html>
         """
@@ -38,14 +30,6 @@ email_prompts = {
                     helping teams like yours move faster without the growing pains.</p>
                     
                     <p>Is it worth exploring how we could support <strong>{company_name}</strong> during this scaling phase?</p>
-                    
-                    <p>For more information on Adept Technologies, kindly visit 
-                        <a href="https://www.adept-techno.com" target="_blank"><strong>Our Website</strong></a>
-                    </p>
-                    
-                    <p>Regards,<br>
-                    Antony Ngatia,<br>
-                    Sales, Adept Technologies</p>
                 </body>
             </html>
         """
@@ -64,14 +48,6 @@ email_prompts = {
                     
                     <p>Would love to connect and share how we could complement what your team is doing.  
                     Would a 15-min call later this week work?</p>
-                    
-                    <p>For more information on Adept Technologies, kindly visit 
-                        <a href="https://www.adept-techno.com" target="_blank"><strong>Our Website</strong></a>
-                    </p>
-                    
-                    <p>Regards,<br>
-                    Antony Ngatia,<br>
-                    Sales, Adept Technologies</p>
                 </body>
             </html>
         """

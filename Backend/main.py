@@ -18,6 +18,7 @@ from utils.db_queries import *
 from utils.data_normalization import *
 from services.db_service import *
 from services.email_sending import *
+from services.sendgrid_webhook import *
 from normalization_module.event_normalization import normalize_event_data
 from normalization_module.funding_normalization import normalize_funding_data
 from normalization_module.hiring_normalization import normalize_hiring_data
@@ -542,9 +543,6 @@ async def main():
 
                 logger.info(f"The response status code is: {response.status_code}")
 
-                #Change contacted_status in database
-                persons_apollo_id = person.get("apollo_id", "")
-                await change_person_contacted_status(persons_apollo_id, pool)
             logger.info("Email sent")
         else:
             logger.info(f"Contacted Status: {contacted_status}\nPerson's email: {persons_email}")
@@ -609,6 +607,27 @@ async def receive_user_phone_number():
     except Exception as e:
         logger.error(f"Failed to get phone number: {str(e)}")
         return jsonify({"status": "error", "message": "Internal Server Error"})
+
+#Sendgrid webhook to receive data about emails sent
+@app.route('/webhook', methods=["POST"])
+async def sendgrid_events_webhook():
+    logger.info("Fetching webhook event data...")
+    events = request.json
+    if not events:
+        return jsonify({"Error": "No events received in request body"}), 400
+
+    try:
+        await update_contacted_status(events)
+        logger.info("Successfully processed webhook events")
+        return jsonify({"Success": "Done fetching webhook event data"}), 200
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error during webhook processing: {str(e)}")
+        return jsonify({"error": "Database update failed", "details": str(e)}), 500
+
+    except Exception as e:
+        logger.error(f"An unexpected error occurred: {str(e)}")
+        return {"Error": "An unexpected error occurred", "details": str(e)}, 500
+
 
 if __name__ == "__main__":
     logger.info("Application running....")

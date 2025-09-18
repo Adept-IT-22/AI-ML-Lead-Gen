@@ -77,23 +77,6 @@ async def send_email(
         open_tracking=OpenTracking(enable=True)
     )
 
-    #Add attachments
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    pdf_path = os.path.join(BASE_DIR, "email_attachments", "Adept Company 1 Pager.pdf")
-    async with aiofiles.open(pdf_path, "rb") as file:
-        data = await file.read()
-        encoded_file = base64.b64encode(data).decode()
-
-    email.attachment = [
-        Attachment(
-            file_content=(encoded_file),
-            file_name=FileName("Adept Company 1 Pager.pdf"),
-            file_type=FileType("application/pdf"),
-            disposition=Disposition("attachment"),
-
-        )
-    ]
-
     response = sendgrid_client.send(email)
     logger.info(f"Email sent to {email_to}")
     return response
@@ -101,11 +84,11 @@ async def send_email(
 if __name__ == "__main__":
     async def main():
         response = await send_email(
-            data_source='hiring',
-            email_to = 'm10mathenge@gmail.com',
-            first_name = 'Mark',
-            company_name='Kiongozi Ltd',
-            extra_info = "Software Dev"
+            data_source='funding',
+            email_to = 'antony.ngatia@adept-techno.com',
+            first_name = 'Antony',
+            company_name='Adept',
+            extra_info = "series A"
         )
         print(response.status_code)
         print(response.body)
