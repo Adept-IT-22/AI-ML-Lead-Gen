@@ -8,6 +8,12 @@
         <mat-card-content>
           <div *ngFor="let entry of section.entries" style="line-height: 1.5em;">
             <strong style="color: var(--color-yellow);">{{ entry.key }}:</strong>
+
+            <ng-container *ngIf="isLink(entry.value)">
+              <a [href]="entry.value" style="color:var(--color-green)"> 
+                {{ entry.value }} 
+              </a>
+            </ng-container>
             
             <ng-container *ngIf="entry.expandable && !isExpanded(entry.key)">
               {{ truncate(entry.value, 120) }} 
@@ -19,9 +25,9 @@
               <a style="color: var(--color-green);" href="#" (click)="toggleField(entry.key); $event.preventDefault()">Show less</a>
             </ng-container>
 
-            <ng-container *ngIf="entry.key == 'contacted_status'">
-              {{entry.value | titlecase}}
-            </ng-container>
+            <ng-container *ngIf="!entry.expandable && !isLink(entry.value)">
+              {{ entry.value || 'N/A'}}
+            </ng-container> 
 
           </div>
         </mat-card-content>
