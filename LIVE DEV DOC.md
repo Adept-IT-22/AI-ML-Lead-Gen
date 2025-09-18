@@ -71,6 +71,19 @@ That is because:
 + **Apollo Bulk Organization Enrichment API** - Used to enrich 10 companies at a time. This means less network overhead due to reduced network requests
 + **People Search** - Used to search for people from a particular organization
 + **Apollo Bulk People Enrichment** - Used to get people's emails and phone numbers. **REMEMBER TO USE THE `reveal_personal_emails` and `reveal_phone_number` PARAMETERS**
++ **SendGrid** - Used for email outreach. SendGrid returns webhooks tracking email events. Below is the mapping we'll use between events and the contacted_status_enum we'll be using to store a lead's contacted_status. The events are the keys, the enum values are the values to the 'status' key. Each enum has a precedence, so that if multiple people from the same company get emailed, we only preserve the higher precedence state e.g. If person A opens but person B doesn't, we'll register that the email was opened.
+
+    EVENT_STATUS_MAP = {
+        "processed": {"status": "pending", "precedence": 2},
+        "delivered": {"status": "contacted", "precedence": 3},
+        "open": {"status": "contacted", "precedence": 3},
+        "click": {"status": "engaged", "precedence": 4},
+        "bounce": {"status": "failed", "precedence": 1},
+        "spamreport": {"status": "failed", "precedence": 1},
+        "unsubscribe": {"status": "opted_out", "precedence": 5}, # A terminal status
+        "dropped": {"status": "failed", "precedence": 1},
+        "deferred": {"status": "pending", "precedence": 2},
+    }
 
 
 ### Databases Used

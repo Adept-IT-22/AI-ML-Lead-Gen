@@ -61,6 +61,23 @@ Below are the phases through which data will flow through the system:
 + **Outreach Phase**
     + Finally, reaching out to the company/decision maker's email is the end goal of this tool, not just lead generation. This will be done via SendGrid's APIs. Templates will be created and chosen based on the context within which the email is being sent.
 
+    + SendGrid returns webhooks tracking email events. Below is the mapping we'll use between events and the contacted_status_enum we'll be using
+    to store a lead's contacted_status. The events are the keys, the enum values are the values to the 'status' key. Each enum has a precedence,
+    so that if multiple people from the same company get emailed, we only preserve the higher precedence state e.g. If person A opens but person B
+    doesn't, we'll register that the email was opened.
+
+    EVENT_STATUS_MAP = {
+        "processed": {"status": "pending", "precedence": 2},
+        "delivered": {"status": "contacted", "precedence": 3},
+        "open": {"status": "contacted", "precedence": 3},
+        "click": {"status": "engaged", "precedence": 4},
+        "bounce": {"status": "failed", "precedence": 1},
+        "spamreport": {"status": "failed", "precedence": 1},
+        "unsubscribe": {"status": "opted_out", "precedence": 5}, # A terminal status
+        "dropped": {"status": "failed", "precedence": 1},
+        "deferred": {"status": "pending", "precedence": 2},
+    }
+
 ## Glossary
 
 + **ICP** - Ideal Customer Profile

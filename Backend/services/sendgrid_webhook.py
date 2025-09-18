@@ -8,7 +8,8 @@ logger = logging.getLogger()
 
 load_dotenv(override=True)
 
-DB_URL = os.getenv("DATABASE_URL")
+#DB_URL = os.getenv("DATABASE_URL")
+DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
 
 async def update_contacted_status(events):
     logger.info(f"The DB URL is: {DB_URL}")
@@ -71,8 +72,8 @@ async def update_contacted_status(events):
                     )
 
                     # Update people and get affected organization_ids
-                    # We use a CTE with a join to the temp table to only update
-                    # if the new status has a higher precedence than the current status.
+                    # We use a CTE with a join to the temp table to only update if
+                    # the new status has a higher precedence than the current status.
                     # This prevents "bounce" from overwriting "delivered".
                     # --- ADDED contacted_status_precedence to the SET clause here ---
                     org_ids = await conn.fetch("""
@@ -123,9 +124,5 @@ async def update_contacted_status(events):
 # Example usage
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    sample_events = [
-        {"email": "sebastian@mbodi.ai", "event": "delivered"},
-        {"email": "jostein@prosper-ai.no", "event": "bounce"},
-        {"email": "erez.kamiski@ketryx.com", "event": "dropped"}
-    ]
+    sample_events = [{'email': 'aniket@spiffy.ai', 'event': 'delivered'}, {'email': 'aniket@spiffy.ai', 'event': 'processed'}, {'email': 'iz@spiffy.ai', 'event': 'processed'}]
     asyncio.run(update_contacted_status(sample_events))
