@@ -441,6 +441,5 @@ if __name__ == "__main__":
         #]
 
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-            await fetch_source_link(pool, "Geniez AI")
-
+            await fetch_company_by_apollo_id("559215e97369641893d55b00")
     asyncio.run(main())
