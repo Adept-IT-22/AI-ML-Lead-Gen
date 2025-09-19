@@ -105,7 +105,7 @@ export class HomeComponent implements OnInit{
   filters = [
   { optionType: 'BY DATE', options: ['All', 'Today', 'This Week', 'This Month'], key: 'updated_at' },
   { optionType: 'BY SCORE', options: ['All', '>80', '<80'], key: 'icp_score' },
-  { optionType: 'BY CONTACTED STATUS', options: ['All', 'Uncontacted', 'Contacted'], key: 'status' },
+  { optionType: 'BY CONTACTED STATUS', options: ['All', 'Uncontacted', 'Contacted', 'Pending', 'Requested', 'Engaged', 'Failed', 'Opted Out'], key: 'contacted_status' },
   { optionType: 'BY SOURCE', options: ['All', 'Funding', 'Hiring', 'Events'], key: 'company_data_source' }
 ];
 
