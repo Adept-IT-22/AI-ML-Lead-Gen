@@ -3,6 +3,7 @@ import httpx
 import aiofiles
 import asyncio
 import logging
+from logging.handlers import RotatingFileHandler
 import yappi
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -29,20 +30,36 @@ from enrichment_module.people_search import people_search
 from enrichment_module.people_enrichment import people_enrichment
 from helpers.helpers import *
 
+# Configure logging before creating Flask app
 logger = logging.getLogger()
-logging.basicConfig(
-    level=logging.INFO, 
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    filename="main_log.log",
-    encoding="utf-8",
-    filemode="a"
-    )
+logger.setLevel(logging.INFO)
+
+# File handler
+file_handler = RotatingFileHandler(
+    "main_log.log",
+    maxBytes=10000000,  # 10MB
+    backupCount=5,
+    encoding="utf-8"
+)
+file_handler.setFormatter(
+    logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+)
+logger.addHandler(file_handler)
+
+# Console handler
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(
+    logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+)
+logger.addHandler(console_handler)
 
 #DB_URL = os.getenv("DATABASE_URL")
 DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
 
 #Create Flask App
 app = Flask(__name__)
+app.logger.handlers = [] #Remove Flask's default logging
+app.logger.propagate = True #Use our configured logger
 CORS(app)
 
 MAX_EMPLOYEE_COUNT = 20
@@ -141,79 +158,79 @@ async def main():
                 return
 
             # Step 2: Insert master (one row per dataset)
-            #for i, normalized_link in enumerate(normalized_data.get("link")):
-                #normalized_master_data_to_store = [
-                    #normalized_data.get("type", ""),
-                    #normalized_data.get("source", ""),
-                    #normalized_link,
-                    #normalized_data.get("title")[i] if normalized_data.get("title") and i < len(normalized_data.get("title", [])) else None,
-                    #normalized_data.get("city")[i] if normalized_data.get("city") and i < len(normalized_data.get("city", [])) else None,
-                    #normalized_data.get("country")[i] if normalized_data.get("country") and i < len(normalized_data.get("country", [])) else None,
-                    #normalized_data.get("tags")[i] if normalized_data.get("tags") and i < len(normalized_data.get("tags", [])) else []
-                #]
-                #data_is_in_db = await is_data_in_db(pool, normalized_link)
-                #if data_is_in_db:
-                    #continue
-                #master_id = await store_in_normalized_master(normalized_master_data_to_store, pool)
+            for i, normalized_link in enumerate(normalized_data.get("link")):
+                normalized_master_data_to_store = [
+                    normalized_data.get("type", ""),
+                    normalized_data.get("source", ""),
+                    normalized_link,
+                    normalized_data.get("title")[i] if normalized_data.get("title") and i < len(normalized_data.get("title", [])) else None,
+                    normalized_data.get("city")[i] if normalized_data.get("city") and i < len(normalized_data.get("city", [])) else None,
+                    normalized_data.get("country")[i] if normalized_data.get("country") and i < len(normalized_data.get("country", [])) else None,
+                    normalized_data.get("tags")[i] if normalized_data.get("tags") and i < len(normalized_data.get("tags", [])) else []
+                ]
+                data_is_in_db = await is_data_in_db(pool, normalized_link)
+                if data_is_in_db:
+                    continue
+                master_id = await store_in_normalized_master(normalized_master_data_to_store, pool)
 
-                ## Step 3: Insert children
-                #if data_type == "event":
-                    #event_data_to_store = [
-                        #master_id,
-                        #normalized_data.get("event_id")[i] if normalized_data.get("event_id") and i < len(normalized_data.get("event_id", [])) else None,
-                        #normalized_data.get("event_summary")[i] if normalized_data.get("event_summary") and i < len(normalized_data.get("event_summary", [])) else None,
-                        #normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online") and i < len(normalized_data.get("event_is_online", [])) else None,
-                        #normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id") and i < len(normalized_data.get("event_organizer_id", [])) else None
-                    #]
-                    #try:
-                        #await store_in_normalized_events(event_data_to_store, pool)
-                    #except Exception as e:
-                        #logger.error(f"Failed to store normalized events: {str(e)}")
+                # Step 3: Insert children
+                if data_type == "event":
+                    event_data_to_store = [
+                        master_id,
+                        normalized_data.get("event_id")[i] if normalized_data.get("event_id") and i < len(normalized_data.get("event_id", [])) else None,
+                        normalized_data.get("event_summary")[i] if normalized_data.get("event_summary") and i < len(normalized_data.get("event_summary", [])) else None,
+                        normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online") and i < len(normalized_data.get("event_is_online", [])) else None,
+                        normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id") and i < len(normalized_data.get("event_organizer_id", [])) else None
+                    ]
+                    try:
+                        await store_in_normalized_events(event_data_to_store, pool)
+                    except Exception as e:
+                        logger.error(f"Failed to store normalized events: {str(e)}")
 
-                #elif data_type == "funding":
-                    #funding_data_to_store = [
-                        #master_id,
-                        #normalized_data.get("company_name")[i] if normalized_data.get("company_name") and i < len(normalized_data.get("company_name", [])) else None,
-                        #normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers") and i < len(normalized_data.get("company_decision_makers", [])) else [],
-                        #normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position") and i < len(normalized_data.get("company_decision_makers_position", [])) else [],
-                        #normalized_data.get("funding_round")[i] if normalized_data.get("funding_round") and i < len(normalized_data.get("funding_round", [])) else None,
-                        #normalized_data.get("amount_raised")[i] if normalized_data.get("amount_raised") and i < len(normalized_data.get("amount_raised", [])) else None,
-                        #normalized_data.get("currency")[i] if normalized_data.get("currency") and i < len(normalized_data.get("currency", [])) else None,
-                        #normalized_data.get("investor_companies")[i] if normalized_data.get("investor_companies") and i < len(normalized_data.get("investor_companies", [])) else [],
-                        #normalized_data.get("investor_people")[i] if normalized_data.get("investor_people") and i < len(normalized_data.get("investor_people", [])) else [],
-                    #]
+                elif data_type == "funding":
+                    funding_data_to_store = [
+                        master_id,
+                        normalized_data.get("company_name")[i] if normalized_data.get("company_name") and i < len(normalized_data.get("company_name", [])) else None,
+                        normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers") and i < len(normalized_data.get("company_decision_makers", [])) else [],
+                        normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position") and i < len(normalized_data.get("company_decision_makers_position", [])) else [],
+                        normalized_data.get("funding_round")[i] if normalized_data.get("funding_round") and i < len(normalized_data.get("funding_round", [])) else None,
+                        normalized_data.get("amount_raised")[i] if normalized_data.get("amount_raised") and i < len(normalized_data.get("amount_raised", [])) else None,
+                        normalized_data.get("currency")[i] if normalized_data.get("currency") and i < len(normalized_data.get("currency", [])) else None,
+                        normalized_data.get("investor_companies")[i] if normalized_data.get("investor_companies") and i < len(normalized_data.get("investor_companies", [])) else [],
+                        normalized_data.get("investor_people")[i] if normalized_data.get("investor_people") and i < len(normalized_data.get("investor_people", [])) else [],
+                    ]
 
-                    #try:
-                        #await store_in_normalized_funding(funding_data_to_store, pool)
-                    #except Exception as e:
-                        #logger.error(f"Failed to store normalized funding: {str(e)}")
+                    try:
+                        await store_in_normalized_funding(funding_data_to_store, pool)
+                    except Exception as e:
+                        logger.error(f"Failed to store normalized funding: {str(e)}")
 
-                #elif data_type == "event":
-                    #event_data_to_store = [
-                        #master_id,
-                        #normalized_data.get("event_id")[i] if normalized_data.get("event_id") and i < len(normalized_data.get("event_id", [])) else None,
-                        #normalized_data.get("event_summary")[i] if normalized_data.get("event_summary") and i < len(normalized_data.get("event_summary", [])) else None,
-                        #normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online") and i < len(normalized_data.get("event_is_online", [])) else None,
-                        #normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id") and i < len(normalized_data.get("event_organizer_id", [])) else None
-                    #]
-                    #try:
-                        #await store_in_normalized_events(event_data_to_store, pool)
-                    #except Exception as e:
-                        #logger.error(f"Failed to store normalized events: {str(e)}")
+                elif data_type == "event":
+                    event_data_to_store = [
+                        master_id,
+                        normalized_data.get("event_id")[i] if normalized_data.get("event_id") and i < len(normalized_data.get("event_id", [])) else None,
+                        normalized_data.get("event_summary")[i] if normalized_data.get("event_summary") and i < len(normalized_data.get("event_summary", [])) else None,
+                        normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online") and i < len(normalized_data.get("event_is_online", [])) else None,
+                        normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id") and i < len(normalized_data.get("event_organizer_id", [])) else None
+                    ]
+                    try:
+                        await store_in_normalized_events(event_data_to_store, pool)
+                    except Exception as e:
+                        logger.error(f"Failed to store normalized events: {str(e)}")
 
-                #elif data_type == "hiring":
-                    #hiring_data_to_store = [
-                        #master_id,
-                        #normalized_data.get("company_name")[i] if normalized_data.get("company_name")[i] else None,
-                        #normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers")[i] else [],
-                        #normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position")[i] else [],
-                        #normalized_data.get("job_roles")[i] if normalized_data.get("job_roles")[i] else [],
-                        #normalized_data.get("hiring_reasons")[i] if normalized_data.get("hiring_reasons")[i] else []
-                    #]
-                    #try:
-                        #await store_in_normalized_hiring(hiring_data_to_store, pool)
-                    #except Exception as e:
-                        #logger.error(f"Failed to store normalized hiring data: {str(e)}")
+                elif data_type == "hiring":
+                    hiring_data_to_store = [
+                        master_id,
+                        normalized_data.get("company_name")[i] if normalized_data.get("company_name")[i] else None,
+                        normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers")[i] else [],
+                        normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position")[i] else [],
+                        normalized_data.get("job_roles")[i] if normalized_data.get("job_roles")[i] else [],
+                        normalized_data.get("hiring_reasons")[i] if normalized_data.get("hiring_reasons")[i] else []
+                    ]
+                    try:
+                        await store_in_normalized_hiring(hiring_data_to_store, pool)
+                    except Exception as e:
+                        logger.error(f"Failed to store normalized hiring data: {str(e)}")
 
             all_normalized_data.append(normalized_data)
             logger.info(f"Normalized {data_type} data from {name}")

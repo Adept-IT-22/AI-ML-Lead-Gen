@@ -1,7 +1,9 @@
 import os
+import json
 import asyncio
 import asyncpg
 import logging
+import aiofiles
 from dotenv import load_dotenv
 
 logger = logging.getLogger()
@@ -14,6 +16,10 @@ DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_d
 async def update_contacted_status(events):
     logger.info(f"The DB URL is: {DB_URL}")
     logger.info(f"The events are: {events}")
+
+    #Write events to file
+    async with aiofiles.open("sendgrid_webhooks", "a") as file:
+        await file.write(json.dumps(events.json, indent=2))
 
     # We use a dictionary to map SendGrid events to a value in the contacted_status db column.
     # The 'status' is the value to be set in the database.
@@ -124,5 +130,5 @@ async def update_contacted_status(events):
 # Example usage
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    sample_events = [{'email': 'aniket@spiffy.ai', 'event': 'delivered'}, {'email': 'aniket@spiffy.ai', 'event': 'processed'}, {'email': 'iz@spiffy.ai', 'event': 'processed'}]
+    sample_events = []
     asyncio.run(update_contacted_status(sample_events))

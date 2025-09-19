@@ -143,9 +143,6 @@ _Insert change history here_
 
 This section is a to-do list for me as the programmer.
 
-+ Fix FinSMES 403 error.
 + See if I can get event attendees on eventbrite
 + Fetch from google news
-+ Create normalization DB
-+ Create mock DB for emails
-+ Show articles leads came from
++ During email sending, if company isn't found enrich it 

@@ -49,7 +49,7 @@ if __name__ == "__main__":
     async def main():
         start_time = time.perf_counter()
         async with httpx.AsyncClient(timeout=10.0) as client:
-            results = await single_org_enrichment(client=client, company_website="reveng.ai")
+            results = await single_org_enrichment(client=client, company_website="eagle.org")
             print(results)
 
         duration = time.perf_counter() - start_time

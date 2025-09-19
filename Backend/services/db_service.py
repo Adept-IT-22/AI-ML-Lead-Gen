@@ -381,7 +381,11 @@ async def fetch_funding_details(pool: asyncpg.Pool, company_name: str)->Dict:
         async with pool.acquire() as conn:
             response = await conn.fetch(query, company_name.lower())
             response_list = [dict(result) for result in response]
-            logger.info(f"Company: {response_list}")
+
+            if not response_list:
+                logger.warning(f"No funding data found for {company_name}")
+                return {}
+
             response_dict = response_list[0]
             logger.info("Funding data found")
             return response_dict
@@ -415,13 +419,14 @@ async def fetch_source_link(pool: asyncpg.Pool, company_name: str)->Dict:
     try:
         async with pool.acquire() as conn:
             results = await conn.fetch(query, company_name.lower())
-            final_result = [dict(result) for result in results][0]
-            logger.info(final_result)
-            logger.info("Done fetching link")
-            if final_result:
-                return final_result
-            else:
+            result_list = [dict(result) for result in results]
+            if not result_list:
+                logger.warning(f"No source link found for {company_name}")
                 return {}
+
+            final_result = result_list[0]
+            logger.info("Done fetching link")
+            return final_result
     except Exception as e:
         logger.error(f"Failed to fetch link for {company_name}: {str(e)}")
         return {}
@@ -441,6 +446,5 @@ if __name__ == "__main__":
         #]
 
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-            await fetch_source_link(pool, "Geniez AI")
-
+            await fetch_company_by_apollo_id("559215e97369641893d55b00")
     asyncio.run(main())
