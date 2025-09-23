@@ -127,7 +127,7 @@ _Insert database used here_
 
         Scale down to 0 at >200
 
-        25 employees → 100, 50 → 85, 75 → 60, 100 → 45, 150 → 20, 200 → 10.
+        25 employees → 100, 50 → 80, 75 → 60, 100 → 40, 150 → 20, 200 → 10.
 
         3. Funding Stage (20%)
 

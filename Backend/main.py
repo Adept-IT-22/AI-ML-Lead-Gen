@@ -17,6 +17,7 @@ from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 from utils.db_queries import *
 from utils.data_normalization import *
+from utils.icp import icp
 from services.db_service import *
 from services.email_sending import *
 from services.sendgrid_webhook import *
@@ -28,6 +29,7 @@ from enrichment_module.bulk_org_enrichment import bulk_org_enrichment
 from enrichment_module.single_org_enrichment import single_org_enrichment
 from enrichment_module.people_search import people_search
 from enrichment_module.people_enrichment import people_enrichment
+from scoring_module.icp_scoring import *
 from helpers.helpers import *
 
 # Configure logging before creating Flask app
@@ -453,6 +455,8 @@ async def main():
                         logger.error(f"Failed to fetch source link for {company_name}: {str(e)}")
                         source_link = ""
 
+                    
+
                     #Ensure all numeric values use safe_int() or safe_decimal()
                     company_row = (
                         apollo_id, 
@@ -474,7 +478,7 @@ async def main():
                         short_description,
                         safe_decimal(total_funding),
                         technology_names,
-                        None,  # icp score placeholder
+                        None, #icp score placeholder  
                         None,  # notes
                         company_data_source,
                         latest_funding_round,
@@ -545,7 +549,43 @@ async def main():
         else: 
             logger.error("No people data to store in db ❌")
 
-    #==============5. EMAIL================
+    
+    #==============5. SCORING================
+    #Fetch unscored companies
+    async with asyncpg.create_pool(dsn=DB_URL) as pool:
+        unscored_company_id_list = await company_is_unscored(pool)    
+
+        #Fetch company details
+        for company_id_info in unscored_company_id_list:
+            company_id = company_id_info.get("id")
+            company_details = await fetch_company_details(company_id)
+            org_name = company_details.get("name", "")
+            org_founded_year = company_details.get("founded_year", None)
+            org_employee_count = company_details.get("estimated_num_employees", None)
+            org_funding_stage = company_details.get("latest_funding_round", "")
+            org_funding_amount = company_details.get("latest_funding_amount", "")
+            org_growth_velocity = company_details.get("organization_headcount_twelve_month_growth") if company_details.get("organization_headcount_twelve_month_growth") else company_details.get("organization_headcount_six_month_growth")
+            org_keywords = company_details.get("keywords", [])
+            org_people = company_details.get("people", [])
+            org_phone = company_details.get("phone", "")
+            org_linkedin = company_details.get("linkedin_url", "")
+            org_website = company_details.get("website_url", "")
+            org_country = company_details.get("country", "")
+
+            #Calculate total score
+            scorer = ICPScorer(icp, org_name, org_founded_year, org_employee_count,
+                               org_funding_stage, org_funding_amount, org_growth_velocity,
+                               org_keywords, org_people, org_phone, org_linkedin, org_website,
+                               org_country)
+            await scorer.log_scoring_start(org_name)
+            total_icp_score = await scorer.calculate_total_score()
+            total_icp_score = round(total_icp_score, 1)
+
+            #Store scored companies
+            await store_icp_score(pool, org_name, company_id, total_icp_score)
+            logger.info("Done storing ICP scores")
+
+    #==============6. EMAIL================
     #logger.info("Sending emails...")
     #list_of_people_in_db = await fetch_people()
 

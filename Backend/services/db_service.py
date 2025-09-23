@@ -455,6 +455,44 @@ async def fetch_events(pool: asyncpg.Pool)->List[Dict[str, str]]:
         logger.error(f"Failed to fetch events: {str(e)}")
         return []
 
+#Fetch company keywords
+async def fetch_keywords(pool):
+    query = "SELECT keywords FROM companies"
+    try:
+        async with pool.acquire() as conn:
+            results = await conn.fetch(query)
+            result_list = [dict(result) for result in results]
+            logger.info(result_list)
+    except Exception as e:
+        logger.error(f"Failed to fetch keywords: {str(e)}")
+
+#Select all unscored companies
+async def company_is_unscored(pool)->List[Dict[str, int]]:
+    logger.info("Fetching all unscored companies...")
+    query = "SELECT id FROM companies WHERE icp_score IS NULL"
+
+    try:
+        async with pool.acquire() as conn:
+            results = await conn.fetch(query)
+            results_list = [dict(result) for result in results]
+            return results_list
+    except Exception as e:
+        logger.error(f"Failed to fetch unscored companies: {str(e)}")
+        return []
+
+#Store icp score
+async def store_icp_score(pool, company_name, company_id, icp_score):
+    logger.info(f"Storing ICP score for {company_name}")
+    query = "UPDATE companies SET icp_score = $1 WHERE id = $2"
+
+    try:
+        async with pool.acquire() as conn:
+            await conn.execute(query, icp_score, company_id)
+        logger.info(f"Done storing icp score for {company_name}")
+        return
+    except Exception as e:
+        logger.error(f"Failed to store icp score for {company_name}")
+        return
 
 if __name__ == "__main__":
     async def main():
@@ -470,6 +508,6 @@ if __name__ == "__main__":
             #["Jane Doe", "Michael Chan"]                       # investor_people
         #]
 
-        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-            await fetch_events(pool)
+        #async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+        await fetch_company_details(52)
     asyncio.run(main())
