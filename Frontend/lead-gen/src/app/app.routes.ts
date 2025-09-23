@@ -3,6 +3,7 @@ import { HomeComponent } from './Pages/home/home.component';
 import { AnalyticsComponent } from './Pages/analytics/analytics.component';
 import { LeadsTableComponent } from './@shared/Components/leads/leads.component'; 
 import { LeadsPageComponent } from './Pages/leads-page/leads-page.component';
+import { EventsComponent} from './Pages/events/events.component';
 
 export const routes: Routes = [
     {
@@ -22,5 +23,10 @@ export const routes: Routes = [
     {
         path: 'leads',
         component: LeadsPageComponent
+    },
+
+    {
+        path: 'events',
+        component: EventsComponent
     },
 ];
