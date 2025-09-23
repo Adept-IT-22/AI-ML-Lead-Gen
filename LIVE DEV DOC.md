@@ -92,7 +92,7 @@ _Insert database used here_
 + **Relational DB**: Postgres (version...)
 
     + **DB Name** - Lead Gen
-    + **DB Tables** - Companies, People
+    + **DB Tables** - Companies, People, (normalized_master, normalized_funding, normalized_events, normalized_hiring => these are to check which companies get fetched and normalized but not enriched)
     + **DB Columns per Table**
         + Companies - 
             + id
@@ -107,16 +107,105 @@ _Insert database used here_
             + **From the people enrichment API -** email, number 
             + **Others -** created_at, updated_at, contacted_status, notes
 
-        + Funding - 
-            + **From the single enrichment API -** company_id, funding_event_id, date, type, investors, amount, currency, news_url, created_at, updated_at
-
-        + Metadata - 
-            + Source (where the data was fetched i.e. TechCrunch)
-            + Type of data i.e. funding, hiring or event
-
 + **Graph DB**: _To Be Determined_
 
-+**[BACKLOG ITEM] Normalized data before enrichment**: Add normalized data but not enriched just to track any failures in enrichment 
+### Scoring Logic
++ Scoring will allow us to categorize leads based on how closely they match our ICP. Below is the criteria to be used:
+    + Scoring Formula (0–100 scale)
+
+        1. Age (20%)
+
+        Ideal: founded ≤ 2 years ago → 100 points
+
+        Scale down linearly to 0 at >10 years.
+
+        e.g. 2 years old → 100, 4 years → 80, 6 years → 60 etc.
+
+        2. Employee Count (20%)
+
+        Ideal: ≤ 25 employees → 100 points
+
+        Scale down to 0 at >200
+
+        25 employees → 100, 50 → 85, 75 → 60, 100 → 45, 150 → 20, 200 → 10.
+
+        3. Funding Stage (20%)
+
+        Pre-seed/Seed → 100
+
+        Series A → 80
+
+        Series B → 60
+
+        Series C → 40
+
+        No funding data → 50
+
+        4. Funding Amount (10%)
+
+        Sweet spot: $0.5M – $15M → 100 points
+
+        < $0.5M → scale down (risk of too early)
+
+        $20M → scale down (likely too mature).
+
+        5. Growth Velocity (10%)
+
+        Use organization_headcount_twelve_month_growth (or 6m if 12m missing).
+
+        50% growth → 100
+
+        ~0% growth → 50
+
+        Negative growth → 0.
+
+        6. Industry / Keywords Match (10%)
+
+        Strong AI/ML match in keywords/industries → 100
+
+        Some AI-related terms but general IT → 60
+
+        No AI/ML terms → 0.
+
+        7. Contactability (5%)
+
+        Valid email + LinkedIn + website → 100
+
+        Missing one → 80
+
+        No contacts → 60.
+
+        8. Geography (5%)
+
+        Europe / North America → 100
+
+        Elsewhere → 0.
+
+        **Final Score**
+        Score = 0.2(Age) + 0.2(Employees) + 0.2(Funding Stage) + 0.1(Funding Amount) + 0.1(Growth) + 0.1(Keywords) + 0.05(Contactability) + 0.05(Geography)
+        
+        Range: 0–100.
+
+        **Example with your sample company ("Leo AI")**
+
+        Age = 2025 – 2023 = 2 → 100
+
+        Employees = 23 → just above cutoff, ~90
+
+        Funding Stage = Seed → 90
+
+        Funding Amount = $9.7M (in sweet spot) → 100
+
+        Growth (12m = 0.28 → 28%) → ~70
+
+        Keywords = strong AI/ML match → 100
+
+        Contactability (email + LinkedIn + site) → 100
+
+        Geography = US → 100
+
+        Score = 20 + 18 + 18 + 10 + 7 + 10 + 5 + 5 = 93 ✅ (Tier A lead)
+
 
 ### Commit Message Format
 

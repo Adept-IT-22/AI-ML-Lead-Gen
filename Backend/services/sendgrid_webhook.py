@@ -15,7 +15,6 @@ DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_d
 
 async def update_contacted_status(events):
     logger.info(f"The DB URL is: {DB_URL}")
-    logger.info(f"The events are: {events}")
 
     #Write events to file
     async with aiofiles.open("sendgrid_webhooks", "a") as file:
