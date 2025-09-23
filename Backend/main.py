@@ -579,6 +579,7 @@ async def main():
                                org_country)
             await scorer.log_scoring_start(org_name)
             total_icp_score = await scorer.calculate_total_score()
+            total_icp_score = round(total_icp_score, 1)
 
             #Store scored companies
             await store_icp_score(pool, org_name, company_id, total_icp_score)

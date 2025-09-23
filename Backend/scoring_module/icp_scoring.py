@@ -92,7 +92,7 @@ class ICPScorer:
             return 50
 
         high, medium, low = 0, 0, 0
-
+        
         for keyword in keywords:
             normal_keyword = keyword.lower().strip()
 
@@ -102,6 +102,10 @@ class ICPScorer:
                 medium += 1
             elif normal_keyword in ai_keywords["low_signal"]:
                 low += 0
+
+        total_matches = high + medium + low
+        if total_matches == 0:
+            return 50
 
         #Weight the results
         icp_keywords = self.icp["keywords"]

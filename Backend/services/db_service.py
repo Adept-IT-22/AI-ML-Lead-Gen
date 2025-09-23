@@ -93,7 +93,6 @@ async def fetch_company_details(id: int)->List[Dict[str, any]]:
         all_companies = await fetch_companies()
         for company in all_companies:
             if company.get("id") == id:
-                logger.info(company)
                 return company
 
     except asyncpg.PostgresError as e:
