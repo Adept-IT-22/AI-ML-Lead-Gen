@@ -689,6 +689,17 @@ async def sendgrid_events_webhook():
         logger.error(f"An unexpected error occurred: {str(e)}")
         return {"Error": "An unexpected error occurred", "details": str(e)}, 500
 
+#Endpoint to fetch events
+@app.route('/events', methods=["GET"])
+async def get_events():
+    async with asyncpg.create_pool(dsn=DB_URL) as pool:
+        try:
+            events = await fetch_events(pool)
+            return events
+        except Exception as e:
+            logger.error(f"Failed to fetch events: {str(e)}")
+            return []
+
 
 if __name__ == "__main__":
     logger.info("Application running....")

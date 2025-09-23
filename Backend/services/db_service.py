@@ -431,6 +431,31 @@ async def fetch_source_link(pool: asyncpg.Pool, company_name: str)->Dict:
         logger.error(f"Failed to fetch link for {company_name}: {str(e)}")
         return {}
 
+#Fetch events from db
+async def fetch_events(pool: asyncpg.Pool)->List[Dict[str, str]]:
+    logger.info("Fetching events from database")
+    query = """
+            SELECT m.id, m.source, m.link, e.event_summary
+            FROM normalized_master m
+            LEFT JOIN normalized_events e ON m.id = e.master_id
+            WHERE m.type = 'event';
+            """
+
+    try: 
+        async with pool.acquire() as conn:
+            results = await conn.fetch(query)
+            results_list = [dict(result) for result in results]
+            if not results_list:
+                logger.warning("No events found")
+                return []
+            
+            logger.info("Events found")
+            return results_list
+    except Exception as e:
+        logger.error(f"Failed to fetch events: {str(e)}")
+        return []
+
+
 if __name__ == "__main__":
     async def main():
         logger.info(f"THE DB URL IS: {DB_URL}")
@@ -446,5 +471,5 @@ if __name__ == "__main__":
         #]
 
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-            await fetch_company_by_apollo_id("559215e97369641893d55b00")
+            await fetch_events(pool)
     asyncio.run(main())
