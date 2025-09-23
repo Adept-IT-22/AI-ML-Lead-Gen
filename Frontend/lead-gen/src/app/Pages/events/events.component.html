@@ -1,0 +1,9 @@
+<div class="events-grid">
+  <div class="event-card" *ngFor="let event of events">
+    <p class="event-summary">{{ event.event_summary }}</p>
+    <a [href]="event.link" target="_blank" rel="noopener noreferrer">
+      View Event →
+    </a>
+    <span class="event-source">{{ event.source }}</span>
+  </div>
+</div>

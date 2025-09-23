@@ -9,6 +9,7 @@ interface CompanyField {
   value: string | number;
 }
 
+
 export interface CompanySection {
   section: string;
   fields: CompanyField[];
