@@ -113,7 +113,7 @@ _Insert database used here_
 + Scoring will allow us to categorize leads based on how closely they match our ICP. Below is the criteria to be used:
     + Scoring Formula (0–100 scale)
 
-        1. Age (20%)
+        1. **Age (20%)**
 
         Ideal: founded ≤ 2 years ago → 100 points
 
@@ -121,7 +121,7 @@ _Insert database used here_
 
         e.g. 2 years old → 100, 4 years → 80, 6 years → 60 etc.
 
-        2. Employee Count (20%)
+        2. **Employee Count (20%)**
 
         Ideal: ≤ 25 employees → 100 points
 
@@ -129,7 +129,7 @@ _Insert database used here_
 
         25 employees → 100, 50 → 80, 75 → 60, 100 → 40, 150 → 20, 200 → 10.
 
-        3. Funding Stage (20%)
+        3. **Funding Stage (20%)**
 
         Pre-seed/Seed → 100
 
@@ -141,7 +141,7 @@ _Insert database used here_
 
         No funding data → 50
 
-        4. Funding Amount (10%)
+        4. **Funding Amount (10%)**
 
         Sweet spot: $0.5M – $15M → 100 points
 
@@ -149,7 +149,7 @@ _Insert database used here_
 
         $20M → scale down (likely too mature).
 
-        5. Growth Velocity (10%)
+        5. **Growth Velocity (10%)**
 
         Use organization_headcount_twelve_month_growth (or 6m if 12m missing).
 
@@ -159,7 +159,7 @@ _Insert database used here_
 
         Negative growth → 0.
 
-        6. Industry / Keywords Match (10%)
+        6. **Industry / Keywords Match (10%)**
 
         Strong AI/ML match in keywords/industries → 100
 
@@ -167,15 +167,13 @@ _Insert database used here_
 
         No AI/ML terms → 0.
 
-        7. Contactability (5%)
+        7. **Contactability (5%)**
 
-        Valid email + LinkedIn + website → 100
+        Email - 100
 
-        Missing one → 80
+        Linkedin - 80
 
-        No contacts → 60.
-
-        8. Geography (5%)
+        8. **Geography (5%)**
 
         Europe / North America → 100
 

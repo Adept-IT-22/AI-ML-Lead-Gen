@@ -104,7 +104,7 @@ export class HomeComponent implements OnInit{
 
   filters = [
   { optionType: 'BY DATE', options: ['All', 'Today', 'This Week', 'This Month'], key: 'updated_at' },
-  { optionType: 'BY SCORE', options: ['All', '>80', '<80'], key: 'icp_score' },
+  { optionType: 'BY SCORE', options: ['All', '90+', '80-89', '70-79', '60-69', '<60'], key: 'icp_score' },
   { optionType: 'BY CONTACTED STATUS', options: ['All', 'Uncontacted', 'Contacted', 'Pending', 'Requested', 'Engaged', 'Failed', 'Opted Out'], key: 'contacted_status' },
   { optionType: 'BY SOURCE', options: ['All', 'Funding', 'Hiring', 'Events'], key: 'company_data_source' }
 ];
@@ -141,7 +141,21 @@ export class HomeComponent implements OnInit{
         }
 
         if (key === 'icp_score') {
-          return value === '>80' ? Number(lead.icp_score) > 80 : Number(lead.icp_score) < 80;
+          const score = Number(lead.icp_score)
+          switch (value) {
+            case '90+':
+              return score >= 90;
+            case '80-89':
+              return score >= 80 && score <= 89;
+            case '70-79':
+              return score >= 70 && score <= 79;
+            case '60-69':
+              return score >= 60 && score <= 69;
+            case '<60':
+              return score < 60;
+            default:
+              return true;
+          }
         }
 
         if (key === 'company_data_source') {
