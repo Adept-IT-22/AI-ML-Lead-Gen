@@ -111,98 +111,99 @@ _Insert database used here_
 
 ### Scoring Logic
 + Scoring will allow us to categorize leads based on how closely they match our ICP. Below is the criteria to be used:
-    + Scoring Formula (0–100 scale)
++ Scoring is done on a 0–100 scale with 0 being terrible and 100 being perfect.
++ The scores are weighted by category:
+    + Tier 1 = 50%
+    + Tier 2 = 40%
+    + Tier 3 = 10%
 
-        1. **Age (20%)**
+    ### Tier 1 Criteria (50% Weight)
 
-        Ideal: founded ≤ 2 years ago → 100 points
+    **1. Geography (25%)**
 
-        Scale down linearly to 0 at >10 years.
+    Europe / North America → 100
 
-        e.g. 2 years old → 100, 4 years → 80, 6 years → 60 etc.
+    Elsewhere → 0.
 
-        2. **Employee Count (20%)**
+    **2. Keywords Match (25%)**
 
-        Ideal: ≤ 25 employees → 100 points
+    Strong match → 100 
 
-        Scale down to 0 at >200
+    Medium match → 60 
 
-        25 employees → 100, 50 → 80, 75 → 60, 100 → 40, 150 → 20, 200 → 10.
+    Weak match → 20 
 
-        3. **Funding Stage (20%)**
+    ### Tier 2 Criteria (40% Weight)
 
-        Pre-seed/Seed → 100
+    **3. Age (10%)**
 
-        Series A → 80
+   Ideal: founded ≤ 1 year ago → 100 points
 
-        Series B → 60
+    Scale down linearly to 0 at >10 years.
 
-        Series C → 40
+    e.g. 1 year → 100, 2 years → 80, 5 years → 60, 8 years → 40, 10 years → 20
 
-        No funding data → 50
+    **4. Employee Count (10%)**
 
-        4. **Funding Amount (10%)**
+    Ideal: ≤ 25 employees → 100 points
 
-        Sweet spot: $0.5M – $15M → 100 points
+    Scale down to 0 at >200
 
-        < $0.5M → scale down (risk of too early)
+    25 employees → 100, 50 → 80, 75 → 60, 100 → 40, 150 → 20, 200 → 10.
 
-        $20M → scale down (likely too mature).
+    **5. Funding Stage (10%)**
 
-        5. **Growth Velocity (10%)**
+    Pre-seed/Seed → 100
 
-        Use organization_headcount_twelve_month_growth (or 6m if 12m missing).
+    Series A → 80
 
-        50% growth → 100
+    Series B → 60
 
-        ~0% growth → 50
+    Series C → 40
 
-        Negative growth → 0.
+    No funding data → 50
 
-        6. **Industry / Keywords Match (10%)**
+    **6. Contactability (10%)**
 
-        Strong AI/ML match in keywords/industries → 100
+    Email - 100
 
-        Some AI-related terms but general IT → 60
+    Linkedin - 80
 
-        No AI/ML terms → 0.
+    ### Tier 3 Criteria (10% Weight)
 
-        7. **Contactability (5%)**
+    **7. Growth Velocity (10%)**
 
-        Email - 100
+    Use organization_headcount_twelve_month_growth (or 6m if 12m missing).
 
-        Linkedin - 80
+    50% growth → 100
 
-        8. **Geography (5%)**
+    ~0% growth → 50
 
-        Europe / North America → 100
+    Negative growth → 0.
 
-        Elsewhere → 0.
+    **Final Score**
 
-        **Final Score**
-        Score = 0.2(Age) + 0.2(Employees) + 0.2(Funding Stage) + 0.1(Funding Amount) + 0.1(Growth) + 0.1(Keywords) + 0.05(Contactability) + 0.05(Geography)
+    Score = 0.2(Age) + 0.2(Employees) + 0.2(Funding Stage) + 0.1(Growth) + 0.1(Keywords) + 0.05(Contactability) + 0.05(Geography)
         
-        Range: 0–100.
+    **Example with sample company ("Leo AI")**
 
-        **Example with your sample company ("Leo AI")**
+    Age = 2025 – 2023 = 2 → 100
 
-        Age = 2025 – 2023 = 2 → 100
+    Employees = 23 → just above cutoff, ~90
 
-        Employees = 23 → just above cutoff, ~90
+    Funding Stage = Seed → 90
 
-        Funding Stage = Seed → 90
+    Funding Amount = $9.7M (in sweet spot) → 100
 
-        Funding Amount = $9.7M (in sweet spot) → 100
+    Growth (12m = 0.28 → 28%) → ~70
 
-        Growth (12m = 0.28 → 28%) → ~70
+    Keywords = strong AI/ML match → 100
 
-        Keywords = strong AI/ML match → 100
+    Contactability (email + LinkedIn + site) → 100
 
-        Contactability (email + LinkedIn + site) → 100
+    Geography = US → 100
 
-        Geography = US → 100
-
-        Score = 20 + 18 + 18 + 10 + 7 + 10 + 5 + 5 = 93 ✅ (Tier A lead)
+    Score = 20 + 18 + 18 + 10 + 7 + 10 + 5 + 5 = 93 ✅ (Tier A lead)
 
 
 ### Commit Message Format

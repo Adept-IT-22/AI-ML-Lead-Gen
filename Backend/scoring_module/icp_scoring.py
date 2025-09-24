@@ -1,13 +1,15 @@
 import logging
 import asyncio
 from datetime import date
-from utils.icp import icp
+from utils.icp import icp, weights
 from utils.ai_keywords import ai_keywords
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 #The weighting ensures the score equals 100 for all categories put together
+
+MAX_AGE = 10
 
 class ICPScorer:
     def __init__(self, icp, name, founded_year = None, employee_count = None,
@@ -27,16 +29,7 @@ class ICPScorer:
         self.linkedin = linkedin
         self.website = website
         self.country = country
-        self.weights = {
-            "age": 0.2,
-            "employee_count": 0.2,
-            "funding_stage": 0.2,
-            "funding_amount": 0.05,
-            "growth_velocity": 0.1,
-            "keywords": 0.1,
-            "contactability": 0.05,
-            "geography": 0.1
-        }
+        self.weights = weights
 
     async def log_scoring_start(self, name):
         logger.info(f"ICP Scoring starting for {name}...")
@@ -49,6 +42,8 @@ class ICPScorer:
         for (low, high), score in self.icp["age"]:
             if low <= age <= high:
                 return score
+        if age > MAX_AGE:
+            return 0
         return 50
 
     async def score_employee_count(self, employee_count: int)->int:
