@@ -6,6 +6,7 @@ import json
 import asyncio
 import logging
 from dotenv import load_dotenv
+from typing import Dict
 import google.generativeai as genai
 from google.generativeai import types
 from utils.prompts.work_category_prompt import get_work_category
@@ -24,7 +25,7 @@ model = genai.GenerativeModel(
     model_name = 'gemini-2.5-flash'
 )
 
-async def extract_work_category(prompt: str):
+async def extract_work_category(prompt: str)->Dict[str,str]:
     logger.info("Extracting work category from LLM...")
     try:
         response = await model.generate_content_async(
@@ -35,10 +36,13 @@ async def extract_work_category(prompt: str):
             )
         )
         logger.info("Gemini API call for work category successful.")
-        return response.parts[0] if response.parts[0] else response.parts
+        raw_text = response.parts[0].text
+        parsed = json.loads(raw_text) #convert to dict
+        return parsed
+
     except Exception as e:
         logger.error(f"Gemini API call for work category failed: {str(e)}")
-        return 
+        return {}
 
 if __name__ == "__main__":
     keywords = [

@@ -563,26 +563,25 @@ async def main():
             org_founded_year = company_details.get("founded_year", None)
             org_employee_count = company_details.get("estimated_num_employees", None)
             org_funding_stage = company_details.get("latest_funding_round", "")
-            org_funding_amount = company_details.get("latest_funding_amount", "")
-            org_growth_velocity = company_details.get("organization_headcount_twelve_month_growth") if company_details.get("organization_headcount_twelve_month_growth") else company_details.get("organization_headcount_six_month_growth")
             org_keywords = company_details.get("keywords", [])
             org_people = company_details.get("people", [])
-            org_phone = company_details.get("phone", "")
             org_linkedin = company_details.get("linkedin_url", "")
-            org_website = company_details.get("website_url", "")
             org_country = company_details.get("country", "")
 
             #Calculate total score
             scorer = ICPScorer(icp, org_name, org_founded_year, org_employee_count,
-                               org_funding_stage, org_funding_amount, org_growth_velocity,
-                               org_keywords, org_people, org_phone, org_linkedin, org_website,
+                               org_funding_stage, org_keywords, org_people, org_linkedin,
                                org_country)
             await scorer.log_scoring_start(org_name)
-            total_icp_score = await scorer.calculate_total_score()
-            total_icp_score = round(total_icp_score, 1)
+
+            #calulate_total_score returns a dict with task_level, specific_tasks and total_score
+            scoring_data = await scorer.calculate_total_score()
+            task_level = scoring_data.get("task_level", "")
+            specific_tasks = scoring_data.get("specific_tasks", {})
+            final_score = scoring_data.get("total_score") if scoring_data.get("total_score") else 0
 
             #Store scored companies
-            await store_icp_score(pool, org_name, company_id, total_icp_score)
+            await store_icp_score(pool, org_name, company_id, final_score, task_level, specific_tasks)
             logger.info("Done storing ICP scores")
 
     #==============6. EMAIL================

@@ -13,7 +13,8 @@ load_dotenv(verbose=True, override=True)
 #=======================================================================================
 
 #DB_URL = os.getenv("DATABASE_URL")
-DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
+#DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
+DB_URL = os.getenv("MOCK_DATABASE_URL")
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -34,7 +35,8 @@ async def fetch_companies()->List[Dict[str, Any]]:
         conn = await asyncpg.connect(dsn=DB_URL) 
 
         #Fetch companies
-        company_query = "SELECT * FROM companies"
+        #CHANGED
+        company_query = "SELECT * FROM mock_companies"
         results = await conn.fetch(company_query)
 
         #Fetch people for each company
@@ -59,8 +61,10 @@ async def fetch_companies()->List[Dict[str, Any]]:
 
         
 async def fetch_people_from_company(organization_id: str)->List[Dict[str, str]]:
+    logger.info(f"Fetching people from company...")
     conn = await asyncpg.connect(dsn=DB_URL)
-    people_query = "SELECT full_name, title, email FROM people WHERE organization_id = $1"
+    #CHANGED
+    people_query = "SELECT full_name, title, email, linkedin_url FROM mock_people WHERE organization_id = $1"
     people_results = await conn.fetch(people_query, organization_id)
     await conn.close()
     return [dict(record) for record in people_results]
@@ -469,7 +473,9 @@ async def fetch_keywords(pool):
 #Select all unscored companies
 async def company_is_unscored(pool)->List[Dict[str, int]]:
     logger.info("Fetching all unscored companies...")
-    query = "SELECT id FROM companies WHERE icp_score IS NULL"
+    
+    #CHANGED
+    query = "SELECT id FROM mock_companies WHERE icp_score IS NULL"
 
     try:
         async with pool.acquire() as conn:
@@ -481,17 +487,17 @@ async def company_is_unscored(pool)->List[Dict[str, int]]:
         return []
 
 #Store icp score
-async def store_icp_score(pool, company_name, company_id, icp_score):
+async def store_icp_score(pool, company_name, company_id, icp_score, level_of_work, specific_tasks):
     logger.info(f"Storing ICP score for {company_name}")
-    query = "UPDATE companies SET icp_score = $1 WHERE id = $2"
-
+    #CHANGED
+    query = "UPDATE mock_companies SET icp_score = $1, level_of_work = $2, specific_tasks_and_scores = $3 WHERE id = $4"
     try:
         async with pool.acquire() as conn:
-            await conn.execute(query, icp_score, company_id)
+            await conn.execute(query, icp_score, level_of_work, json.dumps(specific_tasks), company_id)
         logger.info(f"Done storing icp score for {company_name}")
         return
     except Exception as e:
-        logger.error(f"Failed to store icp score for {company_name}")
+        logger.error(f"Failed to store icp score for {company_name}: {str(e)}")
         return
 
 if __name__ == "__main__":
