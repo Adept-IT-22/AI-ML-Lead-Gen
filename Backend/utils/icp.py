@@ -2,10 +2,10 @@ from utils.locations import locations
 
 icp = {
     "age": [
-        ((0, 2), 100),
-        ((3, 4), 80),
-        ((5, 6), 60),
-        ((7, 8), 40),
+        ((0, 1), 100),
+        ((2, 2), 80),
+        ((3, 5), 60),
+        ((6, 8), 40),
         ((9, 10), 20),
     ],
     "employee_count": [
@@ -52,4 +52,15 @@ icp = {
         "north_america": locations.get("north american countries"),
         "europe": locations.get("european countries"),
     }
+}
+
+
+weights = {
+    "geography": 0.2,
+    "keywords": 0.2,
+    "age": 0.1,
+    "employee_count": 0.1,
+    "funding_stage": 0.1,
+    "contactability": 0.1,
+    "growth_velocity": 0.1,
 }
