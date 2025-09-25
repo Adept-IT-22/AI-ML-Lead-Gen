@@ -9,6 +9,7 @@ import { ButtonComponent } from "../../@shared/Components/button/button.componen
 import { CompaniesService } from '../../@shared/Services/companies.service';
 import { ICompany } from '../../Libs/interfaces/company.interface';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'
+import { NavbarComponent } from '../../@shared/Components/navbar/navbar.component';
 
 @Component({
   selector: 'app-home',

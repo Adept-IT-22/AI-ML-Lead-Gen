@@ -1,7 +1,98 @@
-<!--Data Feed-->
-    <div class="analytics-container">
-        <app-data-feed
-        [title]="'RECENT ACTIVITY'"
-        [data]="activity_feed"
-        ></app-data-feed>
+<!-- 🚀 Summary Metrics Bar -->
+  <div class="summary-bar">
+    <div class="metric-card">
+      <h3>Total Leads</h3>
+      <p>49</p>
     </div>
+    <div class="metric-card">
+      <h3>Conversion Rate</h3>
+      <p>12%</p>
+    </div>
+    <div class="metric-card">
+      <h3>Contacted</h3>
+      <p>10</p>
+    </div>
+    <div class="metric-card">
+      <h3>Open Rate</h3>
+      <p>35%</p>
+    </div>
+  </div>
+<div class="analytics-page grid grid-cols-2 gap-6">
+
+  <!-- 📊 Conversion Funnel -->
+  <div class="chart-card p-4 rounded-2xl shadow-md">
+    <h2 class="heading">Conversion Funnel</h2>
+    <canvas
+      baseChart
+      [data]="funnelData"
+      [options]="funnelOptions"
+      [type]="'bar'">
+    </canvas>
+  </div>
+
+  <!-- 🥧 Leads by Source -->
+  <div class="chart-card p-4 rounded-2xl shadow-md">
+    <h2 class="heading">Leads by Source</h2>
+    <canvas
+      baseChart
+      [data]="sourceData"
+      [options]="pieOptions"
+      [type]="'pie'">
+    </canvas>
+  </div>
+
+  <!-- 🥧 Leads by Industry -->
+  <div class="chart-card p-4 rounded-2xl shadow-md">
+    <h2 class="heading">Leads by Industry</h2>
+    <canvas
+      baseChart
+      [data]="industryData"
+      [options]="pieOptions"
+      [type]="'pie'">
+    </canvas>
+  </div>
+
+  <!-- 🥧 Contact Status -->
+  <div class="chart-card p-4 rounded-2xl shadow-md">
+    <h2 class="heading">Contact Status</h2>
+    <canvas
+      baseChart
+      [data]="contactData"
+      [options]="pieOptions"
+      [type]="'pie'">
+    </canvas>
+  </div>
+
+  <!-- 📈 Leads Over Time -->
+  <div class="chart-card p-4 rounded-2xl shadow-md col-span-2">
+    <h2 class="heading">Leads Over Time</h2>
+    <canvas
+      baseChart
+      [data]="leadsTrendData"
+      [options]="lineOptions"
+      [type]="'line'">
+    </canvas>
+  </div>
+
+  <!-- 📊 ICP Score Distribution -->
+  <div class="chart-card p-4 rounded-2xl shadow-md">
+    <h2 class="heading">ICP Score Distribution</h2>
+    <canvas
+      baseChart
+      [data]="scoreData"
+      [options]="barOptions"
+      [type]="'bar'">
+    </canvas>
+  </div>
+
+  <!-- 🔥 Engagement Heatmap -->
+  <div class="chart-card p-4 rounded-2xl shadow-md">
+    <h2 class="heading">Engagement</h2>
+    <canvas
+      baseChart
+      [data]="engagementData"
+      [options]="barOptions"
+      [type]="'bar'">
+    </canvas>
+  </div>
+</div>
