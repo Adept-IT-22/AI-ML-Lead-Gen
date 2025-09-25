@@ -1,5 +1,4 @@
-<!-- 🚀 Summary Metrics Bar -->
-  <div class="summary-bar">
+<div class="summary-bar">
     <div class="metric-card">
       <h3>Total Leads</h3>
       <p>49</p>
@@ -17,82 +16,42 @@
       <p>35%</p>
     </div>
   </div>
-<div class="analytics-page grid grid-cols-2 gap-6">
-
-  <!-- 📊 Conversion Funnel -->
-  <div class="chart-card p-4 rounded-2xl shadow-md">
-    <h2 class="heading">Conversion Funnel</h2>
-    <canvas
-      baseChart
-      [data]="funnelData"
-      [options]="funnelOptions"
-      [type]="'bar'">
-    </canvas>
+<div class="analytics-container grid grid-cols-1 md:grid-cols-2 gap-6 p-6 text-white">
+  <!-- 🚀 Summary Metrics Bar -->
+  
+  <!-- 🔹 Leads by Source (BAR) -->
+  <div class="chart-card bg-gray-900 p-4 rounded-2xl shadow">
+    <h2 class="text-lg font-semibold mb-3 text-blue-400">Leads by Source</h2>
+    <canvas baseChart [data]="sourceChartData" [options]="barOptions" [type]="'bar'"></canvas>
+    <p class="mt-3 text-sm text-gray-300">{{ sourceSummary }}</p>
   </div>
 
-  <!-- 🥧 Leads by Source -->
-  <div class="chart-card p-4 rounded-2xl shadow-md">
-    <h2 class="heading">Leads by Source</h2>
-    <canvas
-      baseChart
-      [data]="sourceData"
-      [options]="pieOptions"
-      [type]="'pie'">
-    </canvas>
+  <!-- 🔹 Leads by Status (PIE) -->
+  <div class="chart-card bg-gray-900 p-4 rounded-2xl shadow">
+    <h2 class="text-lg font-semibold mb-3 text-blue-400">Leads by Status</h2>
+    <canvas baseChart [data]="statusChartData" [options]="pieOptions" [type]="'pie'"></canvas>
+    <p class="mt-3 text-sm text-gray-300">{{ statusSummary }}</p>
   </div>
 
-  <!-- 🥧 Leads by Industry -->
-  <div class="chart-card p-4 rounded-2xl shadow-md">
-    <h2 class="heading">Leads by Industry</h2>
-    <canvas
-      baseChart
-      [data]="industryData"
-      [options]="pieOptions"
-      [type]="'pie'">
-    </canvas>
+  <!-- 🔹 ICP Score Distribution (PIE) -->
+  <div class="chart-card bg-gray-900 p-4 rounded-2xl shadow">
+    <h2 class="text-lg font-semibold mb-3 text-blue-400">ICP Score Distribution</h2>
+    <canvas baseChart [data]="icpChartData" [options]="pieOptions" [type]="'pie'"></canvas>
+    <p class="mt-3 text-sm text-gray-300">{{ icpSummary }}</p>
   </div>
 
-  <!-- 🥧 Contact Status -->
-  <div class="chart-card p-4 rounded-2xl shadow-md">
-    <h2 class="heading">Contact Status</h2>
-    <canvas
-      baseChart
-      [data]="contactData"
-      [options]="pieOptions"
-      [type]="'pie'">
-    </canvas>
+  <!-- 🔹 Leads Over Time (LINE) -->
+  <div class="chart-card bg-gray-900 p-4 rounded-2xl shadow col-span-1 md:col-span-2">
+    <h2 class="text-lg font-semibold mb-3 text-blue-400">Leads Over Time</h2>
+    <canvas baseChart [data]="timeChartData" [options]="lineOptions" [type]="'line'"></canvas>
+    <p class="mt-3 text-sm text-gray-300">{{ timeSummary }}</p>
   </div>
 
-  <!-- 📈 Leads Over Time -->
-  <div class="chart-card p-4 rounded-2xl shadow-md col-span-2">
-    <h2 class="heading">Leads Over Time</h2>
-    <canvas
-      baseChart
-      [data]="leadsTrendData"
-      [options]="lineOptions"
-      [type]="'line'">
-    </canvas>
+  <!-- 🔹 Conversion Rate Analysis (BAR) -->
+  <div class="chart-card bg-gray-900 p-4 rounded-2xl shadow col-span-1 md:col-span-2">
+    <h2 class="text-lg font-semibold mb-3 text-blue-400">Conversion Rate Analysis</h2>
+    <canvas baseChart [data]="conversionChartData" [options]="barOptions" [type]="'bar'"></canvas>
+    <p class="mt-3 text-sm text-gray-300">{{ conversionSummary }}</p>
   </div>
 
-  <!-- 📊 ICP Score Distribution -->
-  <div class="chart-card p-4 rounded-2xl shadow-md">
-    <h2 class="heading">ICP Score Distribution</h2>
-    <canvas
-      baseChart
-      [data]="scoreData"
-      [options]="barOptions"
-      [type]="'bar'">
-    </canvas>
-  </div>
-
-  <!-- 🔥 Engagement Heatmap -->
-  <div class="chart-card p-4 rounded-2xl shadow-md">
-    <h2 class="heading">Engagement</h2>
-    <canvas
-      baseChart
-      [data]="engagementData"
-      [options]="barOptions"
-      [type]="'bar'">
-    </canvas>
-  </div>
 </div>

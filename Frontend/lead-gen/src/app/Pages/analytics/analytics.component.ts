@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
-import { ChartData, ChartOptions } from 'chart.js';
+import { Component, OnInit } from '@angular/core';
+import { ChartOptions, ChartData } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
+import { CompaniesService } from '../../@shared/Services/companies.service'; // adjust path
+import { ICompany } from '../../Libs/interfaces/company.interface';
 
 @Component({
   standalone: true,
@@ -9,120 +11,155 @@ import { NgChartsModule } from 'ng2-charts';
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss']
 })
-export class AnalyticsComponent {
+export class AnalyticsComponent implements OnInit {
+  leadsData: ICompany[] = [];
 
-  // Common options for bar/line charts
-  private axisOptions: ChartOptions<'bar' | 'line'> = {
-    responsive: true,
-    plugins: { 
-      legend: { 
-        labels: { color: 'white' } // legend text color
-      } 
-    },
-    scales: { 
-      x: {
-        ticks: { color: 'white' }, // X axis labels
-        grid: { color: 'yellow' } // grid lines
-      },
-      y: {
-        beginAtZero: true,
-        ticks: { color: 'white' }, // Y axis labels
-        grid: { color: 'rgba(255,255,255,0.1)' }
-      }
-    }
-  };
+  // ✅ Chart Data
+  sourceChartData!: ChartData<'bar'>;
+  statusChartData!: ChartData<'pie'>;
+  icpChartData!: ChartData<'pie'>;
+  timeChartData!: ChartData<'line'>;
+  conversionChartData!: ChartData<'bar'>;
 
-  // 📊 Conversion Funnel
-  funnelData: ChartData<'bar'> = {
-    labels: ['Total Leads', 'MQLs', 'SQLs', 'Opportunities', 'Conversions'],
-    datasets: [
-      {
-        label: 'Funnel',
-        data: [49, 0, 0, 0, 0],
-        backgroundColor: ['#00FFFF', '#FFD700', '#00BFFF', '#32CD32', '#FF4500']
-      }
-    ]
-  };
-  funnelOptions: ChartOptions<'bar'> = this.axisOptions;
+  // ✅ Summaries
+  sourceSummary = '';
+  statusSummary = '';
+  icpSummary = '';
+  timeSummary = '';
+  conversionSummary = '';
 
-  // 🥧 Leads by Source
-  sourceData: ChartData<'pie'> = {
-    labels: ['Funding', 'Google News', 'Tech.eu', 'HackerNews'],
-    datasets: [
-      { 
-        data: [20, 10, 12, 7],
-        backgroundColor: ['#FFD700', '#00FFFF', '#32CD32', '#FF4500']
-      }
-    ]
-  };
-  pieOptions: ChartOptions<'pie'> = {
+  // ✅ Chart Options
+  barOptions: ChartOptions<'bar'> = {
     responsive: true,
     plugins: {
-      legend: { labels: { color: 'white' } } // white legend labels
+      legend: { labels: { color: 'white' } }
+    },
+    scales: {
+      x: { ticks: { color: 'yellow' }, grid: { color: 'rgba(233,31,31,0.1)' } },
+      y: { ticks: { color: 'yellow' }, grid: { color: 'rgba(255,255,255,0.1)' } }
     }
   };
 
-  // 🥧 Leads by Industry
-  industryData: ChartData<'pie'> = {
-    labels: ['IT Services', 'Education', 'Fintech', 'Defense', 'Commerce'],
-    datasets: [
-      { 
-        data: [15, 8, 12, 5, 9],
-        backgroundColor: ['#FF4500', '#FFD700', '#00FFFF', '#32CD32', '#9370DB']
-      }
-    ]
+  pieOptions: ChartOptions<'pie'> = {
+    responsive: true,
+    plugins: { legend: { labels: { color: 'white' } } }
   };
 
-  // 🥧 Contact Status
-  contactData: ChartData<'pie'> = {
-    labels: ['Contacted', 'Uncontacted', 'Opened'],
-    datasets: [
-      { 
-        data: [10, 30, 9],
-        backgroundColor: ['#32CD32', '#FFD700', '#00BFFF']
-      }
-    ]
+  lineOptions: ChartOptions<'line'> = {
+    responsive: true,
+    plugins: { legend: { labels: { color: 'white' } } },
+    scales: {
+      x: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+      y: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+    }
   };
 
-  // 📈 Leads Over Time
-  leadsTrendData: ChartData<'line'> = {
-    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-    datasets: [
-      { 
-        label: 'Leads Created',
-        data: [5, 12, 18, 14],
-        borderColor: '#00FFFF',
-        fill: true,
-        backgroundColor: 'rgba(0,255,255,0.2)'
-      }
-    ]
-  };
-  lineOptions: ChartOptions<'line'> = this.axisOptions;
+  constructor(private companiesService: CompaniesService) {}
 
-  // 📊 ICP Score Distribution
-  scoreData: ChartData<'bar'> = {
-    labels: ['0-40', '41-60', '61-80', '81-100'],
-    datasets: [
-      {
-        label: 'ICP Score',
-        data: [5, 15, 20, 9],
-        backgroundColor: '#aa29d1ff'
-      }
-    ]
-  };
-  barOptions: ChartOptions<'bar'> = this.axisOptions;
+  ngOnInit() {
+    this.loadCompanies();
+  }
 
-  // 🔥 Engagement Heatmap (simulated with bar chart per day)
-  engagementData: ChartData<'bar'> = {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-    datasets: [
-      {
-        label: 'Engagement',
-        data: [12, 9, 15, 7, 20],
-        backgroundColor: '#32CD32'
-      }
-    ]
-  };
-  engagementOptions: ChartOptions<'bar'> = this.axisOptions;
+  private loadCompanies() {
+    this.companiesService.fetch_companies().subscribe({
+      next: (data) => {
+        console.log("Companies fetched: ", data);
+        this.leadsData = data;
+        this.buildCharts();
+      },
+      error: (err) => console.error("Error fetching companies", err)
+    });
+  }
 
+  private buildCharts() {
+    // 🔹 Leads by Source → BAR
+    const sourceCounts: Record<string, number> = {};
+    this.leadsData.forEach(l => {
+      sourceCounts[l.company_data_source] = (sourceCounts[l.company_data_source] || 0) + 1;
+    });
+    this.sourceChartData = {
+      labels: Object.keys(sourceCounts),
+      datasets: [{
+        data: Object.values(sourceCounts),
+        backgroundColor: ['#ffcc00', '#33ccff', '#ff6666']
+      }]
+    };
+    this.sourceSummary = `Top source: ${this.getTopKey(sourceCounts)} (${Math.max(...Object.values(sourceCounts))} leads).`;
+
+    // 🔹 Leads by Status → PIE
+    const statusCounts: Record<string, number> = {};
+    this.leadsData.forEach(l => {
+      statusCounts[l.contacted_status] = (statusCounts[l.contacted_status] || 0) + 1;
+    });
+    this.statusChartData = {
+      labels: Object.keys(statusCounts),
+      datasets: [{
+        data: Object.values(statusCounts),
+        backgroundColor: ['#00cc66', '#ff9900', '#cc33ff']
+      }]
+    };
+    this.statusSummary = `Most leads are "${this.getTopKey(statusCounts)}" (${Math.max(...Object.values(statusCounts))}).`;
+
+    // 🔹 ICP Score Buckets → PIE
+    const icpBuckets = { '0-25': 0, '25-50': 0, '50-75': 0, '75-100': 0 };
+    this.leadsData.forEach(l => {
+      const score = parseFloat(l.icp_score as any);
+      if (score < 25) icpBuckets['0-25']++;
+      else if (score < 50) icpBuckets['25-50']++;
+      else if (score < 75) icpBuckets['50-75']++;
+      else icpBuckets['75-100']++;
+    });
+    this.icpChartData = {
+      labels: Object.keys(icpBuckets),
+      datasets: [{
+        data: Object.values(icpBuckets),
+        backgroundColor: ['#0099ff', '#33cc33', '#ffcc00', '#ff3333']
+      }]
+    };
+    this.icpSummary = `Most companies fall in the "${this.getTopKey(icpBuckets)}" ICP range.`;
+
+    // 🔹 Leads Over Time → LINE
+    const monthCounts: Record<string, number> = {};
+    this.leadsData.forEach(l => {
+      const date = new Date(l.created_at as any);
+      const month = date.toLocaleString('default', { month: 'short', year: 'numeric' });
+      monthCounts[month] = (monthCounts[month] || 0) + 1;
+    });
+    this.timeChartData = {
+      labels: Object.keys(monthCounts),
+      datasets: [{
+        data: Object.values(monthCounts),
+        borderColor: '#00ccff',
+        backgroundColor: 'rgba(0,204,255,0.3)',
+        fill: true
+      }]
+    };
+    this.timeSummary = `Peak leads were in ${this.getTopKey(monthCounts)} (${Math.max(...Object.values(monthCounts))} leads).`;
+
+    // 🔹 Conversion Rate Analysis → BAR
+    const totalLeads = this.leadsData.length;
+    const mqls = this.leadsData.filter(l => l.status === 'MQL').length;
+    const sqls = this.leadsData.filter(l => l.status === 'SQL').length;
+    const emailsSent = 22; // TODO: replace with actual email count from service
+    const opened = 0;      // TODO: replace with real opened count
+
+    this.conversionChartData = {
+      labels: ['Total Leads', 'MQLs', 'SQLs', 'Emails Sent', 'Opened'],
+      datasets: [{
+        data: [totalLeads, mqls, sqls, emailsSent, opened],
+        backgroundColor: ['#00ccff', '#ffcc00', '#33cc33', '#ff9900', '#ff3333']
+      }]
+    };
+
+    const mqlRate = totalLeads ? ((mqls / totalLeads) * 100).toFixed(1) : '0';
+    const sqlRate = mqls ? ((sqls / mqls) * 100).toFixed(1) : '0';
+    const openRate = emailsSent ? ((opened / emailsSent) * 100).toFixed(1) : '0';
+
+    this.conversionSummary =
+      `MQL Conversion: ${mqlRate}% | SQL Conversion: ${sqlRate}% | Email Open Rate: ${openRate}%`;
+  }
+
+  private getTopKey(obj: Record<string, number>): string {
+    return Object.entries(obj).reduce((a, b) => (a[1] > b[1] ? a : b))[0];
+  }
 }
