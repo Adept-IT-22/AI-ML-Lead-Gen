@@ -112,10 +112,15 @@ _Insert database used here_
 ### Scoring Logic
 + Scoring will allow us to categorize leads based on how closely they match our ICP. Below is the criteria to be used:
 + Scoring is done on a 0–100 scale with 0 being terrible and 100 being perfect.
-+ The scores are weighted by category:
-    + Tier 1 = 50%
-    + Tier 2 = 40%
-    + Tier 3 = 10%
++ Keywords are specifically scored based on their alignment to the tasks
+we currently offer. Lower level tasks e.g. data labeling, curation, verification and higher level tasks e.g. knowledge management, security and compliance etc, are both ranked. The result is anlayzed based on:
+
+|                              | High Higher-Level Score                                      | Low Higher-Level Score                                                                 |
+|------------------------------|-------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| **High Lower-Level Score**    | Strategic Partner: An ideal customer today that is also a good fit for future products. | Perfect Fit: An immediate, high-value lead that aligns directly with your current offerings. |
+| **Low Lower-Level Score**     | Market Watch: A company you should monitor. They are building complex systems, but not with your foundational approach. | Not a Fit: This company is likely too early-stage or focused on problems outside of your expertise. |
+
++ Below is the scoring criteria:
 
     ### Tier 1 Criteria
 
@@ -125,7 +130,7 @@ _Insert database used here_
 
     Elsewhere → 0.
 
-    **2. Keywords Match (20%)**
+    **2. Keywords Match (30%)**
 
     Strong match → 100 
 
@@ -151,11 +156,11 @@ _Insert database used here_
 
     5 employees → 100, 10 → 80, 20 → 60, 40 → 40, 80 → 20, 100 → 10.
 
-    **5. Funding Stage (15%)**
+    **5. Funding Stage (10%)**
 
     This is binary. If the stage is there, 100. If not, 50.
 
-    **6. Contactability (15%)**
+    **6. Contactability (10%)**
 
     Email - 100
 
@@ -163,7 +168,7 @@ _Insert database used here_
 
     **Final Score**
 
-    Score = 0.2(Age) + 0.2(Employees) + 0.2(Funding Stage) + 0.1(Keywords) + 0.05(Contactability) + 0.05(Geography)
+    Score = 0.15(Age) + 0.15(Employees) + 0.1(Funding Stage) + 0.3(Keywords) + 0.1(Contactability) + 0.2(Geography)
         
 ### Commit Message Format
 

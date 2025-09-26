@@ -5,6 +5,7 @@ from typing import Dict
 from datetime import date
 from utils.icp import icp, weights
 from utils.prompts.work_category_prompt import get_work_category
+from utils.ai_keywords import marking_scheme_keywords
 from scoring_module.ai_extraction import extract_work_category
 
 logger = logging.getLogger()
@@ -84,20 +85,50 @@ class ICPScorer:
         return 50
 
     async def score_keywords(self, keywords: list)->dict:
+        #Here we will select keywords and feed them to an LLM to be scored.
+        #We'll then take results for lower level work, divide them against
+        #the total score for lower level work and multiply by 100
+
         if not keywords:
             return {"final_score": 0}
+        
+        #Get total score for lower level work
+        lower_level_scores = []
+        lower_level_work = marking_scheme_keywords.get("lower")
+        for lower_categories in lower_level_work.values():
+            for lower_scores in lower_categories.values():
+                lower_level_scores.append(lower_scores)
+        total_lower_level_scores = sum(lower_level_scores)
 
+        #Get total score for higher level work
+        higher_level_scores = []
+        higher_level_work = marking_scheme_keywords.get("higher")
+        for higher_categories in higher_level_work.values():
+            for higher_scores in higher_categories.values():
+                higher_level_scores.append(higher_scores)
+        total_higher_level_scores = sum(higher_level_scores)
+
+        #Feed the LLM the keywords and get results
         try:
-            prompt = get_work_category(keywords)
+            prompt = get_work_category(self.name, keywords, marking_scheme_keywords)
             work_category_data = dict(await extract_work_category(prompt))
-            specific_tasks = work_category_data.get("specific_tasks", {})
-            scores = list(specific_tasks.values())
-            final_score = statistics.mean(scores) * 100
+            total_score = work_category_data.get("keyword_analysis", {}).get("lower_level_tasks", {}).get("total_score", None)
+            final_score = (total_score/total_lower_level_scores) * 100
             work_category_data["final_score"] = round(final_score, 1)
+
+            #Get level of work that company does
+            level_of_work_score = total_higher_level_scores / total_lower_level_scores
+            if level_of_work_score <= 1:
+                level_of_work = "lower"
+            else:
+                level_of_work = "higher"
+
+            work_category_data["task_level"] = level_of_work
+
             return work_category_data
 
         except Exception as e:
-            logger.error(f"Failed to extract work category from LLM: {str(e)}")
+            logger.error(f"❌ Failed to extract work category from LLM: {str(e)}")
             return {"final_score": 0}
 
     async def score_contactability(self, people: list, linkedin: str):
@@ -128,7 +159,7 @@ class ICPScorer:
         #growth_velocity_score = await self.score_growth_velocity(self.growth_velocity)
         keywords_score = await self.score_keywords(self.keywords)
         task_level = keywords_score.get("task_level") if keywords_score.get("task_level") else None
-        specific_tasks = keywords_score.get("specific_tasks") if keywords_score.get("specific_tasks") else None
+        specific_tasks = keywords_score.get("keyword_analysis", {}).get("lower_level_tasks", {}).get("inferred_categories", []) 
         final_keywords_score = keywords_score.get("final_score") if keywords_score.get("final_score") else 0
         contactability_score = await self.score_contactability(self.people, self.linkedin)
         geography_score = await self.score_geography(self.country)
@@ -143,7 +174,16 @@ class ICPScorer:
         + (geography_score * self.weights["geography"])
         )
 
+        logger.info(f"{keywords_score}, {final_keywords_score}")
         logger.info(f"{self.name}'s total score is: {total_score}")
+        logger.info(f"""
+            task_level: {task_level},
+            specific_tasks: {specific_tasks},
+            total_score: {round(total_score, 1)}
+            """
+            )
+            
+        
         return {
             "task_level": task_level,
             "specific_tasks": specific_tasks,
@@ -155,14 +195,90 @@ if __name__ == "__main__":
     async def main():
         name = 'adept'
         founded_year = 2023
-        employee_count = 10
+        employee_count = 23
         funding_stage = 'seed'
-        keywords = ['ai', 'llm']
-        people = [{'email': 'm10mathenge@gmail.com'}]
+        people = [
+      {
+        "email": "maor@getleo.ai",
+        "full_name": "Maor Farid",
+        "title": "Co-Founder & CEO"
+      }
+    ]
+        keywords = [
+      "ai",
+      "generative ai",
+      "engineering",
+      "design",
+      "cad",
+      "cad software",
+      "technology, information & internet",
+      "generative design for mechanics",
+      "automated design review",
+      "ai for engineering standards compliance",
+      "ai-driven component sourcing",
+      "digital engineering",
+      "computer software",
+      "engineering knowledge management",
+      "engineering services",
+      "natural language processing",
+      "design automation",
+      "mechanical engineering",
+      "engineering documentation",
+      "component retrieval",
+      "engineering calculations",
+      "product design",
+      "legacy data harnessing in engineering",
+      "product development",
+      "machine learning",
+      "mechanical design ideation ai",
+      "product design software",
+      "multimodal input processing",
+      "automated calculations",
+      "product lifecycle management",
+      "ai for product development",
+      "engineering knowledge base",
+      "engineering knowledge centralization",
+      "automated design suggestions",
+      "design brainstorming",
+      "large mechanical model",
+      "engineering data integration",
+      "design decision support",
+      "product design optimization ai",
+      "engineering collaboration tools",
+      "design concept generation",
+      "cad plugin",
+      "mechanical engineering assistant",
+      "product specifications",
+      "part search engine",
+      "engineering decision support",
+      "industrial design",
+      "component search",
+      "multi-modal engineering ai",
+      "ai-powered engineering design",
+      "cad integration",
+      "ai in cad",
+      "product data management",
+      "digital twin integration",
+      "legacy data utilization",
+      "ai engineering assistant",
+      "structural analysis",
+      "context-aware engineering answers",
+      "ai for complex structural analysis",
+      "multimodal inputs",
+      "real-time answers",
+      "ai for early-stage development",
+      "b2b",
+      "services",
+      "enterprise software",
+      "enterprises",
+      "information technology & services",
+      "artificial intelligence",
+      "mechanical or industrial engineering"
+    ]
         phone = '0705548993'
         linkedin = 'linkedin.com/me'
         website = 'www.adept-techno.com'
-        country = 'denmark'
+        country = 'United States'
         scorer = ICPScorer(icp, name, founded_year, employee_count, 
                            funding_stage, keywords, people, phone, 
                            linkedin, website, country)

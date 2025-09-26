@@ -34,9 +34,9 @@ icp = {
 
 weights = {
     "geography": 0.2,
-    "keywords": 0.2,
+    "keywords": 0.3,
     "age": 0.15,
     "employee_count": 0.15,
-    "funding_stage": 0.15,
-    "contactability": 0.15,
+    "funding_stage": 0.1,
+    "contactability": 0.1
 }

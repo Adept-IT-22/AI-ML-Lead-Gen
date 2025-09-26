@@ -10,6 +10,7 @@ from typing import Dict
 import google.generativeai as genai
 from google.generativeai import types
 from utils.prompts.work_category_prompt import get_work_category
+from utils.ai_keywords import marking_scheme_keywords
 
 #Configure logging 
 logger = logging.getLogger()
@@ -25,24 +26,54 @@ model = genai.GenerativeModel(
     model_name = 'gemini-2.5-flash'
 )
 
-async def extract_work_category(prompt: str)->Dict[str,str]:
-    logger.info("Extracting work category from LLM...")
-    try:
-        response = await model.generate_content_async(
-            contents=prompt,
-            generation_config=types.GenerationConfig(
-                response_mime_type="application/json",
-                temperature=0,
-            )
-        )
-        logger.info("Gemini API call for work category successful.")
-        raw_text = response.parts[0].text
-        parsed = json.loads(raw_text) #convert to dict
-        return parsed
+#Rate limiting settings (1 request/6 seconds i.e. 10/minute)
+REQUEST_INTERVAL = 6
+last_call = 0
+semaphore = asyncio.Semaphore(1) 
 
-    except Exception as e:
-        logger.error(f"Gemini API call for work category failed: {str(e)}")
-        return {}
+async def extract_work_category(prompt: str)->Dict[str,str]:
+    global last_call
+
+    logger.info("Extracting work category from LLM...")
+    async with semaphore:
+        now = asyncio.get_running_loop().time()
+        elapsed = now - last_call
+        if elapsed < REQUEST_INTERVAL:
+            await asyncio.sleep(REQUEST_INTERVAL - elapsed)
+        last_call = asyncio.get_running_loop().time()
+
+        try:
+            response = await model.generate_content_async(
+                contents=prompt,
+                generation_config=types.GenerationConfig(
+                    response_mime_type="application/json",
+                    temperature=0,
+                )
+            )
+            logger.info("Gemini API call for work category successful.")
+            raw_text = response.parts[0].text
+            parsed = json.loads(raw_text) #convert to dict
+            return parsed
+
+        except Exception as e:
+            #Handle rate limiting errors (429)
+            err = str(e)
+            if '429' in err and 'retry_delay' in err:
+                delay = 60
+                try:
+                    import re 
+                    match = re.search(r"retry in ([0-9.]+)s", err)
+                    if match:
+                        delay = float(match.group(1))
+                except:
+                    pass
+                logger.warning(f"Rate limit hit. Sleeping for {delay:.1f} seconds.")
+                await asyncio.sleep(delay)
+                return await extract_work_category(prompt)
+
+            logger.error(f"Gemini API call for work category failed: {str(e)}")
+            return {}
+
 
 if __name__ == "__main__":
     keywords = [
@@ -150,8 +181,8 @@ if __name__ == "__main__":
     "information technology & services",
     "medical"
     ]
-    prompt = get_work_category(keywords)
-    prompt = prompt.format(keywords=json.dumps(keywords, indent=2))
+    name = "Adept"
+    prompt = get_work_category(name, keywords, marking_scheme_keywords)
 
     async def main():
         result = await extract_work_category(prompt)

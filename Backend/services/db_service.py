@@ -61,11 +61,12 @@ async def fetch_companies()->List[Dict[str, Any]]:
 
         
 async def fetch_people_from_company(organization_id: str)->List[Dict[str, str]]:
-    logger.info(f"Fetching people from company...")
+    logger.info(f"Fetching people from org id {organization_id}...")
     conn = await asyncpg.connect(dsn=DB_URL)
     #CHANGED
     people_query = "SELECT full_name, title, email, linkedin_url FROM mock_people WHERE organization_id = $1"
     people_results = await conn.fetch(people_query, organization_id)
+    logger.info(f"Done fetching people from org id {organization_id}")
     await conn.close()
     return [dict(record) for record in people_results]
 
@@ -481,6 +482,7 @@ async def company_is_unscored(pool)->List[Dict[str, int]]:
         async with pool.acquire() as conn:
             results = await conn.fetch(query)
             results_list = [dict(result) for result in results]
+            logger.info("Done fetching unscored companies")
             return results_list
     except Exception as e:
         logger.error(f"Failed to fetch unscored companies: {str(e)}")
