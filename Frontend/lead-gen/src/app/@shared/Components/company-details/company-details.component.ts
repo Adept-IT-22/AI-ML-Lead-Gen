@@ -67,7 +67,7 @@ export class CompanyDetailsComponent implements OnInit {
                 entries: [
                   ...(details.people?.map((p: any) => ({
                   key: p.title,
-                  value: `${p.full_name} (${p.email})`
+                  value: `${p.full_name} | ${p.email} | ${p.linkedin_url}`
                 })) || []), 
                   {key: 'Company Phone', value: details.phone},
                   {key: 'Contacted Status', value: details.contacted_status}

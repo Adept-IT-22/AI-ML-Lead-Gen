@@ -112,20 +112,25 @@ _Insert database used here_
 ### Scoring Logic
 + Scoring will allow us to categorize leads based on how closely they match our ICP. Below is the criteria to be used:
 + Scoring is done on a 0–100 scale with 0 being terrible and 100 being perfect.
-+ The scores are weighted by category:
-    + Tier 1 = 50%
-    + Tier 2 = 40%
-    + Tier 3 = 10%
++ Keywords are specifically scored based on their alignment to the tasks
+we currently offer. Lower level tasks e.g. data labeling, curation, verification and higher level tasks e.g. knowledge management, security and compliance etc, are both ranked. The result is anlayzed based on:
 
-    ### Tier 1 Criteria (50% Weight)
+|                              | High Higher-Level Score                                      | Low Higher-Level Score                                                                 |
+|------------------------------|-------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| **High Lower-Level Score**    | Strategic Partner: An ideal customer today that is also a good fit for future products. | Perfect Fit: An immediate, high-value lead that aligns directly with your current offerings. |
+| **Low Lower-Level Score**     | Market Watch: A company you should monitor. They are building complex systems, but not with your foundational approach. | Not a Fit: This company is likely too early-stage or focused on problems outside of your expertise. |
 
-    **1. Geography (25%)**
++ Below is the scoring criteria:
+
+    ### Tier 1 Criteria
+
+    **1. Geography (20%)**
 
     Europe / North America → 100
 
     Elsewhere → 0.
 
-    **2. Keywords Match (25%)**
+    **2. Keywords Match (30%)**
 
     Strong match → 100 
 
@@ -133,9 +138,9 @@ _Insert database used here_
 
     Weak match → 20 
 
-    ### Tier 2 Criteria (40% Weight)
+    ### Tier 2 Criteria
 
-    **3. Age (10%)**
+    **3. Age (15%)**
 
    Ideal: founded ≤ 1 year ago → 100 points
 
@@ -143,25 +148,17 @@ _Insert database used here_
 
     e.g. 1 year → 100, 2 years → 80, 5 years → 60, 8 years → 40, 10 years → 20
 
-    **4. Employee Count (10%)**
+    **4. Employee Count (15%)**
 
-    Ideal: ≤ 25 employees → 100 points
+    Ideal: ≤ 5 employees → 100 points
 
-    Scale down to 0 at >200
+    Scale down to 0 at >100
 
-    25 employees → 100, 50 → 80, 75 → 60, 100 → 40, 150 → 20, 200 → 10.
+    5 employees → 100, 10 → 80, 20 → 60, 40 → 40, 80 → 20, 100 → 10.
 
     **5. Funding Stage (10%)**
 
-    Pre-seed/Seed → 100
-
-    Series A → 80
-
-    Series B → 60
-
-    Series C → 40
-
-    No funding data → 50
+    This is binary. If the stage is there, 100. If not, 50.
 
     **6. Contactability (10%)**
 
@@ -169,43 +166,10 @@ _Insert database used here_
 
     Linkedin - 80
 
-    ### Tier 3 Criteria (10% Weight)
-
-    **7. Growth Velocity (10%)**
-
-    Use organization_headcount_twelve_month_growth (or 6m if 12m missing).
-
-    50% growth → 100
-
-    ~0% growth → 50
-
-    Negative growth → 0.
-
     **Final Score**
 
-    Score = 0.2(Age) + 0.2(Employees) + 0.2(Funding Stage) + 0.1(Growth) + 0.1(Keywords) + 0.05(Contactability) + 0.05(Geography)
+    Score = 0.15(Age) + 0.15(Employees) + 0.1(Funding Stage) + 0.3(Keywords) + 0.1(Contactability) + 0.2(Geography)
         
-    **Example with sample company ("Leo AI")**
-
-    Age = 2025 – 2023 = 2 → 100
-
-    Employees = 23 → just above cutoff, ~90
-
-    Funding Stage = Seed → 90
-
-    Funding Amount = $9.7M (in sweet spot) → 100
-
-    Growth (12m = 0.28 → 28%) → ~70
-
-    Keywords = strong AI/ML match → 100
-
-    Contactability (email + LinkedIn + site) → 100
-
-    Geography = US → 100
-
-    Score = 20 + 18 + 18 + 10 + 7 + 10 + 5 + 5 = 93 ✅ (Tier A lead)
-
-
 ### Commit Message Format
 
 Commit messages should have the following format:
