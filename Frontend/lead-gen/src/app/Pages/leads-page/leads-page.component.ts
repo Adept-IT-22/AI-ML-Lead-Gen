@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CompaniesService } from '../../@shared/Services/companies.service';
 import { ICompany } from '../../Libs/interfaces/company.interface';
 import { LeadsTableComponent } from '../../@shared/Components/leads/leads.component';
+import { NavbarComponent } from '../../@shared/Components/navbar/navbar.component';
 
 @Component({
   standalone: true,

@@ -1,9 +1,22 @@
-<div class="events-grid">
-  <div class="event-card" *ngFor="let event of events">
-    <p class="event-summary">{{ event.event_summary }}</p>
-    <a [href]="event.link" target="_blank" rel="noopener noreferrer">
-      View Event →
-    </a>
-    <span class="event-source">{{ event.source }}</span>
+<div class="events-component">
+  <div class="event-filters">
+    <ng-container *ngFor="let filter of filters">
+      <app-filter 
+        [title]="filter.optionType" 
+        [options]="filter.options" 
+        [filterKey]="filter.key"
+        (filterChanged)="onFilterChange($event)">
+      </app-filter>
+    </ng-container>
+  </div>
+
+  <div class="events-grid">
+    <div class="event-card" *ngFor="let event of filteredEvents">
+      <p class="event-summary">{{ event.event_summary }}</p>
+      <a [href]="event.link" target="_blank" rel="noopener noreferrer">
+        View Event →
+      </a>
+      <span class="event-source">{{ event.source }}</span>
+    </div>
   </div>
 </div>

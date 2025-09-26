@@ -1,0 +1,55 @@
+.analytics-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  padding: 20px;
+  background: #0d1117; // dark background
+  color: white;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; // stack on small screens
+  }
+}
+
+.chart-card {
+  background: #161b22; // slightly lighter dark for contrast
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  h2 {
+    font-size: var(--font-size-header);
+    font-weight: var(--font-weight-header);
+    margin-bottom: 12px;
+    color: var(--color-yellow);
+}
+
+  canvas {
+    width: 100% !important;
+    height: 300px !important; // fixed height for balance
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* Optional: spacing for large charts */
+.chart-card.full-width {
+  grid-column: span 2;
+
+  @media (max-width: 768px) {
+    grid-column: span 1;
+  }
+}
+
+.summary-bar {
+    display: flex;
+  margin-top: 4px;
+  font-size: var(--font-size-header);
+  color: var(--color-green);
+  justify-content: space-evenly;
+  color: var(--color-yellow);
+}
