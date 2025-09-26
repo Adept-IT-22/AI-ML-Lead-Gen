@@ -85,8 +85,8 @@ if __name__ == "__main__":
     async def main():
         response = await send_email(
             data_source='funding',
-            email_to = 'antony.ngatia@adept-techno.com',
-            first_name = 'Antony',
+            email_to = 'gloria.nyambura@adept-techno.com',
+            first_name = 'Gloria',
             company_name='Adept',
             extra_info = "series A"
         )
