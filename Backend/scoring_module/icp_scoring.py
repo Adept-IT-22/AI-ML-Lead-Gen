@@ -7,6 +7,7 @@ from utils.icp import icp, weights
 from utils.prompts.work_category_prompt import get_work_category
 from utils.ai_keywords import marking_scheme_keywords
 from scoring_module.ai_extraction import extract_work_category
+from scoring_module.keyword_scoring.keyword_scoring import JaccardKeywordScorer
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -85,51 +86,8 @@ class ICPScorer:
         return 50
 
     async def score_keywords(self, keywords: list)->dict:
-        #Here we will select keywords and feed them to an LLM to be scored.
-        #We'll then take results for lower level work, divide them against
-        #the total score for lower level work and multiply by 100
-
-        if not keywords:
-            return {"final_score": 0}
-        
-        #Get total score for lower level work
-        lower_level_scores = []
-        lower_level_work = marking_scheme_keywords.get("lower")
-        for lower_categories in lower_level_work.values():
-            for lower_scores in lower_categories.values():
-                lower_level_scores.append(lower_scores)
-        total_lower_level_scores = sum(lower_level_scores)
-
-        #Get total score for higher level work
-        higher_level_scores = []
-        higher_level_work = marking_scheme_keywords.get("higher")
-        for higher_categories in higher_level_work.values():
-            for higher_scores in higher_categories.values():
-                higher_level_scores.append(higher_scores)
-        total_higher_level_scores = sum(higher_level_scores)
-
-        #Feed the LLM the keywords and get results
-        try:
-            prompt = get_work_category(self.name, keywords, marking_scheme_keywords)
-            work_category_data = dict(await extract_work_category(prompt))
-            total_score = work_category_data.get("keyword_analysis", {}).get("lower_level_tasks", {}).get("total_score", None)
-            final_score = (total_score/total_lower_level_scores) * 100
-            work_category_data["final_score"] = round(final_score, 1)
-
-            #Get level of work that company does
-            level_of_work_score = total_higher_level_scores / total_lower_level_scores
-            if level_of_work_score <= 1:
-                level_of_work = "lower"
-            else:
-                level_of_work = "higher"
-
-            work_category_data["task_level"] = level_of_work
-
-            return work_category_data
-
-        except Exception as e:
-            logger.error(f"❌ Failed to extract work category from LLM: {str(e)}")
-            return {"final_score": 0}
+        jaccard_scorer = JaccardKeywordScorer(marking_scheme_keywords)
+        return await jaccard_scorer.score_company(keywords)
 
     async def score_contactability(self, people: list, linkedin: str):
         if not people and not linkedin:
@@ -157,10 +115,14 @@ class ICPScorer:
         employee_count_score = await self.score_employee_count(self.employee_count)
         funding_stage_score = await self.score_funding_stage(self.funding_stage)
         #growth_velocity_score = await self.score_growth_velocity(self.growth_velocity)
+
+        #This group is returned by the keyboard score
         keywords_score = await self.score_keywords(self.keywords)
-        task_level = keywords_score.get("task_level") if keywords_score.get("task_level") else None
-        specific_tasks = keywords_score.get("keyword_analysis", {}).get("lower_level_tasks", {}).get("inferred_categories", []) 
+        category_breakdown = keywords_score.get("category_breakdown") if keywords_score.get("category_breakdown") else None
+        top_matches = keywords_score.get("top_matches") if keywords_score.get("top_matches") else None
+        interpretation = keywords_score.get("interpretation") if keywords_score.get("interpretation") else None
         final_keywords_score = keywords_score.get("final_score") if keywords_score.get("final_score") else 0
+
         contactability_score = await self.score_contactability(self.people, self.linkedin)
         geography_score = await self.score_geography(self.country)
 
@@ -177,17 +139,19 @@ class ICPScorer:
         logger.info(f"{keywords_score}, {final_keywords_score}")
         logger.info(f"{self.name}'s total score is: {total_score}")
         logger.info(f"""
-            task_level: {task_level},
-            specific_tasks: {specific_tasks},
-            total_score: {round(total_score, 1)}
+            category_breakdown: {category_breakdown},\n
+            top_matches: {top_matches},\n
+            interpretation: {interpretation},\n
+            total_score: {total_score}\n
             """
             )
             
         
         return {
-            "task_level": task_level,
-            "specific_tasks": specific_tasks,
-            "total_score": round(total_score, 1)
+            "category_breakdown": category_breakdown,
+            "top_matches": top_matches,
+            "interpretation": interpretation,
+            "total_score": total_score
         }
                 
 
