@@ -25,22 +25,37 @@ email_headers = {
 }
 async def send_email(
         data_source: str,
+        latest_funding_round: str,
         email_to: str,
         first_name: str,
         company_name: str,
-        extra_info: str, #Funding info, hiring area or event name
+        extra_info: str = None, #Funding info, hiring area or event name
         email_from = EMAIL_FROM
 ):
     sendgrid_client = SendGridAPIClient(SENDGRID_API_KEY)
 
     if data_source == 'funding':
-        funding_data = email_prompts.get('funding')
-        subject = funding_data.get('subject')
-        content = funding_data.get('content').format(
-            first_name = first_name.title(),
-            company_name = company_name.title(),
-            funding_round = extra_info.title(),
-        )
+        if latest_funding_round.lower() == 'seed':
+            funding_data = email_prompts.get('funding').get('seed')
+            subject = funding_data.get('subject')
+            content = funding_data.get('content').format(
+                first_name = first_name.title(),
+            )
+        elif latest_funding_round.lower() == 'series a' or latest_funding_round.lower() == 'series b':
+            funding_data = email_prompts.get('funding').get('series')
+            subject = funding_data.get('subject')
+            content = funding_data.get('content').format(
+                first_name = first_name.title(),
+            )
+        else:
+            funding_data = email_prompts.get('funding').get("generic")
+            subject = funding_data.get('subject')
+            content = funding_data.get('content').format(
+                first_name = first_name.title(),
+                company_name = company_name.title(),
+                funding_round = extra_info.title()
+            )
+
     elif data_source == 'hiring':
         hiring_data = email_prompts.get('hiring')
         subject = hiring_data.get('subject')
@@ -85,10 +100,10 @@ if __name__ == "__main__":
     async def main():
         response = await send_email(
             data_source='funding',
-            email_to = 'gloria.nyambura@adept-techno.com',
-            first_name = 'Gloria',
+            latest_funding_round = "seed",
+            email_to = 'm10mathenge@gmail.com',
+            first_name = 'Mark',
             company_name='Adept',
-            extra_info = "series A"
         )
         print(response.status_code)
         print(response.body)
