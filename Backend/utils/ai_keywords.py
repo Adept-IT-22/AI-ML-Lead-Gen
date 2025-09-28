@@ -9,7 +9,13 @@ marking_scheme_keywords = {
                 "object detection", "image annotation", "video annotation",
                 "text classification", "sentiment analysis labeling",
                 "lidar data annotation", "audio transcription and labeling",
-                "medical record categorization", "medical image annotation"
+                "medical record categorization", "medical image annotation",
+                "speech-to-text labeling", "bounding box annotation",
+                "polygon annotation", "keypoint annotation", "named entity recognition",
+                "part-of-speech tagging", "OCR annotation", "document labeling",
+                "time series annotation", "sensor data labeling",
+                "crowdsourced labeling", "annotation workforce",
+                "quality assurance in annotation", "training dataset preparation"
             ],
             "score": 100
         },
@@ -20,7 +26,13 @@ marking_scheme_keywords = {
                 "regulatory compliance checks", "ai model validation",
                 "documentation analysis", "medical record review software",
                 "regulatory audit readiness", "regulatory audit trail automation",
-                "automated risk assessment for ai", "ai-driven risk analysis"
+                "automated risk assessment for ai", "ai-driven risk analysis",
+                "data deduplication", "data consistency checks",
+                "schema validation", "data quality frameworks",
+                "benchmark validation", "data reconciliation",
+                "continuous monitoring", "real-time validation",
+                "bias detection", "fairness validation",
+                "validation dashboards"
             ],
             "score": 95
         },
@@ -30,7 +42,13 @@ marking_scheme_keywords = {
                 "knowledge base automation", "engineering knowledge management",
                 "engineering knowledge centralization", "ai knowledge base",
                 "knowledge hydration", "data curation", "case load management",
-                "client data management", "knowledge discovery"
+                "client data management", "knowledge discovery",
+                "metadata management", "master data management",
+                "reference data", "data stewardship", "data catalog",
+                "data versioning", "dataset lineage", "knowledge graphs",
+                "ontology management", "taxonomy creation",
+                "centralized repositories", "data lifecycle management",
+                "document management systems"
             ],
             "score": 90
         },
@@ -42,7 +60,12 @@ marking_scheme_keywords = {
                 "multimodal inputs", "contextual ai", "medical data processing",
                 "medical data summaries", "structured data assets",
                 "legacy data utilization", "data pipelines",
-                "scalable data platforms", "data assessment"
+                "scalable data platforms", "data assessment",
+                "ETL pipelines", "stream processing", "batch processing",
+                "feature engineering", "data normalization",
+                "distributed data processing", "cloud data lakes",
+                "warehouse integration", "event-driven data",
+                "log data processing", "synthetic data generation"
             ],
             "score": 80
         },
@@ -54,7 +77,11 @@ marking_scheme_keywords = {
                 "speaker diarization", "automated report generation",
                 "meeting notes", "case summary generation", "case timeline creation",
                 "medical record timeline", "automated compliance reporting",
-                "transcription"
+                "transcription", "call transcription", "court transcription",
+                "legal deposition transcription", "podcast transcription",
+                "media subtitling", "captioning", "speech analytics",
+                "conversation intelligence", "call center transcription",
+                "AI note-taking", "customer call summaries"
             ],
             "score": 75
         },
@@ -67,7 +94,11 @@ marking_scheme_keywords = {
                 "support automation", "ai automation", "customer support automation",
                 "automated data entry", "automated video editing",
                 "automated script and video production", "automated property prospectus",
-                "ai backoffice", "compliance automation"
+                "ai backoffice", "compliance automation",
+                "robotic process automation", "RPA", "low-code automation",
+                "no-code workflows", "document automation",
+                "invoice processing", "contract automation",
+                "claims processing", "digital workforce orchestration"
             ],
             "score": 70
         }
@@ -85,7 +116,11 @@ marking_scheme_keywords = {
                 "ai sharding", "ai hybrid consensus", "ai for cross-chain bridges",
                 "ai models for dapps", "ai model tuning", "ai model training",
                 "explainable ai", "generative ai for design",
-                "digital twin simulation", "reinforcement learning"
+                "digital twin simulation", "reinforcement learning",
+                "robotic arms", "autonomous drones", "self-driving vehicles",
+                "humanoid robotics", "cobots", "smart manufacturing",
+                "industrial automation", "robot motion planning",
+                "robot learning from demonstration", "swarm robotics"
             ],
             "score": 25
         },
@@ -103,7 +138,12 @@ marking_scheme_keywords = {
                 "ai for complex structural analysis", "ai for remote training",
                 "ai for sales enablement", "ai for customer support",
                 "clinical decision support", "personalized medicine",
-                "algorithmic trading", "ai for urban planning"
+                "algorithmic trading", "ai for urban planning",
+                "ai in agriculture", "precision farming",
+                "ai in energy", "smart grids", "ai in climate science",
+                "ai in logistics", "predictive maintenance",
+                "ai in supply chain", "smart cities",
+                "ai in telecom", "ai in space exploration"
             ],
             "score": 20
         },
@@ -119,7 +159,10 @@ marking_scheme_keywords = {
                 "fintech", "risk management", "compliance", "regulatory compliance",
                 "securities and commodity contracts intermediation and brokerage",
                 "fraud detection", "ai fraud detection", "predictive analytics",
-                "market forecasting", "supply chain optimization"
+                "market forecasting", "supply chain optimization",
+                "scenario planning", "forecast modeling",
+                "AI-powered dashboards", "investment analysis",
+                "credit scoring", "early warning systems"
             ],
             "score": 15
         },
@@ -131,7 +174,12 @@ marking_scheme_keywords = {
                 "regulatory standards", "regulatory process integration",
                 "regulatory approval for samd", "ai governance in healthcare",
                 "ai/ml lifecycle compliance", "automated regulatory documentation",
-                "regulatory risk assessment"
+                "regulatory risk assessment", "ISO compliance",
+                "GDPR compliance", "CCPA compliance",
+                "cybersecurity automation", "threat detection",
+                "identity management", "zero trust",
+                "AI red teaming", "model governance",
+                "adversarial robustness testing"
             ],
             "score": 10
         },
@@ -139,7 +187,12 @@ marking_scheme_keywords = {
             "keywords": [
                 "ai for medical literature", "ai-powered research tools",
                 "ai + expert hybrid workflows", "ai-enhanced expert calls",
-                "ai for primary research"
+                "ai for primary research", "literature mining",
+                "scientific paper summarization", "knowledge graph construction",
+                "AI-assisted hypothesis generation", "semantic search engines",
+                "research productivity tools", "academic ai tools",
+                "citation extraction", "systematic review automation",
+                "AI lab assistants", "innovation management"
             ],
             "score": 5
         }
