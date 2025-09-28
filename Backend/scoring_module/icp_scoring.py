@@ -4,9 +4,10 @@ import statistics
 from typing import Dict
 from datetime import date
 from utils.icp import icp, weights
-from utils.prompts.work_category_prompt import get_work_category
 from utils.ai_keywords import marking_scheme_keywords
 from scoring_module.ai_extraction import extract_work_category
+from utils.prompts.work_category_prompt import get_work_category
+from services.db_service import store_icp_score, update_company_icp_score
 from scoring_module.keyword_scoring.keyword_scoring import JaccardKeywordScorer
 
 logger = logging.getLogger()
@@ -136,24 +137,20 @@ class ICPScorer:
         + (geography_score * self.weights["geography"])
         )
 
-        logger.info(f"{keywords_score}, {final_keywords_score}")
         logger.info(f"{self.name}'s total score is: {total_score}")
-        logger.info(f"""
-            category_breakdown: {category_breakdown},\n
-            top_matches: {top_matches},\n
-            interpretation: {interpretation},\n
-            total_score: {total_score}\n
-            """
-            )
-            
-        
         return {
+            "age_score": age_score,
+            "employee_count_score": employee_count_score,
+            "funding_stage_score": funding_stage_score,
+            "final_keywords_score": final_keywords_score,
+            "contactability_score": contactability_score,
+            "geography_score": geography_score,
             "category_breakdown": category_breakdown,
             "top_matches": top_matches,
             "interpretation": interpretation,
             "total_score": total_score
         }
-                
+
 
 if __name__ == "__main__":
     async def main():

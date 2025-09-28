@@ -6,6 +6,7 @@ import asyncpg
 from typing import List, Any, Tuple, Dict
 from dotenv import load_dotenv
 from utils.db_queries import *
+from utils.set_conversion import convert_sets
 
 load_dotenv(verbose=True, override=True)
 
@@ -92,20 +93,28 @@ async def fetch_people()->List[Dict[str, Any]]:
         return []
 
 #Fetch company by ID
-async def fetch_company_details(id: int)->List[Dict[str, any]]:
+async def fetch_company_details(id: int) -> Dict[str, any]:
     logger.info(f"Fetching company with ID: {id}")
     try:
-        all_companies = await fetch_companies()
-        for company in all_companies:
-            if company.get("id") == id:
-                return company
-
+        conn = await asyncpg.connect(dsn=DB_URL)
+        #CHANGED
+        query = "SELECT * FROM mock_companies WHERE id = $1"
+        result = await conn.fetchrow(query, id)
+        await conn.close()
+        if result:
+            company = dict(result)
+            # Optionally fetch people for this company
+            company_apollo_id = company.get("apollo_id")
+            company["people"] = await fetch_people_from_company(organization_id=company_apollo_id)
+            return company
+        else:
+            logger.warning(f"No company found with ID {id}")
+            return {}
     except asyncpg.PostgresError as e:
         logger.error(f"Database error occured: {str(e)}")
         return {}
-
     except Exception as e:
-        logger.error(f"Failed to fetch company details for company ID {id}")
+        logger.error(f"Failed to fetch company details for company ID {id}: {str(e)}")
         return {}
 
 #Fetch company by apollo id
@@ -488,19 +497,41 @@ async def company_is_unscored(pool)->List[Dict[str, int]]:
         logger.error(f"Failed to fetch unscored companies: {str(e)}")
         return []
 
-#Store icp score
-async def store_icp_score(pool, company_name, company_id, icp_score, level_of_work, specific_tasks):
-    logger.info(f"Storing ICP score for {company_name}")
+#Store icp score in icp_scores table
+async def store_icp_score(pool, company_id, age_score, employee_count_score,
+                        funding_stage_score, keyword_score, contactability_score,
+                        geography_score, total_score, category_breakdown, top_matches,
+                        interpretation):
+    category_breakdown = convert_sets(category_breakdown)
+    category_breakdown_json = json.dumps(category_breakdown, indent=2)
+    top_matches_json = json.dumps(top_matches, indent=2)
+    logger.info(f"Storing ICP scores for company_id {company_id}...")
     #CHANGED
-    query = "UPDATE mock_companies SET icp_score = $1, level_of_work = $2, specific_tasks_and_scores = $3 WHERE id = $4"
-    try:
-        async with pool.acquire() as conn:
-            await conn.execute(query, icp_score, level_of_work, json.dumps(specific_tasks), company_id)
-        logger.info(f"Done storing icp score for {company_name}")
-        return
-    except Exception as e:
-        logger.error(f"Failed to store icp score for {company_name}: {str(e)}")
-        return
+    query = """
+    INSERT INTO mock_icp_scores (
+        company_id, age_score, employee_count_score, funding_stage_score, keyword_score,
+        contactability_score, geography_score, total_score, category_breakdown, top_matches,
+        interpretation
+    ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+    )
+    """
+    async with pool.acquire() as conn:
+        await conn.execute(query, company_id, age_score, employee_count_score,
+                        funding_stage_score, keyword_score, contactability_score,
+                        geography_score, total_score, category_breakdown_json, top_matches_json,
+                        interpretation)
+    logger.info("Data stored")
+    return
+
+#Store icp score in icp_score column in companies table
+async def update_company_icp_score(pool, company_id: int, total_score: float):
+    logger.info(f"Updating icp_score for company_id {company_id} to {total_score}")
+    #CHANGED
+    query = "UPDATE mock_companies SET icp_score = $1 WHERE id = $2"
+    async with pool.acquire() as conn:
+        await conn.execute(query, total_score, company_id)
+    logger.info("Company icp_score updated")
 
 if __name__ == "__main__":
     async def main():
