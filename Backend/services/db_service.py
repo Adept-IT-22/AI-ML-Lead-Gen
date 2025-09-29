@@ -13,8 +13,8 @@ load_dotenv(verbose=True, override=True)
 #When running the backend locally I use the 2nd DB_URL. When using docker, I use the 1st.
 #=======================================================================================
 
-DB_URL = os.getenv("DATABASE_URL")
-#DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
+#DB_URL = os.getenv("DATABASE_URL")
+DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
 #DB_URL = os.getenv("MOCK_DATABASE_URL")
 
 logger = logging.getLogger()

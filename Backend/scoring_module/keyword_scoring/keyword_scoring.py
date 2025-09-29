@@ -45,8 +45,6 @@ class JaccardKeywordScorer:
         return categories
 
     async def jaccard_similarity(self, set1: set, set2: set)->float:
-        logger.info("Doing jaccard similarity...")
-
         if not set1 or not set2:
             return 0.0
 
@@ -92,7 +90,7 @@ class JaccardKeywordScorer:
             total_possible_score += (float(category_data["score"]) / 100.0) * float(category_data["weight"])
 
         #Final score is weighted score div by possible score
-        final_score = total_weighted_score /total_possible_score if total_possible_score > 0 else 0
+        final_score = (total_weighted_score /total_possible_score) if total_possible_score > 0 else 0
 
         return {
             "final_score": final_score,
