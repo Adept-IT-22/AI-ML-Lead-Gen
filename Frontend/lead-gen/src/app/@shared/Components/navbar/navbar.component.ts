@@ -3,6 +3,7 @@ import { SearchBarComponent } from "../search-bar/search-bar.component";
 import { RouterLink } from '@angular/router';
 import { EventEmitter } from '@angular/core';
 import { SearchService } from '../../Services/search.service';
+import { EngagementComponent } from '../../../Pages/engagement/engagement.component';
 
 @Component({
   selector: 'app-navbar',

@@ -4,6 +4,7 @@ import { AnalyticsComponent } from './Pages/analytics/analytics.component';
 import { LeadsTableComponent } from './@shared/Components/leads/leads.component'; 
 import { LeadsPageComponent } from './Pages/leads-page/leads-page.component';
 import { EventsComponent} from './Pages/events/events.component';
+import { EngagementComponent } from './Pages/engagement/engagement.component';
 
 export const routes: Routes = [
     {
@@ -29,4 +30,9 @@ export const routes: Routes = [
         path: 'events',
         component: EventsComponent
     },
+
+    {
+        path: 'engagement',
+        component: EngagementComponent
+    },  
 ];
