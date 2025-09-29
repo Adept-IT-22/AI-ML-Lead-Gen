@@ -16,8 +16,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
 EMAIL_SEND_API = "https://api.sendgrid.com/v3/mail/send"
-EMAIL_FROM = "antony@adepttechnologieskenya.com" 
-REPLY_TO_EMAIL = "antony@adepttechnologieskenya.com" 
+EMAIL_FROM = "antony@adept-techno.co.ke" 
+REPLY_TO_EMAIL = "antony@adept-techno.co.ke" 
 REPLY_TO_NAME = "Antony Ngatia" 
 
 email_headers = {

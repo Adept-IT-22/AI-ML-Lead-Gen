@@ -37,7 +37,7 @@ async def fetch_companies()->List[Dict[str, Any]]:
 
         #Fetch companies
         #CHANGED
-        company_query = "SELECT * FROM mock_companies"
+        company_query = "SELECT * FROM companies"
         results = await conn.fetch(company_query)
 
         #Fetch people for each company
@@ -65,7 +65,7 @@ async def fetch_people_from_company(organization_id: str)->List[Dict[str, str]]:
     logger.info(f"Fetching people from org id {organization_id}...")
     conn = await asyncpg.connect(dsn=DB_URL)
     #CHANGED
-    people_query = "SELECT full_name, title, email, linkedin_url FROM mock_people WHERE organization_id = $1"
+    people_query = "SELECT full_name, title, email, linkedin_url FROM people WHERE organization_id = $1"
     people_results = await conn.fetch(people_query, organization_id)
     logger.info(f"Done fetching people from org id {organization_id}")
     await conn.close()
@@ -98,7 +98,7 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
     try:
         conn = await asyncpg.connect(dsn=DB_URL)
         #CHANGED
-        query = "SELECT * FROM mock_companies WHERE id = $1"
+        query = "SELECT * FROM companies WHERE id = $1"
         result = await conn.fetchrow(query, id)
         await conn.close()
         if result:
@@ -485,7 +485,7 @@ async def company_is_unscored(pool)->List[Dict[str, int]]:
     logger.info("Fetching all unscored companies...")
     
     #CHANGED
-    query = "SELECT id FROM mock_companies WHERE icp_score IS NULL"
+    query = "SELECT id FROM companies WHERE icp_score IS NULL"
 
     try:
         async with pool.acquire() as conn:
@@ -508,7 +508,7 @@ async def store_icp_score(pool, company_id, age_score, employee_count_score,
     logger.info(f"Storing ICP scores for company_id {company_id}...")
     #CHANGED
     query = """
-    INSERT INTO mock_icp_scores (
+    INSERT INTO icp_scores (
         company_id, age_score, employee_count_score, funding_stage_score, keyword_score,
         contactability_score, geography_score, total_score, category_breakdown, top_matches,
         interpretation
@@ -528,7 +528,7 @@ async def store_icp_score(pool, company_id, age_score, employee_count_score,
 async def update_company_icp_score(pool, company_id: int, total_score: float):
     logger.info(f"Updating icp_score for company_id {company_id} to {total_score}")
     #CHANGED
-    query = "UPDATE mock_companies SET icp_score = $1 WHERE id = $2"
+    query = "UPDATE companies SET icp_score = $1 WHERE id = $2"
     async with pool.acquire() as conn:
         await conn.execute(query, total_score, company_id)
     logger.info("Company icp_score updated")
