@@ -1,0 +1,58 @@
+<div class="settings-container">
+  <h2 class="header" style="color: var(--color-yellow);">⚙️ Global Settings</h2>
+
+  <form class="settings-form" style="display: flex;">
+    <!-- Theme -->
+    <div class="form-group" slot="theme" style="color: var(--color-yellow);">
+      <label>Theme:</label>
+      <select [(ngModel)]="settings.theme" name="theme">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+
+    <!-- Language -->
+    <div class="form-group" style="color: var(--color-yellow);">
+      <label>Language:</label>
+      <input [(ngModel)]="settings.language" name="language" type="text" />
+    </div>
+
+    <!-- Timezone -->
+    <div class="form-group" style="color: var(--color-yellow);">
+      <label>Timezone:</label>
+      <input [(ngModel)]="settings.timezone" name="timezone" type="text" />
+    </div>
+
+    <!-- Notifications -->
+    <div class="notifications-section" style="color: var(--color-yellow);">
+      <h3>Notifications</h3>
+      <label>
+        <input type="checkbox" [(ngModel)]="settings.notifications.email" name="emailNotif" />
+        Email
+      </label>
+      <label>
+        <input type="checkbox" [(ngModel)]="settings.notifications.sms" name="smsNotif" />
+        SMS
+      </label>
+      <label>
+        <input type="checkbox" [(ngModel)]="settings.notifications.inApp" name="inAppNotif" />
+        In-App
+      </label>
+    </div>
+
+    <!-- Export -->
+    <div class="form-group" style="color: var(--color-yellow);">
+      <label>Default Export Format:</label>
+      <select [(ngModel)]="settings.exportFormat" name="exportFormat">
+        <option value="pdf">PDF</option>
+        <option value="excel">Excel</option>
+        <option value="csv">CSV</option>
+      </select>
+    </div>
+
+    <!-- Save -->
+    <button type="button" (click)="save()" class="save-btn" style="background-color: var(--color-green);">
+      💾 Save
+    </button>
+  </form>
+</div>

@@ -45,29 +45,32 @@ export class EngagementComponent implements AfterViewInit {
     });
   }
 
-  private renderBreakdown() {
-    const ctx = document.getElementById('breakdownChart') as HTMLCanvasElement;
-    if (!ctx) return;
+ private renderBreakdown() {
+  const ctx = document.getElementById('breakdownChart') as HTMLCanvasElement;
+  if (!ctx) return;
 
-    new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Clicked', 'Replied', 'Unsubscribed'],
-        datasets: [{
-          data: [50, 12, 8],
-          backgroundColor: ['#22c55e', '#facc15', '#ef4444']
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { position: 'bottom',labels: { color: 'yellow' } } },
-        scales: {
-      x: { ticks: { color: 'white' }, grid: { color: 'rgba(233,31,31,0.1)' } },
-      y: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } }
-    }
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Clicked', 'Replied', 'Unsubscribed'],
+      datasets: [{
+        data: [50, 12, 8],
+        backgroundColor: ['#22c55e', '#facc15', '#ef4444']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: 'yellow' }
+        }
       }
-    });
-  }
+      // ❌ Removed scales (not needed for doughnut)
+    }
+  });
+}
+
 
   private renderActivity() {
     const ctx = document.getElementById('activityChart') as HTMLCanvasElement;

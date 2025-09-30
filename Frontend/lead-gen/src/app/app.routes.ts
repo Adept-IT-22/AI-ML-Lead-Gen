@@ -5,6 +5,7 @@ import { LeadsTableComponent } from './@shared/Components/leads/leads.component'
 import { LeadsPageComponent } from './Pages/leads-page/leads-page.component';
 import { EventsComponent} from './Pages/events/events.component';
 import { EngagementComponent } from './Pages/engagement/engagement.component';
+import { SettingsComponent } from './@shared/Components/settings/settings.component';
 
 export const routes: Routes = [
     {
@@ -35,4 +36,9 @@ export const routes: Routes = [
         path: 'engagement',
         component: EngagementComponent
     },  
+
+    {
+        path: 'settings',
+        component: SettingsComponent
+    },
 ];

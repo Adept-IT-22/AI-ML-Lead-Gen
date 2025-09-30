@@ -6,6 +6,9 @@ import { CompaniesService } from '../../Services/companies.service';
 import { ICompany } from '../../../Libs/interfaces/company.interface';
 import { SearchService } from '../../Services/search.service';
 
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+
 export interface Column {
   key: string;
   header: string;
@@ -21,14 +24,14 @@ export interface Column {
 export class LeadsTableComponent implements OnInit {
   @Input() title: string = "";
   @Input() columns: Column[] = [];
-  @Input() data: any[] = [];          // original dataset
+  @Input() data: any[] = [];          
   @Input() buttons: string[] = [];
   @Input() selectTitle: string = "";
   @Input() selectOptions: string[] = [];
-  @Input() filters: { [key: string]: string } = {}; // active filters
-  @Input() fullTable: boolean = false; // default = preview mode
+  @Input() filters: { [key: string]: string } = {}; 
+  @Input() fullTable: boolean = false; 
 
-  filteredData: any[] = [];   // ✅ holds filtered + searched results
+  filteredData: any[] = [];   
   selectedOption: string = '';
   selectedRow: any = null;
   searchTerm: string = '';
@@ -39,9 +42,7 @@ export class LeadsTableComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.filteredData = [...this.data]; // start with all data
-
-    // ✅ subscribe to global search term (from Navbar search bar)
+    this.filteredData = [...this.data];
     this.searchService.searchTerm$.subscribe(term => {
       this.searchTerm = term.toLowerCase();
       this.applyFiltersAndSearch();
@@ -53,49 +54,56 @@ export class LeadsTableComponent implements OnInit {
     this.applyFiltersAndSearch();
   }
 
-  /** Called when a filter dropdown changes */
   onSelect(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     this.selectedOption = selectElement.value;
-    console.log('Selected:', this.selectedOption);
   }
 
-  /** Called by <app-filter> when filter changes */
   onFilterChange(filter: { key: string, value: string }) {
     this.filters[filter.key] = filter.value;
     this.applyFiltersAndSearch();
   }
 
-  /** Apply both filters + search together */
   applyFiltersAndSearch() {
     this.filteredData = this.data.filter(row => {
-      // ✅ Apply filters (all must match)
       const matchesFilters = Object.keys(this.filters).every(key => {
         return !this.filters[key] || row[key] === this.filters[key];
       });
-
-      // ✅ Apply search (any field contains the term)
       const matchesSearch = !this.searchTerm ||
         Object.values(row).some(val =>
           val?.toString().toLowerCase().includes(this.searchTerm)
         );
-
       return matchesFilters && matchesSearch;
     });
   }
 
-  /** Row actions */
   onView(row: any) {
-    console.log('Viewing row:', row);
-    this.selectedRow = row; // ✅ open modal with row data
+    this.selectedRow = row;
   } 
 
   onUpdate(row: any): void {
     console.log('Update clicked', row);
-    // handle update logic
   }
 
   closeModal() {
-    this.selectedRow = null; // ✅ close modal
+    this.selectedRow = null;
   }
+
+  // ✅ Export to Excel
+  exportToExcel(): void {
+  this.companiesService.exportCompanies().subscribe({
+    next: (blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `leads-${new Date().toISOString().split('T')[0]}.xlsx`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      console.error("Export failed:", err);
+      alert("Failed to export leads.");
+    }
+  });
+}
 }
