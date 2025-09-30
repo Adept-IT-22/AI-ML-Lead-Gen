@@ -34,6 +34,14 @@ export class CompaniesService {
     return this.http.get<ICompany>(`${this.backend_url}/fetch-company-details/${id}`);
   }
 
+  // ✅ Export companies to Excel
+  exportCompanies(): Observable<Blob> {
+    console.log("Exporting companies as Excel...");
+    return this.http.get(`${this.backend_url}/export`, {
+      responseType: 'blob'  // <-- important to handle file download
+    });
+  }
+
   // ✅ Mapper function to structure company into sections
   mapCompanyToSections(company: ICompany): CompanySection[] {
     return [

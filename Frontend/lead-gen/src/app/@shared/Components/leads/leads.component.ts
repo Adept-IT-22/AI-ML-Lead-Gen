@@ -91,10 +91,19 @@ export class LeadsTableComponent implements OnInit {
 
   // ✅ Export to Excel
   exportToExcel(): void {
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.filteredData.length ? this.filteredData : this.data);
-    const workbook: XLSX.WorkBook = { Sheets: { 'Leads': worksheet }, SheetNames: ['Leads'] };
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    saveAs(data, `leads-${new Date().toISOString().split('T')[0]}.xlsx`);
-  }
+  this.companiesService.exportCompanies().subscribe({
+    next: (blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `leads-${new Date().toISOString().split('T')[0]}.xlsx`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      console.error("Export failed:", err);
+      alert("Failed to export leads.");
+    }
+  });
+}
 }
