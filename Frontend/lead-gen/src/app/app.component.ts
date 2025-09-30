@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './@shared/Components/navbar/navbar.component';
 import { CompanyDetailsComponent } from './@shared/Components/company-details/company-details.component';
+import { SettingsService } from './@shared/Services/settings.service';
 
 @Component({
   selector: 'app-root',
@@ -12,4 +13,8 @@ import { CompanyDetailsComponent } from './@shared/Components/company-details/co
 })
 export class AppComponent {
   title = 'Lead Gen';
+
+  constructor(private settingsService: SettingsService) {
+  this.settingsService.loadSettings();
+}
 }

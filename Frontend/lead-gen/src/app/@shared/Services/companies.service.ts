@@ -1,14 +1,14 @@
 // companies.service.ts
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ICompany } from '../../Libs/interfaces/company.interface';
+import { IPeople } from '../../Libs/interfaces/people.interface';
 
 interface CompanyField {
   label: string;
   value: string | number;
 }
-
 
 export interface CompanySection {
   section: string;
@@ -19,22 +19,23 @@ export interface CompanySection {
   providedIn: 'root'
 })
 export class CompaniesService {
-  private readonly backend_url: string = 'http://192.168.1.54:5000'; 
+  private readonly backend_url: string = 'http://192.168.1.54:5000';
   private http = inject(HttpClient);
 
+  // ✅ Fetch all companies (with embedded people array)
   fetch_companies(): Observable<ICompany[]> {
     console.log("Fetching company data from backend...");
     return this.http.get<ICompany[]>(`${this.backend_url}/fetch-companies`);
   }
 
+  // ✅ Fetch single company details (also has people)
   getCompanyDetails(id: number): Observable<ICompany> {
     console.log(`Fetching company with ID ${id}`);
-    return this.http
-      .get<ICompany>(`${this.backend_url}/fetch-company-details/${id}`)
+    return this.http.get<ICompany>(`${this.backend_url}/fetch-company-details/${id}`);
   }
 
-  // 🔥 Mapper function with extended fields
-  private mapCompanyToSections(company: ICompany): CompanySection[] {
+  // ✅ Mapper function to structure company into sections
+  mapCompanyToSections(company: ICompany): CompanySection[] {
     return [
       {
         section: 'Identity',
@@ -75,7 +76,8 @@ export class CompaniesService {
           { label: 'Internal Notes', value: company.notes || 'N/A' },
           { label: 'Created At', value: company.created_at || 'N/A' },
           { label: 'Updated At', value: company.updated_at || 'N/A' },
-          ...((company.people || []).map(p => ({
+          // 🔥 Loop through people array and map them into fields
+          ...((company.people || []).map((p: IPeople) => ({
             label: `${p.full_name} (${p.title})`,
             value: p.email || 'N/A'
           })))
