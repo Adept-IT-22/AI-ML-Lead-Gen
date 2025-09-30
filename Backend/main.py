@@ -5,7 +5,7 @@ import asyncio
 import logging
 from logging.handlers import RotatingFileHandler
 import yappi
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 from decimal import Decimal
 from typing import List, Dict, Any, Awaitable, Union, Callable
@@ -21,6 +21,7 @@ from utils.icp import icp
 from services.db_service import *
 from services.email_sending import *
 from services.sendgrid_webhook import *
+from services.export_to_excel import export_to_excel
 from normalization_module.event_normalization import normalize_event_data
 from normalization_module.funding_normalization import normalize_funding_data
 from normalization_module.hiring_normalization import normalize_hiring_data
@@ -753,6 +754,16 @@ async def get_keywords():
             keyword_list = [dict(keywords) for keywords in keyword_records]
             return keyword_list
 
+@app.route('/export', methods=["GET"])
+async def export():
+    companies = await fetch_companies()
+    try:
+        exported_data = await export_to_excel(companies)
+        if not exported_data:
+            return jsonify({"Error": "No data to export"}), 400
+        return send_file(exported_data, as_attachment=True)
+    except Exception as e:
+        return jsonify({"Error":"An unexpected error occured", "details": {str(e)}}), 500
 
 if __name__ == "__main__":
     logger.info("Application running....")
