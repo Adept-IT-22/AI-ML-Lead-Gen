@@ -4,10 +4,11 @@ import { CompaniesService, CompanySection } from '../../Services/companies.servi
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card'; 
 import { ICompany } from '../../../Libs/interfaces/company.interface';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-company-details',
-  imports: [CommonModule, MatCardModule],
+  imports: [CommonModule, MatCardModule, LoaderComponent],
   standalone: true,
   templateUrl: './company-details.component.html',
   styleUrls: ['./company-details.component.scss']
