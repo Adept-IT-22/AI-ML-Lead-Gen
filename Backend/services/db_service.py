@@ -13,8 +13,8 @@ load_dotenv(verbose=True, override=True)
 #When running the backend locally I use the 2nd DB_URL. When using docker, I use the 1st.
 #=======================================================================================
 
-DB_URL = os.getenv("DATABASE_URL")
-#DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
+#DB_URL = os.getenv("DATABASE_URL")
+DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
 #DB_URL = os.getenv("MOCK_DATABASE_URL")
 
 logger = logging.getLogger()
@@ -44,10 +44,23 @@ async def fetch_companies()->List[Dict[str, Any]]:
         results = await conn.fetch(company_query)
         await conn.close()
         
-        #Return a list of company dictionaries
+        #Since companies -> people has a 1 to many r/ship, and since
+        #postgres does data denormalization for join queries, if a
+        #company has 3 people we get 3 duplicates of the same company
+        #instead of 1 company which is what we want. The code below
+        #fixes that.
         all_companies = ([dict(result) for result in results])
+        apollo_id_set = set()
+        final_all_companies = []
+        for company in all_companies:
+            if company.get("apollo_id") in apollo_id_set:
+                continue
+            else:
+                apollo_id_set.add(company.get("apollo_id"))
+                final_all_companies.append(company)
+
         logger.info("Done fetching companies from DB...")
-        return all_companies
+        return final_all_companies
 
     except asyncpg.PostgresError as e:
         logger.error(f"Database error while trying to fetch companies: {str(e)}")
@@ -550,5 +563,5 @@ if __name__ == "__main__":
         #]
 
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-            await fetch_events(pool)
+            await fetch_companies()
     asyncio.run(main())

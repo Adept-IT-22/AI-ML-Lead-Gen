@@ -474,7 +474,12 @@ async def main():
 
         #Store company data in "companies" database
         if company_data_to_store:
-            await store_to_db(data_to_store=company_data_to_store, query=company_query, company_or_people="company")
+            #Check if company is in db
+            company_in_db = await is_company_in_db(company_name=company_name)
+            if not company_in_db:
+                await store_to_db(data_to_store=company_data_to_store, query=company_query, company_or_people="company")
+            else:
+                logger.warning(f"{company_name} is already in DB")
         else:
             logger.warning("No companies to store ❌")
 
