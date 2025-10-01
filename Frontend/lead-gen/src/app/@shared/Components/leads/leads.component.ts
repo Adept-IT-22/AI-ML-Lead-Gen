@@ -6,8 +6,6 @@ import { CompaniesService } from '../../Services/companies.service';
 import { ICompany } from '../../../Libs/interfaces/company.interface';
 import { SearchService } from '../../Services/search.service';
 
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
 
 export interface Column {
   key: string;

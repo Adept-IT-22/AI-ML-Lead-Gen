@@ -2,15 +2,16 @@ from utils.set_conversion import convert_sets
 from openpyxl import Workbook
 from typing import Dict, List
 import logging
-import string
 import datetime
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO)
 
 def make_excel_safe(value):
+    #Lists and sets aren't allowed
     if isinstance(value, (list, set)):
         return ", ".join(map(str, value))
+    #Dicts have to be strings too
     elif isinstance(value, dict):
         return str(value)
     elif isinstance(value, datetime.datetime):

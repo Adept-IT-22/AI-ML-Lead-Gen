@@ -15,6 +15,10 @@ from utils.data_structures.news_data_structure import fetched_funding_data as fu
 
 logger = logging.getLogger()
 
+#Configure semaphore
+MAX_CONNECTIONS = 10
+
+
 """
 This website's sitemap is a list of nested sitemaps.
 We therefore have to parse them until we find the latest one.
@@ -104,7 +108,7 @@ async def fetch_ai_funding_article_links(client: cloudscraper.CloudScraper, url:
 """
 Now we open the links and extract the necessary paragraphs before feeding it to the LLM
 """
-async def get_paragraphs(client: cloudscraper.CloudScraper, urls: list) -> Dict[str, List[str]]:
+async def get_paragraphs(client: cloudscraper.CloudScraper, urls: list, semaphore) -> Dict[str, List[str]]:
     logger.info("Getting paragraphs from urls...")
     if not urls:
         logger.error("List of AI specific Urls Not Found")
@@ -112,7 +116,7 @@ async def get_paragraphs(client: cloudscraper.CloudScraper, urls: list) -> Dict[
     
     try:
         results = {"urls": [], "paragraphs": []}
-        tasks = [extract_paragraphs(client, url) for url in urls]                
+        tasks = [extract_paragraphs(client, url, semaphore) for url in urls]                
         
         """
         Coroutine below is an awaitable and not the actual coroutine
@@ -133,31 +137,33 @@ async def get_paragraphs(client: cloudscraper.CloudScraper, urls: list) -> Dict[
     return {"": [""]}
             
 #Function that does the actual extraction
-async def extract_paragraphs(client: cloudscraper.CloudScraper, url: str)->tuple[str, list[str]]:
-    logger.info(f"Fetching paragraphs from {url}...")
-    try:
-        response = await fetch_sync(client, url)
-        response.raise_for_status()
+async def extract_paragraphs(client: cloudscraper.CloudScraper, url: str, semaphore)->tuple[str, list[str]]:
+    async with semaphore:
+        logger.info(f"Fetching paragraphs from {url}...")
+        try:
+            response = await fetch_sync(client, url)
+            response.raise_for_status()
 
-        root = html.fromstring(response.text)
+            root = html.fromstring(response.text)
 
-        #Extract paragraphs from the class below
-        paragraph_nodes = root.xpath("//div[contains(@class, 'tdb-block-inner') and contains(@class, 'td-fix-index')]//p")
-        paragraphs = [node.text_content().strip() for node in paragraph_nodes if node.text_content().strip()]
+            #Extract paragraphs from the class below
+            paragraph_nodes = root.xpath("//div[contains(@class, 'tdb-block-inner') and contains(@class, 'td-fix-index')]//p")
+            paragraphs = [node.text_content().strip() for node in paragraph_nodes if node.text_content().strip()]
 
-        logger.info(f"Done fetching paragraphs")
-        return url, paragraphs
+            logger.info(f"Done fetching paragraphs")
+            return url, paragraphs
 
-    except httpx.HTTPStatusError as e:
-        logger.error(f"Failed to fetch paragraphs from {url}")
-    except Exception as e:
-        logger.error(f"Error processing {url}: {str(e)}")
-        
-    return url, []
+        except httpx.HTTPStatusError as e:
+            logger.error(f"Failed to fetch paragraphs from {url}")
+        except Exception as e:
+            logger.error(f"Error processing {url}: {str(e)}")
+            
+        return url, []
 
 
 async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronously to avoid blocking
     logger.info("Fetching from FinSMEs...")
+    semaphore = asyncio.Semaphore(10)
     current_time = time.perf_counter()
 
     client = cloudscraper.create_scraper()
@@ -165,7 +171,7 @@ async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronousl
     if newest_sitemap:
         ai_urls = await fetch_ai_funding_article_links(client, newest_sitemap)
         if ai_urls:
-            results = await get_paragraphs(client, ai_urls)
+            results = await get_paragraphs(client, ai_urls, semaphore)
 
     #Check if results has urls in the first place
     if results["urls"]:
