@@ -42,6 +42,7 @@ class JaccardKeywordScorer:
                     "weight": category_weight
                 }
         
+        logger.info(categories)
         return categories
 
     async def jaccard_similarity(self, set1: set, set2: set)->float:
