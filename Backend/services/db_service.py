@@ -13,8 +13,8 @@ load_dotenv(verbose=True, override=True)
 #When running the backend locally I use the 2nd DB_URL. When using docker, I use the 1st.
 #=======================================================================================
 
-#DB_URL = os.getenv("DATABASE_URL")
-DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
+DB_URL = os.getenv("DATABASE_URL")
+#DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
 #DB_URL = os.getenv("MOCK_DATABASE_URL")
 
 logger = logging.getLogger()
@@ -37,18 +37,15 @@ async def fetch_companies()->List[Dict[str, Any]]:
 
         #Fetch companies
         #CHANGED
-        company_query = "SELECT * FROM companies"
+        company_query = """
+        SELECT c.*, p.full_name, p.title, p.email, p.linkedin_url FROM 
+        companies c LEFT JOIN people p ON c.apollo_id = p.organization_id
+        """ 
         results = await conn.fetch(company_query)
-
-        #Fetch people for each company
-        for result in results:
-            company_apollo_id = result.get("apollo_id")
-            people_results = await fetch_people_from_company(organization_id=company_apollo_id)
-            dict_result = dict(result)
-            dict_result["people"] = people_results
-            all_companies.append(dict_result)
-
         await conn.close()
+        
+        #Return a list of company dictionaries
+        all_companies = ([dict(result) for result in results])
         logger.info("Done fetching companies from DB...")
         return all_companies
 
@@ -98,14 +95,19 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
     try:
         conn = await asyncpg.connect(dsn=DB_URL)
         #CHANGED
-        query = "SELECT * FROM companies WHERE id = $1"
+        query = """
+            SELECT c.*, p.full_name, p.title, p.email, p.linkedin_url 
+            FROM companies c 
+            LEFT JOIN people p 
+            ON c.apollo_id = p.organization_id
+            WHERE c.id = $1
+            """
         result = await conn.fetchrow(query, id)
         await conn.close()
         if result:
             company = dict(result)
             # Optionally fetch people for this company
-            company_apollo_id = company.get("apollo_id")
-            company["people"] = await fetch_people_from_company(organization_id=company_apollo_id)
+            logger.info(company)
             return company
         else:
             logger.warning(f"No company found with ID {id}")
@@ -454,7 +456,6 @@ async def fetch_events(pool: asyncpg.Pool)->List[Dict[str, str]]:
             LEFT JOIN normalized_events e ON m.id = e.master_id
             WHERE m.type = 'event';
             """
-
     try: 
         async with pool.acquire() as conn:
             results = await conn.fetch(query)
@@ -464,6 +465,7 @@ async def fetch_events(pool: asyncpg.Pool)->List[Dict[str, str]]:
                 return []
             
             logger.info("Events found")
+            logger.info(results_list)
             return results_list
     except Exception as e:
         logger.error(f"Failed to fetch events: {str(e)}")
@@ -547,6 +549,6 @@ if __name__ == "__main__":
             #["Jane Doe", "Michael Chan"]                       # investor_people
         #]
 
-        #async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-        await fetch_company_details(52)
+        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+            await fetch_events(pool)
     asyncio.run(main())
