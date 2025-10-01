@@ -13,8 +13,8 @@ load_dotenv(verbose=True, override=True)
 #When running the backend locally I use the 2nd DB_URL. When using docker, I use the 1st.
 #=======================================================================================
 
-#DB_URL = os.getenv("DATABASE_URL")
-DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
+DB_URL = os.getenv("DATABASE_URL")
+#DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
 #DB_URL = os.getenv("MOCK_DATABASE_URL")
 
 logger = logging.getLogger()
@@ -29,47 +29,90 @@ async def initialize_db():
         logger.error("Connection not made!")
 
 #Fetches all companies from the database
-async def fetch_companies()->List[Dict[str, Any]]:
+async def fetch_companies() -> List[Dict[str, Any]]:
+    """
+    Fetches all companies and their associated people in a single query (Eager Loading)
+    and correctly consolidates the denormalized join results into a nested structure.
+    """
     logger.info("Fetching companies from DB...")
+    conn = None # Initialize conn outside the try block
     try:
-        all_companies = []
-        conn = await asyncpg.connect(dsn=DB_URL) 
+        # 1. Connect to the database
+        conn = await asyncpg.connect(dsn=DB_URL)
 
-        #Fetch companies
-        #CHANGED
+        # 2. Eager Load Query: Single query using LEFT JOIN to get all data
         company_query = """
-        SELECT c.*, p.full_name, p.title, p.email, p.linkedin_url FROM 
-        companies c LEFT JOIN people p ON c.apollo_id = p.organization_id
-        """ 
+        SELECT 
+            c.*, 
+            p.full_name, p.title, p.email, p.linkedin_url 
+        FROM 
+            companies c 
+        LEFT JOIN 
+            people p ON c.apollo_id = p.organization_id;
+        """
         results = await conn.fetch(company_query)
+        
+        # 3. Close connection immediately after fetching data
         await conn.close()
         
-        #Since companies -> people has a 1 to many r/ship, and since
-        #postgres does data denormalization for join queries, if a
-        #company has 3 people we get 3 duplicates of the same company
-        #instead of 1 company which is what we want. The code below
-        #fixes that.
-        all_companies = ([dict(result) for result in results])
-        apollo_id_set = set()
-        final_all_companies = []
-        for company in all_companies:
-            if company.get("apollo_id") in apollo_id_set:
-                continue
-            else:
-                apollo_id_set.add(company.get("apollo_id"))
-                final_all_companies.append(company)
+        # 4. CONSOLIDATION LOGIC: Re-structure the flat 99 rows into 62 nested objects
+        companies_map: Dict[str, Dict[str, Any]] = {}
 
-        logger.info("Done fetching companies from DB...")
+        for record in results:
+            # Convert asyncpg.Record to dict for easier manipulation
+            record_dict = dict(record)
+            company_apollo_id = record_dict.get("apollo_id")
+
+            if company_apollo_id is None:
+                # Skip records if the primary company ID is somehow missing
+                continue
+
+            # --- CONSOLIDATE COMPANY DATA ---
+            if company_apollo_id not in companies_map:
+                # A. First time seeing this company: Initialize the master object
+                company_data = record_dict.copy()
+                company_data["people"] = []
+                
+                # Clean up the root object by removing the scattered people data
+                del company_data["full_name"]
+                del company_data["title"]
+                del company_data["email"]
+                del company_data["linkedin_url"]
+                
+                companies_map[company_apollo_id] = company_data
+            
+            # Get the reference to the master company object
+            master_company = companies_map[company_apollo_id]
+
+            # --- CONSOLIDATE PEOPLE DATA ---
+            # The 'full_name' field is NULL if the LEFT JOIN found no matching person.
+            if record_dict["full_name"]:
+                person = {
+                    "full_name": record_dict["full_name"],
+                    "title": record_dict["title"],
+                    "email": record_dict["email"],
+                    "linkedin_url": record_dict["linkedin_url"]
+                }
+                master_company["people"].append(person)
+
+        # Convert the dictionary values (the 62 unique company objects) back to a list
+        final_all_companies = list(companies_map.values())
+        logger.info(f"Done fetching and consolidating {len(final_all_companies)} companies.")
         return final_all_companies
 
     except asyncpg.PostgresError as e:
         logger.error(f"Database error while trying to fetch companies: {str(e)}")
         return []
-
     except Exception as e:
-        logger.error(f"An unexpected error occured: {str(e)}")
+        logger.error(f"An unexpected error occurred: {str(e)}")
         return []
-
+    finally:
+        if conn:
+            # Ensure connection is closed even if an error occurs during fetch
+            try:
+                await conn.close()
+            except Exception:
+                pass # Ignore close errors
         
 async def fetch_people_from_company(organization_id: str)->List[Dict[str, str]]:
     logger.info(f"Fetching people from org id {organization_id}...")
@@ -115,13 +158,42 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
             ON c.apollo_id = p.organization_id
             WHERE c.id = $1
             """
-        result = await conn.fetchrow(query, id)
+        results = await conn.fetch(query, id)
         await conn.close()
-        if result:
-            company = dict(result)
-            # Optionally fetch people for this company
-            logger.info(company)
-            return company
+
+        if results:
+            #Since the results might be multiple as the company might have many people, 
+            #we need to create one dictionary and append the people key with all the people
+            final_results = {}
+            for result in results:
+                #Transform record to dict
+                result_dict = dict(result)
+                #Copy result dict to avoid manipulating the original one
+                result_copy = result_dict.copy()
+                #If result is not in final_results, create a people key, remove the shown keys
+                #then add it to final_results with its key as the apollo_id
+                result_id = result.get('apollo_id')
+                if result_id not in final_results:
+                    result_copy['people'] = []
+                    del result_copy['full_name']
+                    del result_copy['title']
+                    del result_copy['email']
+                    del result_copy['linkedin_url']
+                    final_results[result_id] = result_copy
+
+                stored_result = final_results.get(result_id)
+                if result_copy.get('full_name'):
+                    person = {
+                        'full_name': result_dict.get('full_name'),
+                        'title': result_dict.get('title'),
+                        'email': result_dict.get('email'),
+                        'linkedin_url': result_dict.get('linkedin_url'),
+                    }
+                    stored_result.get('people').append(person)
+
+            if final_results:
+                return next(iter(final_results.values()))
+
         else:
             logger.warning(f"No company found with ID {id}")
             return {}
@@ -562,6 +634,7 @@ if __name__ == "__main__":
             #["Jane Doe", "Michael Chan"]                       # investor_people
         #]
 
-        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-            await fetch_companies()
+        #async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+        x = await fetch_company_details(36)
+        print(x)
     asyncio.run(main())
