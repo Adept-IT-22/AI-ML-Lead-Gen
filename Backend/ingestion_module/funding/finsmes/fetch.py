@@ -163,7 +163,7 @@ async def extract_paragraphs(client: cloudscraper.CloudScraper, url: str, semaph
 
 async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronously to avoid blocking
     logger.info("Fetching from FinSMEs...")
-    semaphore = asyncio.Semaphore(10)
+    semaphore = asyncio.Semaphore(MAX_CONNECTIONS)
     current_time = time.perf_counter()
 
     client = cloudscraper.create_scraper()
