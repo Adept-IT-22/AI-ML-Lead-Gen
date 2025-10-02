@@ -32,8 +32,8 @@ class JaccardKeywordScorer:
             for category_name, category_data in level_data.items():
                 keyword_set = set()
 
-                for keyword in category_data["keywords"]:
-                    keyword_set.update(keyword.lower().split())
+                keywords = list(map(lambda x: x.lower(), category_data["keywords"]))
+                keyword_set.update(keywords)
                 
                 categories[f"{level_name}_{category_name}"] = {
                     "keywords": keyword_set,
@@ -61,8 +61,8 @@ class JaccardKeywordScorer:
 
         #Create company keywords set
         company_keywords_set = set()
-        for keyword in company_keywords:
-            company_keywords_set.update(keyword.lower().split())
+        keywords = list(map(lambda x: x.lower(), company_keywords))
+        company_keywords_set.update(keywords)
 
         category_scores = {}
         total_weighted_score = 0
@@ -83,6 +83,7 @@ class JaccardKeywordScorer:
                 "jaccard_similarity": jaccard_similarity,
                 "category_score": category_score,
                 "matched_words": company_keywords_set.intersection(category_keywords_set),
+                "total_words": len(company_keywords_set.union(category_keywords_set)),
                 "base_score": category_data["score"],
                 "weight": category_data["weight"]
             }
@@ -94,7 +95,7 @@ class JaccardKeywordScorer:
         final_score = (total_weighted_score /total_possible_score) * 100 if total_possible_score > 0 else 0
 
         return {
-            "final_score": final_score,
+            "final_score": round(final_score, 1),
             "category_breakdown": category_scores,
             "top_matches": await self.get_top_matches(category_scores),
             "interpretation": await self.interpret_score(final_score)
@@ -112,11 +113,11 @@ class JaccardKeywordScorer:
     async def interpret_score(self, score: float)->str:
         logger.info("Interpreting the score...")
         
-        if score >= 0.7:
+        if score >= 70:
             return "EXCELLENT - Strong alignment with core offerings"
-        elif score >= 0.5:
+        elif score >= 50:
             return "GOOD - Good fit with current capabilities"
-        elif score >= 0.3:
+        elif score >= 30:
             return "MODERATE - Some alignment, mainly future potential"
         else:
             return "LOW - Minimal alignment"
@@ -256,7 +257,9 @@ if __name__ == "__main__":
     async def main():
         x = JaccardKeywordScorer(marking_scheme_keywords)
         o = await x.score_company(keywords)
+        from utils.set_conversion import convert_sets
+        o = convert_sets(o)
         import json
-        logger.info(o)
+        logger.info(json.dumps(o, indent=2))
 
     asyncio.run(main())

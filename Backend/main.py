@@ -49,8 +49,8 @@ file_handler.setFormatter(
 )
 logger.addHandler(file_handler)
 
-DB_URL = os.getenv("DATABASE_URL")
-#DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
+#DB_URL = os.getenv("DATABASE_URL")
+DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
 
 #Create Flask App
 app = Flask(__name__)
@@ -731,6 +731,7 @@ async def sendgrid_events_webhook():
         await update_contacted_status(events)
         logger.info("Successfully processed webhook events")
         return jsonify({"Success": "Done fetching webhook event data"}), 200
+
     except asyncpg.PostgresError as e:
         logger.error(f"Database error during webhook processing: {str(e)}")
         return jsonify({"error": "Database update failed", "details": str(e)}), 500
