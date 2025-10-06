@@ -611,14 +611,26 @@ async def store_icp_score(pool, company_id, age_score, employee_count_score,
     logger.info("Data stored")
     return
 
-#Store icp score in icp_score column in companies table
+#Store icp score in icp_score column in companies table. Changes status to mcp if score >= 70
 async def update_company_icp_score(pool, company_id: int, total_score: float):
     logger.info(f"Updating icp_score for company_id {company_id} to {total_score}")
-    #CHANGED
-    query = "UPDATE companies SET icp_score = $1 WHERE id = $2"
+
+    # Update both icp_score and status (conditionally)
+    query = """
+        UPDATE companies
+        SET icp_score = $1,
+            status = CASE
+                        WHEN $1 > 69 THEN 'mql'
+                        ELSE status
+                     END
+        WHERE id = $2
+    """
+
     async with pool.acquire() as conn:
         await conn.execute(query, total_score, company_id)
-    logger.info("Company icp_score updated")
+
+    logger.info("Company icp_score and status updated (if applicable)")
+
 
 if __name__ == "__main__":
     async def main():
