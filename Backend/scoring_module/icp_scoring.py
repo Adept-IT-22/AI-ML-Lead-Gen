@@ -8,7 +8,7 @@ from utils.ai_keywords import marking_scheme_keywords
 from scoring_module.ai_extraction import extract_work_category
 from utils.prompts.work_category_prompt import get_work_category
 from services.db_service import store_icp_score, update_company_icp_score
-from scoring_module.keyword_scoring.keyword_scoring import JaccardKeywordScorer
+from scoring_module.keyword_scoring.keyword_scoring import TfIdfScorer
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -87,8 +87,8 @@ class ICPScorer:
         return 50
 
     async def score_keywords(self, keywords: list)->dict:
-        jaccard_scorer = JaccardKeywordScorer(marking_scheme_keywords)
-        return await jaccard_scorer.score_company(keywords)
+        tfidf_scorer = TfIdfScorer(keywords, marking_scheme_keywords)
+        return tfidf_scorer.score()
 
     async def score_contactability(self, people: list, linkedin: str):
         if not people and not linkedin:
