@@ -1,262 +1,221 @@
-#This keyword scoring module uses the Jaccard Coefficient to analyze the set
-#of company keywords vs the set of each category's (e.g. data verification)
-#keywords. We'll then decide based on that, which category this company
-#belongs to.
+# This scoring mechanism successfully uses TF-IDF and Cosine Similarity 
+# to gauge alignment. It treats the company's keywords as a Query Document 
+# and each category in the marking scheme as a separate Target Document.
 
-import asyncio
-import logging
-from typing import Dict, List
-from utils.ai_keywords import marking_scheme_keywords
+# First, it calculates the Term Frequency (TF) for every word in the company's
+# Query Document and in each Target Document. Simultaneously, it calculates 
+# the global Inverse Document Frequency (IDF) for every unique word across 
+# all documents to measure word rarity.
 
-#Configure logging
-logger = logging.getLogger()
-logging.basicConfig(level=logging.INFO)
+# Next, it computes the final TF-IDF score for every word in both the Query 
+# and Target vectors by multiplying its TF by its IDF weight.
 
-#Our current offerings are 2x as important as hopefully future offerings
-LOWER_LEVEL_WEIGHT = 0.665
-HIGHER_LEVEL_WEIGHT = 0.335
+# Finally, it uses Cosine Similarity to mathematically compare the resulting 
+# company keyword vector against each category's keyword vector, yielding 
+# a similarity score (a decimal between 0.0 and 1.0) that represents the 
+# topical fit.
 
-class JaccardKeywordScorer:
-    def __init__(self, marking_scheme_keywords):
+
+# TO CHANGE:
+# ===========
+# 1. Calculate only the services we offer.
+# 2. Add a 'Future Services' category.
+
+import math
+import json
+from collections import Counter
+
+class TfIdfScorer:
+    def __init__(self, company_keywords, marking_scheme_keywords):
+        self.company_keywords = company_keywords
+        self.company_keywords_doc = " ".join(q.lower() for q in company_keywords)
         self.marking_scheme_keywords = marking_scheme_keywords
-        self.categories = self.prepare_keyword_categories()
 
-    #Create dictionary for categories and scores
-    def prepare_keyword_categories(self)->Dict:
-        logger.info("Preparing keyword categories...") 
-        categories = {}
+    # -------------------------
+    # TF-IDF helpers
+    # -------------------------
+    def compute_tf(self, doc):
+        tf = Counter(doc.split())
+        total_terms = sum(tf.values())
+        return {word: count/total_terms for word, count in tf.items()}
 
-        for level_name, level_data in marking_scheme_keywords.items():
-            category_weight = LOWER_LEVEL_WEIGHT if level_name.lower() == 'lower' else HIGHER_LEVEL_WEIGHT
+    def compute_idf(self, docs):
+        N = len(docs)
+        idf = {}
+        all_words = set(word for doc in docs for word in doc.split())
+        for word in all_words:
+            df = sum(1 for doc in docs if word in doc.split())
+            idf[word] = math.log((N+1)/(df+1)) + 1
+        return idf
 
-            for category_name, category_data in level_data.items():
-                keyword_set = set()
-
-                for keyword in category_data["keywords"]:
-                    keyword_set.update(keyword.lower().split())
-                
-                categories[f"{level_name}_{category_name}"] = {
-                    "keywords": keyword_set,
-                    "score": category_data["score"],
-                    "original_keywords": category_data["keywords"],
-                    "weight": category_weight
-                }
+    def compute_tfidf(self, company_keywords, docs):
+        idf = self.compute_idf(docs + [company_keywords])
+        tfidf_docs = []
+        for doc in docs:
+            tf = self.compute_tf(doc)
+            tfidf_docs.append({word: tf[word]*idf[word] for word in tf})
         
-        logger.info(categories)
-        return categories
+        tf_company_keywords = self.compute_tf(company_keywords)
+        tfidf_company_keywords = {word: tf_company_keywords[word]*idf[word] for word in tf_company_keywords}
+        
+        return self.cosine_similarities(tfidf_company_keywords, tfidf_docs)
 
-    async def jaccard_similarity(self, set1: set, set2: set)->float:
-        if not set1 or not set2:
-            return 0.0
+    def cosine_similarities(self, company_keywords_vec, doc_vecs):
+        def dot(v1, v2):
+            return sum(v1.get(w,0)*v2.get(w,0) for w in set(v1)|set(v2))
+        def norm(v):
+            return math.sqrt(sum(val*val for val in v.values()))
+        
+        q_norm = norm(company_keywords_vec)
+        sims = []
+        for doc_vec in doc_vecs:
+            d_norm = norm(doc_vec)
+            if q_norm*d_norm == 0:
+                sims.append(0.0)
+            else:
+                sims.append((dot(company_keywords_vec, doc_vec)/(q_norm*d_norm)))
+        return sims
 
-        #Jaccard similarity = length of intersection of sets / length of union of sets
-        set_intersection = set1.intersection(set2)
-        set_union = set1.union(set2)
-        jaccard_similarity = len(set_intersection) / len(set_union)
-
-        return f"{jaccard_similarity:.2f}"
-
-    async def score_company(self, company_keywords: List[str]):
-        logger.info("Scoring company keywords...")
-
-        #Create company keywords set
-        company_keywords_set = set()
-        for keyword in company_keywords:
-            company_keywords_set.update(keyword.lower().split())
-
+    # -------------------------
+    # Core scoring
+    # -------------------------
+    def score(self):
         category_scores = {}
-        total_weighted_score = 0
-        total_possible_score = 0
+        all_scores = []
 
-        for category_name, category_data in self.categories.items():
-            #Calculate Jaccard similarity
-            category_keywords_set = category_data.get("keywords", {})
+        for level_name, level_data in self.marking_scheme_keywords.items():
+            for category_name, category_data in level_data.items():
+                category_keywords = category_data['keywords']
+                base_score = category_data.get('base_score', 100)
+                weight = category_data.get('weight', 1.0)
 
-            jaccard_similarity = await self.jaccard_similarity(
-                company_keywords_set, 
-                category_keywords_set
-                )
+                # Compute similarity
+                sims = self.compute_tfidf(self.company_keywords_doc, category_keywords)
+                avg_sim = sum(sims) / len(sims) if sims else 0.0
 
-            #Weight category (score * weight * jaccard similarity)
-            category_score = (float(category_data["score"]) / 100.0) * float(category_data["weight"]) * float(jaccard_similarity)
-            category_scores[category_name] = {
-                "jaccard_similarity": jaccard_similarity,
-                "category_score": category_score,
-                "matched_words": company_keywords_set.intersection(category_keywords_set),
-                "base_score": category_data["score"],
-                "weight": category_data["weight"]
-            }
+                # Matched keywords
+                matched = [q for q in self.company_keywords if q in category_keywords]
 
-            total_weighted_score += category_score
-            total_possible_score += (float(category_data["score"]) / 100.0) * float(category_data["weight"])
+                # Category score
+                category_score = avg_sim * base_score * weight
 
-        #Final score is weighted score div by possible score
-        final_score = (total_weighted_score /total_possible_score) * 100 if total_possible_score > 0 else 0
+                category_scores[f"{level_name}_{category_name}"] = {
+                    "tf_idf": f"{avg_sim:.2f}",  
+                    "category_score": category_score,
+                    "matched_words": matched,
+                    "base_score": base_score,
+                    "weight": weight,
+                }
+
+                all_scores.append(category_score)
+
+        # Final score = sum of category scores
+        final_score = sum(all_scores)
 
         return {
-            "final_score": final_score,
+            "final_score": round(final_score, 1),
             "category_breakdown": category_scores,
-            "top_matches": await self.get_top_matches(category_scores),
-            "interpretation": await self.interpret_score(final_score)
+            "top_matches": self.get_top_matches(category_scores),
+            "interpretation": self.interpret_score(final_score)
         }
 
-    #Get top 3 matches
-    async def get_top_matches(self, category_scores: Dict):
-        #Return top 3 categories
-        return sorted(
-            [(category_name, category_data["jaccard_similarity"]) for category_name, category_data in category_scores.items()],
-            key=lambda x: x[1],
+    # -------------------------
+    # Helpers
+    # -------------------------
+    def get_top_matches(self, category_scores, n=3):
+        # sort by similarity
+        sorted_cats = sorted(
+            category_scores.items(),
+            key=lambda x: float(x[1]['tf_idf']),
             reverse=True
-        )[:3]
+        )
+        return [(cat, score['tf_idf']) for cat, score in sorted_cats[:n]]
 
-    async def interpret_score(self, score: float)->str:
-        logger.info("Interpreting the score...")
-        
-        if score >= 0.7:
-            return "EXCELLENT - Strong alignment with core offerings"
-        elif score >= 0.5:
-            return "GOOD - Good fit with current capabilities"
-        elif score >= 0.3:
-            return "MODERATE - Some alignment, mainly future potential"
+    def interpret_score(self, final_score):
+        if final_score >= 70:
+            return "HIGH - Strong alignment"
+        elif final_score >= 40:
+            return "MEDIUM - Moderate alignment"
         else:
             return "LOW - Minimal alignment"
 
+
+# -------------------------
+# Example usage
+# -------------------------
 if __name__ == "__main__":
-    keywords = test_case = [
-      "artificial intelligence",
-      "ai",
-      "software",
-      "smbs",
-      "sales automation",
-      "whatsapp",
-      "support automation",
-      "technology, information & internet",
-      "ai for customer service",
-      "crm integration",
-      "ai for data entry",
-      "ai scalability solutions",
-      "customer service ai",
-      "ai for operational workflows",
-      "ai for real estate leads",
-      "api integration",
-      "conversational ai",
-      "automated data entry",
-      "data security",
-      "natural language processing",
-      "multilingual ai",
-      "ai automation",
-      "ai sentiment detection",
-      "ai training and tuning",
-      "repetitive task automation",
-      "sales process automation",
-      "customer support automation",
-      "customer interaction automation",
-      "user experience optimization",
-      "ai learning algorithms",
-      "customer satisfaction",
-      "business process automation",
-      "ai for customer feedback",
-      "software development",
-      "ai chatbots",
-      "ai in automotive",
-      "operational efficiency",
-      "localization support",
-      "automotive",
-      "ai for complaint resolution",
-      "ai for marketing campaigns",
-      "ai training data",
-      "ai for multilingual support",
-      "ai for customer retention",
-      "ai error reduction",
-      "ai in healthcare",
-      "ai-powered chatbots",
-      "ai response quality",
-      "digital workers",
-      "personalized ai interactions",
-      "ai for appointment scheduling",
-      "business automation tools",
-      "ai for insurance claims",
-      "ai for retail inventory",
-      "multichannel communication",
-      "ai for lead scoring",
-      "ai in education",
-      "ai for lead generation",
-      "real estate",
-      "information technology and services",
-      "ai for education enrollment",
-      "continuous learning ai",
-      "customer engagement ai",
-      "ai integration with crm",
-      "data privacy compliance",
-      "ai task management",
-      "ai for compliance monitoring",
-      "retail",
-      "custom system integration",
-      "ai personalization",
-      "ai for sentiment analysis in calls",
-      "data integration",
-      "ai in retail",
-      "ai for cross-selling",
-      "ai model tuning",
-      "education",
-      "ai performance monitoring",
-      "automated customer support",
-      "ai in real estate",
-      "ai for sales and marketing",
-      "ai deployment tools",
-      "ai in insurance",
-      "ai for dynamic pricing",
-      "healthcare",
-      "ai customization",
-      "ai for marketing automation",
-      "ai for automotive sales",
-      "insurance",
-      "sentiment analysis",
-      "business services",
-      "ai scalability",
-      "cloud ai services",
-      "automated testing",
-      "ai for healthcare patient management",
-      "customer relationship management",
-      "ai for appointment reminders",
-      "ai for post-sale support",
-      "ai for customer onboarding",
-      "ai response accuracy",
-      "workflow management",
-      "ai in small business",
-      "ai feedback loops",
-      "ai for customer journey mapping",
+    from utils.ai_keywords import marking_scheme_keywords
+
+    company_keywords = [
+        "software development",
+      "ai for patient data",
+      "ai for kol insights",
+      "research automation",
+      "ai for life sciences consulting",
+      "pharma-specific ai",
+      "ai for medical literature",
+      "secure ai deployment",
+      "data analysis tools",
+      "biotech ai",
       "workflow automation",
-      "real-time analytics",
+      "ai for primary research",
+      "drug discovery",
+      "security frameworks",
+      "ai citations",
+      "data integration",
+      "data security",
+      "data coverage",
+      "ai for clinical research",
+      "clinical trial review",
+      "clinical workflows",
+      "industry-specific ai",
+      "ai for life sciences",
+      "on-prem deployment",
+      "knowledge management",
+      "pharmaceuticals",
+      "pharma ai",
+      "ai for drug safety",
+      "ai knowledge base",
+      "knowledge hydration",
+      "clinical data analysis",
+      "real-world data",
+      "data privacy",
+      "ai for pharma",
+      "ai for rwd analysis",
+      "healthcare technology",
+      "compliance in ai",
+      "drug development ai",
+      "medical research automation",
+      "biotechnology",
+      "medical research",
+      "knowledge graphs",
+      "biopharma ai",
+      "natural language processing",
+      "ai for biotechs",
       "b2b",
-      "e-commerce",
-      "d2c",
+      "consulting",
       "services",
-      "computer systems design and related services",
-      "customer experience",
-      "data management",
-      "process optimization",
+      "research and development in the physical, engineering, and life sciences",
+      "pharma",
+      "life sciences",
+      "security",
+      "market research",
+      "machine learning",
+      "biotech",
+      "business intelligence",
+      "project management",
       "information technology & services",
-      "saas",
-      "computer software",
       "enterprise software",
       "enterprises",
+      "computer software",
       "computer & network security",
-      "sales",
-      "education management",
-      "health care",
-      "health, wellness & fitness",
-      "hospital & health care",
-      "crm",
-      "consumer internet",
-      "consumers",
-      "internet"
+      "medical",
+      "artificial intelligence",
+      "analytics",
+      "productivity"
     ]
     
-    async def main():
-        x = JaccardKeywordScorer(marking_scheme_keywords)
-        o = await x.score_company(keywords)
-        import json
-        logger.info(o)
+    scorer = TfIdfScorer(company_keywords, marking_scheme_keywords)
+    results = scorer.score()
+    print(json.dumps(results, indent=2))
 
-    asyncio.run(main())

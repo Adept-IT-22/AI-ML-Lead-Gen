@@ -10,15 +10,15 @@ logger = logging.getLogger()
 
 load_dotenv(override=True)
 
-DB_URL = os.getenv("DATABASE_URL")
-#DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
+#DB_URL = os.getenv("DATABASE_URL")
+DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
 
 async def update_contacted_status(events):
     logger.info(f"The DB URL is: {DB_URL}")
 
     #Write events to file
     async with aiofiles.open("sendgrid_webhooks", "a") as file:
-        await file.write(json.dumps(events.json, indent=2))
+        await file.write(json.dumps(events, indent=2))
 
     # We use a dictionary to map SendGrid events to a value in the contacted_status db column.
     # The 'status' is the value to be set in the database.
@@ -129,5 +129,15 @@ async def update_contacted_status(events):
 # Example usage
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    sample_events = []
+    sample_events = [
+        {"email": "alice@example.com", "event": "delivered"},
+        {"email": "bob@example.com", "event": "open"},
+        {"email": "carol@example.com", "event": "bounce"},
+        {"email": "dave@example.com", "event": "unsubscribe"},
+        {"email": "eve@example.com", "event": "click"},
+        {"email": "frank@example.com", "event": "processed"},
+        {"email": "alice@example.com", "event": "click"},  # Alice gets a higher precedence event
+        {"email": "bob@example.com", "event": "spamreport"},
+        {"email": "carol@example.com", "event": "delivered"},  # Carol gets a better event after bounce
+    ]
     asyncio.run(update_contacted_status(sample_events))
