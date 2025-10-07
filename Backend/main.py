@@ -578,7 +578,7 @@ async def main():
                 #Store icp score
                 await store_icp_score(pool, company_id, age_score, employee_count_score,
                                     funding_stage_score, final_keywords_score, contactability_score,
-                                    geography_score, final_score, category_breakdown, top_matches,
+                                    geography_score, round(final_score, 1), category_breakdown, top_matches,
                                     interpretation)
                 await update_company_icp_score(pool, company_id, final_score)
 

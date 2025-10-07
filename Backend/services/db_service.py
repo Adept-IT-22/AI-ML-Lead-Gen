@@ -627,7 +627,7 @@ async def update_company_icp_score(pool, company_id: int, total_score: float):
     """
 
     async with pool.acquire() as conn:
-        await conn.execute(query, total_score, company_id)
+        await conn.execute(query, float(total_score), company_id)
 
     logger.info("Company icp_score and status updated (if applicable)")
 
