@@ -72,7 +72,7 @@ def dict_of_lists(all_jobs: List[Dict])->Dict[str, List[Any]]:
         "url": []
     }
 
-    ai_keywords = [" ai", "artificial intelligence", "machine learning", "ml", "deep learning", "nlp", "computer vision"]
+    ai_keywords = ["ai", "artificial intelligence", "machine learning", "ml", "deep learning", "nlp", "computer vision"]
 
     for job in all_jobs:
         if any(keyword in job.get("url", "").lower() or keyword in job.get("title", "").lower() for keyword in ai_keywords):
@@ -104,6 +104,7 @@ async def main():
             extracted_data = {}
 
     #put extracted data to llm_results
+    llm_results = None
     if extracted_data:
         llm_results = copy.deepcopy(hiring_fetched_data)
         for key, value in extracted_data.items():
