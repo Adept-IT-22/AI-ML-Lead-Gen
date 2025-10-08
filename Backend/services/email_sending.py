@@ -17,6 +17,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
 EMAIL_SEND_API = "https://api.sendgrid.com/v3/mail/send"
 EMAIL_FROM = "antony@adept-techno.co.ke" 
+EMAIL_FROM_NAME = "Antony Ngatia"
 REPLY_TO_EMAIL = "antony@adept-techno.co.ke" 
 REPLY_TO_NAME = "Antony Ngatia" 
 
@@ -85,6 +86,11 @@ async def send_email(
         email=REPLY_TO_EMAIL,
         name=REPLY_TO_NAME
     )
+
+    email.from_email = From(
+        email=EMAIL_FROM,
+        name=EMAIL_FROM_NAME
+    )
     
     #Add email settings
     email.tracking_settings = TrackingSettings(
@@ -101,8 +107,8 @@ if __name__ == "__main__":
         response = await send_email(
             data_source='funding',
             latest_funding_round = "seed",
-            email_to = 'm10mathenge@gmail.com',
-            first_name = 'Mark',
+            email_to = 'william.gateri@adept-techno.com',
+            first_name = 'Billy',
             company_name='Adept',
         )
         print(response.status_code)

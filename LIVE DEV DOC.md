@@ -198,5 +198,6 @@ This section is a to-do list for me as the programmer.
 + See if I can get event attendees on eventbrite
 + Fetch from google news
 + During email sending, if company isn't found enrich it 
-+ Add export button to lead list
-+ Fix keyword scoring
++ Fix keyword scoring to only include services we provide
++ Some companies e.g. envive ai, are getting enriched repeatedly because 
+pre the enrichment phase they're not getting filtered. fix that.
