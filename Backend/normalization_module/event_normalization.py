@@ -33,15 +33,15 @@ async def normalize_event_data(ingested_data: Dict[str, List[Any]]) -> Dict[str,
     normalized_event_data.update({
         "type": "event",
         "source": ingested_data.get("source", ""),
-        "title": [title.strip() for title in ingested_data.get("event_title", [])],
-        "link": [normalize_url(url) for url in ingested_data.get("event_link", [])],
+        "title": [title.strip() for title in ingested_data.get("title", [])],
+        "link": [normalize_url(url) for url in ingested_data.get("link", [])],
         "event_date": [str(normalize_date(date)) for date in ingested_data.get("event_date", [])],
         "country": [normalize_country(country) for country in ingested_data.get("country", [])],
         "city": [normalize_city(city) for city in ingested_data.get("city", [])],
         "event_id": [eid.strip() for eid in ingested_data.get("event_id", [])],
         "event_summary": [summary.strip() for summary in ingested_data.get("event_summary", [])],
         "event_is_online": [str_to_bool(status) for status in ingested_data.get("event_is_online", [])],
-        "tags": [normalize_tags(tag) for tag in ingested_data.get("event_tags")]
+        "tags": [normalize_tags(tag) for tag in ingested_data.get("tags", [])]
     })
 
     logger.info("Normalizing event data")
