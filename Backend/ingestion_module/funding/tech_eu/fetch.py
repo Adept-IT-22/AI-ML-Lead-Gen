@@ -82,8 +82,6 @@ async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, Li
 async def main():
     start_time = time.perf_counter()
     links_and_paragraphs = await fetch_tech_eu_data()
-    logger.info("LOOK HERE............\n")
-    logger.info(f'{links_and_paragraphs}')
 
     if links_and_paragraphs and (links_and_paragraphs.get("urls") and links_and_paragraphs.get("paragraphs")):
         try:
