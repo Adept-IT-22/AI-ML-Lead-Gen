@@ -42,8 +42,8 @@ async def traverse_sitemap(client:httpx.AsyncClient, url: str)->Dict[str, List[A
 
 
         article_data = {
-            "article_link": [],
-            "article_title": [],
+            "link": [],
+            "title": [],
             "article_date": []
         }
 
@@ -52,14 +52,14 @@ async def traverse_sitemap(client:httpx.AsyncClient, url: str)->Dict[str, List[A
             logger.info(f"The article link is {article_link}")
 
             if article_link is not None and ("ai-" in article_link and ("funding" in article_link or "-raises" in article_link or "-closes" in article_link or "-nets" in article_link or "-secures" in article_link)):
-                article_data["article_link"].append(article_link)
+                article_data["link"].append(article_link)
 
                 article_date_and_time = url.find('news:news/news:publication_date', namespaces).text
                 article_date = article_date_and_time.split("T")[0] if article_date_and_time is not None else None
                 article_data["article_date"].append(article_date if article_date is not None else "")
 
                 article_title = url.find('news:news/news:title', namespaces).text
-                article_data["article_title"].append(article_title if article_title is not None else "")
+                article_data["title"].append(article_title if article_title is not None else "")
 
         logger.info("Sitemap traversal done")
         logger.info(f"The article data is: {article_data}")
@@ -67,8 +67,8 @@ async def traverse_sitemap(client:httpx.AsyncClient, url: str)->Dict[str, List[A
     except Exception as e:
         logger.error(f"Error traversing sitemap: {str(e)}")
         return {
-            "article_link": [],
-            "article_title": [],
+            "link": [],
+            "title": [],
             "article_date": []
         }
 
@@ -124,7 +124,7 @@ async def main():
     async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
         #Get article title, link and date
         article_data = await traverse_sitemap(client, URL)
-        article_links = [link for link in article_data["article_link"] if link is not None]
+        article_links = [link for link in article_data["link"] if link is not None]
 
         #Fetch the necessary paragraphs for each url
         links_and_paragraphs = await get_paragraphs(client, article_links)
@@ -136,6 +136,7 @@ async def main():
             logger.error(f"Failed to extract AI content from TechCrunch's data: {str(e)}")
             extracted_data = {}
 
+        llm_results = None
         if extracted_data:
             llm_results =  copy.deepcopy(funding_data_dict)
 
