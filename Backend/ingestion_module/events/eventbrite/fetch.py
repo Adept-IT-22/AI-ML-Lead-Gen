@@ -27,17 +27,17 @@ async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str
     logger.info(f"The url is : {url}")
     event_data = {
         "type": "event",
-        "source": "",
-        "event_title": [],
-        "event_link": [],
+        "source": "Eventbrite",
+        "title": [],
+        "link": [],
         "event_date": [],
-        "event_country": [],
-        "event_city": [],
+        "country": [],
+        "city": [],
         "event_id": [],
         "event_summary": [],
         "event_is_online": [],
         "event_organizer_id": [],
-        "event_tags": []
+        "tags": []
         }
 
     try:
@@ -58,19 +58,17 @@ async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str
         #Append event data in event_data dictionary
         events = data.get("search_data", {}).get("events", {}).get("results", [])
         for event in events:
-            event_data["event_title"].append(event.get("name", ""))
+            event_data["title"].append(event.get("name", ""))
             event_data["event_date"].append(event.get("start_date", ""))
-            event_data["event_country"].append(event.get("timezone", "").split("/")[0])
-            event_data["event_city"].append(event.get("timezone", "").split("/")[1])
-            event_data["event_link"].append(event.get("url", ""))
+            event_data["country"].append(event.get("timezone", "").split("/")[0])
+            event_data["city"].append(event.get("timezone", "").split("/")[1])
+            event_data["link"].append(event.get("url", ""))
             event_data["event_id"].append(event.get("id", ""))
             event_data["event_summary"].append(event.get("summary", ""))
             event_data["event_is_online"].append(event.get("is_online_event", "") == "true")
             event_data["event_organizer_id"].append(event.get("primary_organizer_id", ""))
             event_tags = [tag.get("display_name", "") for tag in event.get("tags", [])]
-            event_data["event_tags"].append(event_tags)
-
-        event_data["source"] = "Eventbrite"
+            event_data["tags"].append(event_tags)
 
         logger.info("Done fetching Eventbrite events")
         return event_data
