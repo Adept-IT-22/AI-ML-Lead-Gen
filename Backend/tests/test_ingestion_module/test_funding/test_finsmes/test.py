@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../..")))
-from Backend.ingestion_module.funding.finsmes import fetch as fetch_mod
+from ingestion_module.funding.finsmes import fetch as fetch_mod
 
 import pytest_asyncio
 import pytest
@@ -34,11 +34,12 @@ async def test_find_newest_sitemap_returns_latest_url(mock_client):
 @pytest.mark.asyncio
 async def test_fetch_ai_funding_article_links_filters_ai_and_funding(mock_client):
     xml = """
-    <urlset xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9">
-        <sitemap:url><sitemap:loc>https://www.finsmes.com/ai-funding-2023.html</sitemap:loc></sitemap:url>
-        <sitemap:url><sitemap:loc>https://www.finsmes.com/ai-raises-2023.html</sitemap:loc></sitemap:url>
-        <sitemap:url><sitemap:loc>https://www.finsmes.com/other-news.html</sitemap:loc></sitemap:url>
-    </urlset>
+        <urlset xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <sitemap:url><sitemap:loc>https://www.finsmes.com/adept-ai-funding-2023.html</sitemap:loc></sitemap:url>
+            <sitemap:url><sitemap:loc>https://www.finsmes.com/not-adept-ai-raises-2023.html</sitemap:loc></sitemap:url>
+            <sitemap:url><sitemap:loc>https://www.finsmes.com/other-news.html</sitemap:loc></sitemap:url>
+        </urlset>
+
     """
     mock_response = MagicMock()
     mock_response.content = xml.encode()
@@ -46,9 +47,8 @@ async def test_fetch_ai_funding_article_links_filters_ai_and_funding(mock_client
     # Patch fetch_sync to return the mocked response
     with patch.object(fetch_mod, "fetch_sync", return_value=mock_response):
         links = await fetch_mod.fetch_ai_funding_article_links(mock_client, "dummy_url")
-        print(f"The links are: {links}")
-        assert "https://www.finsmes.com/ai-funding-2023.html" in links
-        assert "https://www.finsmes.com/ai-raises-2023.html" in links
+        assert "https://www.finsmes.com/adept-ai-funding-2023.html" in links
+        assert "https://www.finsmes.com/not-adept-ai-raises-2023.html" in links
         assert "https://www.finsmes.com/other-news.html" not in links
 
 # Test that extract_paragraphs returns the correct paragraphs from HTML content

@@ -9,9 +9,9 @@ import aiofiles
 import cloudscraper
 from lxml import etree, html
 from typing import Dict, List
-from Backend.services.request_headers import get_header
-from Backend.ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
-from Backend.utils.data_structures.news_data_structure import fetched_funding_data as funding_fetched_data
+from services.request_headers import get_header
+from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
+from utils.data_structures.news_data_structure import fetched_funding_data as funding_fetched_data
 
 logger = logging.getLogger()
 

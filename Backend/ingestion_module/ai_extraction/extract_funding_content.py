@@ -8,7 +8,7 @@ from typing import List, Any, Dict
 import google.generativeai as genai
 from google.generativeai import types
 from google.api_core.exceptions import ResourceExhausted
-from Backend.utils.prompts.funding_prompt import get_funding_extraction_prompt
+from utils.prompts.funding_prompt import get_funding_extraction_prompt
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger()

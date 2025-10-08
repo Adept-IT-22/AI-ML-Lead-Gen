@@ -580,7 +580,7 @@ async def main():
                                     funding_stage_score, final_keywords_score, contactability_score,
                                     geography_score, round(final_score, 1), category_breakdown, top_matches,
                                     interpretation)
-                await update_company_icp_score(pool, company_id, final_score)
+                await update_company_icp_score(pool, company_id, round(final_score, 1))
 
     
     #Use a semaphore to allow concurrent scoring of companies
