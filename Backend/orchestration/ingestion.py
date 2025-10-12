@@ -44,3 +44,42 @@ async def run_ingestion_modules()->Dict:
         logger.info(f"{name}: {status}")
 
     return results
+
+#Put results in queue.
+"""
+Results below will be a dictionary of dictionaries i.e.
+{
+    results = {
+        "finmes": {
+            "type": "funding",
+            "source": "finsmes",
+            etc.
+        }
+    }
+}
+"""
+async def populate_queue(ingestion_to_normalization_queue: asyncio.Queue)->asyncio.Queue:
+    results = await run_ingestion_modules()
+
+    logger.info("Adding ingestion module results to queue 🚂")
+
+    #Add {"finsmes": {}, "tech_eu": {}, "eventbrite": {}}
+    for name, result in results.items():
+        if not isinstance(result, Exception) and isinstance(result, dict) and result.get("type"):
+            #Put name and result in queue for easier debugging
+            await ingestion_to_normalization_queue.put((name, result))
+            logger.info(f"The ingestion to normalization queue size is: {ingestion_to_normalization_queue.qsize()}")
+        else:
+            logger.error(f"Skipping {name} as its results were empty")
+
+    return ingestion_to_normalization_queue
+
+
+if __name__ == "__main__":
+    async def main():
+        q = asyncio.Queue()
+        x = await populate_queue(q)
+        for _ in range(x.qsize()):
+            print(await x.get())
+
+    asyncio.run(main())

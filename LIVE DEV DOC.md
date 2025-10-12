@@ -200,4 +200,6 @@ This section is a to-do list for me as the programmer.
 + During email sending, if company isn't found enrich it 
 + Fix keyword scoring to only include services we provide
 + Some companies e.g. envive ai, are getting enriched repeatedly because 
-pre the enrichment phase they're not getting filtered. fix that.
+pre the enrichment phase they're not getting filtered. fix that by checking
+the normalization db immediately the links are fetched, even before they
+get fed to the llm.
