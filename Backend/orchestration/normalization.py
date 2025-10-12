@@ -3,49 +3,102 @@ import aiofiles
 import asyncio
 import logging
 from orchestration.ingestion import run_ingestion_modules
+from services.db_service import *
 from normalization_module.event_normalization import normalize_event_data
 from normalization_module.funding_normalization import normalize_funding_data
 from normalization_module.hiring_normalization import normalize_hiring_data
 
 logger = logging.getLogger()
 
-async def normalize_data(
-        ingestion_to_normalization_queue: asyncio.Queue,
-        normalization_to_enrichment_queue: asyncio.Queue
-        ):
-
-    logger.info("Normalization started....")
-
-    for name, result in results.items():
-        if not isinstance(result, Exception) and isinstance(result, dict) and result.get("type"):
-            #Put name and result in queue for easier debugging
-            await ingestion_to_normalization_queue.put((name, result))
-            logger.info(f"The ingestion to normalization queue size is: {ingestion_to_normalization_queue.qsize()}")
-        else:
-            logger.error(f"Skipping {name} as its results were empty")
-
-    #==============2. NORMALIZATION================
-    #2.1 =========Fetch from queue============
+async def x(
+        ingestion_to_normalization_queue: asyncio.Queue, 
+        normalization_to_enrichment_queue: asyncio.Queue)->asyncio.Queue: 
     logger.info("Normalizing ingested data....")
     all_normalized_data = []
 
-    while not ingestion_to_normalization_queue.empty():
-        name, data = await ingestion_to_normalization_queue.get()
-        logger.info(f"Fetched data from {name}. Queue size is now: {ingestion_to_normalization_queue.qsize()}")
+    async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+        while not ingestion_to_normalization_queue.empty():
+            name, data = await ingestion_to_normalization_queue.get()
+            logger.info(f"Fetched data from {name}. Queue size is now: {ingestion_to_normalization_queue.qsize()}")
 
-    #2.2 ==========Normalize data ===============
-        data_type = data.get("type")
-        if isinstance(data, dict) and data_type == "event": 
-            normalized_data= await normalize_event_data(data)
+            # 2.2 ========== Normalize data ===============
+            data_type = data.get("type")
 
-        elif isinstance(data, dict) and data_type == "funding":
-            normalized_data = await normalize_funding_data(data)
+            # Step 1: Normalize
+            if data_type == "event":
+                normalized_data = await normalize_event_data(data)
+            elif data_type == "funding":
+                normalized_data = await normalize_funding_data(data)
+            elif data_type == "hiring":
+                normalized_data = await normalize_hiring_data(data)
+            else:
+                logger.warning(f"Unknown data type: {data_type}")
+                return
 
-        elif isinstance(data, dict) and data_type == "hiring":
-            normalized_data = await normalize_hiring_data(data)
+            # Step 2: Insert master (one row per dataset)
+            for i, normalized_link in enumerate(normalized_data.get("link")):
+                normalized_master_data_to_store = [
+                    normalized_data.get("type", ""),
+                    normalized_data.get("source", ""),
+                    normalized_link,
+                    normalized_data.get("title")[i] if normalized_data.get("title") and i < len(normalized_data.get("title", [])) else None,
+                    normalized_data.get("city")[i] if normalized_data.get("city") and i < len(normalized_data.get("city", [])) else None,
+                    normalized_data.get("country")[i] if normalized_data.get("country") and i < len(normalized_data.get("country", [])) else None,
+                    normalized_data.get("tags")[i] if normalized_data.get("tags") and i < len(normalized_data.get("tags", [])) else []
+                ]
+                data_is_in_db = await is_data_in_db(pool, normalized_link)
+                if data_is_in_db:
+                    continue
+                master_id = await store_in_normalized_master(normalized_master_data_to_store, pool)
 
-        all_normalized_data.append(normalized_data)
-        logger.info(f"Normalized {data_type} data from {name}")
+                # Step 3: Insert children
+                if data_type == "event":
+                    event_data_to_store = [
+                        master_id,
+                        normalized_data.get("event_id")[i] if normalized_data.get("event_id") and i < len(normalized_data.get("event_id", [])) else None,
+                        normalized_data.get("event_summary")[i] if normalized_data.get("event_summary") and i < len(normalized_data.get("event_summary", [])) else None,
+                        normalized_data.get("event_is_online")[i] if normalized_data.get("event_is_online") and i < len(normalized_data.get("event_is_online", [])) else None,
+                        normalized_data.get("event_organizer_id")[i] if normalized_data.get("event_organizer_id") and i < len(normalized_data.get("event_organizer_id", [])) else None
+                    ]
+                    try:
+                        await store_in_normalized_events(event_data_to_store, pool)
+                    except Exception as e:
+                        logger.error(f"Failed to store normalized events: {str(e)}")
+
+                elif data_type == "funding":
+                    funding_data_to_store = [
+                        master_id,
+                        normalized_data.get("company_name")[i] if normalized_data.get("company_name") and i < len(normalized_data.get("company_name", [])) else None,
+                        normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers") and i < len(normalized_data.get("company_decision_makers", [])) else [],
+                        normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position") and i < len(normalized_data.get("company_decision_makers_position", [])) else [],
+                        normalized_data.get("funding_round")[i] if normalized_data.get("funding_round") and i < len(normalized_data.get("funding_round", [])) else None,
+                        normalized_data.get("amount_raised")[i] if normalized_data.get("amount_raised") and i < len(normalized_data.get("amount_raised", [])) else None,
+                        normalized_data.get("currency")[i] if normalized_data.get("currency") and i < len(normalized_data.get("currency", [])) else None,
+                        normalized_data.get("investor_companies")[i] if normalized_data.get("investor_companies") and i < len(normalized_data.get("investor_companies", [])) else [],
+                        normalized_data.get("investor_people")[i] if normalized_data.get("investor_people") and i < len(normalized_data.get("investor_people", [])) else [],
+                    ]
+
+                    try:
+                        await store_in_normalized_funding(funding_data_to_store, pool)
+                    except Exception as e:
+                        logger.error(f"Failed to store normalized funding: {str(e)}")
+
+                elif data_type == "hiring":
+                    hiring_data_to_store = [
+                        master_id,
+                        normalized_data.get("company_name")[i] if normalized_data.get("company_name") and i < len(normalized_data.get("company_name", [])) else None,
+                        normalized_data.get("company_decision_makers")[i] if normalized_data.get("company_decision_makers") and i < len(normalized_data.get("company_decision_makers", [])) else [],
+                        normalized_data.get("company_decision_makers_position")[i] if normalized_data.get("company_decision_makers_position") and i < len(normalized_data.get("company_decision_makers_position", [])) else [],
+                        normalized_data.get("job_roles")[i] if normalized_data.get("job_roles") and i < len(normalized_data.get("job_roles", [])) else [],
+                        normalized_data.get("hiring_reasons")[i] if normalized_data.get("hiring_reasons") and i < len(normalized_data.get("hiring_reasons", [])) else []
+                    ]
+                    try:
+                        await store_in_normalized_hiring(hiring_data_to_store, pool)
+                    except Exception as e:
+                        logger.error(f"Failed to store normalized hiring data: {str(e)}")
+
+            all_normalized_data.append(normalized_data)
+            logger.info(f"Normalized {data_type} data from {name}")
 
     async with aiofiles.open("normalized.txt", "a") as file:
         await file.write(json.dumps(all_normalized_data, indent=2))

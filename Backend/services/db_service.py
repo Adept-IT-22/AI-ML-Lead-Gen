@@ -260,7 +260,7 @@ async def is_company_in_db(company_name: str)->bool:
                 results = await conn.fetchrow(query, company_name)
 
             if results:
-                logger.info(f"{company_name} found")
+                logger.warning(f"{company_name} found")
                 return True
             else: 
                 logger.info(f"{company_name} not found")
@@ -285,7 +285,7 @@ async def is_company_id_in_db(company_apollo_id: str)->bool:
                 results = await conn.fetchrow(query, company_apollo_id)
 
             if results:
-                logger.info(f"{company_apollo_id} found")
+                logger.warning(f"{company_apollo_id} found")
                 return True
             else: 
                 logger.info(f"{company_apollo_id} not found")
@@ -310,7 +310,7 @@ async def is_person_in_db(apollo_id: str)->bool:
                 results = await conn.fetchrow(query, apollo_id)
 
             if results:
-                logger.info(f"{apollo_id} found")
+                logger.warning(f"{apollo_id} found")
                 return True
             else: 
                 logger.info(f"{apollo_id} not found")
@@ -618,7 +618,7 @@ async def update_company_icp_score(pool, company_id: int, total_score: float):
     # Update both icp_score and status (conditionally)
     query = """
         UPDATE companies
-        SET icp_score = $1,
+        SET icp_score = CAST($1 AS numeric(4,1)),
             status = CASE
                         WHEN $1 > 69 THEN 'mql'
                         ELSE status
