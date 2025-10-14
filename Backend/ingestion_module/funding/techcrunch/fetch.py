@@ -147,14 +147,14 @@ async def main():
                 elif key in llm_results:
                     llm_results[key] = value_list
                     
-            llm_results["source"] = "TechCrunch"
+            llm_results["source"].append("TechCrunch")
             llm_results["link"] = article_links
 
         else:
             logger.warning("AI extraction for TechCrunch returned no data. No logging will happen")
 
     duration = time.perf_counter() - start_time
-    logger.info(f"This file ran for {duration:.2f} seconds")
+    logger.info(f"Techcrunch ran for {duration:.2f} seconds")
 
     return llm_results
 

@@ -8,7 +8,8 @@ import { IEvent } from '../../Libs/interfaces/event.interface';
 })
 export class EventService {
 
-  private readonly backend_url: string = 'http://192.168.1.54:5000'; 
+  //private readonly backend_url: string = 'http://192.168.1.54:5000'; 
+  private readonly backend_url: string = 'http://127.0.0.1:5000'; 
   private http = inject(HttpClient);
 
   events(): Observable<IEvent[]> {

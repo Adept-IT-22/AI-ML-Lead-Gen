@@ -193,14 +193,14 @@ async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronousl
                 elif key in llm_results:
                     llm_results[key] = value_list
 
-            llm_results["source"] = "FinSMEs"
+            llm_results["source"].append("FinSMEs")
             llm_results["link"].extend(results["urls"])
 
         else:
             logger.warning("AI extraction for FinSMEs returned no data. No logging will happen")
 
         duration = time.perf_counter() - current_time
-        logger.info(f"Program ran for {duration:.2f} seconds")
+        logger.info(f"Finsmes ran for {duration:.2f} seconds")
     
     return llm_results
 

@@ -185,6 +185,7 @@ async def process_articles_batch(batch: Dict[str, List[Any]])->Dict[str, List[An
 
 #===============REGROUP THE BATCHES================
 async def finalize_ai_extraction(links_and_paragraphs: Dict[str, List[str]])->Dict[str, List[Any]]:
+    final_results = {}
     try:
         logger.info("Finalizing AI extraction...")
         list_of_batches = split_into_batches(links_and_paragraphs, BATCH_SIZE)
@@ -193,7 +194,6 @@ async def finalize_ai_extraction(links_and_paragraphs: Dict[str, List[str]])->Di
         results = await asyncio.gather(*tasks)
 
         #Add results from each batch into final_results. 
-        final_results = {}
         for result in results:
             for key, val in result.items():
                 if key not in final_results:
