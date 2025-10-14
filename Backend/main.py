@@ -13,6 +13,7 @@ from typing import List, Dict, Any, Awaitable, Union, Callable
 from ingestion_module.funding.finsmes.fetch import main as finsmes_main
 from ingestion_module.funding.tech_eu.fetch import main as tech_eu_main
 from ingestion_module.funding.techcrunch.fetch import main as techcrunch_main
+from ingestion_module.funding.google_news.fetch import main as google_news_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 from utils.db_queries import *
@@ -67,7 +68,8 @@ async def run_ingestion_modules():
         ("tech_eu", tech_eu_main()),
         ("techcrunch", techcrunch_main()),
         ("hacker_news", hacker_news_main()),
-        ("eventbrite", eventbrite_main())
+        ("eventbrite", eventbrite_main()),
+        ("google_news", google_news_main())
     ]
 
     #A list of wrap coroutine objects to be run
@@ -106,7 +108,7 @@ async def main():
         results = {
             "finmes": {
                 "type": "funding",
-                "source": "finsmes",
+                "source": ["finsmes"],
                 etc.
             }
         }

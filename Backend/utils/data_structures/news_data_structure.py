@@ -20,7 +20,7 @@ class FundingData(TypedDict):
 
 fetched_funding_data = {
     "type": "funding",
-    "source": "",
+    "source": [],
     "title": [],
     "link": [],
     "article_date": [],

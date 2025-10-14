@@ -5,7 +5,6 @@ import copy
 import time
 import json
 import httpx
-import aiofiles
 import asyncio
 import logging
 from lxml import etree, html
@@ -103,7 +102,7 @@ async def main():
             elif key in llm_results:
                 llm_results[key] = value_list
 
-        llm_results["source"] = "Tech.eu"
+        llm_results["source"].append("Tech.eu")
         urls = links_and_paragraphs.get("urls")
         llm_results["link"] = urls
 
@@ -111,7 +110,7 @@ async def main():
         logger.warning("AI extraction for Tech_eu returned no data. No logging will happen")
 
     duration = time.perf_counter() - start_time
-    logger.info(f"This task took {duration:.2f} seconds")
+    logger.info(f"Tech_eu took {duration:.2f} seconds")
 
     return llm_results
 
