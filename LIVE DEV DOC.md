@@ -203,3 +203,4 @@ This section is a to-do list for me as the programmer.
 pre the enrichment phase they're not getting filtered. fix that by checking
 the normalization db immediately the links are fetched, even before they
 get fed to the llm.
++ Google news links are too long. Shorten them.

@@ -159,7 +159,7 @@ async def main():
             for i, normalized_link in enumerate(normalized_data.get("link")):
                 normalized_master_data_to_store = [
                     normalized_data.get("type", ""),
-                    normalized_data.get("source", ""),
+                    normalized_data.get("source")[i] if normalized_data.get("source") and i < len(normalized_data.get("source")) else "",
                     normalized_link,
                     normalized_data.get("title")[i] if normalized_data.get("title") and i < len(normalized_data.get("title", [])) else None,
                     normalized_data.get("city")[i] if normalized_data.get("city") and i < len(normalized_data.get("city", [])) else None,
