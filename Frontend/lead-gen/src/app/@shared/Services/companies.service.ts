@@ -24,7 +24,7 @@ export class CompaniesService {
   //private readonly backend_url: string = 'http://127.0.0.1:5000'; (For at home)
 
   //FOR USE IN PROD
-  private readonly backend_url: string = '/api';
+  private readonly backend_url: string = 'api';
   private http = inject(HttpClient);
 
   // ✅ Fetch all companies (with embedded people array)
