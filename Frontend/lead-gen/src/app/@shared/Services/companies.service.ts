@@ -19,8 +19,12 @@ export interface CompanySection {
   providedIn: 'root'
 })
 export class CompaniesService {
-  //private readonly backend_url: string = 'http://192.168.1.54:5000';
-  private readonly backend_url: string = 'http://127.0.0.1:5000';
+  //FOR USE IN DEV
+  //private readonly backend_url: string = 'http://192.168.1.54:5000'; (For the office)
+  //private readonly backend_url: string = 'http://127.0.0.1:5000'; (For at home)
+
+  //FOR USE IN PROD
+  private readonly backend_url: string = '/api';
   private http = inject(HttpClient);
 
   // ✅ Fetch all companies (with embedded people array)
