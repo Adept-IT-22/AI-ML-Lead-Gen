@@ -727,16 +727,7 @@ async def receive_user_phone_number():
 def sendgrid_events_webhook():
     logger.info("Fetching webhook event data...")
 
-    logger.info(f"Request content type: {request.content_type}")
-    logger.info(f"Request data: {request.data}")
-    logger.info(f"Request form: {request.form}")
-    logger.info(f"Request args: {request.args}")
-
     events = request.json
-
-    logger.info(f"Request.json: {events}")
-    logger.info(f"Type of events: {type(events)}")
-
     if not events:
         return jsonify({"Error": "No events received in request body"}), 400
 
