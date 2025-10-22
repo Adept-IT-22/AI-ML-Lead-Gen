@@ -724,14 +724,24 @@ async def receive_user_phone_number():
 
 #Sendgrid webhook to receive data about emails sent
 @app.route('/webhook', methods=["POST"])
-async def sendgrid_events_webhook():
+def sendgrid_events_webhook():
     logger.info("Fetching webhook event data...")
+
+    logger.info(f"Request content type: {request.content_type}")
+    logger.info(f"Request data: {request.data}")
+    logger.info(f"Request form: {request.form}")
+    logger.info(f"Request args: {request.args}")
+
     events = request.json
+
+    logger.info(f"Request.json: {events}")
+    logger.info(f"Type of events: {type(events)}")
+
     if not events:
         return jsonify({"Error": "No events received in request body"}), 400
 
     try:
-        await update_contacted_status(events)
+        asyncio.run(update_contacted_status(events))
         logger.info("Successfully processed webhook events")
         return jsonify({"Success": "Done fetching webhook event data"}), 200
 
@@ -741,7 +751,7 @@ async def sendgrid_events_webhook():
 
     except Exception as e:
         logger.error(f"An unexpected error occurred: {str(e)}")
-        return {"Error": "An unexpected error occurred", "details": str(e)}, 500
+        return jsonify({"Error": "An unexpected error occurred", "details": str(e)}), 500
 
 #Endpoint to fetch events
 @app.route('/events', methods=["GET"])

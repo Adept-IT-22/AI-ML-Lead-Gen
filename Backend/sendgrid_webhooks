@@ -1,0 +1,43 @@
+[
+  {
+    "email": "alice@example.com",
+    "event": "delivered"
+  },
+  {
+    "email": "bob@example.com",
+    "event": "open"
+  },
+  {
+    "email": "carol@example.com",
+    "event": "bounce"
+  },
+  {
+    "email": "dave@example.com",
+    "event": "unsubscribe"
+  },
+  {
+    "email": "eve@example.com",
+    "event": "click"
+  },
+  {
+    "email": "frank@example.com",
+    "event": "processed"
+  },
+  {
+    "email": "alice@example.com",
+    "event": "click"
+  },
+  {
+    "email": "bob@example.com",
+    "event": "spamreport"
+  },
+  {
+    "email": "carol@example.com",
+    "event": "delivered"
+  }
+][
+  {
+    "email": "test@example.com",
+    "event": "delivered"
+  }
+]
