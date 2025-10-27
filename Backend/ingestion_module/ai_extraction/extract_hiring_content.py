@@ -101,12 +101,15 @@ async def _call_gemini_api_with_retry(prompt: str) -> types.GenerateContentRespo
     """Internal function to call Gemini API with retry logic."""
     logger.info("Attempting Gemini API call for hiring...")
     try:
-        response = await model.generate_content_async(
-            contents=prompt,
-            generation_config=types.GenerationConfig(
-                response_mime_type="application/json",
-                temperature=0.5,
-            )
+        response = await asyncio.wait_for(
+            model.generate_content_async(
+                contents=prompt,
+                generation_config=types.GenerationConfig(
+                    response_mime_type="application/json",
+                    temperature=0.5,
+                )
+            ),
+            timeout=30.0
         )
         logger.info("Gemini API for hiring call successful.")
         return response
