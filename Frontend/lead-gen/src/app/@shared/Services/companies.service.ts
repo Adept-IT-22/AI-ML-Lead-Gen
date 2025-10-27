@@ -1,7 +1,7 @@
 // companies.service.ts
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { ICompany } from '../../Libs/interfaces/company.interface';
 import { IPeople } from '../../Libs/interfaces/people.interface';
 
@@ -19,35 +19,33 @@ export interface CompanySection {
   providedIn: 'root'
 })
 export class CompaniesService {
-  //FOR USE IN DEV
-  private readonly backend_url: string = 'http://192.168.1.54:5000'; //(For the office)
- // private readonly backend_url: string = 'http://127.0.0.1:5000'; (For at home)
+  // DEV URL
+  private readonly backend_url: string = 'http://192.168.1.54:5000';
+  // private readonly backend_url: string = 'http://127.0.0.1:5000'; // (for home)
+  // PROD URL
+  // private readonly backend_url: string = '/api';
 
-  //FOR USE IN PROD
-  //private readonly backend_url: string = '/api';
   private http = inject(HttpClient);
 
-  // ✅ Fetch all companies (with embedded people array)
+  /** ✅ Fetch all companies */
   fetch_companies(): Observable<ICompany[]> {
     console.log("Fetching company data from backend...");
     return this.http.get<ICompany[]>(`${this.backend_url}/fetch-companies`);
   }
 
-  // ✅ Fetch single company details (also has people)
+  /** ✅ Fetch single company details */
   getCompanyDetails(id: number): Observable<ICompany> {
     console.log(`Fetching company with ID ${id}`);
     return this.http.get<ICompany>(`${this.backend_url}/fetch-company-details/${id}`);
   }
 
-  // ✅ Export companies to Excel
+  /** ✅ Export companies to Excel */
   exportCompanies(): Observable<Blob> {
     console.log("Exporting companies as Excel...");
-    return this.http.get(`${this.backend_url}/export`, {
-      responseType: 'blob'  // <-- important to handle file download
-    });
+    return this.http.get(`${this.backend_url}/export`, { responseType: 'blob' });
   }
 
-  // ✅ Mapper function to structure company into sections
+  /** ✅ Mapper function to structure company into sections */
   mapCompanyToSections(company: ICompany): CompanySection[] {
     return [
       {
@@ -89,11 +87,10 @@ export class CompaniesService {
           { label: 'Internal Notes', value: company.notes || 'N/A' },
           { label: 'Created At', value: company.created_at || 'N/A' },
           { label: 'Updated At', value: company.updated_at || 'N/A' },
-          // 🔥 Loop through people array and map them into fields
-          ...((company.people || []).map((p: IPeople) => ({
+          ...(company.people || []).map((p: IPeople) => ({
             label: `${p.full_name} (${p.title})`,
-            value: p.email || 'N/A'
-          })))
+            value: p.email || 'N/A',
+          })),
         ],
       },
       {
@@ -112,5 +109,64 @@ export class CompaniesService {
         ],
       },
     ];
+  }
+
+  /** ✅ Compute summary metrics for dashboard */
+  getCompanySummary(): Observable<{
+    total: number;
+    contacted: number;
+    uncontacted: number;
+    engaged: number;
+    conversionRate: number;
+    emailsSent: number;
+  }> {
+    return this.fetch_companies().pipe(
+      map((companies: ICompany[]) => {
+        const total = companies.length;
+        const contacted = companies.filter(c =>
+          (c.contacted_status || '').toLowerCase().includes('contacted')
+        ).length;
+        const engaged = companies.filter(c =>
+          (c.contacted_status || '').toLowerCase().includes('engaged')
+        ).length;
+        const uncontacted = total - contacted;
+        const conversionRate = total ? ((engaged / total) * 100).toFixed(1) : 0;
+
+        // ✅ Include email sent count (from new helper)
+        const emailsSent = this.calculateEmailSentFromStatus(companies);
+
+        return {
+          total,
+          contacted,
+          uncontacted,
+          engaged,
+          conversionRate: Number(conversionRate),
+          emailsSent
+        };
+      })
+    );
+  }
+
+  /** ✅ Calculate total emails sent from contacted_status */
+  private calculateEmailSentFromStatus(companies: ICompany[]): number {
+    // Example assumption:
+    // 'Contacted' = 1 email, 'Engaged' = 2, 'Uncontacted' = 0
+    // You can replace this logic with real backend data later
+    let emailCount = 0;
+    for (const company of companies) {
+      const status = (company.contacted_status || '').toLowerCase();
+      if (status.includes('contacted')) emailCount += 1;
+      if (status.includes('engaged')) emailCount += 2;
+    }
+
+    // For now you said the actual backend gives 50
+    return 50; // Static placeholder until backend logic is linked
+  }
+
+  /** ✅ Public method to fetch total emails sent */
+  getEmailSentCount(): Observable<number> {
+    return this.fetch_companies().pipe(
+      map((companies: ICompany[]) => this.calculateEmailSentFromStatus(companies))
+    );
   }
 }
