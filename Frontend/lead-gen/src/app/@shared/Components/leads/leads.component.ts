@@ -104,4 +104,8 @@ export class LeadsTableComponent implements OnInit {
     }
   });
 }
+
+importLeads():void {
+  
+}
 }

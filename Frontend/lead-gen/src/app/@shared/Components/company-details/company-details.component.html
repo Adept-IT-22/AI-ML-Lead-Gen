@@ -10,9 +10,10 @@
             <strong style="color: var(--color-yellow);">{{ entry.key }}:</strong>
 
             <ng-container *ngIf="isLink(entry.value)">
-              <a [href]="entry.value" style="color:var(--color-green)"> 
-                {{ entry.value }} 
+              <a [href]="entry.value" class="link-truncate">
+                {{ truncate(entry.value, 50) }}
               </a>
+
             </ng-container>
             
             <ng-container *ngIf="entry.expandable && !isExpanded(entry.key)">
