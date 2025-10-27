@@ -7,6 +7,13 @@
       [iconPosition]="'left'" 
       (click)="exportToExcel()">
     </app-button>
+
+    <app-button 
+      [buttonText]="'IMPORT'" 
+      [icon]="'upload'" 
+      [iconPosition]="'left'" 
+      (click)="importLeads()">
+    </app-button>
   </div>
 
   <div class="lead-table" [ngClass]="{ 'preview': !fullTable, 'full': fullTable }">
