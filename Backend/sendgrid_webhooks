@@ -40,4 +40,1708 @@
     "email": "test@example.com",
     "event": "delivered"
   }
+][
+  {
+    "email": "alice@example.com",
+    "event": "delivered"
+  },
+  {
+    "email": "bob@example.com",
+    "event": "open"
+  }
+][
+  {
+    "email": "alice@example.com",
+    "event": "delivered"
+  },
+  {
+    "email": "bob@example.com",
+    "event": "open"
+  }
+][
+  {
+    "email": "jan.stiborek@bulletproof.ai",
+    "event": "delivered",
+    "ip": "149.72.120.130",
+    "response": "250 2.0.0 OK  1761224092 6a1803df08f44-87f9e9a842bsi6300486d6.1062 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctTHJoMkZtbXJUUGVEODJxQXhyN3hZUS0w",
+    "sg_message_id": "Lrh2FmmrTPeD82qAxr7xYQ.recvd-7f4fb8995-mlp7m-1-68FA2599-11.0",
+    "smtp-id": "<Lrh2FmmrTPeD82qAxr7xYQ@geopod-ismtpd-canary-0>",
+    "timestamp": 1761224092,
+    "tls": 1
+  },
+  {
+    "email": "jan.stiborek@bulletproof.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LUxyaDJGbW1yVFBlRDgycUF4cjd4WVEtMA",
+    "sg_message_id": "Lrh2FmmrTPeD82qAxr7xYQ.recvd-7f4fb8995-mlp7m-1-68FA2599-11.0",
+    "smtp-id": "<Lrh2FmmrTPeD82qAxr7xYQ@geopod-ismtpd-canary-0>",
+    "timestamp": 1761224089
+  }
+][
+  {
+    "email": "cl@basistheory.com",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LTRmd25FSG52U0RPUUxqN1p6WDhEdEEtMA",
+    "sg_message_id": "4fwnEHnvSDOQLj7ZzX8DtA.recvd-7fd96f4944-hvvlc-1-68FA25A0-15.0",
+    "smtp-id": "<4fwnEHnvSDOQLj7ZzX8DtA@geopod-ismtpd-canary-0>",
+    "timestamp": 1761224096
+  }
+][
+  {
+    "email": "jan.dewaard@resistant.ai",
+    "event": "delivered",
+    "ip": "159.183.224.105",
+    "response": "250 2.0.0 OK  1761224095 41be03b00d2f7-b6cf4e41c6fsi1031929a12.747 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctLU42QXFnSGpUTC1rcTFzeUFUdjVwZy0w",
+    "sg_message_id": "-N6AqgHjTL-kq1syATv5pg.recvd-7748d67658-fz24p-1-68FA259C-37.0",
+    "smtp-id": "<-N6AqgHjTL-kq1syATv5pg@geopod-ismtpd-11>",
+    "timestamp": 1761224096,
+    "tls": 1
+  },
+  {
+    "email": "jan.dewaard@resistant.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LS1ONkFxZ0hqVEwta3Exc3lBVHY1cGctMA",
+    "sg_message_id": "-N6AqgHjTL-kq1syATv5pg.recvd-7748d67658-fz24p-1-68FA259C-37.0",
+    "smtp-id": "<-N6AqgHjTL-kq1syATv5pg@geopod-ismtpd-11>",
+    "timestamp": 1761224092
+  }
+][
+  {
+    "email": "hsial@helpcare.ai",
+    "event": "delivered",
+    "ip": "159.183.235.50",
+    "response": "250 2.0.0 OK  1761224096 6a1803df08f44-87f9e98414esi6306726d6.904 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctVXV0Vkg1dWVUUG1vSFY5VFlYRXVfQS0w",
+    "sg_message_id": "UutVH5ueTPmoHV9TYXEu_A.recvd-769f975875-9cdbw-1-68FA259E-8.0",
+    "smtp-id": "<UutVH5ueTPmoHV9TYXEu_A@geopod-ismtpd-6>",
+    "timestamp": 1761224096,
+    "tls": 1
+  },
+  {
+    "email": "hsial@helpcare.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LVV1dFZINXVlVFBtb0hWOVRZWEV1X0EtMA",
+    "sg_message_id": "UutVH5ueTPmoHV9TYXEu_A.recvd-769f975875-9cdbw-1-68FA259E-8.0",
+    "smtp-id": "<UutVH5ueTPmoHV9TYXEu_A@geopod-ismtpd-6>",
+    "timestamp": 1761224094
+  }
+][
+  {
+    "email": "paolo@lexroom.ai",
+    "event": "delivered",
+    "ip": "149.72.123.24",
+    "response": "250 2.0.0 OK  1761224100 e9e14a558f8ab-431dbc0214asi16769265ab.72 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctVXBXcHktNFNSSy00cndXdDVzdzBMZy0w",
+    "sg_message_id": "UpWpy-4SRK-4rwWt5sw0Lg.recvd-7d86b8fd66-hjhpb-1-68FA25A2-41.0",
+    "smtp-id": "<UpWpy-4SRK-4rwWt5sw0Lg@geopod-ismtpd-8>",
+    "timestamp": 1761224100,
+    "tls": 1
+  },
+  {
+    "email": "paolo@lexroom.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LVVwV3B5LTRTUkstNHJ3V3Q1c3cwTGctMA",
+    "sg_message_id": "UpWpy-4SRK-4rwWt5sw0Lg.recvd-7d86b8fd66-hjhpb-1-68FA25A2-41.0",
+    "smtp-id": "<UpWpy-4SRK-4rwWt5sw0Lg@geopod-ismtpd-8>",
+    "timestamp": 1761224098
+  }
+][
+  {
+    "email": "paolo@lexroom.ai",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "k8Sah_FvQQCA3UKBx3qQZw",
+    "sg_machine_open": false,
+    "sg_message_id": "UpWpy-4SRK-4rwWt5sw0Lg.recvd-7d86b8fd66-hjhpb-1-68FA25A2-41.0",
+    "timestamp": 1761224102,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "cl@basistheory.com",
+    "event": "delivered",
+    "ip": "159.183.224.105",
+    "response": "250 2.0.0 OK  1761224099 d9443c01a7336-2946dd97ecdsi12198025ad.74 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctNGZ3bkVIbnZTRE9RTGo3WnpYOER0QS0w",
+    "sg_message_id": "4fwnEHnvSDOQLj7ZzX8DtA.recvd-7fd96f4944-hvvlc-1-68FA25A0-15.0",
+    "smtp-id": "<4fwnEHnvSDOQLj7ZzX8DtA@geopod-ismtpd-canary-0>",
+    "timestamp": 1761224099,
+    "tls": 1
+  }
+][
+  {
+    "email": "andrea@lexroom.ai",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "EWwAllSSRkeqeYayfEOeIw",
+    "sg_machine_open": false,
+    "sg_message_id": "uLcGgvzeROGtx6UwzjLlLg.recvd-7d86b8fd66-5dgsp-1-68FA25A8-2.0",
+    "timestamp": 1761224107,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "gregory@wexler.ai",
+    "event": "delivered",
+    "ip": "159.183.224.105",
+    "response": "250 2.0.0 OK  1761224104 af79cd13be357-89c12f042fcsi58480485a.1443 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctcWQ3ZTBfWDlRc09nbXcxRG5ITHZIUS0w",
+    "sg_message_id": "qd7e0_X9QsOgmw1DnHLvHQ.recvd-769f975875-v2pvw-1-68FA25A5-19.0",
+    "smtp-id": "<qd7e0_X9QsOgmw1DnHLvHQ@geopod-ismtpd-4>",
+    "timestamp": 1761224104,
+    "tls": 1
+  },
+  {
+    "email": "gregory@wexler.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LXFkN2UwX1g5UXNPZ213MURuSEx2SFEtMA",
+    "sg_message_id": "qd7e0_X9QsOgmw1DnHLvHQ.recvd-769f975875-v2pvw-1-68FA25A5-19.0",
+    "smtp-id": "<qd7e0_X9QsOgmw1DnHLvHQ@geopod-ismtpd-4>",
+    "timestamp": 1761224101
+  }
+][
+  {
+    "email": "martina@lexroom.ai",
+    "event": "delivered",
+    "ip": "149.72.120.130",
+    "response": "250 2.0.0 OK  1761224107 41be03b00d2f7-b6cf4e2ba9fsi1004503a12.382 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctUE12TkxNRkpUWjZGcFVTTkNBQW5MUS0w",
+    "sg_message_id": "PMvNLMFJTZ6FpUSNCAAnLQ.recvd-7748d67658-v5m2f-1-68FA25AA-2E.0",
+    "smtp-id": "<PMvNLMFJTZ6FpUSNCAAnLQ@geopod-ismtpd-13>",
+    "timestamp": 1761224107,
+    "tls": 1
+  },
+  {
+    "email": "martina@lexroom.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LVBNdk5MTUZKVFo2RnBVU05DQUFuTFEtMA",
+    "sg_message_id": "PMvNLMFJTZ6FpUSNCAAnLQ.recvd-7748d67658-v5m2f-1-68FA25AA-2E.0",
+    "smtp-id": "<PMvNLMFJTZ6FpUSNCAAnLQ@geopod-ismtpd-13>",
+    "timestamp": 1761224106
+  }
+][
+  {
+    "email": "kush@wexler.ai",
+    "event": "delivered",
+    "ip": "149.72.154.232",
+    "response": "250 2.0.0 OK  1761224114 d2e1a72fcca58-7a274b812a6si1182374b3a.329 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctazFmWnI5ZHpTdVN1cXpBcGZMbkNIZy0w",
+    "sg_message_id": "k1fZr9dzSuSuqzApfLnCHg.recvd-7748d67658-fz24p-1-68FA25B0-38.0",
+    "smtp-id": "<k1fZr9dzSuSuqzApfLnCHg@geopod-ismtpd-12>",
+    "timestamp": 1761224114,
+    "tls": 1
+  },
+  {
+    "email": "kush@wexler.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LWsxZlpyOWR6U3VTdXF6QXBmTG5DSGctMA",
+    "sg_message_id": "k1fZr9dzSuSuqzApfLnCHg.recvd-7748d67658-fz24p-1-68FA25B0-38.0",
+    "smtp-id": "<k1fZr9dzSuSuqzApfLnCHg@geopod-ismtpd-12>",
+    "timestamp": 1761224112
+  }
+][
+  {
+    "email": "louis.tran@alexsolutions.com.au",
+    "event": "delivered",
+    "ip": "149.72.154.232",
+    "response": "250 2.0.0 OK  1761224116 d75a77b69052e-4eb8089dcf4si6038031cf.597 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctcG9hSVJDSGZRUGUyMU5MU2o3UGRvZy0w",
+    "sg_message_id": "poaIRCHfQPe21NLSj7Pdog.recvd-6f5cbff5dc-cznhd-1-68FA25B3-B.0",
+    "smtp-id": "<poaIRCHfQPe21NLSj7Pdog@geopod-ismtpd-8>",
+    "timestamp": 1761224116,
+    "tls": 1
+  },
+  {
+    "email": "louis.tran@alexsolutions.com.au",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LXBvYUlSQ0hmUVBlMjFOTFNqN1Bkb2ctMA",
+    "sg_message_id": "poaIRCHfQPe21NLSj7Pdog.recvd-6f5cbff5dc-cznhd-1-68FA25B3-B.0",
+    "smtp-id": "<poaIRCHfQPe21NLSj7Pdog@geopod-ismtpd-8>",
+    "timestamp": 1761224115
+  }
+][
+  {
+    "email": "andrea@lexroom.ai",
+    "event": "delivered",
+    "ip": "159.183.235.50",
+    "response": "250 2.0.0 OK  1761224106 ca18e2360f4ac-94102d8c4dbsi141282939f.30 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctdUxjR2d2emVST0d0eDZVd3pqTGxMZy0w",
+    "sg_message_id": "uLcGgvzeROGtx6UwzjLlLg.recvd-7d86b8fd66-5dgsp-1-68FA25A8-2.0",
+    "smtp-id": "<uLcGgvzeROGtx6UwzjLlLg@geopod-ismtpd-7>",
+    "timestamp": 1761224106,
+    "tls": 1
+  },
+  {
+    "email": "andrea@lexroom.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LXVMY0dndnplUk9HdHg2VXd6akxsTGctMA",
+    "sg_message_id": "uLcGgvzeROGtx6UwzjLlLg.recvd-7d86b8fd66-5dgsp-1-68FA25A8-2.0",
+    "smtp-id": "<uLcGgvzeROGtx6UwzjLlLg@geopod-ismtpd-7>",
+    "timestamp": 1761224104
+  }
+][
+  {
+    "email": "vikram@tryardent.com",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LW4zLVAzUDUxUzlHN2Z6ZDA0WnpGWVEtMA",
+    "sg_message_id": "n3-P3P51S9G7fzd04ZzFYQ.recvd-7d86b8fd66-hjhpb-1-68FA25AE-3D.0",
+    "smtp-id": "<n3-P3P51S9G7fzd04ZzFYQ@geopod-ismtpd-13>",
+    "timestamp": 1761224111
+  }
+][
+  {
+    "email": "gregory@wexler.ai",
+    "event": "open",
+    "ip": "72.14.199.160",
+    "sg_content_type": "html",
+    "sg_event_id": "ULsGUPHXSl2in5cEjUh0VA",
+    "sg_machine_open": false,
+    "sg_message_id": "qd7e0_X9QsOgmw1DnHLvHQ.recvd-769f975875-v2pvw-1-68FA25A5-19.0",
+    "timestamp": 1761224108,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "khaled@oqood.ai",
+    "event": "delivered",
+    "ip": "149.72.126.143",
+    "response": "250 2.0.0 OK  1761224110 8926c6da1cb9f-5abb4a4e2besi1364419173.4 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctc29hbU1STHVSTGltU1U5RjJSVk00Zy0w",
+    "sg_message_id": "soamMRLuRLimSU9F2RVM4g.recvd-686fbc5d8-6n7bx-1-68FA25AC-E.0",
+    "smtp-id": "<soamMRLuRLimSU9F2RVM4g@geopod-ismtpd-canary-0>",
+    "timestamp": 1761224110,
+    "tls": 1
+  },
+  {
+    "email": "khaled@oqood.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LXNvYW1NUkx1UkxpbVNVOUYyUlZNNGctMA",
+    "sg_message_id": "soamMRLuRLimSU9F2RVM4g.recvd-686fbc5d8-6n7bx-1-68FA25AC-E.0",
+    "smtp-id": "<soamMRLuRLimSU9F2RVM4g@geopod-ismtpd-canary-0>",
+    "timestamp": 1761224108
+  }
+][
+  {
+    "email": "ashok.kartham@circuitry.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LVdkWVJNbjZVVHpha0l3UzRKNmlIYlEtMA",
+    "sg_message_id": "WdYRMn6UTzakIwS4J6iHbQ.recvd-686fbc5d8-wx9kd-1-68FA25B5-2E.0",
+    "smtp-id": "<WdYRMn6UTzakIwS4J6iHbQ@geopod-ismtpd-11>",
+    "timestamp": 1761224118
+  }
+][
+  {
+    "email": "khaled@oqood.ai",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "fiD_Um66RaCbXX9LbMHzww",
+    "sg_machine_open": false,
+    "sg_message_id": "soamMRLuRLimSU9F2RVM4g.recvd-686fbc5d8-6n7bx-1-68FA25AC-E.0",
+    "timestamp": 1761224113,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "kush@wexler.ai",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "6Z26rhffSFScJ0djhKdTsQ",
+    "sg_machine_open": false,
+    "sg_message_id": "k1fZr9dzSuSuqzApfLnCHg.recvd-7748d67658-fz24p-1-68FA25B0-38.0",
+    "timestamp": 1761224116,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "ashleymo@theliva.ai",
+    "event": "delivered",
+    "ip": "149.72.120.130",
+    "response": "250 2.0.0 OK  1761224123 41be03b00d2f7-b6cf4e2c94fsi983434a12.364 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctbnoxVzRnLUxSZXF1eFVualk1UmM5QS0w",
+    "sg_message_id": "nz1W4g-LRequxUnjY5Rc9A.recvd-7748d67658-xmp7t-1-68FA25B9-54.0",
+    "smtp-id": "<nz1W4g-LRequxUnjY5Rc9A@geopod-ismtpd-9>",
+    "timestamp": 1761224123,
+    "tls": 1
+  },
+  {
+    "email": "ashleymo@theliva.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LW56MVc0Zy1MUmVxdXhVbmpZNVJjOUEtMA",
+    "sg_message_id": "nz1W4g-LRequxUnjY5Rc9A.recvd-7748d67658-xmp7t-1-68FA25B9-54.0",
+    "smtp-id": "<nz1W4g-LRequxUnjY5Rc9A@geopod-ismtpd-9>",
+    "timestamp": 1761224121
+  }
+][
+  {
+    "email": "louis.tran@alexsolutions.com.au",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "mpP_avNyRW6Wjh8fcKZA6Q",
+    "sg_machine_open": false,
+    "sg_message_id": "poaIRCHfQPe21NLSj7Pdog.recvd-6f5cbff5dc-cznhd-1-68FA25B3-B.0",
+    "timestamp": 1761224117,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "vikram@tryardent.com",
+    "event": "open",
+    "ip": "72.153.153.18",
+    "sg_content_type": "html",
+    "sg_event_id": "qhGrmbLCQiONDIUa92U1sg",
+    "sg_machine_open": false,
+    "sg_message_id": "n3-P3P51S9G7fzd04ZzFYQ.recvd-7d86b8fd66-hjhpb-1-68FA25AE-3D.0",
+    "timestamp": 1761224119,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+  }
+][
+  {
+    "email": "vikram@tryardent.com",
+    "event": "delivered",
+    "ip": "149.72.120.130",
+    "response": "250 2.6.0 <n3-P3P51S9G7fzd04ZzFYQ@geopod-ismtpd-13> [InternalId=1507533552827, Hostname=LV5PR18MB927537.namprd18.prod.outlook.com] 28634 bytes in 0.157, 177.254 KB/sec Queued mail for delivery",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctbjMtUDNQNTFTOUc3ZnpkMDRaekZZUS0w",
+    "sg_message_id": "n3-P3P51S9G7fzd04ZzFYQ.recvd-7d86b8fd66-hjhpb-1-68FA25AE-3D.0",
+    "smtp-id": "<n3-P3P51S9G7fzd04ZzFYQ@geopod-ismtpd-13>",
+    "timestamp": 1761224114,
+    "tls": 1
+  }
+][
+  {
+    "email": "ashok.kartham@circuitry.ai",
+    "event": "delivered",
+    "ip": "159.183.235.50",
+    "response": "250 2.6.0 <WdYRMn6UTzakIwS4J6iHbQ@geopod-ismtpd-11> [InternalId=176493091127941, Hostname=MW4PR17MB4858.namprd17.prod.outlook.com] 28720 bytes in 0.147, 190.052 KB/sec Queued mail for delivery",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctV2RZUk1uNlVUemFrSXdTNEo2aUhiUS0w",
+    "sg_message_id": "WdYRMn6UTzakIwS4J6iHbQ.recvd-686fbc5d8-wx9kd-1-68FA25B5-2E.0",
+    "smtp-id": "<WdYRMn6UTzakIwS4J6iHbQ@geopod-ismtpd-11>",
+    "timestamp": 1761224121,
+    "tls": 1
+  }
+][
+  {
+    "email": "d@activeloop.ai",
+    "event": "delivered",
+    "ip": "159.183.224.104",
+    "response": "250 2.0.0 OK  1761224122 d2e1a72fcca58-7a274ba7315si1191318b3a.558 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctRkdGRjU3QUJUMmVyWHlLUms4X3RsQS0w",
+    "sg_message_id": "FGFF57ABT2erXyKRk8_tlA.recvd-7748d67658-gt9x5-1-68FA25B7-3.0",
+    "smtp-id": "<FGFF57ABT2erXyKRk8_tlA@geopod-ismtpd-8>",
+    "timestamp": 1761224122,
+    "tls": 1
+  },
+  {
+    "email": "d@activeloop.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LUZHRkY1N0FCVDJlclh5S1JrOF90bEEtMA",
+    "sg_message_id": "FGFF57ABT2erXyKRk8_tlA.recvd-7748d67658-gt9x5-1-68FA25B7-3.0",
+    "smtp-id": "<FGFF57ABT2erXyKRk8_tlA@geopod-ismtpd-8>",
+    "timestamp": 1761224119
+  }
+][
+  {
+    "email": "vikram@tryardent.com",
+    "event": "open",
+    "ip": "72.153.153.18",
+    "sg_content_type": "html",
+    "sg_event_id": "482nD030Rs-Kq25gFOlXig",
+    "sg_machine_open": false,
+    "sg_message_id": "n3-P3P51S9G7fzd04ZzFYQ.recvd-7d86b8fd66-hjhpb-1-68FA25AE-3D.0",
+    "timestamp": 1761224129,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+  }
+][
+  {
+    "email": "aoiotani@theliva.ai",
+    "event": "delivered",
+    "ip": "149.72.120.130",
+    "response": "250 2.0.0 OK  1761224125 af79cd13be357-89c12f022a5si59506885a.1292 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctUkx0RDlKbnNTNHFyZXM0cmZnU0dDUS0w",
+    "sg_message_id": "RLtD9JnsS4qres4rfgSGCQ.recvd-6f5cbff5dc-6ghr9-1-68FA25BB-25.0",
+    "smtp-id": "<RLtD9JnsS4qres4rfgSGCQ@geopod-ismtpd-1>",
+    "timestamp": 1761224125,
+    "tls": 1
+  },
+  {
+    "email": "aoiotani@theliva.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LVJMdEQ5Sm5zUzRxcmVzNHJmZ1NHQ1EtMA",
+    "sg_message_id": "RLtD9JnsS4qres4rfgSGCQ.recvd-6f5cbff5dc-6ghr9-1-68FA25BB-25.0",
+    "smtp-id": "<RLtD9JnsS4qres4rfgSGCQ@geopod-ismtpd-1>",
+    "timestamp": 1761224123
+  }
+][
+  {
+    "email": "ashok.kartham@circuitry.ai",
+    "event": "open",
+    "ip": "72.153.153.17",
+    "sg_content_type": "html",
+    "sg_event_id": "JfLW59xtTi2G_ppehmQEIQ",
+    "sg_machine_open": false,
+    "sg_message_id": "WdYRMn6UTzakIwS4J6iHbQ.recvd-686fbc5d8-wx9kd-1-68FA25B5-2E.0",
+    "timestamp": 1761224128,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+  }
+][
+  {
+    "email": "khaled@oqood.ai",
+    "event": "open",
+    "ip": "66.249.93.199",
+    "sg_content_type": "html",
+    "sg_event_id": "crrPFTA2SzaNIjI3MBQeiQ",
+    "sg_machine_open": false,
+    "sg_message_id": "soamMRLuRLimSU9F2RVM4g.recvd-686fbc5d8-6n7bx-1-68FA25AC-E.0",
+    "timestamp": 1761224127,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
+][
+  {
+    "email": "sharon@moonlakeai.com",
+    "event": "delivered",
+    "ip": "159.183.224.105",
+    "response": "250 2.0.0 OK  1761224132 d75a77b69052e-4eb8093e5bbsi5932001cf.902 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctMmRwSGZuc0hSWVc5bzYweXJndHhPUS0w",
+    "sg_message_id": "2dpHfnsHRYW9o60yrgtxOQ.recvd-769f975875-kml4r-1-68FA25C1-1F.0",
+    "smtp-id": "<2dpHfnsHRYW9o60yrgtxOQ@geopod-ismtpd-4>",
+    "timestamp": 1761224132,
+    "tls": 1
+  },
+  {
+    "email": "sharon@moonlakeai.com",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LTJkcEhmbnNIUllXOW82MHlyZ3R4T1EtMA",
+    "sg_message_id": "2dpHfnsHRYW9o60yrgtxOQ.recvd-769f975875-kml4r-1-68FA25C1-1F.0",
+    "smtp-id": "<2dpHfnsHRYW9o60yrgtxOQ@geopod-ismtpd-4>",
+    "timestamp": 1761224130
+  }
+][
+  {
+    "email": "ycd@cookiy.com",
+    "event": "delivered",
+    "ip": "149.72.154.232",
+    "response": "250 2.0.0 OK  1761224127 d75a77b69052e-4eb8039074asi6259481cf.0 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctYVlGWERCa1RUR1dILU1qWDZwdXFMZy0w",
+    "sg_message_id": "aYFXDBkTTGWH-MjX6puqLg.recvd-65696df74f-f8h55-1-68FA25BE-2F.0",
+    "smtp-id": "<aYFXDBkTTGWH-MjX6puqLg@geopod-ismtpd-10>",
+    "timestamp": 1761224127,
+    "tls": 1
+  },
+  {
+    "email": "ycd@cookiy.com",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LWFZRlhEQmtUVEdXSC1Nalg2cHVxTGctMA",
+    "sg_message_id": "aYFXDBkTTGWH-MjX6puqLg.recvd-65696df74f-f8h55-1-68FA25BE-2F.0",
+    "smtp-id": "<aYFXDBkTTGWH-MjX6puqLg@geopod-ismtpd-10>",
+    "timestamp": 1761224126
+  }
+][
+  {
+    "email": "ashleymo@theliva.ai",
+    "event": "open",
+    "ip": "64.233.172.136",
+    "sg_content_type": "html",
+    "sg_event_id": "jqeNUm5mRLiG42Imk-JmLw",
+    "sg_machine_open": false,
+    "sg_message_id": "nz1W4g-LRequxUnjY5Rc9A.recvd-7748d67658-xmp7t-1-68FA25B9-54.0",
+    "timestamp": 1761224129,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
+][
+  {
+    "email": "anita@getpeer.ai",
+    "event": "delivered",
+    "ip": "149.72.120.130",
+    "response": "250 2.0.0 OK  1761224133 41be03b00d2f7-b6cf4e2b69dsi1065370a12.408 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctQmlnaUI2d0pUalczOFZXeXZEVUw0Zy0w",
+    "sg_message_id": "BigiB6wJTjW38VWyvDUL4g.recvd-canary-7787d4fc79-kg2p5-1-68FA25C4-1.0",
+    "smtp-id": "<BigiB6wJTjW38VWyvDUL4g@geopod-ismtpd-canary-0>",
+    "timestamp": 1761224133,
+    "tls": 1
+  },
+  {
+    "email": "anita@getpeer.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LUJpZ2lCNndKVGpXMzhWV3l2RFVMNGctMA",
+    "sg_message_id": "BigiB6wJTjW38VWyvDUL4g.recvd-canary-7787d4fc79-kg2p5-1-68FA25C4-1.0",
+    "smtp-id": "<BigiB6wJTjW38VWyvDUL4g@geopod-ismtpd-canary-0>",
+    "timestamp": 1761224132
+  }
+][
+  {
+    "email": "ravi@getpeer.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LURVQ0xPWWRnUmhHWDd5SThyWS15YkEtMA",
+    "sg_message_id": "DUCLOYdgRhGX7yI8rY-ybA.recvd-7d86b8fd66-cq829-1-68FA25C5-4D.0",
+    "smtp-id": "<DUCLOYdgRhGX7yI8rY-ybA@geopod-ismtpd-11>",
+    "timestamp": 1761224133
+  }
+][
+  {
+    "email": "anita@getpeer.ai",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "WHBFQsN0S-CIbGWvU1HFHA",
+    "sg_machine_open": false,
+    "sg_message_id": "BigiB6wJTjW38VWyvDUL4g.recvd-canary-7787d4fc79-kg2p5-1-68FA25C4-1.0",
+    "timestamp": 1761224135,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "ashok.kartham@circuitry.ai",
+    "event": "open",
+    "ip": "72.153.153.17",
+    "sg_content_type": "html",
+    "sg_event_id": "of5C0kesRYSvYd5x75G0eA",
+    "sg_machine_open": false,
+    "sg_message_id": "WdYRMn6UTzakIwS4J6iHbQ.recvd-686fbc5d8-wx9kd-1-68FA25B5-2E.0",
+    "timestamp": 1761224137,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+  }
+][
+  {
+    "email": "chris@getpeer.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LURoU2pDV3lYUjV5ZjZJQkxIeUpGOVEtMA",
+    "sg_message_id": "DhSjCWyXR5yf6IBLHyJF9Q.recvd-canary-69c768f6d6-jqxn6-1-68FA25C7-41.0",
+    "smtp-id": "<DhSjCWyXR5yf6IBLHyJF9Q@geopod-ismtpd-1>",
+    "timestamp": 1761224135
+  }
+][
+  {
+    "email": "misha@reflection.ai",
+    "event": "delivered",
+    "ip": "149.72.123.24",
+    "response": "250 2.0.0 OK  1761224139 d75a77b69052e-4eb80974d46si6072061cf.1023 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctT0dJZ1p2X2xTVWVhb1l0RmlxcGtMdy0w",
+    "sg_message_id": "OGIgZv_lSUeaoYtFiqpkLw.recvd-6f5cbff5dc-9p4pc-1-68FA25C9-2D.0",
+    "smtp-id": "<OGIgZv_lSUeaoYtFiqpkLw@geopod-ismtpd-7>",
+    "timestamp": 1761224139,
+    "tls": 1
+  },
+  {
+    "email": "misha@reflection.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LU9HSWdadl9sU1VlYW9ZdEZpcXBrTHctMA",
+    "sg_message_id": "OGIgZv_lSUeaoYtFiqpkLw.recvd-6f5cbff5dc-9p4pc-1-68FA25C9-2D.0",
+    "smtp-id": "<OGIgZv_lSUeaoYtFiqpkLw@geopod-ismtpd-7>",
+    "timestamp": 1761224137
+  }
+][
+  {
+    "email": "geoff@theforecastingcompany.com",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LXBNaWhkRXE2U3AtSFk4VW95bHlLeUEtMA",
+    "sg_message_id": "pMihdEq6Sp-HY8UoylyKyA.recvd-6f5cbff5dc-5598z-1-68FA25CB-20.0",
+    "smtp-id": "<pMihdEq6Sp-HY8UoylyKyA@geopod-ismtpd-1>",
+    "timestamp": 1761224139
+  }
+][
+  {
+    "email": "ravi@getpeer.ai",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "DcGoAHkSQK6F1TpERvxirg",
+    "sg_machine_open": false,
+    "sg_message_id": "DUCLOYdgRhGX7yI8rY-ybA.recvd-7d86b8fd66-cq829-1-68FA25C5-4D.0",
+    "timestamp": 1761224138,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "ravi@getpeer.ai",
+    "event": "delivered",
+    "ip": "159.183.224.105",
+    "response": "250 2.0.0 OK  1761224136 ca18e2360f4ac-94102d8ed1csi133841439f.62 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctRFVDTE9ZZGdSaEdYN3lJOHJZLXliQS0w",
+    "sg_message_id": "DUCLOYdgRhGX7yI8rY-ybA.recvd-7d86b8fd66-cq829-1-68FA25C5-4D.0",
+    "smtp-id": "<DUCLOYdgRhGX7yI8rY-ybA@geopod-ismtpd-11>",
+    "timestamp": 1761224136,
+    "tls": 1
+  }
+][
+  {
+    "email": "joachim@theforecastingcompany.com",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "eR4HW5s3S_SR2LmeHnBL_A",
+    "sg_machine_open": false,
+    "sg_message_id": "iOLGIo1RSnG2JN1BPGX6NQ.recvd-686fbc5d8-wx9kd-1-68FA25CD-6.0",
+    "timestamp": 1761224145,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "fpestoni@inorbit.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LUF5dzdUR3l1Uzc2U0NzZWZnTnlvN3ctMA",
+    "sg_message_id": "Ayw7TGyuS76SCsefgNyo7w.recvd-7fd96f4944-2p2p4-1-68FA25D8-2C.0",
+    "smtp-id": "<Ayw7TGyuS76SCsefgNyo7w@geopod-ismtpd-6>",
+    "timestamp": 1761224152
+  }
+][
+  {
+    "email": "misha@reflection.ai",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "OdGHeFOcRNOjmxogggFBCA",
+    "sg_machine_open": false,
+    "sg_message_id": "OGIgZv_lSUeaoYtFiqpkLw.recvd-6f5cbff5dc-9p4pc-1-68FA25C9-2D.0",
+    "timestamp": 1761224142,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "chris@getpeer.ai",
+    "event": "delivered",
+    "ip": "149.72.126.143",
+    "response": "250 2.0.0 OK  1761224137 6a1803df08f44-87f9e9f4ed8si6671926d6.1445 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctRGhTakNXeVhSNXlmNklCTEh5SkY5US0w",
+    "sg_message_id": "DhSjCWyXR5yf6IBLHyJF9Q.recvd-canary-69c768f6d6-jqxn6-1-68FA25C7-41.0",
+    "smtp-id": "<DhSjCWyXR5yf6IBLHyJF9Q@geopod-ismtpd-1>",
+    "timestamp": 1761224137,
+    "tls": 1
+  }
+][
+  {
+    "email": "geoff@theforecastingcompany.com",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "xfajAzM9SfGOZuK1n1QZ8Q",
+    "sg_machine_open": false,
+    "sg_message_id": "pMihdEq6Sp-HY8UoylyKyA.recvd-6f5cbff5dc-5598z-1-68FA25CB-20.0",
+    "timestamp": 1761224143,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "joachim@theforecastingcompany.com",
+    "event": "delivered",
+    "ip": "159.183.224.104",
+    "response": "250 2.0.0 OK  1761224143 ca18e2360f4ac-94102d8ecaesi146001839f.37 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctaU9MR0lvMVJTbkcySk4xQlBHWDZOUS0w",
+    "sg_message_id": "iOLGIo1RSnG2JN1BPGX6NQ.recvd-686fbc5d8-wx9kd-1-68FA25CD-6.0",
+    "smtp-id": "<iOLGIo1RSnG2JN1BPGX6NQ@geopod-ismtpd-7>",
+    "timestamp": 1761224144,
+    "tls": 1
+  },
+  {
+    "email": "joachim@theforecastingcompany.com",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LWlPTEdJbzFSU25HMkpOMUJQR1g2TlEtMA",
+    "sg_message_id": "iOLGIo1RSnG2JN1BPGX6NQ.recvd-686fbc5d8-wx9kd-1-68FA25CD-6.0",
+    "smtp-id": "<iOLGIo1RSnG2JN1BPGX6NQ@geopod-ismtpd-7>",
+    "timestamp": 1761224141
+  }
+][
+  {
+    "email": "geoff@theforecastingcompany.com",
+    "event": "delivered",
+    "ip": "159.183.235.50",
+    "response": "250 2.0.0 OK  1761224141 d75a77b69052e-4eb805fd2dcsi6113341cf.249 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctcE1paGRFcTZTcC1IWThVb3lseUt5QS0w",
+    "sg_message_id": "pMihdEq6Sp-HY8UoylyKyA.recvd-6f5cbff5dc-5598z-1-68FA25CB-20.0",
+    "smtp-id": "<pMihdEq6Sp-HY8UoylyKyA@geopod-ismtpd-1>",
+    "timestamp": 1761224141,
+    "tls": 1
+  }
+][
+  {
+    "email": "fpestoni@inorbit.ai",
+    "event": "delivered",
+    "ip": "159.183.224.105",
+    "response": "250 2.0.0 OK  1761224156 41be03b00d2f7-b6cf4e426absi1004020a12.776 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctQXl3N1RHeXVTNzZTQ3NlZmdOeW83dy0w",
+    "sg_message_id": "Ayw7TGyuS76SCsefgNyo7w.recvd-7fd96f4944-2p2p4-1-68FA25D8-2C.0",
+    "smtp-id": "<Ayw7TGyuS76SCsefgNyo7w@geopod-ismtpd-6>",
+    "timestamp": 1761224156,
+    "tls": 1
+  }
+][
+  {
+    "email": "sun@moonlakeai.com",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LThKdXZVblRrUURDa0NYTWVtdk1oWlEtMA",
+    "sg_message_id": "8JuvUnTkQDCkCXMemvMhZQ.recvd-7fd96f4944-s5frb-1-68FA25E2-2D.0",
+    "smtp-id": "<8JuvUnTkQDCkCXMemvMhZQ@geopod-ismtpd-2>",
+    "timestamp": 1761224162
+  }
+][
+  {
+    "email": "fpestoni@inorbit.ai",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "5gzXgjU1QhmiaVkrmZGj_g",
+    "sg_machine_open": false,
+    "sg_message_id": "Ayw7TGyuS76SCsefgNyo7w.recvd-7fd96f4944-2p2p4-1-68FA25D8-2C.0",
+    "timestamp": 1761224157,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "sun@moonlakeai.com",
+    "event": "delivered",
+    "ip": "149.72.123.24",
+    "response": "250 2.0.0 OK  1761224164 d9443c01a7336-2946dfb87basi11711025ad.330 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctOEp1dlVuVGtRRENrQ1hNZW12TWhaUS0w",
+    "sg_message_id": "8JuvUnTkQDCkCXMemvMhZQ.recvd-7fd96f4944-s5frb-1-68FA25E2-2D.0",
+    "smtp-id": "<8JuvUnTkQDCkCXMemvMhZQ@geopod-ismtpd-2>",
+    "timestamp": 1761224164,
+    "tls": 1
+  }
+][
+  {
+    "email": "veronika@demodesk.com",
+    "event": "delivered",
+    "ip": "149.72.126.143",
+    "response": "250 2.0.0 OK  1761224174 d9443c01a7336-2946dd9b6dcsi11285975ad.47 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctNExrMGs5ZnBTS3FXOGhVMVZJQTVjQS0w",
+    "sg_message_id": "4Lk0k9fpSKqW8hU1VIA5cA.recvd-canary-7787d4fc79-kg2p5-1-68FA25ED-29.0",
+    "smtp-id": "<4Lk0k9fpSKqW8hU1VIA5cA@geopod-ismtpd-13>",
+    "timestamp": 1761224174,
+    "tls": 1
+  },
+  {
+    "email": "veronika@demodesk.com",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LTRMazBrOWZwU0txVzhoVTFWSUE1Y0EtMA",
+    "sg_message_id": "4Lk0k9fpSKqW8hU1VIA5cA.recvd-canary-7787d4fc79-kg2p5-1-68FA25ED-29.0",
+    "smtp-id": "<4Lk0k9fpSKqW8hU1VIA5cA@geopod-ismtpd-13>",
+    "timestamp": 1761224173
+  }
+][
+  {
+    "email": "veronika@demodesk.com",
+    "event": "open",
+    "ip": "72.14.199.160",
+    "sg_content_type": "html",
+    "sg_event_id": "3gdYsO_XT3CUzuwYBTdEdg",
+    "sg_machine_open": false,
+    "sg_message_id": "4Lk0k9fpSKqW8hU1VIA5cA.recvd-canary-7787d4fc79-kg2p5-1-68FA25ED-29.0",
+    "timestamp": 1761224178,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "aaron@airgoods.com",
+    "event": "delivered",
+    "ip": "149.72.123.24",
+    "response": "250 2.0.0 OK  1761224185 ca18e2360f4ac-94103033b3bsi132769739f.276 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctRzZFT1lFS0ZRM2lrUHJpNzlROTRxZy0w",
+    "sg_message_id": "G6EOYEKFQ3ikPri79Q94qg.recvd-686fbc5d8-jp6gw-1-68FA25F8-8.0",
+    "smtp-id": "<G6EOYEKFQ3ikPri79Q94qg@geopod-ismtpd-10>",
+    "timestamp": 1761224185,
+    "tls": 1
+  },
+  {
+    "email": "aaron@airgoods.com",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LUc2RU9ZRUtGUTNpa1ByaTc5UTk0cWctMA",
+    "sg_message_id": "G6EOYEKFQ3ikPri79Q94qg.recvd-686fbc5d8-jp6gw-1-68FA25F8-8.0",
+    "smtp-id": "<G6EOYEKFQ3ikPri79Q94qg@geopod-ismtpd-10>",
+    "timestamp": 1761224184
+  }
+][
+  {
+    "email": "finn@kapa.ai",
+    "event": "delivered",
+    "ip": "149.72.154.232",
+    "response": "250 2.0.0 OK  1761224195 af79cd13be357-89c11f58771si56714885a.641 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTcteFNoUDJNdUZSSGlrZTlHRUxqV185QS0w",
+    "sg_message_id": "xShP2MuFRHike9GELjW_9A.recvd-7f4fb8995-gm6sw-1-68FA2602-23.0",
+    "smtp-id": "<xShP2MuFRHike9GELjW_9A@geopod-ismtpd-0>",
+    "timestamp": 1761224195,
+    "tls": 1
+  },
+  {
+    "email": "finn@kapa.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LXhTaFAyTXVGUkhpa2U5R0VMaldfOUEtMA",
+    "sg_message_id": "xShP2MuFRHike9GELjW_9A.recvd-7f4fb8995-gm6sw-1-68FA2602-23.0",
+    "smtp-id": "<xShP2MuFRHike9GELjW_9A@geopod-ismtpd-0>",
+    "timestamp": 1761224194
+  }
+][
+  {
+    "email": "emil@kapa.ai",
+    "event": "delivered",
+    "ip": "159.183.224.105",
+    "response": "250 2.0.0 OK  1761224207 6a1803df08f44-87f9de7ac64si6626106d6.205 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctZ0RoTW1XdFNSQ08tb0RYSHhQMERXdy0w",
+    "sg_message_id": "gDhMmWtSRCO-oDXHxP0DWw.recvd-7f4fb8995-rgjpj-1-68FA260D-8.0",
+    "smtp-id": "<gDhMmWtSRCO-oDXHxP0DWw@geopod-ismtpd-9>",
+    "timestamp": 1761224207,
+    "tls": 1
+  },
+  {
+    "email": "emil@kapa.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LWdEaE1tV3RTUkNPLW9EWEh4UDBEV3ctMA",
+    "sg_message_id": "gDhMmWtSRCO-oDXHxP0DWw.recvd-7f4fb8995-rgjpj-1-68FA260D-8.0",
+    "smtp-id": "<gDhMmWtSRCO-oDXHxP0DWw@geopod-ismtpd-9>",
+    "timestamp": 1761224205
+  }
+][
+  {
+    "email": "emil@kapa.ai",
+    "event": "open",
+    "ip": "74.125.208.43",
+    "sg_content_type": "html",
+    "sg_event_id": "F2H0ymvoR_mwPux9ccxkTg",
+    "sg_machine_open": false,
+    "sg_message_id": "gDhMmWtSRCO-oDXHxP0DWw.recvd-7f4fb8995-rgjpj-1-68FA260D-8.0",
+    "timestamp": 1761224212,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
+][
+  {
+    "email": "keshav@optiq.ai",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "eIopqFV4RTmjNWQQXbrjiA",
+    "sg_machine_open": false,
+    "sg_message_id": "2ynk3_8AQR6q_JR0xjVXNw.recvd-65696df74f-gsmz5-1-68FA2618-31.0",
+    "timestamp": 1761224219,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "keshav@optiq.ai",
+    "event": "delivered",
+    "ip": "149.72.123.24",
+    "response": "250 2.0.0 OK  1761224218 d75a77b69052e-4eb80843ea8si6519941cf.515 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctMnluazNfOEFRUjZxX0pSMHhqVlhOdy0w",
+    "sg_message_id": "2ynk3_8AQR6q_JR0xjVXNw.recvd-65696df74f-gsmz5-1-68FA2618-31.0",
+    "smtp-id": "<2ynk3_8AQR6q_JR0xjVXNw@geopod-ismtpd-0>",
+    "timestamp": 1761224218,
+    "tls": 1
+  },
+  {
+    "email": "keshav@optiq.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LTJ5bmszXzhBUVI2cV9KUjB4alZYTnctMA",
+    "sg_message_id": "2ynk3_8AQR6q_JR0xjVXNw.recvd-65696df74f-gsmz5-1-68FA2618-31.0",
+    "smtp-id": "<2ynk3_8AQR6q_JR0xjVXNw@geopod-ismtpd-0>",
+    "timestamp": 1761224216
+  }
+][
+  {
+    "email": "o.spence@cybaverse.co.uk",
+    "event": "delivered",
+    "ip": "159.183.224.104",
+    "response": "250 2.6.0 <Cmps3eATTUi913hzzmDW0A@geopod-ismtpd-5> [InternalId=34381213226448, Hostname=LO8P123MB7711.GBRP123.PROD.OUTLOOK.COM] 27149 bytes in 0.224, 118.157 KB/sec Queued mail for delivery",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctQ21wczNlQVRUVWk5MTNoenptRFcwQS0w",
+    "sg_message_id": "Cmps3eATTUi913hzzmDW0A.recvd-7748d67658-v57fl-1-68FA2624-18.0",
+    "smtp-id": "<Cmps3eATTUi913hzzmDW0A@geopod-ismtpd-5>",
+    "timestamp": 1761224232,
+    "tls": 1
+  },
+  {
+    "email": "o.spence@cybaverse.co.uk",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LUNtcHMzZUFUVFVpOTEzaHp6bURXMEEtMA",
+    "sg_message_id": "Cmps3eATTUi913hzzmDW0A.recvd-7748d67658-v57fl-1-68FA2624-18.0",
+    "smtp-id": "<Cmps3eATTUi913hzzmDW0A@geopod-ismtpd-5>",
+    "timestamp": 1761224228
+  }
+][
+  {
+    "email": "carl@nothing.tech",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LTQzUnRMdnViUTMyUElfcHFiWUZHd1EtMA",
+    "sg_message_id": "43RtLvubQ32PI_pqbYFGwQ.recvd-6f5cbff5dc-jzws7-1-68FA2630-40.0",
+    "smtp-id": "<43RtLvubQ32PI_pqbYFGwQ@geopod-ismtpd-5>",
+    "timestamp": 1761224240
+  }
+][
+  {
+    "email": "martin.rehak@resistant.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LVZYblJ4Mkt2UTUtTThlM0wyMW5mY1EtMA",
+    "sg_message_id": "VXnRx2KvQ5-M8e3L21nfcQ.recvd-6f5cbff5dc-cznhd-1-68FA2634-3D.0",
+    "smtp-id": "<VXnRx2KvQ5-M8e3L21nfcQ@geopod-ismtpd-1>",
+    "timestamp": 1761224244
+  }
+][
+  {
+    "email": "carl@nothing.tech",
+    "event": "open",
+    "ip": "72.14.199.160",
+    "sg_content_type": "html",
+    "sg_event_id": "RvJ1Mfg8QzqTzDvTKkbQ0g",
+    "sg_machine_open": false,
+    "sg_message_id": "43RtLvubQ32PI_pqbYFGwQ.recvd-6f5cbff5dc-jzws7-1-68FA2630-40.0",
+    "timestamp": 1761224243,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "karel.bartos@resistant.ai",
+    "event": "delivered",
+    "ip": "149.72.154.232",
+    "response": "250 2.0.0 OK  1761224247 af79cd13be357-89c12f08302si61833085a.1530 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctY3IwYlhlUGRTRnFoNDh3elUtUUQ0Zy0w",
+    "sg_message_id": "cr0bXePdSFqh48wzU-QD4g.recvd-6f5cbff5dc-cznhd-1-68FA2636-1E.0",
+    "smtp-id": "<cr0bXePdSFqh48wzU-QD4g@geopod-ismtpd-6>",
+    "timestamp": 1761224247,
+    "tls": 1
+  },
+  {
+    "email": "karel.bartos@resistant.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LWNyMGJYZVBkU0ZxaDQ4d3pVLVFENGctMA",
+    "sg_message_id": "cr0bXePdSFqh48wzU-QD4g.recvd-6f5cbff5dc-cznhd-1-68FA2636-1E.0",
+    "smtp-id": "<cr0bXePdSFqh48wzU-QD4g@geopod-ismtpd-6>",
+    "timestamp": 1761224246
+  }
+][
+  {
+    "email": "cathy@dedaluslabs.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LWNQSUdBWmI0U0gtM1U1UUNkNEtaTkEtMA",
+    "sg_message_id": "cPIGAZb4SH-3U5QCd4KZNA.recvd-769f975875-t8bjd-1-68FA263A-7.0",
+    "smtp-id": "<cPIGAZb4SH-3U5QCd4KZNA@geopod-ismtpd-7>",
+    "timestamp": 1761224250
+  }
+][
+  {
+    "email": "carl@nothing.tech",
+    "event": "delivered",
+    "ip": "159.183.224.104",
+    "response": "250 2.0.0 OK  1761224242 af79cd13be357-89c0dbccae1si63004685a.202 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctNDNSdEx2dWJRMzJQSV9wcWJZRkd3US0w",
+    "sg_message_id": "43RtLvubQ32PI_pqbYFGwQ.recvd-6f5cbff5dc-jzws7-1-68FA2630-40.0",
+    "smtp-id": "<43RtLvubQ32PI_pqbYFGwQ@geopod-ismtpd-5>",
+    "timestamp": 1761224242,
+    "tls": 1
+  }
+][
+  {
+    "email": "martin.rehak@resistant.ai",
+    "event": "open",
+    "ip": "72.14.199.161",
+    "sg_content_type": "html",
+    "sg_event_id": "bTMWkDuESreaf6Wn1WOoGA",
+    "sg_machine_open": false,
+    "sg_message_id": "VXnRx2KvQ5-M8e3L21nfcQ.recvd-6f5cbff5dc-cznhd-1-68FA2634-3D.0",
+    "timestamp": 1761224249,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "martin.rehak@resistant.ai",
+    "event": "delivered",
+    "ip": "149.72.123.24",
+    "response": "250 2.0.0 OK  1761224246 d75a77b69052e-4eb808451fbsi6022031cf.332 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctVlhuUngyS3ZRNS1NOGUzTDIxbmZjUS0w",
+    "sg_message_id": "VXnRx2KvQ5-M8e3L21nfcQ.recvd-6f5cbff5dc-cznhd-1-68FA2634-3D.0",
+    "smtp-id": "<VXnRx2KvQ5-M8e3L21nfcQ@geopod-ismtpd-1>",
+    "timestamp": 1761224246,
+    "tls": 1
+  }
+][
+  {
+    "email": "alok@mistral.ai",
+    "event": "delivered",
+    "ip": "149.72.120.130",
+    "response": "250 2.0.0 Ok: queued as 4csmKG5sZ4zvQFs",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctOEtHb2dvbnlSZHlla3Rzc1c4TEIwdy0w",
+    "sg_message_id": "8KGogonyRdyektssW8LB0w.recvd-7fd96f4944-4vhxg-1-68FA2641-18.0",
+    "smtp-id": "<8KGogonyRdyektssW8LB0w@geopod-ismtpd-9>",
+    "timestamp": 1761224259,
+    "tls": 1
+  },
+  {
+    "email": "alok@mistral.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LThLR29nb255UmR5ZWt0c3NXOExCMHctMA",
+    "sg_message_id": "8KGogonyRdyektssW8LB0w.recvd-7fd96f4944-4vhxg-1-68FA2641-18.0",
+    "smtp-id": "<8KGogonyRdyektssW8LB0w@geopod-ismtpd-9>",
+    "timestamp": 1761224257
+  }
+][
+  {
+    "email": "a@mistral.ai",
+    "event": "delivered",
+    "ip": "149.72.120.130",
+    "response": "250 2.0.0 Ok: queued as 4csmK66LKMz7wN2",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctV2RXc2V6dkRRTUdPSGhHNm14Unl1US0w",
+    "sg_message_id": "WdWsezvDQMGOHhG6mxRyuQ.recvd-6f5cbff5dc-6ghr9-1-68FA2638-D.0",
+    "smtp-id": "<WdWsezvDQMGOHhG6mxRyuQ@geopod-ismtpd-9>",
+    "timestamp": 1761224252,
+    "tls": 1
+  },
+  {
+    "email": "a@mistral.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LVdkV3NlenZEUU1HT0hoRzZteFJ5dVEtMA",
+    "sg_message_id": "WdWsezvDQMGOHhG6mxRyuQ.recvd-6f5cbff5dc-6ghr9-1-68FA2638-D.0",
+    "smtp-id": "<WdWsezvDQMGOHhG6mxRyuQ@geopod-ismtpd-9>",
+    "timestamp": 1761224248
+  }
+][
+  {
+    "email": "vipul@fireai.in",
+    "event": "delivered",
+    "ip": "159.183.235.50",
+    "response": "250 2.0.0 OK  1761224257 af79cd13be357-89c1263eedbsi58403885a.824 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctOWItMnRTODFUN0s5U3JwSFRaRmo4Zy0w",
+    "sg_message_id": "9b-2tS81T7K9SrpHTZFj8g.recvd-6f5cbff5dc-5d7s5-1-68FA263F-1.0",
+    "smtp-id": "<9b-2tS81T7K9SrpHTZFj8g@geopod-ismtpd-12>",
+    "timestamp": 1761224257,
+    "tls": 1
+  },
+  {
+    "email": "vipul@fireai.in",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LTliLTJ0UzgxVDdLOVNycEhUWkZqOGctMA",
+    "sg_message_id": "9b-2tS81T7K9SrpHTZFj8g.recvd-6f5cbff5dc-5d7s5-1-68FA263F-1.0",
+    "smtp-id": "<9b-2tS81T7K9SrpHTZFj8g@geopod-ismtpd-12>",
+    "timestamp": 1761224255
+  }
+][
+  {
+    "email": "cathy@dedaluslabs.ai",
+    "event": "delivered",
+    "ip": "159.183.224.105",
+    "response": "250 2.0.0 OK  1761224252 d75a77b69052e-4eb80a1dd34si6358661cf.1212 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctY1BJR0FaYjRTSC0zVTVRQ2Q0S1pOQS0w",
+    "sg_message_id": "cPIGAZb4SH-3U5QCd4KZNA.recvd-769f975875-t8bjd-1-68FA263A-7.0",
+    "smtp-id": "<cPIGAZb4SH-3U5QCd4KZNA@geopod-ismtpd-7>",
+    "timestamp": 1761224252,
+    "tls": 1
+  }
+][
+  {
+    "email": "sam@inference.net",
+    "event": "delivered",
+    "ip": "149.72.154.232",
+    "response": "250 2.0.0 OK  1761224254 d9443c01a7336-2946e117ff8si11153115ad.525 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctalBSUGlXTDFSZ0taV0g2bEVZemdVZy0w",
+    "sg_message_id": "jPRPiWL1RgKZWH6lEYzgUg.recvd-7fd96f4944-8xvpt-1-68FA263C-F.0",
+    "smtp-id": "<jPRPiWL1RgKZWH6lEYzgUg@geopod-ismtpd-13>",
+    "timestamp": 1761224254,
+    "tls": 1
+  },
+  {
+    "email": "sam@inference.net",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LWpQUlBpV0wxUmdLWldINmxFWXpnVWctMA",
+    "sg_message_id": "jPRPiWL1RgKZWH6lEYzgUg.recvd-7fd96f4944-8xvpt-1-68FA263C-F.0",
+    "smtp-id": "<jPRPiWL1RgKZWH6lEYzgUg@geopod-ismtpd-13>",
+    "timestamp": 1761224252
+  }
+][
+  {
+    "email": "cathy@dedaluslabs.ai",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "DxorPxjyTKO1dZqeZ2lZBw",
+    "sg_machine_open": false,
+    "sg_message_id": "cPIGAZb4SH-3U5QCd4KZNA.recvd-769f975875-t8bjd-1-68FA263A-7.0",
+    "timestamp": 1761224254,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "andrew@cerebras.net",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LXNNWkdlQ2ZIUmdDNGZhNXN1eGRERGctMA",
+    "sg_message_id": "sMZGeCfHRgC4fa5suxdDDg.recvd-769f975875-bzv77-1-68FA264A-30.0",
+    "smtp-id": "<sMZGeCfHRgC4fa5suxdDDg@geopod-ismtpd-0>",
+    "timestamp": 1761224266
+  }
+][
+  {
+    "email": "laird@exacare.com",
+    "event": "delivered",
+    "ip": "149.72.123.24",
+    "response": "250 2.0.0 OK  1761224261 af79cd13be357-89c12f04213si57835385a.1427 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctQ0dQNnp3SU9RYnFNcDF1SE51VFBJZy0w",
+    "sg_message_id": "CGP6zwIOQbqMp1uHNuTPIg.recvd-7f4fb8995-gm6sw-1-68FA2643-4.0",
+    "smtp-id": "<CGP6zwIOQbqMp1uHNuTPIg@geopod-ismtpd-10>",
+    "timestamp": 1761224261,
+    "tls": 1
+  },
+  {
+    "email": "laird@exacare.com",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LUNHUDZ6d0lPUWJxTXAxdUhOdVRQSWctMA",
+    "sg_message_id": "CGP6zwIOQbqMp1uHNuTPIg.recvd-7f4fb8995-gm6sw-1-68FA2643-4.0",
+    "smtp-id": "<CGP6zwIOQbqMp1uHNuTPIg@geopod-ismtpd-10>",
+    "timestamp": 1761224259
+  }
+][
+  {
+    "email": "bruce.qi@golaunchpad.io",
+    "event": "delivered",
+    "ip": "159.183.224.104",
+    "response": "250 2.0.0 OK  1761224263 8926c6da1cb9f-5abb7313301si1482261173.127 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctTHJkdFZTclFUa3EzeUc3VDN6T3RWdy0w",
+    "sg_message_id": "LrdtVSrQTkq3yG7T3zOtVw.recvd-7d86b8fd66-hjhpb-1-68FA2644-27.0",
+    "smtp-id": "<LrdtVSrQTkq3yG7T3zOtVw@geopod-ismtpd-8>",
+    "timestamp": 1761224263,
+    "tls": 1
+  },
+  {
+    "email": "bruce.qi@golaunchpad.io",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LUxyZHRWU3JRVGtxM3lHN1Qzek90VnctMA",
+    "sg_message_id": "LrdtVSrQTkq3yG7T3zOtVw.recvd-7d86b8fd66-hjhpb-1-68FA2644-27.0",
+    "smtp-id": "<LrdtVSrQTkq3yG7T3zOtVw@geopod-ismtpd-8>",
+    "timestamp": 1761224261
+  }
+][
+  {
+    "email": "glample@mistral.ai",
+    "event": "delivered",
+    "ip": "149.72.154.232",
+    "response": "250 2.0.0 Ok: queued as 4csmKM3L3hz2JYyM",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctQXk1SDRkb1NTS2E0OXZhYmFmMFQtQS0w",
+    "sg_message_id": "Ay5H4doSSKa49vabaf0T-A.recvd-7f4fb8995-gm6sw-1-68FA2646-3.0",
+    "smtp-id": "<Ay5H4doSSKa49vabaf0T-A@geopod-ismtpd-8>",
+    "timestamp": 1761224263,
+    "tls": 1
+  },
+  {
+    "email": "glample@mistral.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LUF5NUg0ZG9TU0thNDl2YWJhZjBULUEtMA",
+    "sg_message_id": "Ay5H4doSSKa49vabaf0T-A.recvd-7f4fb8995-gm6sw-1-68FA2646-3.0",
+    "smtp-id": "<Ay5H4doSSKa49vabaf0T-A@geopod-ismtpd-8>",
+    "timestamp": 1761224262
+  }
+][
+  {
+    "email": "laird@exacare.com",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "Sr3f_npnT7iAqYqU-2OMrQ",
+    "sg_machine_open": false,
+    "sg_message_id": "CGP6zwIOQbqMp1uHNuTPIg.recvd-7f4fb8995-gm6sw-1-68FA2643-4.0",
+    "timestamp": 1761224262,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "ricky@exacare.com",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "itKC-aATRTu8CDPETTbu2w",
+    "sg_machine_open": false,
+    "sg_message_id": "ndiTVaU6T0usPm8att6owA.recvd-7d86b8fd66-wmff9-1-68FA2648-6.0",
+    "timestamp": 1761224267,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "andrew@cerebras.net",
+    "event": "delivered",
+    "ip": "149.72.123.24",
+    "response": "250 2.6.0 <sMZGeCfHRgC4fa5suxdDDg@geopod-ismtpd-0> [InternalId=235115099751656, Hostname=MN2PR17MB3904.namprd17.prod.outlook.com] 28642 bytes in 0.113, 246.844 KB/sec Queued mail for delivery",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctc01aR2VDZkhSZ0M0ZmE1c3V4ZEREZy0w",
+    "sg_message_id": "sMZGeCfHRgC4fa5suxdDDg.recvd-769f975875-bzv77-1-68FA264A-30.0",
+    "smtp-id": "<sMZGeCfHRgC4fa5suxdDDg@geopod-ismtpd-0>",
+    "timestamp": 1761224269,
+    "tls": 1
+  }
+][
+  {
+    "email": "ricky@exacare.com",
+    "event": "delivered",
+    "ip": "149.72.154.232",
+    "response": "250 2.0.0 OK  1761224265 8926c6da1cb9f-5abb780434fsi1839010173.158 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctbmRpVFZhVTZUMHVzUG04YXR0Nm93QS0w",
+    "sg_message_id": "ndiTVaU6T0usPm8att6owA.recvd-7d86b8fd66-wmff9-1-68FA2648-6.0",
+    "smtp-id": "<ndiTVaU6T0usPm8att6owA@geopod-ismtpd-9>",
+    "timestamp": 1761224265,
+    "tls": 1
+  },
+  {
+    "email": "ricky@exacare.com",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LW5kaVRWYVU2VDB1c1BtOGF0dDZvd0EtMA",
+    "sg_message_id": "ndiTVaU6T0usPm8att6owA.recvd-7d86b8fd66-wmff9-1-68FA2648-6.0",
+    "smtp-id": "<ndiTVaU6T0usPm8att6owA@geopod-ismtpd-9>",
+    "timestamp": 1761224264
+  }
+][
+  {
+    "email": "edward.adjei@aragorn.ai",
+    "event": "delivered",
+    "ip": "159.183.235.50",
+    "response": "250 2.0.0 OK  1761224272 41be03b00d2f7-b6cf4e6a93bsi1065547a12.1050 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctaWV5dEFKU2dTc0N0UDMtZXBZajdHQS0w",
+    "sg_message_id": "ieytAJSgSsCtP3-epYj7GA.recvd-7fd96f4944-vrppq-1-68FA264C-24.0",
+    "smtp-id": "<ieytAJSgSsCtP3-epYj7GA@geopod-ismtpd-2>",
+    "timestamp": 1761224272,
+    "tls": 1
+  },
+  {
+    "email": "edward.adjei@aragorn.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LWlleXRBSlNnU3NDdFAzLWVwWWo3R0EtMA",
+    "sg_message_id": "ieytAJSgSsCtP3-epYj7GA.recvd-7fd96f4944-vrppq-1-68FA264C-24.0",
+    "smtp-id": "<ieytAJSgSsCtP3-epYj7GA@geopod-ismtpd-2>",
+    "timestamp": 1761224268
+  }
+][
+  {
+    "email": "ricky@exacare.com",
+    "event": "open",
+    "ip": "192.178.10.41",
+    "sg_content_type": "html",
+    "sg_event_id": "BuUWdAwITzyDzjbNZjJ92g",
+    "sg_machine_open": false,
+    "sg_message_id": "ndiTVaU6T0usPm8att6owA.recvd-7d86b8fd66-wmff9-1-68FA2648-6.0",
+    "timestamp": 1761224272,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
+][
+  {
+    "email": "edward.adjei@aragorn.ai",
+    "event": "open",
+    "ip": "72.14.199.165",
+    "sg_content_type": "html",
+    "sg_event_id": "F_ov-YxJSAGSWlg_0Ft2qg",
+    "sg_machine_open": false,
+    "sg_message_id": "ieytAJSgSsCtP3-epYj7GA.recvd-7fd96f4944-vrppq-1-68FA264C-24.0",
+    "timestamp": 1761224275,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "andrew@cerebras.net",
+    "event": "open",
+    "ip": "135.232.19.0",
+    "sg_content_type": "html",
+    "sg_event_id": "mak0E_KRTZuNn5HRPjMDww",
+    "sg_machine_open": false,
+    "sg_message_id": "sMZGeCfHRgC4fa5suxdDDg.recvd-769f975875-bzv77-1-68FA264A-30.0",
+    "timestamp": 1761224283,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+  }
+][
+  {
+    "email": "o.spence@cybaverse.co.uk",
+    "event": "open",
+    "ip": "148.252.128.85",
+    "sg_content_type": "html",
+    "sg_event_id": "gfj-bHsaRlObyt7c0Yq12A",
+    "sg_machine_open": false,
+    "sg_message_id": "Cmps3eATTUi913hzzmDW0A.recvd-7748d67658-v57fl-1-68FA2624-18.0",
+    "timestamp": 1761224310,
+    "useragent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  }
+][
+  {
+    "email": "kush@wexler.ai",
+    "event": "open",
+    "ip": "104.28.40.145",
+    "sg_content_type": "html",
+    "sg_event_id": "51q9Us6HRw-cj6a2chwAZA",
+    "sg_machine_open": true,
+    "sg_message_id": "k1fZr9dzSuSuqzApfLnCHg.recvd-7748d67658-fz24p-1-68FA25B0-38.0",
+    "timestamp": 1761224311,
+    "useragent": "Mozilla/5.0"
+  }
+][
+  {
+    "email": "o.spence@cybaverse.co.uk",
+    "event": "open",
+    "ip": "148.252.128.85",
+    "sg_content_type": "html",
+    "sg_event_id": "NALVxrsrRtGuTx5Rbj5epQ",
+    "sg_machine_open": false,
+    "sg_message_id": "Cmps3eATTUi913hzzmDW0A.recvd-7748d67658-v57fl-1-68FA2624-18.0",
+    "timestamp": 1761224309,
+    "useragent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  }
+][
+  {
+    "email": "andrew@cerebras.net",
+    "event": "open",
+    "ip": "135.232.19.0",
+    "sg_content_type": "html",
+    "sg_event_id": "c__a4qg7RUy5L3Lby2YFaw",
+    "sg_machine_open": false,
+    "sg_message_id": "sMZGeCfHRgC4fa5suxdDDg.recvd-769f975875-bzv77-1-68FA264A-30.0",
+    "timestamp": 1761224349,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+  }
+][
+  {
+    "email": "aaron@airgoods.com",
+    "event": "open",
+    "ip": "66.102.8.225",
+    "sg_content_type": "html",
+    "sg_event_id": "AvYodNb5Qj-LcaqIh9ExyA",
+    "sg_machine_open": false,
+    "sg_message_id": "G6EOYEKFQ3ikPri79Q94qg.recvd-686fbc5d8-jp6gw-1-68FA25F8-8.0",
+    "timestamp": 1761224677,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
+][
+  {
+    "email": "alok@mistral.ai",
+    "event": "open",
+    "ip": "66.249.93.204",
+    "sg_content_type": "html",
+    "sg_event_id": "oEhNXvZwQISrtIW0q4Xn3Q",
+    "sg_machine_open": false,
+    "sg_message_id": "8KGogonyRdyektssW8LB0w.recvd-7fd96f4944-4vhxg-1-68FA2641-18.0",
+    "timestamp": 1761224944,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
+][
+  {
+    "email": "vipul@fireai.in",
+    "event": "open",
+    "ip": "66.249.84.224",
+    "sg_content_type": "html",
+    "sg_event_id": "PxZujzaCTgq7qtET1VbC2w",
+    "sg_machine_open": false,
+    "sg_message_id": "9b-2tS81T7K9SrpHTZFj8g.recvd-6f5cbff5dc-5d7s5-1-68FA263F-1.0",
+    "timestamp": 1761225599,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
+][
+  {
+    "email": "ricky@exacare.com",
+    "event": "open",
+    "ip": "74.125.213.9",
+    "sg_content_type": "html",
+    "sg_event_id": "8lOHLINkTlSg2EmdMoILgA",
+    "sg_machine_open": false,
+    "sg_message_id": "ndiTVaU6T0usPm8att6owA.recvd-7d86b8fd66-wmff9-1-68FA2648-6.0",
+    "timestamp": 1761225936,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
+][
+  {
+    "email": "o.spence@cybaverse.co.uk",
+    "event": "open",
+    "ip": "35.231.92.0",
+    "sg_content_type": "html",
+    "sg_event_id": "8-rT8MOmSOSDLNGE73mDAA",
+    "sg_machine_open": false,
+    "sg_message_id": "Cmps3eATTUi913hzzmDW0A.recvd-7748d67658-v57fl-1-68FA2624-18.0",
+    "timestamp": 1761226566,
+    "useragent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 [SuperhumanProxy]/1.0 (email hello AT superhuman.com)"
+  }
+][
+  {
+    "email": "anita@getpeer.ai",
+    "event": "open",
+    "ip": "104.28.124.89",
+    "sg_content_type": "html",
+    "sg_event_id": "JzbMXrKaSZCwuBMZrSIwrg",
+    "sg_machine_open": true,
+    "sg_message_id": "BigiB6wJTjW38VWyvDUL4g.recvd-canary-7787d4fc79-kg2p5-1-68FA25C4-1.0",
+    "timestamp": 1761226786,
+    "useragent": "Mozilla/5.0"
+  }
+][
+  {
+    "email": "d@activeloop.ai",
+    "event": "open",
+    "ip": "35.231.92.0",
+    "sg_content_type": "html",
+    "sg_event_id": "TJpUjI1YQAKfyhb6Z7er2w",
+    "sg_machine_open": false,
+    "sg_message_id": "FGFF57ABT2erXyKRk8_tlA.recvd-7748d67658-gt9x5-1-68FA25B7-3.0",
+    "timestamp": 1761235830,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 [SuperhumanProxy]/1.0 (email hello AT superhuman.com)"
+  }
+][
+  {
+    "email": "joachim@theforecastingcompany.com",
+    "event": "open",
+    "ip": "104.28.42.16",
+    "sg_content_type": "html",
+    "sg_event_id": "A6i6CeNBTga7YJawcclCjw",
+    "sg_machine_open": true,
+    "sg_message_id": "iOLGIo1RSnG2JN1BPGX6NQ.recvd-686fbc5d8-wx9kd-1-68FA25CD-6.0",
+    "timestamp": 1761257525,
+    "useragent": "Mozilla/5.0"
+  }
+][
+  {
+    "email": "vikram@tryardent.com",
+    "event": "open",
+    "ip": "98.47.83.147",
+    "sg_content_type": "html",
+    "sg_event_id": "W0dYjF-aS3OcMDUB8h8p7A",
+    "sg_machine_open": false,
+    "sg_message_id": "n3-P3P51S9G7fzd04ZzFYQ.recvd-7d86b8fd66-hjhpb-1-68FA25AE-3D.0",
+    "timestamp": 1761283087,
+    "useragent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  }
+][
+  {
+    "email": "vikram@tryardent.com",
+    "event": "open",
+    "ip": "98.47.83.147",
+    "sg_content_type": "html",
+    "sg_event_id": "9NrocQajSzylDRgUw0x3nw",
+    "sg_machine_open": false,
+    "sg_message_id": "n3-P3P51S9G7fzd04ZzFYQ.recvd-7d86b8fd66-hjhpb-1-68FA25AE-3D.0",
+    "timestamp": 1761283088,
+    "useragent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+  }
+][
+  {
+    "email": "sun@moonlakeai.com",
+    "event": "open",
+    "ip": "146.75.154.1",
+    "sg_content_type": "html",
+    "sg_event_id": "pT4ZhjBbRSqudZBMYNVszw",
+    "sg_machine_open": true,
+    "sg_message_id": "8JuvUnTkQDCkCXMemvMhZQ.recvd-7fd96f4944-s5frb-1-68FA25E2-2D.0",
+    "timestamp": 1761236589,
+    "useragent": "Mozilla/5.0"
+  }
+][
+  {
+    "email": "gregory@wexler.ai",
+    "event": "open",
+    "ip": "104.28.88.48",
+    "sg_content_type": "html",
+    "sg_event_id": "wTWU1lolT2ygQPihQTB-fA",
+    "sg_machine_open": true,
+    "sg_message_id": "qd7e0_X9QsOgmw1DnHLvHQ.recvd-769f975875-v2pvw-1-68FA25A5-19.0",
+    "timestamp": 1761248243,
+    "useragent": "Mozilla/5.0"
+  }
+][
+  {
+    "email": "edward.adjei@aragorn.ai",
+    "event": "open",
+    "ip": "172.226.81.25",
+    "sg_content_type": "html",
+    "sg_event_id": "jo4CBD3GTUS8wvAN3KQsog",
+    "sg_machine_open": true,
+    "sg_message_id": "ieytAJSgSsCtP3-epYj7GA.recvd-7fd96f4944-vrppq-1-68FA264C-24.0",
+    "timestamp": 1761259442,
+    "useragent": "Mozilla/5.0"
+  }
+][
+  {
+    "email": "vipul@fireai.in",
+    "event": "open",
+    "ip": "66.249.84.227",
+    "sg_content_type": "html",
+    "sg_event_id": "kigQUYsNTcONEvctJXX34Q",
+    "sg_machine_open": false,
+    "sg_message_id": "9b-2tS81T7K9SrpHTZFj8g.recvd-6f5cbff5dc-5d7s5-1-68FA263F-1.0",
+    "timestamp": 1761238933,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
+][
+  {
+    "email": "cl@basistheory.com",
+    "event": "open",
+    "ip": "146.75.154.1",
+    "sg_content_type": "html",
+    "sg_event_id": "nl2VCGQiT8S94mUce7KPVQ",
+    "sg_machine_open": true,
+    "sg_message_id": "4fwnEHnvSDOQLj7ZzX8DtA.recvd-7fd96f4944-hvvlc-1-68FA25A0-15.0",
+    "timestamp": 1761228336,
+    "useragent": "Mozilla/5.0"
+  }
+][
+  {
+    "email": "aoiotani@theliva.ai",
+    "event": "open",
+    "ip": "66.249.84.227",
+    "sg_content_type": "html",
+    "sg_event_id": "HobOh5KnQw6tMa8vIlfrQA",
+    "sg_machine_open": false,
+    "sg_message_id": "RLtD9JnsS4qres4rfgSGCQ.recvd-6f5cbff5dc-6ghr9-1-68FA25BB-25.0",
+    "timestamp": 1761239732,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
+][
+  {
+    "email": "vipul@fireai.in",
+    "event": "open",
+    "ip": "104.28.37.209",
+    "sg_content_type": "html",
+    "sg_event_id": "RbjbRiN0SwCcrkCpMxe7rw",
+    "sg_machine_open": true,
+    "sg_message_id": "9b-2tS81T7K9SrpHTZFj8g.recvd-6f5cbff5dc-5d7s5-1-68FA263F-1.0",
+    "timestamp": 1761290579,
+    "useragent": "Mozilla/5.0"
+  }
+][
+  {
+    "email": "andrea@lexroom.ai",
+    "event": "open",
+    "ip": "146.75.186.14",
+    "sg_content_type": "html",
+    "sg_event_id": "gDw3tbR4Tra95E7tNtqyoQ",
+    "sg_machine_open": true,
+    "sg_message_id": "uLcGgvzeROGtx6UwzjLlLg.recvd-7d86b8fd66-5dgsp-1-68FA25A8-2.0",
+    "timestamp": 1761240214,
+    "useragent": "Mozilla/5.0"
+  }
+][
+  {
+    "email": "bruce.qi@golaunchpad.io",
+    "event": "open",
+    "ip": "192.178.10.41",
+    "sg_content_type": "html",
+    "sg_event_id": "c_rtAFLLRmu3K_QX6BhPQw",
+    "sg_machine_open": false,
+    "sg_message_id": "LrdtVSrQTkq3yG7T3zOtVw.recvd-7d86b8fd66-hjhpb-1-68FA2644-27.0",
+    "timestamp": 1761230241,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
+][
+  {
+    "email": "joachim@theforecastingcompany.com",
+    "event": "open",
+    "ip": "35.231.92.0",
+    "sg_content_type": "html",
+    "sg_event_id": "vKkHlhWST_eze3cbC7dS8w",
+    "sg_machine_open": false,
+    "sg_message_id": "iOLGIo1RSnG2JN1BPGX6NQ.recvd-686fbc5d8-wx9kd-1-68FA25CD-6.0",
+    "timestamp": 1761252627,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 [SuperhumanProxy]/1.0 (email hello AT superhuman.com)"
+  }
+][
+  {
+    "email": "joachim@theforecastingcompany.com",
+    "event": "open",
+    "ip": "35.231.92.0",
+    "sg_content_type": "html",
+    "sg_event_id": "1zieiS9NTJKyZfXGeoA9Mg",
+    "sg_machine_open": false,
+    "sg_message_id": "iOLGIo1RSnG2JN1BPGX6NQ.recvd-686fbc5d8-wx9kd-1-68FA25CD-6.0",
+    "timestamp": 1761252634,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 [SuperhumanProxy]/1.0 (email hello AT superhuman.com)"
+  }
+][
+  {
+    "email": "bruce.qi@golaunchpad.io",
+    "event": "open",
+    "ip": "66.249.84.227",
+    "sg_content_type": "html",
+    "sg_event_id": "NX67cwtFTLiBmILK5UZkFg",
+    "sg_machine_open": false,
+    "sg_message_id": "LrdtVSrQTkq3yG7T3zOtVw.recvd-7d86b8fd66-hjhpb-1-68FA2644-27.0",
+    "timestamp": 1761231779,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
+][
+  {
+    "email": "misha@reflection.ai",
+    "event": "open",
+    "ip": "66.249.93.202",
+    "sg_content_type": "html",
+    "sg_event_id": "h9JDFyGCSze2aZYCF00bvQ",
+    "sg_machine_open": false,
+    "sg_message_id": "OGIgZv_lSUeaoYtFiqpkLw.recvd-6f5cbff5dc-9p4pc-1-68FA25C9-2D.0",
+    "timestamp": 1761232308,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
+][
+  {
+    "email": "martin.rehak@resistant.ai",
+    "event": "open",
+    "ip": "104.28.114.10",
+    "sg_content_type": "html",
+    "sg_event_id": "43gR5L9IRQqkmIiUjTew5g",
+    "sg_machine_open": true,
+    "sg_message_id": "VXnRx2KvQ5-M8e3L21nfcQ.recvd-6f5cbff5dc-cznhd-1-68FA2634-3D.0",
+    "timestamp": 1761254683,
+    "useragent": "Mozilla/5.0"
+  }
+][
+  {
+    "email": "aoiotani@theliva.ai",
+    "event": "open",
+    "ip": "66.249.84.228",
+    "sg_content_type": "html",
+    "sg_event_id": "Ja0VcaFTS7uGvzVliYLNyA",
+    "sg_machine_open": false,
+    "sg_message_id": "RLtD9JnsS4qres4rfgSGCQ.recvd-6f5cbff5dc-6ghr9-1-68FA25BB-25.0",
+    "timestamp": 1761244819,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
+][
+  {
+    "email": "keshav@optiq.ai",
+    "event": "open",
+    "ip": "66.249.84.225",
+    "sg_content_type": "html",
+    "sg_event_id": "9kZ91BfEQQ6taQPE7ODPew",
+    "sg_machine_open": false,
+    "sg_message_id": "2ynk3_8AQR6q_JR0xjVXNw.recvd-65696df74f-gsmz5-1-68FA2618-31.0",
+    "timestamp": 1761234080,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
 ]
