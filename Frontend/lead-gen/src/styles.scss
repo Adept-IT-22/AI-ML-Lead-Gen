@@ -1,6 +1,21 @@
 @use '@angular/material' as mat;
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap');
 
+:root{
+  /* Font Sizes (Conversion from px to rem done assuming a 16px base i.e. 16px = 1rem */
+    --font-size-base: 0.75rem;
+    --font-size-header: 1rem;
+    --font-size-title: 1.5rem; /*Reference data card title*/
+    --font-size-data: 2rem; /*References data card numbers*/
+
+    /* Font Weights */
+    --font-weight-normal: 400;
+    --font-weight-header: 600;
+
+    /* Font Family */
+    --font-family-base: 'IBM Plex Mono', monospace;
+}
+
 /* ===================================================
    🌑 DARK THEME (unchanged — from p21)
 =================================================== */
