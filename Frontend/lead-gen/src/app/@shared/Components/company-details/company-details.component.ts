@@ -61,7 +61,7 @@ export class CompanyDetailsComponent implements OnInit {
                   { key: 'Number of Employees', value: details.estimated_num_employees },
                   { key: 'Total Funding', value: this.formatNumber(details.total_funding) },
                   { key: 'Annual Revenue', value: this.formatNumber(details.annual_revenue) },
-                  { key: 'Services To Provide',
+                  { key: 'Services Needed',
                       value: (() => {
                         if (!details.top_matches) return 'N/A';
                         try {
@@ -71,6 +71,7 @@ export class CompanyDetailsComponent implements OnInit {
                               .map((item: any[]) =>
                                 item[0]
                                   .replace(/^lower_/, '') // Remove 'lower_' prefix
+                                  .replace(/^higher_/, '') // Remove 'higher_' prefix
                                   .replace(/_/g, ' ')     // Replace underscores with spaces
                                   .replace(/\b\w/g, (c: string) => c.toUpperCase()) // Capitalize each word
                               )

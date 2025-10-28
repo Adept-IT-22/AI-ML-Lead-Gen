@@ -16,13 +16,16 @@
     <a class="nav-link" routerLink="/settings">SETTINGS</a>
   </div>
 
-  <!-- Search Bar + Theme Toggle -->
-  <div class="navbar-actions">
-    <div class="search-bar">
-      <app-search-bar></app-search-bar>
-    </div>
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <app-search-bar></app-search-bar>
+  </div>
+  <!--
+  <div>
     <button class="theme-toggle" (click)="toggleTheme()">
       <mat-icon>{{ isDarkTheme ? 'dark_mode' : 'light_mode' }}</mat-icon>
     </button>
   </div>
+  -->
+  
 </nav>
