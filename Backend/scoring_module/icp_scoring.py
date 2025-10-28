@@ -165,7 +165,7 @@ if __name__ == "__main__":
         keywords = fetched_company.get('keywords')
         people = fetched_company.get('people', [])
         phone = fetched_company.get('phone', '')
-        linkedin = [people_dict.get('linkedin_url', '') for people_dict in people][0]
+        linkedin = [people_dict.get('linkedin_url', '') for people_dict in people][0] if people else None
         website = fetched_company.get('website_url', '')
         country = fetched_company.get('country', '')
 
@@ -174,6 +174,7 @@ if __name__ == "__main__":
                            linkedin, website, country)
 
         await scorer.log_scoring_start(name)
+        print(await scorer.calculate_total_score())
 
     asyncio.run(main())
 
