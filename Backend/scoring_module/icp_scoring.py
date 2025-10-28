@@ -154,98 +154,27 @@ class ICPScorer:
 
 if __name__ == "__main__":
     async def main():
-        name = 'adept'
-        founded_year = 2023
-        employee_count = 23
-        funding_stage = 'seed'
-        people = [
-      {
-        "email": "maor@getleo.ai",
-        "full_name": "Maor Farid",
-        "title": "Co-Founder & CEO"
-      }
-    ]
-        keywords = [
-      "ai",
-      "generative ai",
-      "engineering",
-      "design",
-      "cad",
-      "cad software",
-      "technology, information & internet",
-      "generative design for mechanics",
-      "automated design review",
-      "ai for engineering standards compliance",
-      "ai-driven component sourcing",
-      "digital engineering",
-      "computer software",
-      "engineering knowledge management",
-      "engineering services",
-      "natural language processing",
-      "design automation",
-      "mechanical engineering",
-      "engineering documentation",
-      "component retrieval",
-      "engineering calculations",
-      "product design",
-      "legacy data harnessing in engineering",
-      "product development",
-      "machine learning",
-      "mechanical design ideation ai",
-      "product design software",
-      "multimodal input processing",
-      "automated calculations",
-      "product lifecycle management",
-      "ai for product development",
-      "engineering knowledge base",
-      "engineering knowledge centralization",
-      "automated design suggestions",
-      "design brainstorming",
-      "large mechanical model",
-      "engineering data integration",
-      "design decision support",
-      "product design optimization ai",
-      "engineering collaboration tools",
-      "design concept generation",
-      "cad plugin",
-      "mechanical engineering assistant",
-      "product specifications",
-      "part search engine",
-      "engineering decision support",
-      "industrial design",
-      "component search",
-      "multi-modal engineering ai",
-      "ai-powered engineering design",
-      "cad integration",
-      "ai in cad",
-      "product data management",
-      "digital twin integration",
-      "legacy data utilization",
-      "ai engineering assistant",
-      "structural analysis",
-      "context-aware engineering answers",
-      "ai for complex structural analysis",
-      "multimodal inputs",
-      "real-time answers",
-      "ai for early-stage development",
-      "b2b",
-      "services",
-      "enterprise software",
-      "enterprises",
-      "information technology & services",
-      "artificial intelligence",
-      "mechanical or industrial engineering"
-    ]
-        phone = '0705548993'
-        linkedin = 'linkedin.com/me'
-        website = 'www.adept-techno.com'
-        country = 'United States'
+        from services.db_service import fetch_company_details
+
+        fetched_company = await fetch_company_details(128)
+
+        name = fetched_company.get('name')
+        founded_year = fetched_company.get('founded_year')
+        employee_count = fetched_company.get('estimated_num_employees')
+        funding_stage = fetched_company.get('latest_funding_round')
+        keywords = fetched_company.get('keywords')
+        people = fetched_company.get('people', [])
+        phone = fetched_company.get('phone', '')
+        linkedin = [people_dict.get('linkedin_url', '') for people_dict in people][0]
+        website = fetched_company.get('website_url', '')
+        country = fetched_company.get('country', '')
+
         scorer = ICPScorer(icp, name, founded_year, employee_count, 
                            funding_stage, keywords, people, phone, 
                            linkedin, website, country)
 
         await scorer.log_scoring_start(name)
-        await scorer.calculate_total_score()
+        print(await scorer.calculate_total_score())
 
     asyncio.run(main())
 

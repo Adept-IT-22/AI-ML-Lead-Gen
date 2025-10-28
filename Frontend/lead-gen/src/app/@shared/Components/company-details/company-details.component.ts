@@ -83,7 +83,7 @@ export class CompanyDetailsComponent implements OnInit {
                         }
                       })()
                   },
-                  { key: 'Interpretation', value: details.interpretation}
+                  { key: 'Potential Fit', value: details.interpretation}
                 ]
               },
               {

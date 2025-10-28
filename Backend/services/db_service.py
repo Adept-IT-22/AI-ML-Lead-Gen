@@ -14,8 +14,8 @@ load_dotenv(verbose=True, override=True)
 #=======================================================================================
 
 #DB_URL = os.getenv("DATABASE_URL")
-#DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
-DB_URL = "postgresql://lead_gen_user:lead_gen_password@lead-gen-db:5432/lead_gen_db"
+DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
+#DB_URL = "postgresql://lead_gen_user:lead_gen_password@lead-gen-db:5432/lead_gen_db"
 #DB_URL = os.getenv("MOCK_DATABASE_URL")
 
 logger = logging.getLogger()
@@ -664,6 +664,6 @@ if __name__ == "__main__":
         #]
 
         #async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-        x = await fetch_companies()
+        x = await fetch_company_details(118)
         print(x)
     asyncio.run(main())

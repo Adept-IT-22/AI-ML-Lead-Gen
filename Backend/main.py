@@ -51,8 +51,8 @@ file_handler.setFormatter(
 logger.addHandler(file_handler)
 
 #DB_URL = os.getenv("DATABASE_URL")
-#DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
-DB_URL = "postgresql://lead_gen_user:lead_gen_password@lead-gen-db:5432/lead_gen_db"
+DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
+#DB_URL = "postgresql://lead_gen_user:lead_gen_password@lead-gen-db:5432/lead_gen_db"
 
 #Create Flask App
 app = Flask(__name__)
