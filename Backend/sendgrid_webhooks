@@ -1744,4 +1744,13 @@
     "timestamp": 1761234080,
     "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
   }
+][
+  {
+    "email": "alice@example.com",
+    "event": "delivered"
+  },
+  {
+    "email": "bob@example.com",
+    "event": "open"
+  }
 ]

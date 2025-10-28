@@ -174,7 +174,6 @@ if __name__ == "__main__":
                            linkedin, website, country)
 
         await scorer.log_scoring_start(name)
-        print(await scorer.calculate_total_score())
 
     asyncio.run(main())
 

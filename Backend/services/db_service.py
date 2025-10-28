@@ -619,6 +619,18 @@ async def store_icp_score(pool, company_id, age_score, employee_count_score,
     ) VALUES (
         $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
     )
+    ON CONFLICT (company_id)
+    DO UPDATE SET
+        age_score = EXCLUDED.age_score,
+        employee_count_score = EXCLUDED.employee_count_score,
+        funding_stage_score = EXCLUDED.funding_stage_score,
+        keyword_score = EXCLUDED.keyword_score,
+        contactability_score = EXCLUDED.contactability_score,
+        geography_score = EXCLUDED.geography_score,
+        total_score = EXCLUDED.total_score,
+        category_breakdown = EXCLUDED.category_breakdown,
+        top_matches = EXCLUDED.top_matches,
+        interpretation = EXCLUDED.interpretation
     """
     async with pool.acquire() as conn:
         await conn.execute(query, company_id, age_score, employee_count_score,
@@ -646,7 +658,7 @@ async def update_company_icp_score(pool, company_id: int, total_score: float):
     async with pool.acquire() as conn:
         await conn.execute(query, float(total_score), company_id)
 
-    logger.info("Company icp_score and status updated (if applicable)")
+    logger.info("Company icp_score and status updated")
 
 
 if __name__ == "__main__":
