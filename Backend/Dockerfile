@@ -22,4 +22,4 @@ ENV FLASK_RUN_HOST=0.0.0.0
 ENV PYTHONPATH=/app
 
 # Run the Flask app with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
+CMD ["gunicorn", "--worker-class", "gevent",  "--bind", "0.0.0.0:5000", "--timeout", "300", "main:app"]

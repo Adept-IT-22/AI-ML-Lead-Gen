@@ -14,7 +14,8 @@ load_dotenv(verbose=True, override=True)
 #=======================================================================================
 
 #DB_URL = os.getenv("DATABASE_URL")
-DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
+#DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
+DB_URL = "postgresql://lead_gen_user:lead_gen_password@lead-gen-db:5432/lead_gen_db"
 #DB_URL = os.getenv("MOCK_DATABASE_URL")
 
 logger = logging.getLogger()
@@ -44,11 +45,15 @@ async def fetch_companies() -> List[Dict[str, Any]]:
         company_query = """
         SELECT 
             c.*, 
-            p.full_name, p.title, p.email, p.linkedin_url 
+            p.full_name, p.title, p.email, p.linkedin_url,
+            i.top_matches, i.interpretation
         FROM 
             companies c 
         LEFT JOIN 
-            people p ON c.apollo_id = p.organization_id;
+            people p ON c.apollo_id = p.organization_id
+
+        LEFT JOIN
+            icp_scores i ON c.id = i.company_id;
         """
         results = await conn.fetch(company_query)
         
@@ -61,6 +66,7 @@ async def fetch_companies() -> List[Dict[str, Any]]:
         for record in results:
             # Convert asyncpg.Record to dict for easier manipulation
             record_dict = dict(record)
+            print(record_dict)
             company_apollo_id = record_dict.get("apollo_id")
 
             if company_apollo_id is None:
@@ -72,6 +78,10 @@ async def fetch_companies() -> List[Dict[str, Any]]:
                 # A. First time seeing this company: Initialize the master object
                 company_data = record_dict.copy()
                 company_data["people"] = []
+
+                # Also, add the companies alignment to our services.
+                company_data["top_matches"] = record_dict.get('top_matches')
+                company_data["interpretation"] = record_dict.get('interpretation')
                 
                 # Clean up the root object by removing the scattered people data
                 del company_data["full_name"]
@@ -93,7 +103,8 @@ async def fetch_companies() -> List[Dict[str, Any]]:
                     "email": record_dict["email"],
                     "linkedin_url": record_dict["linkedin_url"]
                 }
-                master_company["people"].append(person)
+                if person not in master_company.get('people'):
+                    master_company["people"].append(person)
 
         # Convert the dictionary values (the 62 unique company objects) back to a list
         final_all_companies = list(companies_map.values())
@@ -152,10 +163,12 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
         conn = await asyncpg.connect(dsn=DB_URL)
         #CHANGED
         query = """
-            SELECT c.*, p.full_name, p.title, p.email, p.linkedin_url 
+            SELECT c.*, p.full_name, p.title, p.email, p.linkedin_url, i.top_matches, i.interpretation
             FROM companies c 
             LEFT JOIN people p 
             ON c.apollo_id = p.organization_id
+            LEFT JOIN icp_scores i
+            ON c.id = i.company_id
             WHERE c.id = $1
             """
         results = await conn.fetch(query, id)
@@ -189,7 +202,11 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
                         'email': result_dict.get('email'),
                         'linkedin_url': result_dict.get('linkedin_url'),
                     }
-                    stored_result.get('people').append(person)
+                    if person not in stored_result.get('people'):
+                        stored_result.get('people').append(person)
+
+                stored_result['top_matches'] = result_copy.get('top_matches')
+                stored_result['interpretation'] = result_copy.get('interpretation')
 
             if final_results:
                 return next(iter(final_results.values()))
@@ -647,6 +664,6 @@ if __name__ == "__main__":
         #]
 
         #async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-        x = await fetch_company_details(36)
+        x = await fetch_companies()
         print(x)
     asyncio.run(main())

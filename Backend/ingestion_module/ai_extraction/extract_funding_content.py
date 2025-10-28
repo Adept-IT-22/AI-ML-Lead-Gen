@@ -99,12 +99,15 @@ def log_failure():
 async def _call_gemini_api_with_retry(prompt: str) -> types.GenerateContentResponse:
     logger.info("Attempting Gemini API call for funding...")
     try:
-        response = await model.generate_content_async(
-            contents=prompt,
-            generation_config=types.GenerationConfig(
-                response_mime_type="application/json",
-                temperature=0,
-            )
+        response = await asyncio.wait_for(
+            model.generate_content_async(
+                contents=prompt,
+                generation_config=types.GenerationConfig(
+                    response_mime_type="application/json",
+                    temperature=0,
+                )
+            ),
+        timeout=30.0
         )
         logger.info("Gemini API call for funding successful.")
         return response

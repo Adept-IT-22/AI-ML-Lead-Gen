@@ -51,7 +51,8 @@ file_handler.setFormatter(
 logger.addHandler(file_handler)
 
 #DB_URL = os.getenv("DATABASE_URL")
-DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
+#DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
+DB_URL = "postgresql://lead_gen_user:lead_gen_password@lead-gen-db:5432/lead_gen_db"
 
 #Create Flask App
 app = Flask(__name__)
@@ -595,69 +596,69 @@ async def main():
 
     logger.info("Done storing ICP scores")
 
-    ##==============6. EMAIL================
-    #logger.info("Sending emails...")
-    #list_of_people_in_db = await fetch_people()
+    #==============6. EMAIL================
+    logger.info("Sending emails...")
+    list_of_people_in_db = await fetch_people()
 
-    ## Create one connection pool for all emails
-    #async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-        #for person in list_of_people_in_db:
-            #try:
-                #contacted_status = person.get("contacted_status", "")
-                #persons_email = person.get("email", "")
+    # Create one connection pool for all emails
+    async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+        for person in list_of_people_in_db:
+            try:
+                contacted_status = person.get("contacted_status", "")
+                persons_email = person.get("email", "")
 
-                #if contacted_status != "uncontacted" or not persons_email:
-                    #logger.info(f"Skipping {persons_email} - Status: {contacted_status}")
-                    #continue
+                if contacted_status != "uncontacted" or not persons_email:
+                    logger.info(f"Skipping {persons_email} - Status: {contacted_status}")
+                    continue
 
-                ## Fetch company info
-                #persons_company_apollo_id = person.get("organization_id", "")
-                #persons_company = await fetch_company_by_apollo_id(persons_company_apollo_id)
-                #if not persons_company:
-                    #logger.warning(f"No company found for person {person.get('first_name')} with apollo ID {persons_company_apollo_id}")
-                    #continue
+                # Fetch company info
+                persons_company_apollo_id = person.get("organization_id", "")
+                persons_company = await fetch_company_by_apollo_id(persons_company_apollo_id)
+                if not persons_company:
+                    logger.warning(f"No company found for person {person.get('first_name')} with apollo ID {persons_company_apollo_id}")
+                    continue
 
-                ## Prepare email data
-                #data_source = persons_company.get("company_data_source", "")
-                #latest_funding_round = persons_company.get("latest_funding_round", "")
-                #email_to = persons_email
-                #first_name = person.get("first_name")
-                #company_name = persons_company.get("name")
+                # Prepare email data
+                data_source = persons_company.get("company_data_source", "")
+                latest_funding_round = persons_company.get("latest_funding_round", "")
+                email_to = persons_email
+                first_name = person.get("first_name")
+                company_name = persons_company.get("name")
                 
-                #logger.info(f"Preparing email for {first_name} ({email_to}) at {company_name}")
+                logger.info(f"Preparing email for {first_name} ({email_to}) at {company_name}")
 
-                ## Get extra info based on data source
-                #if data_source == "funding" and latest_funding_round not in ['Seed', 'Series A', 'Series B']:
-                    #extra_info = "latest" if not latest_funding_round or latest_funding_round == "Other" else str(latest_funding_round)
-                #elif data_source == "hiring":
-                    #hiring_area = await get_hiring_area(company_name, pool)
-                    #extra_info = str(hiring_area) if hiring_area else "various areas"
-                #else:
-                    #logger.warning(f"Unknown data source {data_source} for {company_name}")
-                    #continue
+                # Get extra info based on data source
+                if data_source == "funding" and latest_funding_round not in ['Seed', 'Series A', 'Series B']:
+                    extra_info = "latest" if not latest_funding_round or latest_funding_round == "Other" else str(latest_funding_round)
+                elif data_source == "hiring":
+                    hiring_area = await get_hiring_area(company_name, pool)
+                    extra_info = str(hiring_area) if hiring_area else "various areas"
+                else:
+                    logger.warning(f"Unknown data source {data_source} for {company_name}")
+                    continue
 
-                ## Send individual email
-                #response = await send_email(
-                    #data_source=data_source,
-                    #latest_funding_round=latest_funding_round,
-                    #email_to=email_to,
-                    #first_name=first_name,
-                    #company_name=company_name,
-                    #extra_info=extra_info
-                #)
+                # Send individual email
+                response = await send_email(
+                    data_source=data_source,
+                    latest_funding_round=latest_funding_round,
+                    email_to=email_to,
+                    first_name=first_name,
+                    company_name=company_name,
+                    extra_info=extra_info
+                )
 
-                ## Add delay between emails
-                #if response and response.status_code == 202:
-                    #logger.info(f"✅ Email sent successfully to {email_to}")
-                    #await asyncio.sleep(1)  # Rate limiting - 1 second between emails
-                #else:
-                    #logger.error(f"❌ Failed to send email to {email_to} - Status: {response.status_code if response else 'No response'}")
+                # Add delay between emails
+                if response and response.status_code == 202:
+                    logger.info(f"✅ Email sent successfully to {email_to}")
+                    await asyncio.sleep(1)  # Rate limiting - 1 second between emails
+                else:
+                    logger.error(f"❌ Failed to send email to {email_to} - Status: {response.status_code if response else 'No response'}")
 
-            #except Exception as e:
-                #logger.error(f"Failed to process email for {person.get('first_name', 'Unknown')}: {str(e)}")
-                #continue
+            except Exception as e:
+                logger.error(f"Failed to process email for {person.get('first_name', 'Unknown')}: {str(e)}")
+                continue
 
-    #logger.info("Email sending complete")
+    logger.info("Email sending complete")
     
     return jsonify({"success": "Main function done"}), 200
 
@@ -723,14 +724,15 @@ async def receive_user_phone_number():
 
 #Sendgrid webhook to receive data about emails sent
 @app.route('/webhook', methods=["POST"])
-async def sendgrid_events_webhook():
+def sendgrid_events_webhook():
     logger.info("Fetching webhook event data...")
+
     events = request.json
     if not events:
         return jsonify({"Error": "No events received in request body"}), 400
 
     try:
-        await update_contacted_status(events)
+        asyncio.run(update_contacted_status(events))
         logger.info("Successfully processed webhook events")
         return jsonify({"Success": "Done fetching webhook event data"}), 200
 
@@ -740,7 +742,7 @@ async def sendgrid_events_webhook():
 
     except Exception as e:
         logger.error(f"An unexpected error occurred: {str(e)}")
-        return {"Error": "An unexpected error occurred", "details": str(e)}, 500
+        return jsonify({"Error": "An unexpected error occurred", "details": str(e)}), 500
 
 #Endpoint to fetch events
 @app.route('/events', methods=["GET"])
