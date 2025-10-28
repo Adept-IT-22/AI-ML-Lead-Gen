@@ -1,33 +1,64 @@
-.navbar-component{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    top: 0%;
-    left: 0%;
-    border: 2px solid #f9f9f9;
-    
+.navbar-component {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  top: 0;
+  left: 0;
+  border: 2px solid #f9f9f9;
+  padding: 0.5rem 1rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.navbar-menu{
-    display: flex;
-    align-items: center;
-    gap: 4rem;
+.app-logo {
+  display: flex;
+  align-items: center;
+  padding-left: 0.5rem;
+
+  img {
+    height: 40px;
+    width: auto;
+  }
 }
 
-.app-logo{
-    display:flex;
-    align-items: center;
-    padding-left: 0.5rem;
-}
-
-.search-bar{
-    margin-left: auto;
+.navbar-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
 }
 
 .nav-link {
-    color: var(--color-yellow);
-    font-family: var(--font-family-base);
-    font-weight: var(--font-weight-header);
-    font-size: var(--font-size-header);
-    cursor: pointer;
-    text-decoration: underline;
+  color: var(--color-yellow);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-header);
+  font-size: var(--font-size-header);
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--color-blue);
+  }
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 1.8rem;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--color-blue);
+  }
 }

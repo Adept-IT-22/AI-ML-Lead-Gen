@@ -1,23 +1,42 @@
-import { Component, Injectable, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SearchBarComponent } from "../search-bar/search-bar.component";
 import { RouterLink } from '@angular/router';
-import { EventEmitter } from '@angular/core';
 import { SearchService } from '../../Services/search.service';
-import { EngagementComponent } from '../../../Pages/engagement/engagement.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-navbar',
-  imports: [SearchBarComponent, RouterLink],
+  standalone: true,
+  imports: [SearchBarComponent, RouterLink, MatIconModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+  styleUrls: ['./navbar.component.scss']
 })
-
-export class NavbarComponent {
-   searchText: string = '';
+export class NavbarComponent implements OnInit {
+  searchText: string = '';
+  isDarkTheme = true;
 
   constructor(private searchService: SearchService) {}
 
-  onSearchChange(event: Event) {
+  ngOnInit() {
+    const savedTheme = localStorage.getItem('theme');
+    this.isDarkTheme = savedTheme !== 'light';
+    document.body.classList.add(this.isDarkTheme ? 'dark-theme' : 'light-theme');
+  }
+
+  toggleTheme() {
+    this.isDarkTheme = !this.isDarkTheme;
+    const body = document.body;
+    if (this.isDarkTheme) {
+      body.classList.remove('light-theme');
+      body.classList.add('dark-theme');
+    } else {
+      body.classList.remove('dark-theme');
+      body.classList.add('light-theme');
+    }
+    localStorage.setItem('theme', this.isDarkTheme ? 'dark' : 'light');
+  }
+
+  onSearchChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.searchText = input.value;
     this.searchService.setSearchTerm(this.searchText.trim());

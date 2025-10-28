@@ -1,21 +1,28 @@
 <nav class="navbar-component">
-    <div class="app-logo">
-        <a routerLink="">
-            <img src="assets/white adept logo 3.png" alt="Adept Logo" />
-        </a>
-    </div>
+  <!-- App Logo -->
+  <div class="app-logo">
+    <a routerLink="">
+      <img src="assets/white adept logo 3.png" alt="Adept Logo" />
+    </a>
+  </div>
 
-    <div class="navbar-menu">
-        <a class="nav-link" routerLink="">HOME</a>
-        <a class="nav-link" routerLink="/leads">LEADS</a>
-        <a class="nav-link" routerLink="/events">EVENTS</a>
-        <a class="nav-link" routerLink="/analytics">ANALYTICS</a>
-        <a class="nav-link" routerLink="/engagement">ENGAGEMENT</a>
-        <a class="nav-link" routerLink="/settings">SETTINGS</a>
-        
-    </div>
+  <!-- Navigation Menu -->
+  <div class="navbar-menu">
+    <a class="nav-link" routerLink="">HOME</a>
+    <a class="nav-link" routerLink="/leads">LEADS</a>
+    <a class="nav-link" routerLink="/events">EVENTS</a>
+    <a class="nav-link" routerLink="/analytics">ANALYTICS</a>
+    <a class="nav-link" routerLink="/engagement">ENGAGEMENT</a>
+    <a class="nav-link" routerLink="/settings">SETTINGS</a>
+  </div>
 
+  <!-- Search Bar + Theme Toggle -->
+  <div class="navbar-actions">
     <div class="search-bar">
-        <app-search-bar></app-search-bar>
+      <app-search-bar></app-search-bar>
     </div>
+    <button class="theme-toggle" (click)="toggleTheme()">
+      <mat-icon>{{ isDarkTheme ? 'dark_mode' : 'light_mode' }}</mat-icon>
+    </button>
+  </div>
 </nav>

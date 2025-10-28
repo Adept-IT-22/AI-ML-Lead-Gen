@@ -130,3 +130,11 @@ a{
   border: 1px solid white;
   padding: 8px;
 }
+
+.link-truncate {
+  word-break: break-all;
+  color: var(--color-green);
+}
+.link-truncate:hover {
+  text-decoration: underline;
+}
