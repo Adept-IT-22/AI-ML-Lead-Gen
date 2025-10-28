@@ -66,7 +66,6 @@ async def fetch_companies() -> List[Dict[str, Any]]:
         for record in results:
             # Convert asyncpg.Record to dict for easier manipulation
             record_dict = dict(record)
-            print(record_dict)
             company_apollo_id = record_dict.get("apollo_id")
 
             if company_apollo_id is None:
@@ -466,7 +465,6 @@ async def check_master_normalization(pool: asyncpg.pool):
     async with pool.acquire() as conn:
         query = "SELECT * FROM normalized_master"
         results = await conn.execute(query)
-    print(results)
     return results
 
 #Get company from normalization_hiring table and return hiring area

@@ -24,6 +24,7 @@
 import math
 import json
 from collections import Counter
+from typing import List
 
 class TfIdfScorer:
     def __init__(self, company_keywords, marking_scheme_keywords):
@@ -93,7 +94,7 @@ class TfIdfScorer:
     # -------------------------
     # Core scoring
     # -------------------------
-    def score(self, filter_by_services=True):
+    def score(self):
         category_scores = {}
         all_scores = []
         
@@ -110,11 +111,6 @@ class TfIdfScorer:
 
         for level_name, level_data in self.marking_scheme_keywords.items():
             for category_name, category_data in level_data.items():
-                
-                # REQUEST 1: Calculate only the services we offer (using a new 'is_service' flag)
-                is_service = category_data.get('is_service', True) 
-                if filter_by_services and not is_service:
-                    continue
 
                 category_keywords = category_data['keywords']
                 # Consolidation is key to fixing the score: one massive document per category
@@ -256,7 +252,7 @@ class TfIdfScorer:
     # -------------------------
     # Core scoring
     # -------------------------
-    def score(self, filter_by_services=True):
+    def score(self):
         category_scores = {}
         all_scores = []
         
@@ -275,9 +271,9 @@ class TfIdfScorer:
             for category_name, category_data in level_data.items():
                 
                 # REQUEST 1: Calculate only the services we offer (using a new 'is_service' flag)
-                is_service = category_data.get('is_service', True) 
-                if filter_by_services and not is_service:
-                    continue
+                #is_service = category_data.get('is_service', True) 
+                #if filter_by_services and not is_service:
+                    #continue
 
                 category_keywords = category_data['keywords']
                 # Consolidation is key to fixing the score: one massive document per category
@@ -315,11 +311,12 @@ class TfIdfScorer:
         # Final score = sum of category scores
         final_score = sum(all_scores)
 
+        top_matches = self.get_top_matches(category_scores)
         return {
             "final_score": round(final_score, 1),
             "category_breakdown": category_scores,
-            "top_matches": self.get_top_matches(category_scores),
-            "interpretation": self.interpret_score(final_score, len(all_scores))
+            "top_matches": top_matches,
+            "interpretation": self.interpret_score(top_matches)
         }
 
     # -------------------------
@@ -332,19 +329,23 @@ class TfIdfScorer:
             key=lambda x: float(x[1]['tf_idf']),
             reverse=True
         )
-        return [(cat, score['tf_idf']) for cat, score in sorted_cats[:n]]
+        return [[cat, score['tf_idf']] for cat, score in sorted_cats[:n]]
 
-    def interpret_score(self, final_score, num_categories):
-        # Use a percentage-based interpretation based on the potential max score
-        max_possible_score = num_categories * 100 # Assuming base_score=100 and weight=1.0
-        percentage = (final_score / max_possible_score) * 100 if max_possible_score > 0 else 0
+    def interpret_score(self, top_matches: List[List[str]])->str:
+        #If 3/3 matches are in the lower category, alignment = high. If 2? medium. If 1? low.
+        list_of_matches = [matches[0] for matches in top_matches] if top_matches else []
+        counter = 0
+        for match in list_of_matches:
+            if 'lower_' in match:
+                counter += 1
 
-        if percentage >= 60:
-            return "HIGH - Strong alignment"
-        elif percentage >= 30:
-            return "MEDIUM - Moderate alignment"
+        if counter == 3:
+            return 'HIGH -Strong alignment'
+        elif counter == 2:
+            return 'MEDIUM - Moderate alignment'
         else:
-            return "LOW - Minimal alignment"
+            return 'LOW - Minimal alignment'
+
 
 # -------------------------
 # Example usage
@@ -418,14 +419,8 @@ if __name__ == "__main__":
       "analytics"
     ]
     
-    # Run the scorer with the fixed logic and service filtering
     scorer = TfIdfScorer(company_keywords, marking_scheme_keywords)
-    results = scorer.score(filter_by_services=False) # Showing all categories for demonstration
-    print("\n--- RESULTS WITH FIXED LOGIC (All Categories) ---")
+    results = scorer.score() # Showing all categories for demonstration
     print(json.dumps(results, indent=2))
     
-    # Running again with service filtering enabled (data_labeling_and_annotation will be excluded)
-    results_filtered = scorer.score(filter_by_services=True)
-    print("\n--- RESULTS WITH FIXED LOGIC (Services Only) ---")
-    print(json.dumps(results_filtered, indent=2))
 

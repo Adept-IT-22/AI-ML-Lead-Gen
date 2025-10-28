@@ -1,4 +1,5 @@
 import os
+import time
 import json
 import logging
 import asyncio
@@ -28,7 +29,7 @@ model = genai.GenerativeModel(
 BATCH_SIZE = 4 #How many jobs we want to feed the llm at a time
 
 #=============REQUEST CONCURRENCY==============
-MAX_CONCURRENT_REQUEST = 10 #How many API request we can send the llm at a time
+MAX_CONCURRENT_REQUEST = 1 #How many API request we can send the llm at a time
 semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUEST)
 
 #============API RATE LIMITS==============
@@ -213,3 +214,16 @@ async def finalize_ai_extraction(ids_urls_titles: Dict[str, List[str]])->Dict[st
     except Exception as e:
         logger.error(f"Failed to regroup the batches: {str(e)}")
         return final_results
+
+async def fake_prompt(n):
+    start = time.perf_counter()
+    await rate_limited_gemini_call(f"Prompt {n}")
+    end = time.perf_counter()
+    print(f"Task {n} finished in {end - start:.2f}s")
+
+async def main():
+    tasks = [fake_prompt(i) for i in range(5)]
+    await asyncio.gather(*tasks)
+
+if __name__ == "__main__":
+    asyncio.run(main())
