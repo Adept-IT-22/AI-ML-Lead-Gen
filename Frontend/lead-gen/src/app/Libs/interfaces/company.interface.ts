@@ -13,6 +13,7 @@ export interface ICompany {
   icp_score: string | null;
   id: number;
   industries: string[] | null;
+  interpretation: string | null;
   keywords: string[] | null;
   latest_funding_amount: string | null;
   latest_funding_currency: string | null;
@@ -30,6 +31,7 @@ export interface ICompany {
   state: string | null;
   status: string | null;
   technology_names: string[] | null;
+  top_matches: string | null;
   total_funding: string | null;
   updated_at: string | null;
   website_url: string | null;

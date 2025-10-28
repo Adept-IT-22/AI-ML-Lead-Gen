@@ -60,7 +60,29 @@ export class CompanyDetailsComponent implements OnInit {
                   { key: 'Year Founded', value: details.founded_year },
                   { key: 'Number of Employees', value: details.estimated_num_employees },
                   { key: 'Total Funding', value: this.formatNumber(details.total_funding) },
-                  { key: 'Annual Revenue', value: this.formatNumber(details.annual_revenue) }
+                  { key: 'Annual Revenue', value: this.formatNumber(details.annual_revenue) },
+                  { key: 'Services To Provide',
+                      value: (() => {
+                        if (!details.top_matches) return 'N/A';
+                        try {
+                          const arr = JSON.parse(details.top_matches);
+                          if (Array.isArray(arr) && arr.length > 0) {
+                            return arr
+                              .map((item: any[]) =>
+                                item[0]
+                                  .replace(/^lower_/, '') // Remove 'lower_' prefix
+                                  .replace(/_/g, ' ')     // Replace underscores with spaces
+                                  .replace(/\b\w/g, (c: string) => c.toUpperCase()) // Capitalize each word
+                              )
+                              .join(', ');
+                          }
+                          return 'N/A';
+                        } catch {
+                          return 'N/A';
+                        }
+                      })()
+                  },
+                  { key: 'Interpretation', value: details.interpretation}
                 ]
               },
               {

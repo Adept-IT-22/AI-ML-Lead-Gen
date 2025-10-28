@@ -20,11 +20,11 @@ export interface CompanySection {
 })
 export class CompaniesService {
   //FOR USE IN DEV
-  //private readonly backend_url: string = 'http://192.168.1.54:5000'; (For the office)
+  private readonly backend_url: string = 'http://192.168.1.54:5000'; //(For the office)
   //private readonly backend_url: string = 'http://127.0.0.1:5000'; (For at home)
 
   //FOR USE IN PROD
-  private readonly backend_url: string = 'api';
+  //private readonly backend_url: string = 'api';
   private http = inject(HttpClient);
 
   // ✅ Fetch all companies (with embedded people array)
@@ -89,7 +89,7 @@ export class CompaniesService {
           { label: 'Internal Notes', value: company.notes || 'N/A' },
           { label: 'Created At', value: company.created_at || 'N/A' },
           { label: 'Updated At', value: company.updated_at || 'N/A' },
-          // 🔥 Loop through people array and map them into fields
+          // Loop through people array and map them into fields
           ...((company.people || []).map((p: IPeople) => ({
             label: `${p.full_name} (${p.title})`,
             value: p.email || 'N/A'
@@ -102,6 +102,21 @@ export class CompaniesService {
           { label: 'ICP Score', value: company.icp_score || 'N/A' },
           { label: 'Head-count growth (6M)', value: company.organization_headcount_six_month_growth || 'N/A' },
           { label: 'Head-count growth (12M)', value: company.organization_headcount_twelve_month_growth || 'N/A' },
+          { label: 'Services To Provide', 
+            value: (()=>{
+                if (!company.top_matches) return 'N/A';
+                try{
+                  const arr = JSON.parse(company.top_matches);
+                  if (Array.isArray(arr) && arr.length > 0){
+                    return arr.map((item: any[]) => item[0]).join(', ');
+                  }
+                  return 'N/A'
+                } catch {
+                  return 'N/A'
+                }
+            })()
+          },
+          { label: 'Alignment', value: company.interpretation || 'N/A'}
         ],
       },
       {
