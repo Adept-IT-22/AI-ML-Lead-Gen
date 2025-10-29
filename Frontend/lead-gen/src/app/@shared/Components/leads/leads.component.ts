@@ -1,10 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { ButtonComponent } from '../button/button.component';
 import { RouterModule } from '@angular/router'; 
 import { CompaniesService } from '../../Services/companies.service';
 import { ICompany } from '../../../Libs/interfaces/company.interface';
 import { SearchService } from '../../Services/search.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 
 export interface Column {
@@ -34,10 +36,16 @@ export class LeadsTableComponent implements OnInit {
   selectedRow: any = null;
   searchTerm: string = '';
 
+  //Reference to hidden file input
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
   constructor(
     private companiesService: CompaniesService, 
-    private searchService: SearchService
+    private searchService: SearchService,
+    private http: HttpClient
   ) {}
+
+  backend_url = environment.API_URL;
 
   ngOnInit(): void {
     this.filteredData = [...this.data];
@@ -106,6 +114,29 @@ export class LeadsTableComponent implements OnInit {
 }
 
 importLeads():void {
-  
+  //Open file selector
+  this.fileInput.nativeElement.click();  
 }
+
+onFileSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (!input.files?.length) return;
+
+  const file = input.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
+
+  //Send to backend
+  this.http.post('backend_url/upload_leads', formData).subscribe({
+    next: (res: any)=> {
+      console.log('File uploaded successfuly', res);
+      alert(res.message || 'File uploaded successfully!');
+    },
+    error: (err) => {
+      console.error('Uploaded failed', err);
+      alert('Failed to upload file');
+    }
+  });
+}
+
 }

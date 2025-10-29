@@ -16,6 +16,14 @@
     </app-button>
   </div>
 
+  <input
+    type="file"
+    #fileInput
+    (change)="onFileSelected($event)"
+    accept=".xlsx"
+    hidden
+  />
+
   <div class="lead-table" [ngClass]="{ 'preview': !fullTable, 'full': fullTable }">
     <table>
       <thead>

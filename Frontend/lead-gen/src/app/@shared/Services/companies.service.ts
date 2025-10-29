@@ -20,14 +20,14 @@ export interface CompanySection {
 })
 export class CompaniesService {
   //FOR USE IN DEV
-  private readonly backend_url: string = 'http://192.168.1.54:5000'; //(For the office)
-  //private readonly backend_url: string = 'http://127.0.0.1:5000'; //(For at home)
+  //private readonly backend_url: string = 'http://192.168.1.54:5000'; //(For the office)
+  private readonly backend_url: string = 'http://127.0.0.1:5000'; //(For at home)
 
   //FOR USE IN PROD
   //private readonly backend_url: string = 'api';
   private http = inject(HttpClient);
 
-  // ✅ Fetch all companies (with embedded people array)
+  // Fetch all companies (with embedded people array)
   fetch_companies(): Observable<ICompany[]> {
     console.log("Fetching company data from backend...");
     return this.http.get<ICompany[]>(`${this.backend_url}/fetch-companies`);
