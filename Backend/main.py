@@ -33,6 +33,7 @@ from enrichment_module.people_search import people_search
 from enrichment_module.people_enrichment import people_enrichment
 from scoring_module.icp_scoring import *
 from helpers.helpers import *
+from import_excel.import_excel import main as import_excel_main
 
 # Configure logging before creating Flask app
 logger = logging.getLogger()
@@ -774,6 +775,21 @@ async def export():
         return send_file(exported_data, as_attachment=True)
     except Exception as e:
         return jsonify({"Error":"An unexpected error occured", "details": {str(e)}}), 500
+
+@app.route('/import-leads', methods=['POST'])
+def import_leads():
+    try:
+        if 'file' not in request.files:
+            return jsonify({"Error": "No file in the request"}), 400
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({"Error": "No selected file"}), 400
+
+        import_excel_main(file)
+        return jsonify({"Success": f"Done importing file {file.filename}"}), 200
+    except Exception as e:
+        logger.error(f"Failed to import excdl file: {str(e)}")
+        return jsonify({"Error": "Failed to import file", "details": str(e)})
 
 if __name__ == "__main__":
     logger.info("Application running....")
