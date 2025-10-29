@@ -1,6 +1,6 @@
 from openpyxl import load_workbook
 
-def excel_input(file: str):
+def main(file: str):
     print("Starting file input...")
     
     #Load file
@@ -17,10 +17,6 @@ def excel_input(file: str):
     print(x[0])
 
     return
-
-def main():
-    with open('./import_excel/demo.xlsx', 'rb') as file:
-        excel_input(file)
 
 if __name__ == "__main__":
     main()    

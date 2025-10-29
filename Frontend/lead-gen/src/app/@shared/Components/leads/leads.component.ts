@@ -127,7 +127,7 @@ onFileSelected(event: Event): void {
   formData.append('file', file);
 
   //Send to backend
-  this.http.post('backend_url/upload_leads', formData).subscribe({
+  this.http.post(`${this.backend_url}/import-leads`, formData).subscribe({
     next: (res: any)=> {
       console.log('File uploaded successfuly', res);
       alert(res.message || 'File uploaded successfully!');
@@ -137,6 +137,9 @@ onFileSelected(event: Event): void {
       alert('Failed to upload file');
     }
   });
+
+  //Reset filename to empty so that user can select the same file again
+  input.value = '';
 }
 
 }
