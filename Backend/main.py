@@ -781,12 +781,14 @@ def import_leads():
     try:
         if 'file' not in request.files:
             return jsonify({"Error": "No file in the request"}), 400
+
         file = request.files['file']
         if file.filename == '':
             return jsonify({"Error": "No selected file"}), 400
 
         import_excel_main(file)
         return jsonify({"Success": f"Done importing file {file.filename}"}), 200
+
     except Exception as e:
         logger.error(f"Failed to import excdl file: {str(e)}")
         return jsonify({"Error": "Failed to import file", "details": str(e)})
