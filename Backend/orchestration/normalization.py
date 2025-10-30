@@ -10,7 +10,7 @@ from normalization_module.hiring_normalization import normalize_hiring_data
 
 logger = logging.getLogger()
 
-async def run_normalization_modules(
+async def main(
         ingestion_to_normalization_queue: asyncio.Queue, 
         normalization_to_enrichment_queue: asyncio.Queue
         )->asyncio.Queue: 
@@ -163,7 +163,7 @@ if __name__ == "__main__":
             await ingestion_to_normalization_queue.put(data)
             print("Data added")
 
-        x = await run_normalization_modules(ingestion_to_normalization_queue, normalization_to_enrichment_queue)
+        x = await main(ingestion_to_normalization_queue, normalization_to_enrichment_queue)
         print(x.qsize())
 
     asyncio.run(main())
