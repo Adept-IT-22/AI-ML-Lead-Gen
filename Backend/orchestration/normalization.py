@@ -10,9 +10,11 @@ from normalization_module.hiring_normalization import normalize_hiring_data
 
 logger = logging.getLogger()
 
-async def x(
+async def run_normalization_modules(
         ingestion_to_normalization_queue: asyncio.Queue, 
-        normalization_to_enrichment_queue: asyncio.Queue)->asyncio.Queue: 
+        normalization_to_enrichment_queue: asyncio.Queue
+        )->asyncio.Queue: 
+
     logger.info("Normalizing ingested data....")
     all_normalized_data = []
 
@@ -109,3 +111,10 @@ async def x(
     logger.info("Adding normalized data to queue...")
     await normalization_to_enrichment_queue.put(all_normalized_data)
     logger.info(f"Done adding {len(all_normalized_data)} normalized items to queue")
+
+    return normalization_to_enrichment_queue
+
+if __name__ == "__main__":
+    norm_to_enrich_queue = run_normalization_modules() 
+
+    #Populate ingestion_to_normalization_queue

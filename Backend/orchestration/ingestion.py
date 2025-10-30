@@ -24,7 +24,7 @@ async def run_ingestion_modules()->Dict:
     tasks = [wrap(name, coroutine) for name, coroutine in coroutines]
 
     results = {} #Will store info about each coroutines status
-
+    
     #Process the coroutines as they complete
     completed_tasks = await asyncio.gather(*tasks, return_exceptions=True)
     for name, result in completed_tasks:
@@ -43,6 +43,7 @@ async def run_ingestion_modules()->Dict:
         status = "SUCCESS ✅" if not isinstance(result, Exception) else "FAILED ❌"
         logger.info(f"{name}: {status}")
 
+    print(f"THE RESULTS ARE: \n {results}")
     return results
 
 #Put results in queue.

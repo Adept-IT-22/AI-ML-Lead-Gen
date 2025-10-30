@@ -1753,4 +1753,71 @@
     "email": "bob@example.com",
     "event": "open"
   }
+][
+  {
+    "email": "adam@bricklayer.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LUQ0WmV1bU52VGJxcjBXZGVsZVVwU1EtMA",
+    "sg_message_id": "D4ZeumNvTbqr0WdeleUpSQ.recvd-686fbc5d8-j4wt4-1-690207E7-3F.0",
+    "smtp-id": "<D4ZeumNvTbqr0WdeleUpSQ@geopod-ismtpd-4>",
+    "timestamp": 1761740776
+  }
+][
+  {
+    "email": "adam@bricklayer.ai",
+    "event": "open",
+    "ip": "72.14.199.161",
+    "sg_content_type": "html",
+    "sg_event_id": "J5Oll43mTwWYVWmbDYd2uA",
+    "sg_machine_open": false,
+    "sg_message_id": "D4ZeumNvTbqr0WdeleUpSQ.recvd-686fbc5d8-j4wt4-1-690207E7-3F.0",
+    "timestamp": 1761740781,
+    "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246 Mozilla/5.0"
+  }
+][
+  {
+    "email": "adam@bricklayer.ai",
+    "event": "delivered",
+    "ip": "159.183.224.104",
+    "response": "250 2.0.0 OK  1761740778 8926c6da1cb9f-5b2c52914a3si4439620173.37 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctRDRaZXVtTnZUYnFyMFdkZWxlVXBTUS0w",
+    "sg_message_id": "D4ZeumNvTbqr0WdeleUpSQ.recvd-686fbc5d8-j4wt4-1-690207E7-3F.0",
+    "smtp-id": "<D4ZeumNvTbqr0WdeleUpSQ@geopod-ismtpd-4>",
+    "timestamp": 1761740778,
+    "tls": 1
+  }
+][
+  {
+    "email": "rahul@stampmyvisa.com",
+    "event": "delivered",
+    "ip": "149.72.126.143",
+    "response": "250 2.0.0 OK  1761740780 6a1803df08f44-87fc6ba69a1si41137496d6.1253 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctam5RbkplTXpSOFNzRHpaUUh1TXY1QS0w",
+    "sg_message_id": "jnQnJeMzR8SsDzZQHuMv5A.recvd-7f4fb8995-kn4l4-1-690207EB-7.0",
+    "smtp-id": "<jnQnJeMzR8SsDzZQHuMv5A@geopod-ismtpd-4>",
+    "timestamp": 1761740780,
+    "tls": 1
+  },
+  {
+    "email": "rahul@stampmyvisa.com",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LWpuUW5KZU16UjhTc0R6WlFIdU12NUEtMA",
+    "sg_message_id": "jnQnJeMzR8SsDzZQHuMv5A.recvd-7f4fb8995-kn4l4-1-690207EB-7.0",
+    "smtp-id": "<jnQnJeMzR8SsDzZQHuMv5A@geopod-ismtpd-4>",
+    "timestamp": 1761740779
+  }
+][
+  {
+    "email": "adam@bricklayer.ai",
+    "event": "open",
+    "ip": "66.102.8.233",
+    "sg_content_type": "html",
+    "sg_event_id": "jo8f1PWsStqE4aA4ZhMWvA",
+    "sg_machine_open": false,
+    "sg_message_id": "D4ZeumNvTbqr0WdeleUpSQ.recvd-686fbc5d8-j4wt4-1-690207E7-3F.0",
+    "timestamp": 1761741009,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
 ]
