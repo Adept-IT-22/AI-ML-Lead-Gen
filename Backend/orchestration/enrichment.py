@@ -58,8 +58,7 @@ async def organization_search(data_to_enrich_list: List, client: httpx.AsyncClie
 
     logger.info(f"Completed organization seach for {len(searched_orgs)} companies")
 
-    #async with aiofiles.open(f"org_search.txt", "a") as org_search_file:
-    async with aiofiles.open(f"test_org_search.txt", "a") as org_search_file:
+    async with aiofiles.open(f"org_search.txt", "a") as org_search_file:
         await org_search_file.write(json.dumps(searched_orgs, indent=2))
 
     logger.info("Completed organizational search")
@@ -97,8 +96,7 @@ async def bulk_organization_enrichment(searched_orgs: List, client: httpx.AsyncC
             except Exception as e:
                 logger.error(f"Failed bulk enrichment for bulk starting at index {i}: {str(e)}")
     
-    #async with aiofiles.open("bulk_org_enrichment.txt", "w") as bulk_org_enrichment_file:
-    async with aiofiles.open("test_bulk_org_enrichment.txt", "w") as bulk_org_enrichment_file:
+    async with aiofiles.open("bulk_org_enrichment.txt", "w") as bulk_org_enrichment_file:
         await bulk_org_enrichment_file.write(json.dumps(bulk_enriched_orgs, indent=2))
 
     logger.info("Completed Bulk Org Enrichment")
@@ -124,8 +122,7 @@ async def single_organization_enrichment(bulk_enriched_orgs: list, client: httpx
     except Exception as e:
         logger.error(f"Single enrichment failed: {str(e)}")
         
-    #async with aiofiles.open("single_org_enrichment.txt", "w") as single_org_enrichment_file:
-    async with aiofiles.open("test_single_org_enrichment.txt", "w") as single_org_enrichment_file:
+    async with aiofiles.open("single_org_enrichment.txt", "w") as single_org_enrichment_file:
         await single_org_enrichment_file.write(json.dumps(single_enriched_orgs, indent=2))
 
     logger.info("Completed Single Org Enrichment")
@@ -152,8 +149,7 @@ async def search_for_people(bulk_enriched_orgs: List, client: httpx.AsyncClient)
     
     searched_people = await people_search(client=client, org_ids=org_ids, org_domains=org_domains)
 
-    #async with aiofiles.open("people_search.txt", "w") as people_search_file:
-    async with aiofiles.open("test_people_search.txt", "w") as people_search_file:
+    async with aiofiles.open("people_search.txt", "w") as people_search_file:
         await people_search_file.write(json.dumps(searched_people, indent=2))
 
     logger.info("Completed people Search")
@@ -179,8 +175,7 @@ async def enrich_people(searched_people: List, client: httpx.AsyncClient)->Dict[
         enriched_person = await people_enrichment(client=client, user_id=user_id, user_name=user_name)
         enriched_people.append(enriched_person)
 
-    #async with aiofiles.open("people_enrichment.txt", "w") as people_enrichment_file:
-    async with aiofiles.open("test_people_enrichment.txt", "w") as people_enrichment_file:
+    async with aiofiles.open("people_enrichment.txt", "w") as people_enrichment_file:
         await people_enrichment_file.write(json.dumps(searched_people, indent=2))
 
     logger.info("Completed people enrichment")
@@ -217,7 +212,7 @@ async def main(
     return enrichment_to_storage_queue
 
 if __name__ == "__main__":
-    async def main():
+    async def demo():
         n2eq = asyncio.Queue()
         e2sq = asyncio.Queue()
         normalized_data = [{'type': 'funding', 'source': ['FinSMEs'], 'title': [], 'link': ['https://www.finsmes.com/2025/10/socratix-ai-raises-4-1m-in-seed-funding.html'], 'article_date': ['2025-10-29'], 'company_name': ['socratix ai'], 'city': [], 'country': [], 'company_decision_makers': [['Riya Jagetia', 'Satya Vasanth Tumati']], 'company_decision_makers_position': [['Co-Founder', 'Co-Founder']], 'funding_round': ['Seed'], 'amount_raised': ['4099999'], 'currency': ['US Dollar'], 'investor_companies': [['Pear Vc', 'Y Combinator', 'Twenty Two Ventures', 'Transpose Platform Management']], 'investor_people': [[]], 'tags': [[]]}, {'type': 'funding', 'source': ['TechCrunch'], 'title': [], 'link': ['https://techcrunch.com/2025/10/28/mem0-raises-24m-from-yc-peak-xv-and-basis-set-to-build-the-memory-layer-for-ai-apps/'], 'article_date': ['2025-10-28'], 'company_name': ['mem0'], 'city': [], 'country': [], 'company_decision_makers': [['Taranjeet Singh', 'Deshraj Yadav']], 'company_decision_makers_position': [['Founder', 'Co-Founder And Cto']], 'funding_round': ['Series A'], 'amount_raised': ['24000000'], 'currency': ['US Dollar'], 'investor_companies': [['Basis Set Ventures', 'Kindred Ventures', 'Y Combinator', 'Peak Xv Partners', 'Github Fund']], 'investor_people': [['Dharmesh Shah', 'Scott Belsky', 'Olivier Pomel', 'Thomas Dohmke', 'Paul Copplestone', 'James Hawkins', 'Lukas Biewald', 'Brian Balfour', 'Philip Rathle', 'Jennifer Taylor', 'Lan Xuezhao']], 'tags': [[]]}]
@@ -228,5 +223,5 @@ if __name__ == "__main__":
         print("THE RETURNED QUEUE DATA IS:")
         print(await returned_queue.get())
 
-    asyncio.run(main())
+    asyncio.run(demo())
 

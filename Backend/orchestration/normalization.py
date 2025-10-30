@@ -115,7 +115,7 @@ async def main(
     return normalization_to_enrichment_queue
 
 if __name__ == "__main__":
-    async def main():
+    async def demo():
         #Populate ingestion_to_normalization_queue
         ingestion_to_normalization_queue = asyncio.Queue()
         normalization_to_enrichment_queue = asyncio.Queue()
@@ -166,4 +166,4 @@ if __name__ == "__main__":
         x = await main(ingestion_to_normalization_queue, normalization_to_enrichment_queue)
         print(x.qsize())
 
-    asyncio.run(main())
+    asyncio.run(demo())

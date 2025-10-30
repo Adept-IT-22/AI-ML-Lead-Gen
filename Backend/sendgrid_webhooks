@@ -1820,4 +1820,100 @@
     "timestamp": 1761741009,
     "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
   }
+][
+  {
+    "email": "patrick@maket.ca",
+    "event": "delivered",
+    "ip": "149.72.120.130",
+    "response": "250 2.0.0 OK  1761847648 af79cd13be357-89f4670d4c2si497762485a.571 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctMjB3ZzAyak5RZ0cyZU9JRjRybENhdy0w",
+    "sg_message_id": "20wg02jNQgG2eOIF4rlCaw.recvd-7f4fb8995-kn4l4-1-6903A95E-31.0",
+    "smtp-id": "<20wg02jNQgG2eOIF4rlCaw@geopod-ismtpd-9>",
+    "timestamp": 1761847648,
+    "tls": 1
+  },
+  {
+    "email": "patrick@maket.ca",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LTIwd2cwMmpOUWdHMmVPSUY0cmxDYXctMA",
+    "sg_message_id": "20wg02jNQgG2eOIF4rlCaw.recvd-7f4fb8995-kn4l4-1-6903A95E-31.0",
+    "smtp-id": "<20wg02jNQgG2eOIF4rlCaw@geopod-ismtpd-9>",
+    "timestamp": 1761847646
+  }
+][
+  {
+    "email": "nelson@salespatriot.com",
+    "event": "delivered",
+    "ip": "149.72.126.143",
+    "response": "250 2.0.0 OK  1761847649 6a1803df08f44-87fc6b75dfdsi48992466d6.988 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctWmJsZlY2dVFUOWU1S29FVEdxYjRVdy0w",
+    "sg_message_id": "ZblfV6uQT9e5KoETGqb4Uw.recvd-769f975875-k9t5x-1-6903A960-26.0",
+    "smtp-id": "<ZblfV6uQT9e5KoETGqb4Uw@geopod-ismtpd-10>",
+    "timestamp": 1761847649,
+    "tls": 1
+  },
+  {
+    "email": "nelson@salespatriot.com",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LVpibGZWNnVRVDllNUtvRVRHcWI0VXctMA",
+    "sg_message_id": "ZblfV6uQT9e5KoETGqb4Uw.recvd-769f975875-k9t5x-1-6903A960-26.0",
+    "smtp-id": "<ZblfV6uQT9e5KoETGqb4Uw@geopod-ismtpd-10>",
+    "timestamp": 1761847648
+  }
+][
+  {
+    "email": "maciej@salespatriot.com",
+    "event": "delivered",
+    "ip": "149.72.154.232",
+    "response": "250 2.0.0 OK  1761847653 8926c6da1cb9f-5aec88f39ddsi11956618173.156 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctLThNV1RLblRRdy1aX25PbXJkNGZ4US0w",
+    "sg_message_id": "-8MWTKnTQw-Z_nOmrd4fxQ.recvd-686fbc5d8-5nfb8-1-6903A964-2E.0",
+    "smtp-id": "<-8MWTKnTQw-Z_nOmrd4fxQ@geopod-ismtpd-7>",
+    "timestamp": 1761847653,
+    "tls": 1
+  },
+  {
+    "email": "maciej@salespatriot.com",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LS04TVdUS25UUXctWl9uT21yZDRmeFEtMA",
+    "sg_message_id": "-8MWTKnTQw-Z_nOmrd4fxQ.recvd-686fbc5d8-5nfb8-1-6903A964-2E.0",
+    "smtp-id": "<-8MWTKnTQw-Z_nOmrd4fxQ@geopod-ismtpd-7>",
+    "timestamp": 1761847652
+  }
+][
+  {
+    "email": "riya@getsocratix.ai",
+    "event": "delivered",
+    "ip": "149.72.154.232",
+    "response": "250 2.0.0 OK  1761847654 41be03b00d2f7-b71d57298a7si8911927a12.18 - gsmtp",
+    "sg_event_id": "ZGVsaXZlcmVkLTAtNTU4NzQ3NTctaUlQYXEwNnZUNTZnM25GRC1CSkVEUS0w",
+    "sg_message_id": "iIPaq06vT56g3nFD-BJEDQ.recvd-7748d67658-bpjps-1-6903A962-20.0",
+    "smtp-id": "<iIPaq06vT56g3nFD-BJEDQ@geopod-ismtpd-10>",
+    "timestamp": 1761847654,
+    "tls": 1
+  },
+  {
+    "email": "riya@getsocratix.ai",
+    "event": "processed",
+    "send_at": 0,
+    "sg_event_id": "cHJvY2Vzc2VkLTU1ODc0NzU3LWlJUGFxMDZ2VDU2ZzNuRkQtQkpFRFEtMA",
+    "sg_message_id": "iIPaq06vT56g3nFD-BJEDQ.recvd-7748d67658-bpjps-1-6903A962-20.0",
+    "smtp-id": "<iIPaq06vT56g3nFD-BJEDQ@geopod-ismtpd-10>",
+    "timestamp": 1761847650
+  }
+][
+  {
+    "email": "patrick@maket.ca",
+    "event": "open",
+    "ip": "66.102.8.237",
+    "sg_content_type": "html",
+    "sg_event_id": "tWGHL8BwQUiWYJDUztCE5g",
+    "sg_machine_open": false,
+    "sg_message_id": "20wg02jNQgG2eOIF4rlCaw.recvd-7f4fb8995-kn4l4-1-6903A95E-31.0",
+    "timestamp": 1761848159,
+    "useragent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)"
+  }
 ]
