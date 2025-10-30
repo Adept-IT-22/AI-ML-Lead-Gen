@@ -23,7 +23,7 @@ async def run_normalization_modules(
             name, data = await ingestion_to_normalization_queue.get()
             logger.info(f"Fetched data from {name}. Queue size is now: {ingestion_to_normalization_queue.qsize()}")
 
-            # 2.2 ========== Normalize data ===============
+            # ========== Normalize data ===============
             data_type = data.get("type")
 
             # Step 1: Normalize
@@ -115,6 +115,55 @@ async def run_normalization_modules(
     return normalization_to_enrichment_queue
 
 if __name__ == "__main__":
-    norm_to_enrich_queue = run_normalization_modules() 
+    async def main():
+        #Populate ingestion_to_normalization_queue
+        ingestion_to_normalization_queue = asyncio.Queue()
+        normalization_to_enrichment_queue = asyncio.Queue()
 
-    #Populate ingestion_to_normalization_queue
+        mock_fetched_data = [
+            ('finsmes', {
+                "type": "funding",
+                "source": ["FinSMEs"],
+                "title": [],
+                "link": ["https://www.finsmes.com/2025/10/socratix-ai-raises-4-1m-in-seed-funding.html"],
+                "article_date": ["2025-10-29"],
+                "company_name": ["Socratix AI"],
+                "city": [],
+                "country": [],
+                "company_decision_makers": [["Riya Jagetia", "Satya Vasanth Tumati"]],
+                "company_decision_makers_position": [["Co-founder", "Co-founder"]],
+                "funding_round": ["Seed"],
+                "amount_raised": ["$4.1M"],
+                "currency": ["USD"],
+                "investor_companies": [["Pear VC", "Y Combinator", "Twenty Two Ventures", "Transpose Platform Management"]],
+                "investor_people": [[]],
+                "tags": [["AI", "fintech", "fraud", "risk", "startup", "seed funding"]]
+            }),
+            ('techcrunch', {
+                "type": "funding",
+                "source": ["TechCrunch"],
+                "title": [],
+                "link": ["https://techcrunch.com/2025/10/28/mem0-raises-24m-from-yc-peak-xv-and-basis-set-to-build-the-memory-layer-for-ai-apps/"],
+                "article_date": ["2025-10-28"],
+                "company_name": ["Mem0"],
+                "city": [],
+                "country": [],
+                "company_decision_makers": [["Taranjeet Singh", "Deshraj Yadav"]],
+                "company_decision_makers_position": [["Founder", "Co-founder and CTO"]],
+                "funding_round": ["Series A"],
+                "amount_raised": ["$24M"],
+                "currency": ["USD"],
+                "investor_companies": [["Basis Set Ventures", "Kindred Ventures", "Y Combinator", "Peak XV Partners", "GitHub Fund"]],
+                "investor_people": [["Dharmesh Shah", "Scott Belsky", "Olivier Pomel", "Thomas Dohmke", "Paul Copplestone", "James Hawkins", "Lukas Biewald", "Brian Balfour", "Philip Rathle", "Jennifer Taylor", "Lan Xuezhao"]],
+                "tags": [["AI", "LLM", "memory", "open source", "API", "developers", "startup", "funding", "infrastructure", "Seed Funding"]]
+            }),
+        ]
+
+        for data in mock_fetched_data:
+            await ingestion_to_normalization_queue.put(data)
+            print("Data added")
+
+        x = await run_normalization_modules(ingestion_to_normalization_queue, normalization_to_enrichment_queue)
+        print(x.qsize())
+
+    asyncio.run(main())

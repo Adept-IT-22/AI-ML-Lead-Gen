@@ -43,7 +43,6 @@ async def run_ingestion_modules()->Dict:
         status = "SUCCESS ✅" if not isinstance(result, Exception) else "FAILED ❌"
         logger.info(f"{name}: {status}")
 
-    print(f"THE RESULTS ARE: \n {results}")
     return results
 
 #Put results in queue.
@@ -59,7 +58,9 @@ Results below will be a dictionary of dictionaries i.e.
     }
 }
 """
-async def populate_queue(ingestion_to_normalization_queue: asyncio.Queue)->asyncio.Queue:
+
+#Populate queue and return it
+async def main(ingestion_to_normalization_queue: asyncio.Queue)->asyncio.Queue:
     results = await run_ingestion_modules()
 
     logger.info("Adding ingestion module results to queue 🚂")
@@ -77,10 +78,10 @@ async def populate_queue(ingestion_to_normalization_queue: asyncio.Queue)->async
 
 
 if __name__ == "__main__":
-    async def main():
+    async def ingestion():
         q = asyncio.Queue()
-        x = await populate_queue(q)
+        x = await main(q)
         for _ in range(x.qsize()):
             print(await x.get())
 
-    asyncio.run(main())
+    asyncio.run(ingestion())
