@@ -1,19 +1,26 @@
 import re
+import os
 import copy
 import json
 import time
 import httpx
 import asyncio
+import asyncpg
 import logging
 import aiofiles
 import cloudscraper
+from dotenv import load_dotenv
 from lxml import etree, html
 from typing import Dict, List
 from services.request_headers import get_header
+from services.db_service import is_data_in_db
 from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
 from utils.data_structures.news_data_structure import fetched_funding_data as funding_fetched_data
 
 logger = logging.getLogger()
+
+load_dotenv(override=True)
+DB_URL = os.getenv("DEV_DATABASE_URL")
 
 #Configure semaphore
 MAX_CONNECTIONS = 10
@@ -171,7 +178,17 @@ async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronousl
     if newest_sitemap:
         ai_urls = await fetch_ai_funding_article_links(client, newest_sitemap)
         if ai_urls:
-            results = await get_paragraphs(client, ai_urls, semaphore)
+            urls_to_get_paragraphs = []
+
+            #Skip links that are already in the db
+            async with asyncpg.create_pool(dsn=DB_URL) as pool:
+                for url in ai_urls:
+                    if await is_data_in_db(pool, url):
+                        continue
+
+                    urls_to_get_paragraphs.append(url)
+
+        results = await get_paragraphs(client, urls_to_get_paragraphs, semaphore)
 
     #Check if results has urls in the first place
     if results["urls"]:
@@ -202,6 +219,7 @@ async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronousl
         duration = time.perf_counter() - current_time
         logger.info(f"Finsmes ran for {duration:.2f} seconds")
     
+    print(f"THE RESULTS ARE: \n {llm_results}")
     return llm_results
 
 if __name__ == "__main__":
