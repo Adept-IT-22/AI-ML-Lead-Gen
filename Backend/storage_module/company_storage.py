@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Store company data
 async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searched_orgs: List, bulk_enriched_orgs: List, single_enriched_orgs: List):
-    logger.info("Storing company data")
+    logger.info("Storing company data...")
     company_data_to_store = []
 
     searched_organizations = [orgs[0] for dictionary in searched_orgs if (orgs := dictionary.get("organizations"))]
@@ -126,8 +126,7 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
         #Check if company is in db
         company_in_db = await is_company_in_db(company_name=company_name)
         if not company_in_db:
-            #await store_to_db(data_to_store=company_data_to_store, query=company_query, company_or_people="company")
-            print("WE GOOD BABY!!!")
+            await store_to_db(data_to_store=company_data_to_store, query=company_query, company_or_people="company")
         else:
             logger.warning(f"{company_name} is already in DB")
     else:
