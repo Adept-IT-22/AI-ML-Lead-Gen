@@ -233,13 +233,13 @@ async def main():
     logger.info(f"Done adding {len(all_normalized_data)} normalized items to queue")
 
     #==============3. ENRICHMENT================
-    #2.1 =========Fetch from queue============
+    #3.1 =========Fetch from queue============
     logger.info("Enriching normalized data....")
     while not normalization_to_enrichment_queue.empty():
         data_to_enrich_list = await normalization_to_enrichment_queue.get()
         logger.info(f"Fetched {len(data_to_enrich_list)} items from normaliztion_to_enrichment queue.")
     
-    #2.2 =======Organization Search to Get Org Website=========
+    #3.2 =======Organization Search to Get Org Website=========
         async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
             set_of_orgs_to_search = set()
             searched_orgs = []
@@ -273,7 +273,7 @@ async def main():
 
             logger.info("Completed organizational search")
     
-    #2.3 ========Bulk Org Enrichment===========
+    #3.3 ========Bulk Org Enrichment===========
             logger.info("Bulk Org Enrichment started...")
             bulk_enriched_orgs = []
 
@@ -304,7 +304,7 @@ async def main():
 
             logger.info("Completed Bulk Org Enrichment")
 
-    #2.4 ========Single Org Enrichment===========
+    #3.4 ========Single Org Enrichment===========
             logger.info("Single Org Enrichment started...")
 
             try:
@@ -324,7 +324,7 @@ async def main():
 
             logger.info("Completed Single Org Enrichment")
     
-    #2.5 ========People Search========
+    #3.5 ========People Search========
             logger.info("People Search started...")
 
             #Get org ids
@@ -345,7 +345,7 @@ async def main():
 
             logger.info("Completed people Search")
 
-    #2.6 ============People Enrichment=============
+    #3.6 ============People Enrichment=============
             logger.info("People Enrichment started....")
 
             enriched_people = []
