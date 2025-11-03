@@ -9,6 +9,7 @@ from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 
 logger = logging.getLogger()
+logging.basicConfig(level=logging.INFO)
 
 async def run_ingestion_modules()->Dict:
     #Each coroutine and it's name

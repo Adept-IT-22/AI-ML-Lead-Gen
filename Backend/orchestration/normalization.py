@@ -109,11 +109,12 @@ async def main(
     logger.info("Done normalizing ingested data")
 
     #2.3 ==========Put In Normalization-Enrichment Queue===========
-    logger.info("Adding normalized data to queue...")
-    await normalization_to_enrichment_queue.put(all_normalized_data)
-    logger.info(f"Done adding {len(all_normalized_data)} normalized items to queue")
+    logger.info("Adding normalized data to queues...")
 
-    normalization_to_storage_queue = normalization_to_enrichment_queue
+    await normalization_to_enrichment_queue.put(all_normalized_data)
+    await normalization_to_storage_queue.put(all_normalized_data)
+
+    logger.info(f"Done adding {len(all_normalized_data)} normalized items to queues")
 
     return {
         "normalization_to_enrichment": normalization_to_enrichment_queue,
