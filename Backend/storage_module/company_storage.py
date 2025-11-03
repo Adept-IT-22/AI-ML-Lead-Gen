@@ -5,8 +5,6 @@ from typing import List
 from utils.db_queries import company_query
 from helpers.helpers import safe_int, safe_decimal
 from utils.data_normalization import normalize_amount_raised
-from orchestration.normalization import main as normalization_main
-from orchestration.enrichment import main as enrichment_main
 from services.db_service import store_to_db, is_company_in_db, fetch_source_link, fetch_funding_details
 
 logger = logging.getLogger()
