@@ -12,7 +12,8 @@ logger = logging.getLogger()
 
 async def main(
         ingestion_to_normalization_queue: asyncio.Queue, 
-        normalization_to_enrichment_queue: asyncio.Queue
+        normalization_to_enrichment_queue: asyncio.Queue,
+        normalization_to_storage_queue: asyncio.Queue
         )->asyncio.Queue: 
 
     logger.info("Normalizing ingested data....")
@@ -112,7 +113,12 @@ async def main(
     await normalization_to_enrichment_queue.put(all_normalized_data)
     logger.info(f"Done adding {len(all_normalized_data)} normalized items to queue")
 
-    return normalization_to_enrichment_queue
+    normalization_to_storage_queue = normalization_to_enrichment_queue
+
+    return {
+        "normalization_to_enrichment": normalization_to_enrichment_queue,
+        "normalization_to_storage": normalization_to_storage_queue
+    }
 
 if __name__ == "__main__":
     async def demo():
