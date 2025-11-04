@@ -25,7 +25,6 @@ DB_URL = os.getenv("DEV_DATABASE_URL")
 #Configure semaphore
 MAX_CONNECTIONS = 10
 
-
 """
 This website's sitemap is a list of nested sitemaps.
 We therefore have to parse them until we find the latest one.
@@ -118,7 +117,7 @@ Now we open the links and extract the necessary paragraphs before feeding it to 
 async def get_paragraphs(client: cloudscraper.CloudScraper, urls: list, semaphore) -> Dict[str, List[str]]:
     logger.info("Getting paragraphs from urls...")
     if not urls:
-        logger.error("List of AI specific Urls Not Found")
+        logger.warning("List of new AI funding urls Not Found")
         return {"urls": [], "paragraphs": []}
     
     try:
@@ -170,6 +169,8 @@ async def extract_paragraphs(client: cloudscraper.CloudScraper, url: str, semaph
 
 async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronously to avoid blocking
     logger.info("Fetching from FinSMEs...")
+
+    llm_results = {}
     semaphore = asyncio.Semaphore(MAX_CONNECTIONS)
     current_time = time.perf_counter()
 
@@ -191,6 +192,7 @@ async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronousl
         results = await get_paragraphs(client, urls_to_get_paragraphs, semaphore)
 
     #Check if results has urls in the first place
+    
     if results["urls"]:
 
         #Feed the results to the llm
@@ -219,7 +221,6 @@ async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronousl
         duration = time.perf_counter() - current_time
         logger.info(f"Finsmes ran for {duration:.2f} seconds")
     
-    print(f"THE RESULTS ARE: \n {llm_results}")
     return llm_results
 
 if __name__ == "__main__":

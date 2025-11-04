@@ -4,14 +4,14 @@ from typing import Dict, List
 from utils.db_queries import people_query
 from services.db_service import store_to_db
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 async def people_storage(searched_people: Dict[str, List | str | Dict], enriched_people: Dict[str, List | str | Dict]):
     logger.info("Storing people data...")
     people_data_to_store = []
 
-    people_search_data = searched_people.get("people", [])
+    people_search_data = searched_people.get("people") if searched_people else []
     people_enrichment_data = enriched_people
 
     if people_search_data and people_enrichment_data:

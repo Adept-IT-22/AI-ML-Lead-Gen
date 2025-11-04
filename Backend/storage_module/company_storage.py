@@ -7,7 +7,7 @@ from helpers.helpers import safe_int, safe_decimal
 from utils.data_normalization import normalize_amount_raised
 from services.db_service import store_to_db, is_company_in_db, fetch_source_link, fetch_funding_details
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 # Store company data
@@ -16,7 +16,7 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
     company_data_to_store = []
 
     searched_organizations = [orgs[0] for dictionary in searched_orgs if (orgs := dictionary.get("organizations"))]
-    bulk_enriched_organizations = bulk_enriched_orgs[0].get("organizations", [])
+    bulk_enriched_organizations = bulk_enriched_orgs[0].get("organizations") if bulk_enriched_orgs else []
     single_enriched_organizations = [item.get("organization", []) for item in single_enriched_orgs]
 
     #Iterate over orgs
