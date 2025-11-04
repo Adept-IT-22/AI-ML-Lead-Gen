@@ -11,7 +11,7 @@ from enrichment_module.bulk_org_enrichment import bulk_org_enrichment
 from enrichment_module.single_org_enrichment import single_org_enrichment
 from enrichment_module.organization_search import org_search as apollo_org_search
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 # =========Fetch from queue============

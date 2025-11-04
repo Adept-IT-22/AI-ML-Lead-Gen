@@ -47,19 +47,11 @@ async def score_and_store(pool, unscored_company_id_list, company_id, semaphore)
             interpretation = scoring_data.get("interpretation")
             final_score = scoring_data.get("total_score") if scoring_data.get("total_score") else 0
             
-            #await store_icp_score(pool, company_id, age_score, employee_count_score,
-                                #funding_stage_score, final_keywords_score, contactability_score,
-                                #geography_score, round(final_score, 1), category_breakdown, top_matches,
-                                #interpretation)
-            #await update_company_icp_score(pool, company_id, round(final_score, 1))
-
-            logger.info("TUKO NDANI!!!!")
-            logger.info(pool, company_id, age_score, employee_count_score,
+            await store_icp_score(pool, company_id, age_score, employee_count_score,
                                 funding_stage_score, final_keywords_score, contactability_score,
                                 geography_score, round(final_score, 1), category_breakdown, top_matches,
                                 interpretation)
-
-            logger.info(pool, company_id, round(final_score, 1))
+            await update_company_icp_score(pool, company_id, round(final_score, 1))
 
 async def main(pool: asyncpg.Pool):
     logger.info("Scoring companies...")
