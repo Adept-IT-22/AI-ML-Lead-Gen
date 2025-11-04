@@ -152,6 +152,24 @@ async def fetch_people()->List[Dict[str, Any]]:
         logger.error(f"An unexpected error occured: {str(e)}")
         return []
 
+async def fetch_uncontacted_people(pool: asyncpg.Pool)->List:
+    logger.info("Fetching uncontacted people from DB...")
+    query = "SELECT organization_id, email FROM people WHERE contacted_status = 'uncontacted' AND email IS NOT NULL AND email <> ''"
+
+    try: 
+        async with pool.acquire() as conn:
+            results = await conn.fetch(query)
+            uncontacted_people_organization_ids = [dict(result) for result in results]
+
+        return uncontacted_people_organization_ids
+
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while trying to fetch uncontacted people", str(e))
+        return []
+    except Exception as e:
+        logger.error(f"An unexpected error occured")
+        return []
+
 #Fetch company by ID
 async def fetch_company_details(id: int) -> Dict[str, any]:
     logger.info(f"Fetching company with ID: {id}")
@@ -675,7 +693,6 @@ if __name__ == "__main__":
             #["Jane Doe", "Michael Chan"]                       # investor_people
         #]
 
-        #async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-        x = await fetch_company_details(118)
-        print(x)
+        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+            await fetch_uncontacted_people(pool)
     asyncio.run(main())

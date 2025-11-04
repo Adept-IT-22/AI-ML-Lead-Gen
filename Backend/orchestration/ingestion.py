@@ -8,7 +8,7 @@ from ingestion_module.funding.techcrunch.fetch import main as techcrunch_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 async def run_ingestion_modules()->Dict:
