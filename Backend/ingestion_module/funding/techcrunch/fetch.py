@@ -126,6 +126,9 @@ async def main():
         article_data = await traverse_sitemap(client, URL)
         article_links = [link for link in article_data["link"] if link is not None]
 
+        if not article_links:
+            return {}
+
         #Fetch the necessary paragraphs for each url
         links_and_paragraphs = await get_paragraphs(client, article_links)
 
