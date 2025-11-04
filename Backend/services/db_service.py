@@ -589,9 +589,14 @@ async def company_is_unscored(pool)->List[Dict[str, int]]:
     try:
         async with pool.acquire() as conn:
             results = await conn.fetch(query)
-            results_list = [dict(result) for result in results]
-            logger.info("Done fetching unscored companies")
-            return results_list
+            if results:
+                results_list = [dict(result) for result in results]
+                logger.info("Done fetching unscored companies")
+                return results_list
+            else:
+                logger.warning("No unscored companies found")
+                return []
+
     except Exception as e:
         logger.error(f"Failed to fetch unscored companies: {str(e)}")
         return []
