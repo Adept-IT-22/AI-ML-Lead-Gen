@@ -63,6 +63,10 @@ async def main():
             pool
         )
 
+        await outreach_main(
+            pool
+        )
+
     return jsonify({"success": "Main function done"}), 200
 
 #Sendgrid webhook to receive data about emails sent

@@ -775,7 +775,7 @@ async def export():
         return jsonify({"Error":"An unexpected error occured", "details": {str(e)}}), 500
 
 @app.route('/import-leads', methods=['POST'])
-def import_leads():
+async def import_leads():
     try:
         if 'file' not in request.files:
             return jsonify({"Error": "No file in the request"}), 400
@@ -784,7 +784,7 @@ def import_leads():
         if file.filename == '':
             return jsonify({"Error": "No selected file"}), 400
 
-        import_excel_main(file)
+        await import_excel_main(file)
         return jsonify({"Success": f"Done importing file {file.filename}"}), 200
 
     except Exception as e:
