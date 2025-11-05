@@ -1,0 +1,49 @@
+<mat-card class="notes-card">
+  <mat-card-content>
+
+    <!-- 📝 New Remark Input -->
+    <mat-form-field appearance="outline" class="note-input-field">
+        <h4 style="color:var(--color-yellow);">REMARKS</h4>
+        <mat-divider></mat-divider>
+      <textarea
+        matInput
+        [(ngModel)]="newNote"
+        rows="3"
+        placeholder="Type your remark here">
+      </textarea>
+    </mat-form-field>
+
+    <!-- 🔘 Buttons Row -->
+    <div class="button-row">
+      <!-- Left: Save -->
+      <button
+        mat-flat-button
+        color="primary"
+        class="save-btn"
+        (click)="saveRemark()">
+        Save
+      </button>
+
+      <!-- right: View Previous -->
+      <button
+        mat-flat-button
+        color="accent"
+        class="right-btn"
+        (click)="togglePreviousRemarks()">
+        {{ showPrevious ? 'Hide Previous Remarks' : 'View Previous Remarks' }}
+      </button>
+
+    </div>
+
+    <!-- 🕒 Previous Remarks Section -->
+    <div *ngIf="showPrevious" class="previous-remarks">
+      <h4>Previous Remarks</h4>
+      <mat-divider></mat-divider>
+      <p *ngIf="previousRemarks; else noPrev">{{ previousRemarks }}</p>
+      <ng-template #noPrev>
+        <p class="no-remarks">No previous remarks found.</p>
+      </ng-template>
+    </div>
+
+  </mat-card-content>
+</mat-card>
