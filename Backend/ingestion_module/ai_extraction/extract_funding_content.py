@@ -152,9 +152,27 @@ async def process_articles_batch(batch: Dict[str, List[Any]])->Dict[str, List[An
             Content: {paragraphs}\n
             ------ARTICLE END--------
             """
+        
+        # Log what's being sent to LLM
+        num_articles = len(batch["urls"])
+        total_content_length = len(combined_input_for_llm)
+        logger.info(f"📤 Sending {num_articles} articles to LLM for extraction")
+        logger.info(f"📊 Total content length: {total_content_length:,} characters")
+        
+        # Log sample of first article content
+        if num_articles > 0:
+            first_url = batch["urls"][0]
+            first_paragraph = batch["paragraphs"][0]
+            logger.info(f"📄 Sample - First article URL: {first_url}")
+            logger.info(f"📝 Sample - First article content preview (first 300 chars): {first_paragraph[:300]}...")
+            logger.info(f"📏 Sample - First article content length: {len(first_paragraph):,} characters")
 
         #=================LLM PROMPT==================
         prompt = get_funding_extraction_prompt(combined_input_for_llm)
+        
+        # Log prompt size (first 500 chars of prompt)
+        logger.debug(f"📋 LLM Prompt preview (first 500 chars): {prompt[:500]}...")
+        logger.info(f"📋 LLM Prompt total length: {len(prompt):,} characters")
 
         #=============EXTRACT JSON FROM RESULT===============
         try:
