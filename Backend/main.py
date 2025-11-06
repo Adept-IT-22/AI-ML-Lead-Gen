@@ -3,6 +3,21 @@ import logging
 from logging.handlers import RotatingFileHandler
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
+from decimal import Decimal
+from typing import List, Dict, Any, Awaitable, Union, Callable
+
+from ingestion_module.funding.finsmes.fetch import main as finsmes_main
+from ingestion_module.funding.tech_eu.fetch import main as tech_eu_main
+from ingestion_module.funding.techcrunch.fetch import main as techcrunch_main
+from ingestion_module.funding.google_news.fetch import main as google_news_main
+from ingestion_module.funding.pitchbook.fetch import main as pitchbook_main
+from ingestion_module.funding.siliconangle.fetch import main as siliconangle_main
+from ingestion_module.funding.techfundingnews.fetch import main as techfundingnews_main
+from ingestion_module.funding.ventureburn.fetch import main as ventureburn_main
+from ingestion_module.funding.businessinsider_africa.fetch import main as businessinsider_africa_main
+from ingestion_module.funding.economictimes_india.fetch import main as economictimes_india_main
+from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
+from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 from utils.db_queries import *
 from utils.data_normalization import *
 from services.db_service import *

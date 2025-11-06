@@ -5,9 +5,18 @@ from helpers.helpers import wrap
 from ingestion_module.funding.finsmes.fetch import main as finsmes_main
 from ingestion_module.funding.tech_eu.fetch import main as tech_eu_main
 from ingestion_module.funding.techcrunch.fetch import main as techcrunch_main
+<<<<<<< HEAD
 from ingestion_module.funding.sifted_eu.fetch import main as sifted_eu_main
 from ingestion_module.funding.cbinsights.fetch import main as cbinsights_main
 from ingestion_module.funding.google_news.fetch import main as google_news_main
+=======
+from ingestion_module.funding.pitchbook.fetch import main as pitchbook_main
+from ingestion_module.funding.siliconangle.fetch import main as siliconangle_main
+from ingestion_module.funding.techfundingnews.fetch import main as techfundingnews_main
+from ingestion_module.funding.ventureburn.fetch import main as ventureburn_main
+from ingestion_module.funding.businessinsider_africa.fetch import main as businessinsider_africa_main
+from ingestion_module.funding.economictimes_india.fetch import main as economictimes_india_main
+>>>>>>> 8cfb95b (feat: Add standard funding sources (PitchBook, Silicon Angle, Tech Funding News, VentureBurn, Business Insider Africa, Economic Times India))
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 
@@ -24,7 +33,16 @@ async def run_ingestion_modules()->Dict:
         ("cbinsights", cbinsights_main()),
         ("hacker_news", hacker_news_main()),
         ("eventbrite", eventbrite_main()),
+<<<<<<< HEAD
         ("google_news", google_news_main()),
+=======
+        ("pitchbook", pitchbook_main()),
+        ("siliconangle", siliconangle_main()),
+        ("techfundingnews", techfundingnews_main()),
+        ("ventureburn", ventureburn_main()),
+        ("businessinsider_africa", businessinsider_africa_main()),
+        ("economictimes_india", economictimes_india_main())
+>>>>>>> 8cfb95b (feat: Add standard funding sources (PitchBook, Silicon Angle, Tech Funding News, VentureBurn, Business Insider Africa, Economic Times India))
     ]
 
     #A list of wrap coroutine objects to be run
