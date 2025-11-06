@@ -1,12 +1,48 @@
+import os
+import copy
+import asyncio
+import asyncpg
 import logging
 from typing import List
+from dotenv import load_dotenv
+from utils.data_structures.news_data_structure import fetched_funding_data
 from openpyxl import load_workbook
+from orchestration.enrichment import main as enrichment_main
+from orchestration.storage import main as storage_main
+from orchestration.scoring import main as scoring_main
+from orchestration.outreach import main as outreach_main
 
+#Set up DB_URL
+load_dotenv(override=True)
+DB_URL = os.getenv("DEV_DATABASE_URL")
+
+#Set up logger
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO)
 
-def main(file: str)->List[str]:
-    print("Starting file input...")
+#Expected file names
+files_to_import = {
+    'FUNDED_IQ':'fundediq',
+    'ADEPT_WEBSITE': 'apollo-accounts'
+    }
+
+#Column names
+column_names = {
+    'FUNDED_IQ': ['Website', 'company', 'funding type', 'funding amount'],
+    'ADEPT_WEBSITE': ['website', 'company name', 'latest funding', 'latest funding amount']
+    }
+
+# ===============GET FILE NAME=============
+def get_file_name(file)->str:
+    logger.info("Getting file name")
+
+    filename= file.filename
+    return filename
+
+# ===============EXTRACT DESIRED SHEET=============
+
+def get_desired_sheet(file)->List[str]:
+    logger.info("Getting newest sheet")
     
     #Load file
     workbook = load_workbook(file)
@@ -15,27 +51,112 @@ def main(file: str)->List[str]:
     list_of_worksheets = workbook.worksheets
     desired_sheet = list_of_worksheets[0]
 
-    #Open and read the first row, goal is to get the index website column
-    x = {}
-    for i, row in enumerate(desired_sheet.iter_rows(values_only=True)):
-        x[i] = row
-    
-    website_col_index = None
-    headers = list(x[0])
-    for i, val in enumerate(headers):
-        if val != None and 'website' in val.lower():
-            website_col_index = i + 1 #Because the iter_cols method is 1-indexed
+    return desired_sheet
 
-    if website_col_index == None:
-        logger.error('No website url column found')
+# ===============EXTRACT COLUMN DATA=============
+
+def extract_column_data(part_filename: str, actual_filename, desired_sheet, column_name:str)->List[str]:
+    column_data = []
+
+    if part_filename in actual_filename.lower():
+        column_data = return_column_data(desired_sheet, column_name)
+
+    return column_data
+
+def return_column_data(desired_sheet, column: str)->List[str]:
+    #Put rows in this dictionary with numbers as keys
+    row_dict = {}
+    for i, row in enumerate(desired_sheet.iter_rows(values_only=True)):
+        row_dict[i] = row
+    
+    column_index = 0
+    headers = list(row_dict[0])
+
+    for i, val in enumerate(headers):
+        if val != None and column.lower() in val.lower():
+            column_index = i + 1 #Because the iter_cols method is 1-indexed
+
+    if column_index == 0:
+        logger.error('No such column exists')
         return []
 
-    website_urls = []
-    for row in desired_sheet.iter_cols(min_col=website_col_index, max_col=website_col_index):
+    column_data = []
+    for row in desired_sheet.iter_cols(min_col=column_index, max_col=column_index):
         for cell in row:
-            website_urls.append(cell.value)
+            column_data.append(cell.value)
 
-    return website_urls
+    #Remove the 1st entry as it's row 1 in the excel sheet which is the column title
+    final_column_data = column_data[1:]
+
+    return final_column_data
+
+
+# =========CONVERT DATA INTO NORMALIZED DATA========
+def create_normalized_data(file):
+    filename = get_file_name(file)
+    desired_sheet = get_desired_sheet(file)
+
+    funding_data_structure = copy.deepcopy(fetched_funding_data)
+
+    # Example for FUNDED_IQ file
+    if 'fundediq' in filename.lower():
+        company_names = extract_column_data('fundediq', filename, desired_sheet, 'company')
+        funding_rounds = extract_column_data('fundediq', filename, desired_sheet, 'funding type')
+        amounts = extract_column_data('fundediq', filename, desired_sheet, 'funding amount')
+
+        funding_data_structure['company_name'].extend(company_names)
+        funding_data_structure['funding_round'].extend(funding_rounds)
+        funding_data_structure['amount_raised'].extend(amounts)
+        funding_data_structure['source'].append('Funded IQ')
+
+    # Example for ADEPT_WEBSITE file
+    if 'apollo-accounts' in filename.lower():
+        company_names = extract_column_data('apollo-accounts', filename, desired_sheet, 'company name')
+        funding_rounds = extract_column_data('apollo-accounts', filename, desired_sheet, 'latest funding')
+        amounts = extract_column_data('apollo-accounts', filename, desired_sheet, 'latest funding amount')
+
+        funding_data_structure['company_name'].extend(company_names)
+        funding_data_structure['funding_round'].extend(funding_rounds)
+        funding_data_structure['amount_raised'].extend(amounts)
+        funding_data_structure['source'].append('Adept Website')
+
+    logger.info([funding_data_structure])
+    return [funding_data_structure]
+
+# ========ENRICH, SCORE, STORE, OUTREACH==========
+
+async def main(file):
+
+    normalized_data = create_normalized_data(file)
+
+    # ===========QUEUE CREATION ===============
+    normalization_to_enrichment= asyncio.Queue()
+    normalization_to_storage= asyncio.Queue()
+    enrichment_to_storage_queue = asyncio.Queue()
+
+    await normalization_to_enrichment.put(normalized_data)
+    await normalization_to_storage.put(normalized_data)
+
+    async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=100) as pool:
+
+        enrichment_module_queue = await enrichment_main(
+            normalization_to_enrichment_queue=normalization_to_enrichment,
+            enrichment_to_storage_queue=enrichment_to_storage_queue
+        )
+
+        await storage_main(
+            pool,
+            normalization_to_storage_queue=normalization_to_storage,
+            enrichment_to_storage_queue=enrichment_module_queue
+        )
+
+        await scoring_main(
+            pool
+        )
+
+        await outreach_main(
+            pool
+        )
 
 if __name__ == "__main__":
-    main()    
+    asyncio.run(main())
