@@ -4,13 +4,14 @@ import logging
 import asyncio
 from typing import Dict, Any, List
 from config.apollo_config import headers as APOLLO_HEADERS
+from helpers.apollo_rate_limiter import rate_limited_apollo_call
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 PEOPLE_SEARCH_URL = "https://api.apollo.io/api/v1/mixed_people/search"
 
-async def people_search(
+async def no_rate_limit_people_search(
         client: httpx.AsyncClient, 
         org_ids: List[str], 
         org_domains: List[str],
@@ -46,6 +47,19 @@ async def people_search(
     except Exception as e:
         logger.error(f"Couldnt perform people search: {str(e)}")
         return {"Error": str(e)}
+
+async def people_search(
+        client: httpx.AsyncClient, 
+        org_ids: List[str], 
+        org_domains: List[str],
+        api_url: str = PEOPLE_SEARCH_URL, 
+        headers: Dict[str, str] = APOLLO_HEADERS
+    )->Dict[str, Any]:
+
+    return await rate_limited_apollo_call(
+        no_rate_limit_people_search, client, org_ids, org_domains, api_url, headers
+        )
+        
 
 if __name__ == "__main__":
     async def main():
