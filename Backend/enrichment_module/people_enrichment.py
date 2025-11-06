@@ -5,6 +5,7 @@ import logging
 from httpx import AsyncClient
 from typing import Dict, List
 from config.apollo_config import headers as APOLLO_HEADERS
+from helpers.apollo_rate_limiter import rate_limited_apollo_call
 
 #This API is necessary to get user emails and numbers
 API_URL = "https://api.apollo.io/api/v1/people/match"
@@ -14,7 +15,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 WEBHOOK_URL = ""
 
-async def people_enrichment(
+async def no_rate_limit_people_enrichment(
       client: AsyncClient, 
       user_id: str,
       user_name: str,
@@ -46,6 +47,16 @@ async def people_enrichment(
 
     except Exception as e:
        logger.error(f"People enrichment failed: {str(e)}")
+
+async def people_enrichment(
+      client: AsyncClient, 
+      user_id: str,
+      user_name: str,
+      url: str = API_URL, 
+      headers=APOLLO_HEADERS
+    )->Dict:
+
+      return await rate_limited_apollo_call(no_rate_limit_people_enrichment, client, user_id, user_name, url, headers)
 
 if __name__ == "__main__":
     async def main():
