@@ -139,7 +139,7 @@ async def fetch_ai_funding_articles(client: cloudscraper.CloudScraper, sitemap_u
                 # Filter for AI-related articles - include if has AI keywords OR funding keywords
                 # We're looking for AI funding news, so articles with AI keywords are likely relevant
                 # even if funding keywords aren't in URL (they may be in content)
-                has_ai = ('ai' in link_lower or 'artificial-intelligence' in link_lower or 
+                has_ai = ('-ai' in link_lower or 'ai-' in link_lower or 'artificial-intelligence' in link_lower or 
                           'artificialintelligence' in link_lower or 'machine-learning' in link_lower or
                           'genai' in link_lower or 'generative-ai' in link_lower)
                 has_funding = any(keyword in link_lower for keyword in FUNDING_KEYWORDS)
@@ -147,7 +147,7 @@ async def fetch_ai_funding_articles(client: cloudscraper.CloudScraper, sitemap_u
                 # Include articles with AI keywords (they may discuss funding in content)
                 # OR articles with funding keywords (they may be about AI companies)
                 if has_ai and has_funding:
-                    article_links.append(article_link)
+                        article_links.append(article_link)
         
         logger.info(f"Found {len(article_links)} AI funding articles in {sitemap_url}")
         return article_links
@@ -296,6 +296,7 @@ async def main():
     duration = time.perf_counter() - start_time
     logger.info(f"CB Insights took {duration:.2f} seconds")
     
+    logger.info(llm_results)
     return llm_results
 
 if __name__ == "__main__":
