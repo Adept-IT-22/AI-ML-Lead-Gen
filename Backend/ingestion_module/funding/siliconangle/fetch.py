@@ -389,7 +389,7 @@ async def fetch_siliconangle_data() -> Dict[str, List[str]]:
                         # results["urls"][i] corresponds to results["paragraphs"][i]
                         results["urls"].append(url)
                         results["paragraphs"].append(content_text)
-                        logger.info(f"✅ Matched AI funding article: {url} (Source: {url})")
+                        logger.info(f"✅ Matched AI funding article: {url}")
             
             logger.info(f"Found {len(results['urls'])} AI funding articles from last 2 months")
             logger.info("Done fetching data from Silicon Angle")
