@@ -67,9 +67,8 @@ async def bulk_org_enrichment(
     ) -> List[Dict[str, Any]]:
     results = []
     for batch in batchify(company_websites, RATE_LIMIT):
-        async with limiter:
-            result = await rate_limited_apollo_call(org_enrichment, client, batch, api_url, headers)
-            results.append(result)
+        result = await rate_limited_apollo_call(org_enrichment, client, batch, api_url, headers)
+        results.append(result)
     return results
 
 if __name__ == "__main__":
