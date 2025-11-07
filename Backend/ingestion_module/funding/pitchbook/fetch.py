@@ -124,7 +124,6 @@ def is_ai_funding_related_content(title: str, content: str) -> bool:
                        'seed round', 'venture capital', 'vc', 'raised', 'million', 'billion']
     
     # Use word boundary matching to avoid false positives (e.g., "ai" in "raises")
-    import re
     has_ai = any(re.search(r'\b' + re.escape(keyword) + r'\b', text) for keyword in ai_keywords)
     has_funding = any(keyword in text for keyword in funding_keywords)
     
