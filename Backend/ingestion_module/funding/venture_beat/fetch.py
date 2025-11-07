@@ -2,23 +2,39 @@ import copy
 import time
 import json
 import httpx
+import re
 import asyncio
 import logging
+import datetime
 from lxml import etree, html
 from lxml.etree import XMLSyntaxError
 from typing import Dict, List
 from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
 from utils.data_structures.news_data_structure import fetched_funding_data as funding_data_dict
-logger = logging.getLogger()
+
+logger = logging.getLogger(__name__)
+
+logging.basicConfig(level=logging.INFO)  
 
 
 #============URLs===============
-URL = ["https://venturebeat.com/news-sitemap.xml", "https://venturebeat.com/sitemap.xml"]
+URL = ["https://venturebeat.com/news-sitemap.xml"]
 
 #============KEYWORDS===============
 FUNDING_KEYWORDS = ["funding", "raises", "closes", "nets", "secures", "awarded", "notches", "lands"]
+AI_KEYWORDS = ["ai", "artificial intelligence", "machine learning"]
 
-async def fetch_with_retries(client: httpx.AsyncClient, url: str, retries: int = 3, delay: int = 5):
+def compile_keywords_regex(keywords):
+    # Escape special regex characters and replace spaces with [ -] for URL matching
+    patterns = []
+    for keyword in keywords:
+        escaped_keyword = re.escape(keyword)
+        # Allow spaces or hyphens in multi-word keywords in URLs
+        pattern = r'\b' + escaped_keyword.replace(r'\ ', r'[ -]') + r'\b'
+        patterns.append(pattern)
+    return re.compile('|'.join(patterns), re.IGNORECASE)
+
+async def fetch_with_retries(client: httpx.AsyncClient, url: str, retries: int = 3, delay: int = 5): # Do you need this
     """Fetch a URL with retries and delay for rate-limiting."""
     for attempt in range(retries):
         try:
@@ -45,6 +61,10 @@ async def fetch_venture_beat_data() -> Dict[str, List[str]]:
     results = {"urls": [], "paragraphs": []}
     article_links = []
 
+    AI_KEYWORDS_REGEX = compile_keywords_regex(AI_KEYWORDS)
+    FUNDING_KEYWORDS_REGEX = compile_keywords_regex(FUNDING_KEYWORDS)
+  
+    #========MIMICK BROWSER===========
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
     }
@@ -65,41 +85,27 @@ async def fetch_venture_beat_data() -> Dict[str, List[str]]:
 
                     root = etree.fromstring(response.content)
 
-                    #============Extract all <loc> entries===============
-                    loc_elements = root.findall(".//ns:loc", namespaces)
-                    loc_texts = [loc.text for loc in loc_elements if loc is not None]
+                    # Extract article <url> blocks which contain both link and date
+                    url_elements = root.findall(".//ns:url", namespaces)
+                    now = datetime.datetime.now()
+                    previous_month_date = now - datetime.timedelta(days=30)
+                    allowed_months = {now.month, previous_month_date.month}
 
-                    #============Check if its a nested sitemap===============
-                    if any("yyyy=" in url and "mm=" in url for url in loc_texts):
-                        #============date filter sitemaps==============
-                        filtered_nested_sitemaps_oct_nov = [
-                            url for url in loc_texts
-                            if "yyyy=2025" in url and ("mm=10" in url or "mm=11" in url)
-                        ]
+                    for url_element in url_elements:
+                        loc_element = url_element.find("ns:loc", namespaces)
+                        date_element = url_element.find("n:publication_date", namespaces)
 
-                        # Fetch filtered daily sitemaps concurrently
-                        oct_nov_tasks = [fetch_with_retries(client, url) for url in filtered_nested_sitemaps_oct_nov]
-                        daily_responses = await asyncio.gather(*oct_nov_tasks)
-
-                        for daily_response in daily_responses:
+                        if loc_element is not None and date_element is not None and date_element.text:
                             try:
-                                daily_root = etree.fromstring(daily_response.content)
-                                daily_locs = daily_root.findall(".//ns:loc", namespaces)
-
-                                for loc in daily_locs:
-                                    link = loc.text
-                                    if link and any(keyword in link for keyword in FUNDING_KEYWORDS):
-                                        article_links.append(link)
-                            except XMLSyntaxError as e:
-                                logger.error(f"Failed to parse XML from nested sitemap: {str(e)}")
-                                continue
-
-                    else:
-                        # Direct article sitemap — extract article links directly
-                        for loc in loc_elements:
-                            link = loc.text
-                            if link and any(keyword in link for keyword in FUNDING_KEYWORDS):
-                                article_links.append(link)
+                                # date filter
+                                pub_date = datetime.datetime.fromisoformat(date_element.text.replace('Z', '+00:00'))
+                                if pub_date.year == now.year and pub_date.month in allowed_months:
+                                    url_link = loc_element.text
+                                    # Use regex for more precise keyword matching  
+                                    if url_link and AI_KEYWORDS_REGEX.search(url_link) and FUNDING_KEYWORDS_REGEX.search(url_link): 
+                                        article_links.append(url_link)  
+                            except (ValueError, TypeError):
+                                continue # Ignore if date parsing fails
 
                 except XMLSyntaxError as e:
                     logger.error(f"Failed to parse XML from {response.url}: {str(e)}")
