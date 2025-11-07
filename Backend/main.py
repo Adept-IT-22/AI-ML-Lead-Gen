@@ -16,6 +16,14 @@ from ingestion_module.funding.techcrunch.fetch import main as techcrunch_main
 from ingestion_module.funding.google_news.fetch import main as google_news_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
+from ingestion_module.funding.venture_beat.fetch import main as venture_beat_main
+from ingestion_module.funding.thenextweb.fetch import main as thenextweb_main
+from ingestion_module.funding.reuters.fetch import main as reuters_main
+from ingestion_module.funding.startup_hub.fetch import main as startup_hub_main
+from ingestion_module.funding.pr_news_wire.fetch import main as pr_news_wire_main
+from ingestion_module.funding.betakit.fetch import main as betakit_main
+from ingestion_module.funding.eu_startups.fetch import main as eu_startups_main
+
 from utils.db_queries import *
 from utils.data_normalization import *
 from utils.icp import icp
@@ -71,7 +79,16 @@ async def run_ingestion_modules():
         ("techcrunch", techcrunch_main()),
         ("hacker_news", hacker_news_main()),
         ("eventbrite", eventbrite_main()),
-        ("google_news", google_news_main())
+        ("google_news", google_news_main()),
+        ("venture_beat", venture_beat_main()),
+        ("thenextweb", thenextweb_main()),
+        ("reuters", reuters_main()),
+        ("startuphub", startup_hub_main()),
+        ("betakit", betakit_main()),
+        ("pr_news_wire", pr_news_wire_main()),
+        ("eu_startups", eu_startups_main())
+
+
     ]
 
     #A list of wrap coroutine objects to be run
