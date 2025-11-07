@@ -71,10 +71,9 @@ async def find_latest_sitemaps(client: cloudscraper.CloudScraper) -> List[str]:
             if match:
                 year, month = int(match.group(1)), int(match.group(2))
                 
-                # Check if this is October or November 2025 (last 2 months)
+                # Check if this is last 2 months
                 is_last_2_months = (
-                    (year == current_year and month in [current_month - 1, current_month]) or
-                    (year == current_year - 1 and current_month == 1 and month in [11, 12])  # Handle Jan case
+                    (year == current_year and month in [current_month - 1, current_month])
                 )
                 
                 # Check if sitemap was updated recently (within last 60 days)
@@ -147,7 +146,7 @@ async def fetch_ai_funding_articles(client: cloudscraper.CloudScraper, sitemap_u
                 
                 # Include articles with AI keywords (they may discuss funding in content)
                 # OR articles with funding keywords (they may be about AI companies)
-                if has_ai or has_funding:
+                if has_ai and has_funding:
                     article_links.append(article_link)
         
         logger.info(f"Found {len(article_links)} AI funding articles in {sitemap_url}")
@@ -283,11 +282,9 @@ async def main():
                 
                 # Ensure source is a list matching the number of companies
                 num_companies = len(result.get("company_name", []))
-                llm_results["source"] = ["CB Insights"] * num_companies
+                llm_results["source"] = ["CB Insights"] 
                 llm_results["link"] = links_and_paragraphs.get("urls")
                 
-                # Add type field for consistency with other sources
-                llm_results["type"] = "funding"
             else:
                 logger.warning("AI extraction for CB Insights returned no data")
                 
