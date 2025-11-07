@@ -100,7 +100,7 @@ async def bulk_organization_enrichment(searched_orgs: List, client: httpx.AsyncC
         await bulk_org_enrichment_file.write(json.dumps(bulk_enriched_orgs, indent=2))
 
     logger.info("Completed Bulk Org Enrichment")
-    return bulk_enriched_orgs
+    return bulk_enriched_orgs[0]
 
     # ========Single Org Enrichment===========
 

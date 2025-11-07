@@ -156,13 +156,10 @@ async def main():
                     elif key in llm_results:
                         llm_results[key] = value_list
 
-                # Ensure source is a list matching the number of companies
-                num_companies = len(result.get("company_name", []))
-                llm_results["source"] = ["Sifted.eu"] * num_companies
+                # Ensure source is a list 
+                llm_results["source"] = ["Sifted.eu"] 
                 llm_results["link"] = links_and_paragraphs.get("urls")
                 
-                # Add type field for consistency with other sources
-                llm_results["type"] = "funding"
             else:
                 logger.warning("AI extraction for Sifted.eu returned no data")
                 

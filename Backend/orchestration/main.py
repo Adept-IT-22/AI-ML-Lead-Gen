@@ -19,11 +19,6 @@ DB_URL = os.getenv("DEV_DATABASE_URL")
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-#Create Flask App
-app = Flask(__name__)
-CORS(app)
-
-@app.route('/run', methods=["GET", "POST"])
 async def main():
 
     # ===========QUEUE CREATION ===============
@@ -67,32 +62,6 @@ async def main():
             pool
         )
 
-    return jsonify({"success": "Main function done"}), 200
-
-#Sendgrid webhook to receive data about emails sent
-@app.route('/webhook', methods=["POST"])
-def sendgrid_events_webhook():
-    logger.info("Fetching webhook event data...")
-
-    events = request.json
-    if not events:
-        return jsonify({"Error": "No events received in request body"}), 400
-
-    try:
-        asyncio.run(update_contacted_status(events))
-        logger.info("Successfully processed webhook events")
-        return jsonify({"Success": "Done fetching webhook event data"}), 200
-
-    except asyncpg.PostgresError as e:
-        logger.error(f"Database error during webhook processing: {str(e)}")
-        return jsonify({"error": "Database update failed", "details": str(e)}), 500
-
-    except Exception as e:
-        logger.error(f"An unexpected error occurred: {str(e)}")
-        return jsonify({"Error": "An unexpected error occurred", "details": str(e)}), 500
-
 if __name__ == "__main__":
-    logger.info("Application running....")
-    app.run(debug=True)
-    logger.info("Application Done")
+    asyncio.run(main())
 

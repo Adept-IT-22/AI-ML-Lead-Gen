@@ -29,7 +29,7 @@ model = genai.GenerativeModel(
 BATCH_SIZE = 4 #How many jobs we want to feed the llm at a time
 
 #================REQUEST CONCURRENCY============
-MAX_CONCURRENT_REQUEST = 6 #How many API request we can send the llm at a time
+MAX_CONCURRENT_REQUEST = 1 #How many API request we can send the llm at a time
 semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUEST)
 
 #==============API RATE LIMITS===============
