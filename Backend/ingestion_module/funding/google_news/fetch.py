@@ -2,16 +2,14 @@
 
 import copy
 import time
-import json
 import httpx
 import logging
 import asyncio
-import trafilatura
 from lxml import etree, html
 from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
 from utils.data_structures.news_data_structure import fetched_funding_data as funding_data_dict
 
-logger=logging.getLogger()
+logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 URL = "https://news.google.com/rss/search?q=ai+funding"
@@ -20,8 +18,12 @@ funding_keywords = ['raises', 'closes', 'nets', 'secures', 'awarded', 'notches',
 async def fetch_rss_feed(client, url):
     logger.info("Fetching Google News....")
 
-    response = await client.get(url)
-    response.raise_for_status()
+    try:
+        response = await client.get(url)
+        response.raise_for_status()
+    except httpx.HTTPError as e:
+        logger.error(f"Error fetching RSS feed: {e}")
+        raise
 
     article_data = {
         'titles': [],
@@ -31,9 +33,17 @@ async def fetch_rss_feed(client, url):
         'sources': []
     }
 
-    root = etree.fromstring(response.content)
+    try:
+        root = etree.fromstring(response.content)
+    except etree.XMLSyntaxError as e:
+        logger.error(f"Error parsing XML: {e}")
+        raise
+
     for item in root.findall('.//item'):
         title = item.findtext('title')
+        if not title:
+            continue
+            
         lowercase_title = title.lower().split()
         if "AI" in title and any(word in lowercase_title for word in funding_keywords):
             title = title.split('-')[0] if '-' in title else title
@@ -49,31 +59,27 @@ async def fetch_rss_feed(client, url):
                 url = anchor[0].get('href')
                 article_data['urls'].append(url)
 
-                description = anchor[0].text.strip()
+                description = anchor[0].text.strip() if anchor[0].text else "N/A"
                 article_data["descriptions"].append(description)
             else:
-                article_data['url'].append(item.findtext('link'))
+                article_data['urls'].append(item.findtext('link'))  # Fixed: was 'url'
                 article_data['descriptions'].append("N/A")
 
             source = item.findtext('source')
             article_data["sources"].append(source)
-            
-        else: 
-            continue
 
     return article_data
 
-logger = logging.getLogger(__name__)
-
 async def main():
     start_time = time.perf_counter()
-    client = httpx.AsyncClient(timeout=30.0, follow_redirects=True)
-    article_data = await fetch_rss_feed(client, URL)
-    links_and_paragraphs = {
-        'urls': article_data['urls'],
-        'paragraphs': article_data['descriptions']
-    }
-    result = await finalize_ai_extraction(links_and_paragraphs)
+    
+    async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
+        article_data = await fetch_rss_feed(client, URL)
+        links_and_paragraphs = {
+            'urls': article_data['urls'],
+            'paragraphs': article_data['descriptions']
+        }
+        result = await finalize_ai_extraction(links_and_paragraphs)
 
     llm_results = None
     if result:
@@ -92,7 +98,7 @@ async def main():
         llm_results['source'].extend(article_data['sources'])
 
     else:
-        logger.warning("AI extraction for Tech_eu returned no data. No logging will happen")
+        logger.warning("AI extraction for Google News returned no data. No logging will happen")
 
     duration = time.perf_counter() - start_time
     logger.info(f"Google News ran for {duration:.2f} seconds")

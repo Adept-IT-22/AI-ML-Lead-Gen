@@ -30,7 +30,7 @@ This website's sitemap is a list of nested sitemaps.
 We therefore have to parse them until we find the latest one.
 Once we find the latest one, we must open it and parse all the
 urls inside it searching for ai-related urls. We then open those
-urls and fetch all important data-filled paragraphs. That's what
+urls and fetch all important datafilled paragraphs. That's what
 we eventually return: each url and its paragraphs.
 """
 #===============PARENT SITEMAP================

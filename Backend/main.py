@@ -14,6 +14,7 @@ from ingestion_module.funding.finsmes.fetch import main as finsmes_main
 from ingestion_module.funding.tech_eu.fetch import main as tech_eu_main
 from ingestion_module.funding.techcrunch.fetch import main as techcrunch_main
 from ingestion_module.funding.google_news.fetch import main as google_news_main
+from ingestion_module.funding.cbinsights.fetch import main as cbinsights_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 from utils.db_queries import *
@@ -69,7 +70,8 @@ async def run_ingestion_modules():
         ("techcrunch", techcrunch_main()),
         ("hacker_news", hacker_news_main()),
         ("eventbrite", eventbrite_main()),
-        ("google_news", google_news_main())
+        ("google_news", google_news_main()),
+        ("cbinsights", cbinsights_main())
     ]
 
     #A list of wrap coroutine objects to be run
