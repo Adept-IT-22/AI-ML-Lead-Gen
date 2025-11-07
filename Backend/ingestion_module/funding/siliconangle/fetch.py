@@ -181,7 +181,7 @@ def is_ai_funding_related_content(title: str, content: str) -> bool:
     funding_keywords = FUNDING_KEYWORDS + ['raised', 'raise', 'invest', 'investor', 'venture', 
                                            'capital', 'series', 'round', 'seed', 'funding']
     
-    has_ai = any(keyword in text for keyword in ai_keywords)
+    has_ai = any(re.search(r'\b' + re.escape(keyword) + r'\b', text) for keyword in ai_keywords)
     has_funding = any(keyword in text for keyword in funding_keywords)
     
     return has_ai and has_funding
