@@ -368,7 +368,7 @@ async def fetch_techfundingnews_data() -> Dict[str, List[str]]:
                         # Store URL and paragraphs - they are paired by index
                         results["urls"].append(url)
                         results["paragraphs"].append(content_text)
-                        logger.info(f"✅ Matched AI funding article: {url} (Source: {url})")
+                        logger.info(f"✅ Matched AI funding article: {url}")
             
             logger.info(f"Found {len(results['urls'])} AI funding articles from last 2 months")
             logger.info("Done fetching data from Tech Funding News")
