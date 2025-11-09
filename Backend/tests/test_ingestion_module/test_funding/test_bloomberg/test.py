@@ -23,7 +23,7 @@ from datetime import datetime, timedelta
 async def test_is_within_last_two_months_filters_recent_dates():
     # Test with a recent date (within last 2 months)
     recent_date = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    assert fetch_mod.is_within_last_two_months(recent_date) == True
+    assert fetch_mod.is_within_last_two_months(recent_date)
     
     # Test with an old date (more than 2 months ago)
     old_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
