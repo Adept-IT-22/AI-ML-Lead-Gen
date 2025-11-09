@@ -1,10 +1,20 @@
 .notes-card {
   color: var(--color-white);
+  padding: 0 !important;
 }
 
 .note-input-field {
   width: 100%;
   color: var(--color-white);
+
+  p{
+    font-family: var(--font-family-base);
+    font-weight: var(--font-weight-header);
+    font-size: var(--font-size-title);
+    color: var(--color-yellow);
+    padding: 0 !important;
+    margin: 0 !important;
+  }
 }
 
 .button-row {
@@ -27,9 +37,13 @@
 
 }
 
+button {
+    font-size: var(--font-size-header);
+    font-weight: var(--font-weight-header);
+} 
+
 .previous-remarks {
   margin-top: 1rem;
-
 
   p{
     display: grid;
