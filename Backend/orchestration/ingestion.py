@@ -13,6 +13,7 @@ from ingestion_module.funding.ventureburn.fetch import main as ventureburn_main
 from ingestion_module.funding.venture_beat.fetch import main as venture_beat_main
 from ingestion_module.funding.betakit.fetch import main as betakit_main
 from ingestion_module.funding.startup_hub.fetch import main as startup_hub_main
+from ingestion_module.funding.eu_startups.fetch import main as eu_startups_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 
@@ -34,7 +35,8 @@ async def run_ingestion_modules()->Dict:
         ("ventureburn", ventureburn_main()),
         ("venture_beat", venture_beat_main()),
         ("betakit", betakit_main()),
-        ("startup_hub", startup_hub_main())
+        ("startup_hub", startup_hub_main()),
+        ("eu_startups", eu_startups_main())
     ]
 
     #A list of wrap coroutine objects to be run
