@@ -3,14 +3,9 @@ import logging
 from logging.handlers import RotatingFileHandler
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
-from utils.db_queries import *
-from utils.data_normalization import *
-from services.db_service import *
 from services.email_sending import *
 from services.sendgrid_webhook import *
 from services.export_to_excel import export_to_excel
-from scoring_module.icp_scoring import *
-from helpers.helpers import *
 from import_excel.import_excel import main as import_excel_main
 from orchestration.main import main as orchestration_main 
 

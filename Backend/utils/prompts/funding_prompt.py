@@ -26,11 +26,11 @@ def get_funding_extraction_prompt(combined_input_for_llm):
     Example of desired output structure for multiple articles:
     {{
         "article_id": [0, 1],
-        "article_title": ["Tech Startup A Secures $5M Seed Funding", "Green Energy Co. B Closes Series B Round for €10 Million"],
+        "title": ["Tech Startup A Secures $5M Seed Funding", "Green Energy Co. B Closes Series B Round for €10 Million"],
         "article_date": ["2024-07-25", "2025-04-12"],
         "company_name": ["Tech Startup A", "Tech Startup B"],
-        "company_city": ["San Francisco", "Berlin"],
-        "company_country": ["America", "Germany"],
+        "city": ["San Francisco", "Berlin"],
+        "country": ["America", "Germany"],
         "company_decision_makers": [["John Doe"],["Jane Doe", "John Smith"]],
         "company_decision_makers_position": [["CEO"], ["CTO", "CEO"]]
         "funding_round": ["Seed", "Series A"],
