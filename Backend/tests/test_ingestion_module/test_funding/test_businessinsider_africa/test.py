@@ -26,7 +26,7 @@ async def test_is_within_last_two_months_filters_recent_dates():
     assert fetch_mod.is_within_last_two_months(recent_date) == True
     
     old_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
-    assert fetch_mod.is_within_last_two_months(old_date) == False
+    assert not fetch_mod.is_within_last_two_months(old_date)
     
     assert fetch_mod.is_within_last_two_months(None) == False
 
