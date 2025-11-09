@@ -133,19 +133,21 @@ def test_is_ai_funding_related_content_filters_ai_and_funding():
     assert fetch_mod.is_ai_funding_related_content(
         "AI Technology Advances",
         "Machine learning models are improving rapidly."
-    ) == False
-    
+    )
+    assert not fetch_mod.is_ai_funding_related_content(
+        "AI Technology Advances",
+        "Machine learning models are improving rapidly."
+    )
     # Test with only funding keywords (no AI)
-    assert fetch_mod.is_ai_funding_related_content(
+    assert not fetch_mod.is_ai_funding_related_content(
         "Tech Startup Secures Investment",
         "The company secured $10 million in Series B funding from venture capital investors."
-    ) == False
-    
+    )
     # Test with neither AI nor funding
-    assert fetch_mod.is_ai_funding_related_content(
+    assert not fetch_mod.is_ai_funding_related_content(
         "Regular News Article",
         "This is just a regular news article about technology."
-    ) == False
+    )
 
 # Test that extract_and_filter_paragraphs extracts paragraphs
 @pytest.mark.asyncio
