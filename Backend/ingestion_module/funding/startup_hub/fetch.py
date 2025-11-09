@@ -1,8 +1,8 @@
 import copy
 import time
-import re
 import json
 import httpx
+import re
 import asyncio
 import logging
 import datetime
@@ -14,16 +14,15 @@ from utils.data_structures.news_data_structure import fetched_funding_data as fu
 
 logger = logging.getLogger(__name__)
 
-logging.basicConfig(level=logging.INFO) 
+logging.basicConfig(level=logging.INFO) # TEST WITH AND WITHOUT 
 
 #============URLs==============
-URL = ["https://betakit.com/news-sitemap.xml"]
+URL = ["https://www.startuphub.ai/news-sitemap.xml"]
 
 #============KEYWORDS===============
 FUNDING_KEYWORDS = ["funding", "raises", "closes", "nets", "secures", "awarded", "notches", "lands"] 
 AI_KEYWORDS = ["ai", "artificial intelligence", "machine learning"]
 
-# Compile regex patterns for more precise keyword matching
 def compile_keywords_regex(keywords):
     # Escape special regex characters and replace spaces with [ -] for URL matching
     patterns = []
@@ -35,7 +34,7 @@ def compile_keywords_regex(keywords):
     return re.compile('|'.join(patterns), re.IGNORECASE)
 
 async def fetch_with_retries(client: httpx.AsyncClient, url: str, retries: int = 3, initial_delay: int = 2):
-    """Fetch a URL with exponential backoff retries for rate-limiting.""" 
+    """Fetch a URL with exponential backoff retries for rate-limiting.""" # remove
     for attempt in range(retries):
         try:
             response = await client.get(url)
@@ -50,8 +49,8 @@ async def fetch_with_retries(client: httpx.AsyncClient, url: str, retries: int =
                 raise
     raise Exception(f"Failed to fetch {url} after {retries} retries")
 
-async def fetch_betakit_data() -> Dict[str, List[str]]:
-    logger.info("Fetching data from betakit...")
+async def fetch_startuphub_data() -> Dict[str, List[str]]:
+    logger.info("Fetching data from startuphub...")
 
     #=========NAMESPACES=============
     namespaces = {
@@ -61,10 +60,10 @@ async def fetch_betakit_data() -> Dict[str, List[str]]:
 
     results = {"urls": [], "paragraphs": []}
     article_links = []
-  
+
     AI_KEYWORDS_REGEX = compile_keywords_regex(AI_KEYWORDS)
     FUNDING_KEYWORDS_REGEX = compile_keywords_regex(FUNDING_KEYWORDS)
-
+  
     #========MIMICK BROWSER===========
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
@@ -87,7 +86,7 @@ async def fetch_betakit_data() -> Dict[str, List[str]]:
                     root = etree.fromstring(response.content)
 
                     # Extract article links and publication dates
-                    link_tags = [".//ns:loc", ".//link", ".//guid"]
+                    link_tags = [".//ns:loc", ".//ns:link", ".//ns:guid"]
                     date_tags = [
                         ".//n:publication_date",   # news sitemap
                         ".//ns:lastmod",           # standard sitemap
@@ -138,11 +137,11 @@ async def fetch_betakit_data() -> Dict[str, List[str]]:
                 results["urls"].append(url)
                 results["paragraphs"].append('\n'.join(paragraphs))
 
-            logger.info("Done fetching data from betakit")
+            logger.info("Done fetching data from startuphub")
             return results
 
         except Exception as e:
-            logger.exception(f"Error fetching/parsing betakit sitemaps: {str(e)}")
+            logger.exception(f"Error fetching/parsing startuphub sitemaps: {str(e)}")
 
     return {"urls": [], "paragraphs": []}
 
@@ -155,7 +154,7 @@ async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, Li
 
         root = html.fromstring(response.text)
 
-        paragraph_nodes = root.xpath("//article[contains(@class, 'clearfix')]//p")
+        paragraph_nodes = root.xpath("//div[contains(@class, 'infinity-article-content')]//p")
         paragraphs = [node.text_content().strip() for node in paragraph_nodes if node.text_content().strip()]
 
         logger.info(f"Fetching paragraphs from {url} done")
@@ -168,13 +167,13 @@ async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, Li
 
 async def main():
     start_time = time.perf_counter()
-    links_and_paragraphs = await fetch_betakit_data()
+    links_and_paragraphs = await fetch_startuphub_data()
 
     if links_and_paragraphs and (links_and_paragraphs.get("urls") and links_and_paragraphs.get("paragraphs")):
         try:
             result = await finalize_ai_extraction(links_and_paragraphs=links_and_paragraphs)
         except Exception as e:
-            logger.error(f"Failed to extract AI content from betakit beat's data: {str(e)}")
+            logger.error(f"Failed to extract AI content from startuphub beat's data: {str(e)}")
             result = {}
     else:
         logger.error("No links or paragraphs found for AI extraction. Skipping LLM call")
@@ -188,15 +187,15 @@ async def main():
             elif key in llm_results:
                 llm_results[key] = value_list
 
-        llm_results["source"].append("Betakit")
+        llm_results["source"].append("Startuphub")
         urls = links_and_paragraphs.get("urls")
         llm_results["link"] = urls
 
     else:
-        logger.warning("AI extraction for betakit returned no data. No logging will happen")
+        logger.warning("AI extraction for startuphub returned no data. No logging will happen")
 
     duration = time.perf_counter() - start_time
-    logger.info(f"betakit took {duration:.2f} seconds")
+    logger.info(f"startuphub took {duration:.2f} seconds")
 
     logger.info(llm_results)
     return llm_results
