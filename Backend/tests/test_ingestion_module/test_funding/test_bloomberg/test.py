@@ -27,13 +27,13 @@ async def test_is_within_last_two_months_filters_recent_dates():
     
     # Test with an old date (more than 2 months ago)
     old_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
-    assert fetch_mod.is_within_last_two_months(old_date) == False
+    assert not fetch_mod.is_within_last_two_months(old_date)
     
     # Test with None (should exclude - fail closed)
-    assert fetch_mod.is_within_last_two_months(None) == False
+    assert not fetch_mod.is_within_last_two_months(None)
     
     # Test with invalid date (should exclude - fail closed)
-    assert fetch_mod.is_within_last_two_months("invalid-date") == False
+    assert not fetch_mod.is_within_last_two_months("invalid-date")
 
 # Test that parse_sitemap_index extracts sitemap URLs
 @pytest.mark.asyncio
