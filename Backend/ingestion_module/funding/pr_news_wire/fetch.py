@@ -7,6 +7,7 @@ import asyncio
 import logging
 import datetime
 from lxml import etree, html
+from aiolimiter import AsyncLimiter
 from lxml.etree import XMLSyntaxError
 from typing import Dict, List
 from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
@@ -15,6 +16,8 @@ from utils.data_structures.news_data_structure import fetched_funding_data as fu
 logger = logging.getLogger(__name__)
 
 logging.basicConfig(level=logging.INFO)  
+
+limiter = AsyncLimiter(max_rate=5, time_period=1)
 
 #============URLs==============
 URL = ["https://www.prnewswire.com/sitemap-news.xml"]
@@ -157,39 +160,38 @@ async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, Li
 
 async def main():
     start_time = time.perf_counter()
-    links_and_paragraphs = await fetch_prnewswire_data()
+    async with limiter:
+        links_and_paragraphs = await fetch_prnewswire_data()
 
-    if links_and_paragraphs and (links_and_paragraphs.get("urls") and links_and_paragraphs.get("paragraphs")):
-        try:
-            result = await finalize_ai_extraction(links_and_paragraphs=links_and_paragraphs)
-        except Exception as e:
-            logger.error(f"Failed to extract AI content from prnewswire beat's data: {str(e)}")
+        if links_and_paragraphs and (links_and_paragraphs.get("urls") and links_and_paragraphs.get("paragraphs")):
+            try:
+                result = await finalize_ai_extraction(links_and_paragraphs=links_and_paragraphs)
+            except Exception as e:
+                logger.error(f"Failed to extract AI content from prnewswire beat's data: {str(e)}")
+                result = {}
+        else:
+            logger.error("No links or paragraphs found for AI extraction. Skipping LLM call")
             result = {}
-    else:
-        logger.error("No links or paragraphs found for AI extraction. Skipping LLM call")
-        result = {}
 
-    llm_results = None
-    if result:
         llm_results = copy.deepcopy(funding_data_dict)
+        if result:
+            for key, value_list in result.items():
+                if key in llm_results and isinstance(value_list, list):
+                    llm_results[key].extend(value_list)
+                elif key in llm_results:
+                    llm_results[key] = value_list
 
-        for key, value_list in result.items():
-            if key in llm_results and isinstance(value_list, list):
-                llm_results[key].extend(value_list)
-            elif key in llm_results:
-                llm_results[key] = value_list
+            llm_results["source"].append("prnewswire")
+            urls = links_and_paragraphs.get("urls")
+            llm_results["link"] = urls
 
-        llm_results["source"].append("prnewswire.com")
-        urls = links_and_paragraphs.get("urls")
-        llm_results["link"] = urls
+        else:
+            logger.warning("AI extraction for prnewswire returned no data. No logging will happen")
 
-    else:
-        logger.warning("AI extraction for prnewswire returned no data. No logging will happen")
+        duration = time.perf_counter() - start_time
+        logger.info(f"prnewswire took {duration:.2f} seconds")
 
-    duration = time.perf_counter() - start_time
-    logger.info(f"prnewswire took {duration:.2f} seconds")
-
-    return llm_results
+        return llm_results
 
 if __name__ == "__main__":
     asyncio.run(main())
