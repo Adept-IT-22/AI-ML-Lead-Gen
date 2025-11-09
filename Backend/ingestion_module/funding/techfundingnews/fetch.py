@@ -442,8 +442,9 @@ async def main():
     duration = time.perf_counter() - start_time
     logger.info(f"Tech Funding News took {duration:.2f} seconds")
     
+    if llm_results is None:
+        return copy.deepcopy(funding_data_dict)
     return llm_results
-
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     asyncio.run(main())
