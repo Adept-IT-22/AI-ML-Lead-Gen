@@ -173,7 +173,7 @@ button:hover, .btn:hover {
 =================================================== */
 app-data-card,
 .data-card {
-  background-color: var(--bg-card);
+  background-color: var(--bg-primary);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
 }
@@ -181,9 +181,8 @@ app-data-card,
 app-filter,
 .lead-filters,
 .filter-container {
-  background-color: var(--bg-filter);
+  background-color: var(--bg-primary);
   color: var(--text-primary);
-  border: 1px solid var(--border-color);
 }
 
 /* ===================================================
