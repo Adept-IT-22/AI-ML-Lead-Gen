@@ -180,10 +180,8 @@ async def main():
         logger.error("No links or paragraphs found for AI extraction. Skipping LLM call")
         result = {}
 
-    llm_results = None
+    llm_results = copy.deepcopy(funding_data_dict)
     if result:
-        llm_results = copy.deepcopy(funding_data_dict)
-
         for key, value_list in result.items():
             if key in llm_results and isinstance(value_list, list):
                 llm_results[key].extend(value_list)
@@ -200,6 +198,7 @@ async def main():
     duration = time.perf_counter() - start_time
     logger.info(f"betakit took {duration:.2f} seconds")
 
+    logger.info(llm_results)
     return llm_results
 
 if __name__ == "__main__":
