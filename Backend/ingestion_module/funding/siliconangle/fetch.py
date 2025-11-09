@@ -464,6 +464,8 @@ async def main():
     duration = time.perf_counter() - start_time
     logger.info(f"Silicon Angle took {duration:.2f} seconds")
     
+    if llm_results is None:
+        return copy.deepcopy(funding_data_dict)
     return llm_results
 
 if __name__ == "__main__":
