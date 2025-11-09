@@ -127,7 +127,7 @@ def test_is_ai_funding_related_content_filters_ai_and_funding():
     assert fetch_mod.is_ai_funding_related_content(
         "AI Startup Raises Funding",
         "The artificial intelligence company secured $10 million in Series A funding."
-    ) == True
+    )
     
     # Test with only AI keywords (no funding)
     assert fetch_mod.is_ai_funding_related_content(
