@@ -126,7 +126,7 @@ async def parse_sitemap_index(client: httpx.AsyncClient, url: str) -> List[Dict[
             if loc_element is not None and loc_element.text:
                 sitemap_url = loc_element.text
                 # Filter to relevant sitemaps (post-sitemap files)
-                if any(pattern in sitemap_url for pattern in RELEVANT_SITEMAP_PATTERNS):
+                if sitemap_url != "https://techfundingnews.com/post-sitemap.xml" and any(pattern in sitemap_url for pattern in RELEVANT_SITEMAP_PATTERNS):
                     lastmod = lastmod_element.text if lastmod_element is not None else None
                     sitemap_entries.append({
                         'url': sitemap_url,
@@ -149,7 +149,7 @@ async def parse_sitemap(client: httpx.AsyncClient, url: str) -> List[Dict[str, s
         response.raise_for_status()
         
         root = etree.fromstring(response.content)
-        
+
         articles = []
         for url_entry in root.findall('ns:url', NAMESPACE):
             loc_element = url_entry.find('ns:loc', NAMESPACE)
@@ -159,10 +159,11 @@ async def parse_sitemap(client: httpx.AsyncClient, url: str) -> List[Dict[str, s
                 url_text = loc_element.text
                 lastmod_text = lastmod_element.text if lastmod_element is not None else None
                 
-                articles.append({
-                    'url': url_text,
-                    'lastmod': lastmod_text
-                })
+                if is_ai_funding_related_content(url_text):
+                    articles.append({
+                        'url': url_text,
+                        'lastmod': lastmod_text
+                    })
         
         logger.info(f"Extracted {len(articles)} URLs from {url}")
         return articles
@@ -171,21 +172,24 @@ async def parse_sitemap(client: httpx.AsyncClient, url: str) -> List[Dict[str, s
         logger.error(f"Error parsing sitemap {url}: {str(e)}")
         return []
 
-def is_ai_funding_related_content(title: str, content: str) -> bool:
+def is_ai_funding_related_content(url: str) -> bool:
     """Check if article content is related to AI funding."""
-    text = f"{title} {content}".lower()
+    text = url.lower()
     
-    ai_keywords = ['ai', 'artificial intelligence', 'machine learning', 'ml', 'deep learning', 
+    ai_keywords = ['ai', 'ai' 'artificial intelligence', 'machine learning', 'ml', 'deep learning', 
                    'neural network', 'llm', 'large language model', 'genai', 'generative ai']
     
-    funding_keywords = FUNDING_KEYWORDS + ['raised', 'raise', 'invest', 'investor', 'venture', 
-                                           'capital', 'series', 'round', 'seed', 'funding']
+    funding_keywords = FUNDING_KEYWORDS  
     
     # Use word boundary matching for AI keywords to avoid false positives
     has_ai = any(re.search(r'\b' + re.escape(keyword) + r'\b', text) for keyword in ai_keywords)
     has_funding = any(keyword in text for keyword in funding_keywords)
     
-    return has_ai and has_funding
+    if has_ai and has_funding: 
+        logger.info(f"✅ Matched AI funding article: {url}")
+        return True
+
+    return False
 
 async def extract_and_filter_paragraphs(client: httpx.AsyncClient, url: str, semaphore: asyncio.Semaphore) -> Tuple[str, List[str], str]:
     """Extract paragraphs and title from a Tech Funding News article URL."""
@@ -362,13 +366,10 @@ async def fetch_techfundingnews_data() -> Dict[str, List[str]]:
             for coroutine in asyncio.as_completed(tasks):
                 url, paragraphs, title = await coroutine
                 if paragraphs and title:
-                    # Check if content is AI funding related
-                    content_text = '\n'.join(paragraphs)
-                    if is_ai_funding_related_content(title, content_text):
-                        # Store URL and paragraphs - they are paired by index
-                        results["urls"].append(url)
-                        results["paragraphs"].append(content_text)
-                        logger.info(f"✅ Matched AI funding article: {url}")
+                    # Store URL and paragraphs - they are paired by index
+                    results["urls"].append(url)
+                    results["paragraphs"].append(paragraphs)
+                    
             
             logger.info(f"Found {len(results['urls'])} AI funding articles from last 2 months")
             logger.info("Done fetching data from Tech Funding News")
@@ -418,7 +419,7 @@ async def main():
                 
                 # Ensure source is a list matching the number of companies
                 num_companies = len(result.get("company_name", []))
-                llm_results["source"] = ["Tech Funding News"] * num_companies
+                llm_results["source"] = ["Tech Funding News"] 
                 
                 # Store source URLs - these correspond to the paragraphs that were processed
                 source_urls = links_and_paragraphs.get("urls", [])
@@ -429,8 +430,6 @@ async def main():
                     logger.info(f"Source URLs tracked: {len(source_urls)} URLs mapped to {num_companies} extracted companies")
                     logger.debug(f"First few source URLs: {source_urls[:3]}")
                 
-                # Add type field for consistency with other sources
-                llm_results["type"] = "funding"
             else:
                 logger.warning("AI extraction for Tech Funding News returned no data")
                 
@@ -444,7 +443,10 @@ async def main():
     
     if llm_results is None:
         return copy.deepcopy(funding_data_dict)
+    
+    logger.info(llm_results)
     return llm_results
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     asyncio.run(main())

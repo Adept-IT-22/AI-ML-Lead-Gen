@@ -23,7 +23,7 @@ RELEVANT_SITEMAP_PATTERNS = [
     'post-sitemap'
 ]
 
-FUNDING_KEYWORDS = ['raises', 'closes', 'nets', 'secures', 'awarded', 'notches', 'lands', 'funding', 'investment', 'funded']
+FUNDING_KEYWORDS = ['raises', 'closes', 'nets', 'secures', 'awarded', 'notches', 'lands', 'funded']
 
 # Configure semaphore for rate limiting
 MAX_CONNECTIONS = 10
@@ -34,7 +34,7 @@ NAMESPACE = {
     "ns": "http://www.sitemaps.org/schemas/sitemap/0.9"
 }
 
-def is_within_last_two_months(date_str: Optional[str]) -> bool:
+def is_within_last_one_month(date_str: Optional[str]) -> bool:
     """Check if a date string is within the last two months."""
     if not date_str:
         return False  # Exclude if no date available (fail closed)
@@ -100,8 +100,8 @@ def is_within_last_two_months(date_str: Optional[str]) -> bool:
             article_date = article_date.replace(tzinfo=timezone.utc)
         
         # Compare with timezone-aware current time
-        two_months_ago = datetime.now(article_date.tzinfo) - timedelta(days=60)
-        return article_date >= two_months_ago
+        one_month_ago = datetime.now(article_date.tzinfo) - timedelta(days=30)
+        return article_date >= one_month_ago
         
     except Exception as e:
         logger.debug(f"Error parsing date '{date_str}': {str(e)}")
@@ -159,10 +159,11 @@ async def parse_sitemap(client: httpx.AsyncClient, url: str) -> List[Dict[str, s
                 url_text = loc_element.text
                 lastmod_text = lastmod_element.text if lastmod_element is not None else None
                 
-                articles.append({
-                    'url': url_text,
-                    'lastmod': lastmod_text
-                })
+                if is_ai_funding_related_content(url_text):
+                    articles.append({
+                        'url': url_text,
+                        'lastmod': lastmod_text
+                    })
         
         logger.info(f"Extracted {len(articles)} URLs from {url}")
         return articles
@@ -171,20 +172,23 @@ async def parse_sitemap(client: httpx.AsyncClient, url: str) -> List[Dict[str, s
         logger.error(f"Error parsing sitemap {url}: {str(e)}")
         return []
 
-def is_ai_funding_related_content(title: str, content: str) -> bool:
+def is_ai_funding_related_content(url: str) -> bool:
     """Check if article content is related to AI funding."""
-    text = f"{title} {content}".lower()
+    text = url.lower()
     
     ai_keywords = ['ai', 'artificial intelligence', 'machine learning', 'ml', 'deep learning', 
                    'neural network', 'llm', 'large language model', 'genai', 'generative ai']
     
-    funding_keywords = FUNDING_KEYWORDS + ['raised', 'raise', 'invest', 'investor', 'venture', 
-                                           'capital', 'series', 'round', 'seed', 'funding']
+    funding_keywords = FUNDING_KEYWORDS 
     
     has_ai = any(re.search(r'\b' + re.escape(keyword) + r'\b', text) for keyword in ai_keywords)
     has_funding = any(keyword in text for keyword in funding_keywords)
     
-    return has_ai and has_funding
+    if has_ai and has_funding:
+        logger.info(f"✅ Matched AI funding article: {url}")
+        return True
+    
+    return False
 
 async def extract_and_filter_paragraphs(client: httpx.AsyncClient, url: str, semaphore: asyncio.Semaphore) -> Tuple[str, List[str], str]:
     """Extract paragraphs and title from a Silicon Angle article URL."""
@@ -346,7 +350,7 @@ async def fetch_siliconangle_data() -> Dict[str, List[str]]:
             # This optimizes performance by skipping old sitemaps (e.g., only parse post-sitemap71-75 from 2025)
             recent_sitemaps = [
                 entry for entry in sitemap_entries
-                if is_within_last_two_months(entry.get('lastmod'))
+                if is_within_last_one_month(entry.get('lastmod'))
             ]
             
             logger.info(f"Filtered to {len(recent_sitemaps)} recent sitemaps (last 2 months) out of {len(sitemap_entries)} total")
@@ -368,7 +372,7 @@ async def fetch_siliconangle_data() -> Dict[str, List[str]]:
             # Step 4: Filter articles by date (last 2 months)
             recent_articles = [
                 article for article in all_articles
-                if is_within_last_two_months(article.get('lastmod'))
+                if is_within_last_one_month(article.get('lastmod'))
             ]
             
             logger.info(f"Found {len(recent_articles)} articles from last 2 months")
@@ -384,12 +388,11 @@ async def fetch_siliconangle_data() -> Dict[str, List[str]]:
                 if paragraphs and title:
                     # Check if content is AI funding related
                     content_text = '\n'.join(paragraphs)
-                    if is_ai_funding_related_content(title, content_text):
-                        # Store URL and paragraphs - they are paired by index
-                        # results["urls"][i] corresponds to results["paragraphs"][i]
-                        results["urls"].append(url)
-                        results["paragraphs"].append(content_text)
-                        logger.info(f"✅ Matched AI funding article: {url}")
+                    # Store URL and paragraphs - they are paired by index
+                    # results["urls"][i] corresponds to results["paragraphs"][i]
+                    results["urls"].append(url)
+                    results["paragraphs"].append(content_text)
+                    
             
             logger.info(f"Found {len(results['urls'])} AI funding articles from last 2 months")
             logger.info("Done fetching data from Silicon Angle")
@@ -439,7 +442,7 @@ async def main():
                 
                 # Ensure source is a list matching the number of companies
                 num_companies = len(result.get("company_name", []))
-                llm_results["source"] = ["Silicon Angle"] * num_companies
+                llm_results["source"] = ["Silicon Angle"] 
                 
                 # Store source URLs - these correspond to the paragraphs that were processed
                 # Each URL in links_and_paragraphs["urls"][i] is the source for paragraphs[i]
@@ -451,8 +454,6 @@ async def main():
                     logger.info(f"Source URLs tracked: {len(source_urls)} URLs mapped to {num_companies} extracted companies")
                     logger.debug(f"First few source URLs: {source_urls[:3]}")
                 
-                # Add type field for consistency with other sources
-                llm_results["type"] = "funding"
             else:
                 logger.warning("AI extraction for Silicon Angle returned no data")
                 

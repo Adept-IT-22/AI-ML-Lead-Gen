@@ -14,6 +14,7 @@ from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_e
 from utils.data_structures.news_data_structure import fetched_funding_data as funding_data_dict
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 # Sitemap URL
 SITEMAP_URL = "https://ventureburn.com/news-sitemap.xml"
@@ -416,11 +417,9 @@ async def main():
         # Log source URL tracking for verification
         if source_urls:
             logger.info(f"Source URLs tracked: {len(source_urls)} URLs mapped to {num_companies} extracted companies")
-            logger.debug(f"First few source URLs: {source_urls[:3]}")
         
         # Add source metadata
-        llm_results["source"] = ["VentureBurn"] * num_companies
-        llm_results["type"] = "funding"
+        llm_results["source"] = ["VentureBurn"] 
         
         elapsed_time = time.perf_counter() - start_time
         logger.info(f"VentureBurn took {elapsed_time:.2f} seconds")
@@ -431,3 +430,5 @@ async def main():
         logger.error(f"Failed to extract AI content from VentureBurn data: {str(e)}")
         return copy.deepcopy(funding_data_dict)
 
+if __name__ == "__main__":
+    asyncio.run(main())
