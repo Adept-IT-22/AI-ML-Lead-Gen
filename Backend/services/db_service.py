@@ -1,4 +1,5 @@
 import os
+import copy
 import json
 import logging
 import asyncio
@@ -194,7 +195,7 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
                 #Transform record to dict
                 result_dict = dict(result)
                 #Copy result dict to avoid manipulating the original one
-                result_copy = result_dict.copy()
+                result_copy = copy.deepcopy(result_dict)
                 #If result is not in final_results, create a people key, remove the shown keys
                 #then add it to final_results with its key as the apollo_id
                 result_id = result.get('apollo_id')
@@ -207,7 +208,7 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
                     final_results[result_id] = result_copy
 
                 stored_result = final_results.get(result_id)
-                if result_copy.get('full_name'):
+                if result_dict.get('full_name'):
                     person = {
                         'full_name': result_dict.get('full_name'),
                         'title': result_dict.get('title'),
@@ -692,8 +693,8 @@ if __name__ == "__main__":
             #["Jane Doe", "Michael Chan"]                       # investor_people
         #]
 
-        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-            x = await fetch_uncontacted_people(pool)
-            print(x)
+        #async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+        x = await fetch_company_details(160)
+        print(x)
 
     asyncio.run(main())
