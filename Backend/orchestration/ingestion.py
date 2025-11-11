@@ -17,6 +17,9 @@ from ingestion_module.funding.eu_startups.fetch import main as eu_startups_main
 from ingestion_module.funding.thenextweb.fetch import main as thenextweb_main
 from ingestion_module.funding.pr_news_wire import main as pr_news_wire_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
+from ingestion_module.hiring.stackoverflow_jobs.fetch import main as stackoverflow_jobs_main
+from ingestion_module.hiring.crunchboard.fetch import main as crunchboard_main
+from ingestion_module.hiring.remoteok.fetch import main as remoteok_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 
 logger = logging.getLogger(__name__)
@@ -31,6 +34,9 @@ async def run_ingestion_modules()->Dict:
         ("sifted_eu", sifted_eu_main()),
         ("cbinsights", cbinsights_main()),
         ("hacker_news", hacker_news_main()),
+        ("stackoverflow_jobs", stackoverflow_jobs_main()),
+        ("crunchboard", crunchboard_main()),
+        ("remoteok", remoteok_main()),
         ("eventbrite", eventbrite_main()),
         ("siliconangle", siliconangle_main()),
         ("techfundingnews", techfundingnews_main()),

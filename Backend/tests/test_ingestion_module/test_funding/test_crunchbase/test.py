@@ -26,12 +26,12 @@ from datetime import datetime, timedelta
 @pytest.mark.asyncio
 async def test_is_within_last_two_months_filters_recent_dates():
     recent_date = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    assert fetch_mod.is_within_last_two_months(recent_date) == True
+    assert fetch_mod.is_within_last_two_months(recent_date)
     
     old_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
-    assert fetch_mod.is_within_last_two_months(old_date) == False
+    assert not fetch_mod.is_within_last_two_months(old_date)
     
-    assert fetch_mod.is_within_last_two_months(None) == False
+    assert not fetch_mod.is_within_last_two_months(None)
 
 # Test that parse_sitemap_index extracts sitemap URLs
 @pytest.mark.asyncio
@@ -123,12 +123,12 @@ def test_is_ai_funding_related_content_filters_ai_and_funding():
     assert fetch_mod.is_ai_funding_related_content(
         "AI Startup Raises Funding",
         "The artificial intelligence company secured $10 million in Series A funding."
-    ) == True
+    )
     
-    assert fetch_mod.is_ai_funding_related_content(
+    assert not fetch_mod.is_ai_funding_related_content(
         "AI Technology Advances",
         "Machine learning models are improving rapidly."
-    ) == False
+    )
 
 # Test that extract_and_filter_paragraphs extracts paragraphs
 @pytest.mark.asyncio

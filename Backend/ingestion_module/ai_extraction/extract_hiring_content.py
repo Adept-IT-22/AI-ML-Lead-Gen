@@ -7,7 +7,6 @@ from tenacity import retry, wait_exponential, stop_after_attempt, RetryCallState
 from dotenv import load_dotenv
 from typing import List, Any, Dict, Union
 import google.generativeai as genai
-from google.generativeai import types
 from google.api_core.exceptions import ResourceExhausted
 from utils.prompts.hiring_prompt import get_hiring_extraction_prompt
 
@@ -21,12 +20,31 @@ load_dotenv(verbose=True, override=True)
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 if not GEMINI_API_KEY:
     raise ValueError("Gemini API Key not found in env variables")
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel(
-    model_name="gemini-2.5-flash",
-)
 
-BATCH_SIZE = 4 #How many jobs we want to feed the llm at a time
+# Initialize model - handle different versions of google-generativeai
+try:
+    genai.configure(api_key=GEMINI_API_KEY)
+    # Try to use GenerativeModel (newer API)
+    if hasattr(genai, 'GenerativeModel'):
+        from google.generativeai import types
+        model = genai.GenerativeModel(
+            model_name="gemini-2.5-flash",
+        )
+        USE_NEW_API = True
+    else:
+        # Fallback for older versions (0.1.0rc1) - use generate_text or chat_async
+        logger.info("Using older google-generativeai API (generate_text)")
+        model = None
+        USE_NEW_API = False
+        # For older API, we'll use generate_text directly
+        MODEL_NAME = "gemini-2.5-flash"
+except Exception as e:
+    logger.error(f"Error initializing Gemini model: {str(e)}")
+    model = None
+    USE_NEW_API = False
+    MODEL_NAME = None
+
+BATCH_SIZE = 5 #How many jobs we want to feed the llm at a time
 
 #=============REQUEST CONCURRENCY==============
 MAX_CONCURRENT_REQUEST = 1 #How many API request we can send the llm at a time
@@ -73,17 +91,20 @@ def split_into_batches(ids_urls_titles: Dict[str, List[str]], BATCH_SIZE)->List[
     return result
 
 #===============================HANDLE RETRIES====================================
-#Check if exception is a ResourceExhaustedException
-def retry_if_resource_exhausted(exception: BaseException) -> bool:
-    """Returns True if the exception is a ResourceExhausted exception."""
-    return isinstance(exception, ResourceExhausted)
+#Check if exception is a ResourceExhaustedException or TimeoutError
+def retry_if_resource_exhausted_or_timeout(exception: BaseException) -> bool:
+    """Returns True if the exception is a ResourceExhausted or TimeoutError exception."""
+    return isinstance(exception, (ResourceExhausted, asyncio.TimeoutError, TimeoutError))
 
 
 def log_before_retry(retry_state: RetryCallState):
-    logger.info(f"Retrying Gemini API call... attempt #{retry_state.attempt_number}")
+    if retry_state.attempt_number > 1:
+        logger.info(f"Retrying Gemini API call... attempt #{retry_state.attempt_number}")
 
 def log_after(retry_state: RetryCallState):
-    logger.info(f"Attempt #{retry_state.attempt_number} done")
+    # Only log successful retries, not every attempt
+    if retry_state.attempt_number > 1:
+        logger.info(f"Attempt #{retry_state.attempt_number} completed successfully")
 
 def log_failure():
     logger.error("Gemini API failed after retries.")
@@ -92,35 +113,91 @@ def log_failure():
 @retry(
     wait=wait_exponential(multiplier=1, min=4, max=60),
     stop=stop_after_attempt(5),
-    retry=retry_if_resource_exhausted,
+    retry=retry_if_resource_exhausted_or_timeout,
     reraise=True,
     before=log_before_retry,
     after=log_after,
     retry_error_callback=log_failure
 )
-async def _call_gemini_api_with_retry(prompt: str) -> types.GenerateContentResponse:
+async def _call_gemini_api_with_retry(prompt: str):
     """Internal function to call Gemini API with retry logic."""
-    logger.info("Attempting Gemini API call for hiring...")
+    # Only log on first attempt, retries are logged separately
+    # logger.debug("Attempting Gemini API call for hiring...")
+    
+    # Calculate timeout based on prompt length (longer prompts need more time)
+    # Base timeout of 60 seconds, add 1 second per 1000 characters
+    prompt_length = len(prompt)
+    timeout = max(60.0, 60.0 + (prompt_length / 1000))
+    
     try:
-        response = await asyncio.wait_for(
-            model.generate_content_async(
-                contents=prompt,
-                generation_config=types.GenerationConfig(
-                    response_mime_type="application/json",
+        if USE_NEW_API and model:
+            # New API with GenerativeModel
+            from google.generativeai import types
+            response = await asyncio.wait_for(
+                model.generate_content_async(
+                    contents=prompt,
+                    generation_config=types.GenerationConfig(
+                        response_mime_type="application/json",
+                        temperature=0.5,
+                    )
+                ),
+                timeout=timeout
+            )
+        else:
+            # Older API (0.1.0rc1) - use generate_text
+            if not MODEL_NAME:
+                raise ValueError("Gemini model not properly initialized")
+            
+            # Use generate_text for older API
+            # generate_text returns a result object with .result attribute
+            # Use to_thread if available (Python 3.9+), otherwise use executor (Python 3.8)
+            if hasattr(asyncio, 'to_thread'):
+                result = await asyncio.to_thread(
+                    genai.generate_text,
+                    model=MODEL_NAME,
+                    prompt=prompt,
                     temperature=0.5,
                 )
-            ),
-            timeout=30.0
-        )
-        logger.info("Gemini API for hiring call successful.")
+            else:
+                # Fallback for Python 3.8
+                loop = asyncio.get_event_loop()
+                result = await loop.run_in_executor(
+                    None,
+                    lambda: genai.generate_text(
+                        model=MODEL_NAME,
+                        prompt=prompt,
+                        temperature=0.5,
+                    )
+                )
+            
+            # Create a mock response object with .text attribute
+            # Older API returns result.result (the generated text)
+            class MockResponse:
+                def __init__(self, text):
+                    self.text = text
+            
+            # Extract text from result object
+            response_text = result.result if hasattr(result, 'result') else str(result)
+            response = MockResponse(response_text)
+        
+        # logger.debug("Gemini API for hiring call successful.")
         return response
+    except asyncio.TimeoutError as e:
+        error_msg = f"Request timed out after {timeout:.1f}s (prompt length: {prompt_length} chars)"
+        logger.error(f"Gemini API call for hiring failed: TimeoutError - {error_msg}")
+        # Re-raise as TimeoutError so retry logic can catch it
+        raise asyncio.TimeoutError(error_msg) from e
     except Exception as e:
-        logger.error(f"Gemini API call for hiring failed: {str(e)}")
-        return
+        error_msg = str(e) if str(e) else repr(e)
+        error_type = type(e).__name__
+        logger.error(f"Gemini API call for hiring failed: {error_type} - {error_msg}")
+        import traceback
+        logger.debug(f"Full traceback:\n{traceback.format_exc()}")
+        raise
 
 #=======================PROCESS EACH BATCH=========================
 async def process_hiring_data_batch(batch: Dict[str, List[Union[str, int]]])->Dict[str, List[Any]]:
-    logger.info("AI hiring information extraction beginning...")
+    # logger.debug("AI hiring information extraction beginning...")
 
     return_data = {
         "type": "hiring",
@@ -163,9 +240,14 @@ async def process_hiring_data_batch(batch: Dict[str, List[Union[str, int]]])->Di
             extracted_json_data = json.loads(response_data)
         except json.JSONDecodeError as e:
             logger.error(f"Failed to parse model's JSON response: {e.msg}")
+            logger.debug(f"Response text (first 500 chars): {response_data[:500] if 'response_data' in locals() else 'N/A'}")
             return return_data
         except Exception as e:
-            logger.error(f"Error during Gemini API call")
+            error_msg = str(e) if str(e) else repr(e)
+            error_type = type(e).__name__
+            logger.error(f"Error during Gemini API call: {error_type} - {error_msg}")
+            import traceback
+            logger.debug(f"Full traceback:\n{traceback.format_exc()}")
             return return_data
 
         #===============ADD URL & ID BACK IN RESULT=================
@@ -184,7 +266,7 @@ async def process_hiring_data_batch(batch: Dict[str, List[Union[str, int]]])->Di
             original_data = id_to_data_map.get(article_id, {})
             extracted_json_data["article_link"][i] = original_data.get("url", "")
 
-        logger.info("AI information extraction is done")
+        # logger.debug("AI information extraction is done")
         return extracted_json_data
 
     except Exception as e:
@@ -196,19 +278,42 @@ async def finalize_ai_extraction(ids_urls_titles: Dict[str, List[str]])->Dict[st
     final_results = {}
     try:
         logger.info("Finalizing AI extraction...")
+        total_items = len(ids_urls_titles["ids"])
         list_of_batches = split_into_batches(ids_urls_titles, BATCH_SIZE)
+        num_batches = len(list_of_batches)
+        logger.info(f"Processing {total_items} items in {num_batches} batches (batch size: {BATCH_SIZE})")
         tasks = [safe_process_hiring_data_batch(batch) for batch in list_of_batches]
-        results = await asyncio.gather(*tasks)
+        # Use return_exceptions=True to continue processing even if some batches fail
+        results = await asyncio.gather(*tasks, return_exceptions=True)
         
-        for result in results:
+        # Process results, handling exceptions
+        successful_batches = 0
+        failed_batches = 0
+        for i, result in enumerate(results):
+            if isinstance(result, Exception):
+                failed_batches += 1
+                error_type = type(result).__name__
+                logger.error(f"Batch {i + 1} failed with {error_type}: {str(result)}")
+                continue
+            
+            successful_batches += 1
             for key, val in result.items():
                 if key not in final_results:
                     final_results[key] = val
                 else:
                     if isinstance(final_results[key], list) and isinstance(val, list):
                         final_results[key].extend(val)
+        
+        if failed_batches > 0:
+            logger.warning(f"Completed with {successful_batches} successful batches and {failed_batches} failed batches")
 
-        logger.info("AI extraction done")
+        # Log summary of extracted data
+        num_extracted = len(final_results.get("article_id", []))
+        success_rate = (num_extracted / total_items * 100) if total_items > 0 else 0
+        logger.info("")
+        logger.info(f"AI extraction completed: {num_extracted}/{total_items} items extracted ({success_rate:.1f}% success rate)")
+        if num_extracted > 0:
+            logger.info(f"Result contains {len(final_results)} data fields")
         return final_results
 
     except Exception as e:

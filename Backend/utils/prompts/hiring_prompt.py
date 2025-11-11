@@ -10,8 +10,8 @@ def get_hiring_extraction_prompt(combined_input_for_llm: str):
         - Date of Article (format as YYYY-MM-DD if possible)  
         - Company Name  
         - Company Website (if mentioned or can be confidently inferred)  
-        - Company City  
-        - Company Country  
+        - Company City (extract the actual city where the company is based, even if the job is remote. Look for phrases like "based in", "located in", "headquartered in", "office in", etc. in the description. If the location field says "Remote" but the description mentions a city, extract that city. If truly no city can be found, return empty string.)
+        - Company Country (extract the actual country where the company is based, even if the job is remote. Look for country names, country codes, or phrases like "based in [country]", "located in [country]", etc. in the description. If truly no country can be found, return empty string.)  
         - Company Decision Makers (as a list of strings. Include names of all identifiable decision makers or hiring managers mentioned.)  
         - Company Decision Makers Position (the position of the above decision makers e.g. CEO, CTO, etc.)
         - Job Roles (as a list of strings. Extract the specific job roles, positions, or departments the company is hiring for, e.g., "software engineer", "data scientist", "marketing", "product design".)  
