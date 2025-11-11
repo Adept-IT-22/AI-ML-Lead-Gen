@@ -9,10 +9,9 @@ sys.modules['ingestion_module.ai_extraction.extract_funding_content'].finalize_a
 
 from ingestion_module.funding.siliconangle import fetch as fetch_mod
 
-import pytest_asyncio
 import pytest
 import asyncio
-from unittest.mock import patch, MagicMock, AsyncMock
+from unittest.mock import MagicMock
 from datetime import datetime, timedelta
 
 # Test that is_within_last_two_months correctly filters dates

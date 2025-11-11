@@ -1,7 +1,4 @@
 import pytest
-import pytest_asyncio
-import asyncio
-from unittest.mock import AsyncMock, patch, MagicMock
 
 import sys
 import os
@@ -9,7 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 # Mock the Sifted EU module since it doesn't exist yet
 # This allows tests to run without the actual module implementation
-from unittest.mock import MagicMock, AsyncMock
+from unittest.mock import MagicMock
 import types
 import httpx
 from lxml import etree
