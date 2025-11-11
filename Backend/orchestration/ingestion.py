@@ -15,7 +15,7 @@ from ingestion_module.funding.betakit.fetch import main as betakit_main
 from ingestion_module.funding.startup_hub.fetch import main as startup_hub_main
 from ingestion_module.funding.eu_startups.fetch import main as eu_startups_main
 from ingestion_module.funding.thenextweb.fetch import main as thenextweb_main
-from ingestion_module.funding.pr_news_wire import main as pr_news_wire_main
+from ingestion_module.funding.pr_news_wire.fetch import main as pr_news_wire_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 

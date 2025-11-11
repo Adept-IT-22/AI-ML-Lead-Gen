@@ -42,7 +42,7 @@ async def main(
         for i, normalized_link in enumerate(normalized_data.get("link")):
             normalized_master_data_to_store = [
                 normalized_data.get("type", ""),
-                normalized_data.get("source", ""),
+                normalized_data.get("source")[0] if normalized_data.get("source") else "",
                 normalized_link,
                 normalized_data.get("title")[i] if normalized_data.get("title") and i < len(normalized_data.get("title", [])) else None,
                 normalized_data.get("city")[i] if normalized_data.get("city") and i < len(normalized_data.get("city", [])) else None,
@@ -126,13 +126,14 @@ if __name__ == "__main__":
         #Populate ingestion_to_normalization_queue
         ingestion_to_normalization_queue = asyncio.Queue()
         normalization_to_enrichment_queue = asyncio.Queue()
+        normalization_to_storage_queue = asyncio.Queue()
 
         mock_fetched_data = [
             ('finsmes', {
                 "type": "funding",
                 "source": ["FinSMEs"],
                 "title": [],
-                "link": ["https://www.finsmes.com/2025/10/socratix-ai-raises-4-1m-in-seed-funding.html"],
+                "link": ["https://www.finsmes.com/2025/10/socratix-ai-raises-4-1m-in-seed-funding.htm"],
                 "article_date": ["2025-10-29"],
                 "company_name": ["Socratix AI"],
                 "city": [],
@@ -150,7 +151,7 @@ if __name__ == "__main__":
                 "type": "funding",
                 "source": ["TechCrunch"],
                 "title": [],
-                "link": ["https://techcrunch.com/2025/10/28/mem0-raises-24m-from-yc-peak-xv-and-basis-set-to-build-the-memory-layer-for-ai-apps/"],
+                "link": ["https://techcrunch.com/2025/10/28/mem0-raises-24m-from-yc-peak-xv-and-basis-set-to-build-the-memory-layer-for-ai-app/"],
                 "article_date": ["2025-10-28"],
                 "company_name": ["Mem0"],
                 "city": [],
@@ -171,7 +172,7 @@ if __name__ == "__main__":
             print("Data added")
 
         async with asyncpg.create_pool(dsn=DB_URL) as pool:
-            x = await main(pool, ingestion_to_normalization_queue, normalization_to_enrichment_queue)
-            print(x.qsize())
+            x = await main(pool, ingestion_to_normalization_queue, normalization_to_enrichment_queue, normalization_to_storage_queue)
+            print(x['normalization_to_storage'].qsize())
 
     asyncio.run(demo())
