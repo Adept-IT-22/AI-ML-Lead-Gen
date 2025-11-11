@@ -6,7 +6,7 @@ from scoring_module.icp_scoring import ICPScorer
 from services.db_service import fetch_company_details, store_icp_score, update_company_icp_score, company_is_unscored
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("Scoring Orchestrator")
+logger = logging.getLogger(__name__)
 
 #Fetch unscored companies
 async def score_and_store(pool, unscored_company_id_list, company_id, semaphore):
@@ -67,13 +67,4 @@ async def main(pool: asyncpg.Pool):
 
 
 if __name__ and "__main__":
-    import os
-    from dotenv import load_dotenv
-    load_dotenv(override=True)
-
-    DB_URL = os.getenv("DEV_DATABASE_URL")
-    async def demo():
-        async with asyncpg.create_pool(dsn=DB_URL) as pool:
-            await main(pool)
-
-    asyncio.run(demo())
+    pass
