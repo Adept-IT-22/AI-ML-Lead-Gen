@@ -16,8 +16,12 @@ from ingestion_module.funding.startup_hub.fetch import main as startup_hub_main
 from ingestion_module.funding.eu_startups.fetch import main as eu_startups_main
 from ingestion_module.funding.thenextweb.fetch import main as thenextweb_main
 from ingestion_module.funding.pr_news_wire import main as pr_news_wire_main
+from ingestion_module.funding.vc_news_daily.fetch import main as vc_news_daily_main
+from ingestion_module.funding.vestbee.fetch import main as vestbee_main
+from ingestion_module.funding.geekwire.fetch import main as geekwire_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
+
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -40,7 +44,11 @@ async def run_ingestion_modules()->Dict:
         ("startup_hub", startup_hub_main()),
         ("eu_startups", eu_startups_main()),
         ("thenextweb", thenextweb_main()),
-        ("pr_news_wire", pr_news_wire_main())
+        ("pr_news_wire", pr_news_wire_main()),
+        ("vc_news_daily", vc_news_daily_main()),
+        ("vestbee", vestbee_main()),
+        ("geekwire", geekwire_main()),
+
     ]
 
     #A list of wrap coroutine objects to be run
