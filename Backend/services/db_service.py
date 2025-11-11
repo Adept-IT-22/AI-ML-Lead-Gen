@@ -10,9 +10,6 @@ from utils.set_conversion import convert_sets
 
 load_dotenv(verbose=True, override=True)
 
-#When running the backend locally I use the 2nd DB_URL. When using docker, I use the 1st.
-#=======================================================================================
-
 DB_URL = os.getenv("DEV_DATABASE_URL")
 
 logger = logging.getLogger()
@@ -27,6 +24,7 @@ async def initialize_db():
         logger.error("Connection not made!")
 
 #Fetches all companies from the database
+#CHANGED
 async def fetch_companies() -> List[Dict[str, Any]]:
     """
     Fetches all companies and their associated people in a single query (Eager Loading)
@@ -154,7 +152,7 @@ async def fetch_people()->List[Dict[str, Any]]:
 
 async def fetch_uncontacted_people(pool: asyncpg.Pool)->List:
     logger.info("Fetching uncontacted people from DB...")
-    query = "SELECT organization_id, email FROM people WHERE contacted_status = 'uncontacted' AND email IS NOT NULL AND email <> ''"
+    query = "SELECT first_name, organization_id, email FROM people WHERE contacted_status = 'uncontacted' AND email IS NOT NULL AND email <> ''"
 
     try: 
         async with pool.acquire() as conn:
@@ -659,6 +657,7 @@ async def store_icp_score(pool, company_id, age_score, employee_count_score,
     return
 
 #Store icp score in icp_score column in companies table. Changes status to mcp if score >= 70
+#CHANGED
 async def update_company_icp_score(pool, company_id: int, total_score: float):
     logger.info(f"Updating icp_score for company_id {company_id} to {total_score}")
 
@@ -694,5 +693,7 @@ if __name__ == "__main__":
         #]
 
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-            await fetch_uncontacted_people(pool)
+            x = await fetch_uncontacted_people(pool)
+            print(x)
+
     asyncio.run(main())
