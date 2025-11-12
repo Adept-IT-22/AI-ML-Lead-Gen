@@ -138,7 +138,7 @@ async def main():
                 elif key in llm_results:
                     llm_results[key] = value_list
 
-            llm_results["source"].append("vestbee.com")
+            llm_results["source"].append("Vestbee")
             urls = links_and_paragraphs.get("urls")
             llm_results["link"] = urls
 
