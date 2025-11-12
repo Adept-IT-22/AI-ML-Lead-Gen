@@ -1,4 +1,4 @@
-from typing import Any, Union, Awaitable
+from typing import Any, Union, Awaitable, Tuple
 from decimal import Decimal
 import logging
 
@@ -19,7 +19,7 @@ def safe_decimal(value: Any)->Union[Decimal, None]:
         return None
 
 #This function pairs a name with a coroutine (if all goes well) or with an exception otherwise 
-async def wrap(name: str, coroutine: Awaitable[Any] )->tuple[str, Union[Any, Exception]]:
+async def wrap(name: str, coroutine: Awaitable[Any] )->Tuple[str, Union[Any, Exception]]:
     try:
         result = await coroutine 
         logger.info(f"Coroutine {name} done")

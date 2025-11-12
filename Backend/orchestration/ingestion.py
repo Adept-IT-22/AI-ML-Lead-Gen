@@ -15,8 +15,15 @@ from ingestion_module.funding.betakit.fetch import main as betakit_main
 from ingestion_module.funding.startup_hub.fetch import main as startup_hub_main
 from ingestion_module.funding.eu_startups.fetch import main as eu_startups_main
 from ingestion_module.funding.thenextweb.fetch import main as thenextweb_main
-from ingestion_module.funding.pr_news_wire import main as pr_news_wire_main
+from ingestion_module.funding.pr_news_wire.fetch import main as pr_news_wire_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
+from ingestion_module.hiring.indeed_scraper_api.fetch import main as indeed_scraper_api_main
+from ingestion_module.hiring.jobs_api.fetch import main as jobs_api_main
+from ingestion_module.hiring.active_jobs_db.fetch import main as active_jobs_db_main
+from ingestion_module.hiring.linkedin_job_search_api.fetch import main as linkedin_job_search_api_main
+from ingestion_module.hiring.ycombinator_jobs_api.fetch import main as ycombinator_jobs_api_main
+from ingestion_module.hiring.jsearch_api.fetch import main as jsearch_api_main
+from ingestion_module.hiring.remoteok.fetch import main as remoteok_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 
 logger = logging.getLogger(__name__)
@@ -31,6 +38,13 @@ async def run_ingestion_modules()->Dict:
         ("sifted_eu", sifted_eu_main()),
         ("cbinsights", cbinsights_main()),
         ("hacker_news", hacker_news_main()),
+        ("indeed_scraper_api", indeed_scraper_api_main()),
+        ("jobs_api", jobs_api_main()),
+        ("active_jobs_db", active_jobs_db_main()),
+        ("linkedin_job_search_api", linkedin_job_search_api_main()),
+        ("ycombinator_jobs_api", ycombinator_jobs_api_main()),
+        ("jsearch_api", jsearch_api_main()),
+        ("remoteok", remoteok_main()),
         ("eventbrite", eventbrite_main()),
         ("siliconangle", siliconangle_main()),
         ("techfundingnews", techfundingnews_main()),
