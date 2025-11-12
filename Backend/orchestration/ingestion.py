@@ -21,6 +21,7 @@ from ingestion_module.funding.geekwire.fetch import main as geekwire_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
