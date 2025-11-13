@@ -26,6 +26,8 @@ file_handler.setFormatter(
 )
 logger.addHandler(file_handler)
 
+logging.basicConfig(level=logging.INFO, handlers=[file_handler])
+
 #The Database in use
 DB_URL = os.getenv("DEV_DATABASE_URL")
 
@@ -43,7 +45,7 @@ async def main():
         await orchestration_main()
         return jsonify({"success": "Main function done"}), 200
     except Exception as e:
-        return jsonify({"Error": "An unexpected error occured", "Message": str(e) })
+        return jsonify({"Error": "An unexpected error occured", "Message": str(e) }), 500
 
 #Database API for fetching companies
 @app.route('/fetch-companies', methods=["GET"])

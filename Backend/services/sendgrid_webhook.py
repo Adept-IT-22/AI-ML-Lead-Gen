@@ -10,9 +10,7 @@ logger = logging.getLogger()
 
 load_dotenv(override=True)
 
-#DB_URL = os.getenv("DATABASE_URL")
-DB_URL = "postgresql://lead_gen_user:lead_gen_password@localhost:2345/lead_gen_db"
-#DB_URL = "postgresql://lead_gen_user:lead_gen_password@lead-gen-db:5432/lead_gen_db"
+DB_URL = os.getenv("DEV_DATABASE_URL")
 
 async def update_contacted_status(events):
     logger.info(f"The DB URL is: {DB_URL}")
