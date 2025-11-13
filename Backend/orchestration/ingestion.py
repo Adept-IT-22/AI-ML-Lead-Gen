@@ -15,9 +15,18 @@ from ingestion_module.funding.betakit.fetch import main as betakit_main
 from ingestion_module.funding.startup_hub.fetch import main as startup_hub_main
 from ingestion_module.funding.eu_startups.fetch import main as eu_startups_main
 from ingestion_module.funding.thenextweb.fetch import main as thenextweb_main
+<<<<<<< HEAD
 from ingestion_module.funding.vestbee.fetch import main as vestbee_main
 from ingestion_module.funding.pr_news_wire.fetch import main as pr_news_wire_main
 from ingestion_module.funding.geekwire.fetch import main as geekwire_main
+=======
+from ingestion_module.funding.pr_news_wire import main as pr_news_wire_main
+from ingestion_module.funding.eu_entrepreneur.fetch import main as eu_entrepreneur_main
+from ingestion_module.funding.hyper_latam.fetch import main as hyper_latam_main
+from ingestion_module.funding.inc42.fetch import main as inc42_main
+from ingestion_module.funding.smart_company.fetch import main as smart_company_main
+from ingestion_module.funding.silicon_republic.fetch import main as silicon_republic_main
+>>>>>>> 04c3a35e71bf4274a1e46d1302a40f02217416b8
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 
@@ -44,8 +53,16 @@ async def run_ingestion_modules()->Dict:
         ("eu_startups", eu_startups_main()),
         ("thenextweb", thenextweb_main()),
         ("pr_news_wire", pr_news_wire_main()),
+<<<<<<< HEAD
         ("vestbee", vestbee_main()),
         ("geekwire", geekwire_main())
+=======
+        ("eu_entrepreneur", eu_entrepreneur_main()),
+        ("hyper_latam", hyper_latam_main()),
+        ("inc42", inc42_main()),
+        ("silicon_republic", silicon_republic_main()),
+        ("smart_company", smart_company_main())
+>>>>>>> 04c3a35e71bf4274a1e46d1302a40f02217416b8
     ]
 
     #A list of wrap coroutine objects to be run
