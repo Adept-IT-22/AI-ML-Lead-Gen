@@ -176,7 +176,7 @@ async def main():
         elif key in llm_results:
             llm_results[key] = value_list
 
-    llm_results["source"].append("siliconrepublic")
+    llm_results["source"].append("silicon republic")
     llm_results["link"] = links_and_paragraphs.get("urls", [])
 
     duration = time.perf_counter() - start_time
