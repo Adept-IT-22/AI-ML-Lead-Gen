@@ -444,7 +444,6 @@ async def main():
     if llm_results is None:
         return copy.deepcopy(funding_data_dict)
     
-    logger.info(llm_results)
     return llm_results
 
 if __name__ == "__main__":
