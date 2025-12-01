@@ -12,7 +12,7 @@ from google.api_core.exceptions import ResourceExhausted
 from utils.prompts.funding_prompt import get_funding_extraction_prompt
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 #Import env variables
 load_dotenv(verbose=True, override=True)

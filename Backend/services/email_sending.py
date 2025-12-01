@@ -1,14 +1,11 @@
-import os, base64
+import os
 import logging
-from enum import Enum
-from typing import List
 from dotenv import load_dotenv
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import *
-from utils.email_prompts import email_prompts
-import aiofiles,asyncio
-import email_attachments 
+import asyncio
 from services.db_service import *
+from utils.prompts.email_generation_prompt import get_email_generation_prompt
 
 load_dotenv(override=True)
 logger = logging.getLogger()
@@ -25,55 +22,13 @@ email_headers = {
     "Authorization": f"Bearer {SENDGRID_API_KEY}"
 }
 async def send_email(
-        data_source: str,
-        latest_funding_round: str,
         email_to: str,
-        first_name: str,
-        company_name: str,
-        extra_info: str = None, #Funding info, hiring area or event name
+        subject: str,
+        content: str ,
         email_from = EMAIL_FROM
 ):
     sendgrid_client = SendGridAPIClient(SENDGRID_API_KEY)
-
-    if data_source == 'funding':
-        if latest_funding_round.lower() == 'seed':
-            funding_data = email_prompts.get('funding').get('seed')
-            subject = funding_data.get('subject')
-            content = funding_data.get('content').format(
-                first_name = first_name.title(),
-            )
-        elif latest_funding_round.lower() == 'series a' or latest_funding_round.lower() == 'series b':
-            funding_data = email_prompts.get('funding').get('series')
-            subject = funding_data.get('subject')
-            content = funding_data.get('content').format(
-                first_name = first_name.title(),
-            )
-        else:
-            funding_data = email_prompts.get('funding').get("generic")
-            subject = funding_data.get('subject')
-            content = funding_data.get('content').format(
-                first_name = first_name.title(),
-                company_name = company_name.title(),
-                funding_round = extra_info.title()
-            )
-
-    elif data_source == 'hiring':
-        hiring_data = email_prompts.get('hiring')
-        subject = hiring_data.get('subject')
-        content = hiring_data.get('content').format(
-            first_name = first_name.title(),
-            company_name = company_name.title(),
-            hiring_area = extra_info.title()
-        )
-    elif data_source == 'events':
-        event_data = email_prompts.get('events')
-        subject = event_data.get('subject')
-        content = event_data.get('content').format(
-            first_name = first_name.title(),
-            company_name = company_name.title(),
-            event_name = extra_info.title()
-        )
-
+    
     email = Mail(
         from_email=email_from, 
         to_emails=email_to,
@@ -105,14 +60,52 @@ async def send_email(
 if __name__ == "__main__":
     async def main():
         response = await send_email(
-            data_source='funding',
-            latest_funding_round = "seed",
             email_to = 'william.gateri@adept-techno.com',
-            first_name = 'Billy',
-            company_name='Adept',
+            subject= "Greetings",
+            content= "Hello"
         )
         print(response.status_code)
         print(response.body)
         print(response.headers)
     
     asyncio.run(main())
+
+
+#if data_source == 'funding':
+    #if latest_funding_round.lower() == 'seed':
+        #funding_data = email_prompts.get('funding').get('seed')
+        #subject = funding_data.get('subject')
+        #content = funding_data.get('content').format(
+            #first_name = first_name.title(),
+        #)
+    #elif latest_funding_round.lower() == 'series a' or latest_funding_round.lower() == 'series b':
+        #funding_data = email_prompts.get('funding').get('series')
+        #subject = funding_data.get('subject')
+        #content = funding_data.get('content').format(
+            #first_name = first_name.title(),
+        #)
+    #else:
+        #funding_data = email_prompts.get('funding').get("generic")
+        #subject = funding_data.get('subject')
+        #content = funding_data.get('content').format(
+            #first_name = first_name.title(),
+            #company_name = company_name.title(),
+            #funding_round = extra_info.title()
+        #)
+
+#elif data_source == 'hiring':
+    #hiring_data = email_prompts.get('hiring')
+    #subject = hiring_data.get('subject')
+    #content = hiring_data.get('content').format(
+        #first_name = first_name.title(),
+        #company_name = company_name.title(),
+        #hiring_area = extra_info.title()
+    #)
+#elif data_source == 'events':
+    #event_data = email_prompts.get('events')
+    #subject = event_data.get('subject')
+    #content = event_data.get('content').format(
+        #first_name = first_name.title(),
+        #company_name = company_name.title(),
+        #event_name = extra_info.title()
+    #)
