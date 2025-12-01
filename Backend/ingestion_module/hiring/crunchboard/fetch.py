@@ -8,6 +8,8 @@ import time
 import copy
 import asyncio
 import logging
+import json
+import re
 import requests
 import cloudscraper
 from datetime import datetime, timedelta, timezone
@@ -25,7 +27,6 @@ SITEMAP_URL = f"{BASE_URL}/sitemap.xml"
 
 # Rate limiting
 MAX_CONCURRENT = 3
-semaphore = asyncio.Semaphore(MAX_CONCURRENT)
 
 
 def parse_date(date_str: Optional[str]) -> Optional[datetime]:
@@ -47,14 +48,14 @@ def parse_date(date_str: Optional[str]) -> Optional[datetime]:
             return dt_value.astimezone(timezone.utc).replace(tzinfo=None)
 
         return dt_value
-    except Exception as e:
+    except (ValueError, TypeError) as e:
         logger.debug(f"Failed to parse date '{date_str}': {str(e)}")
 
     return None
 
 
-def is_within_last_two_months(date_str: Optional[str]) -> bool:
-    """Check if a job posting date is within the last 2 months."""
+def is_within_last_60_days(date_str: Optional[str]) -> bool:
+    """Check if a job posting date is within the last 60 days."""
     if not date_str:
         return False
     
@@ -98,6 +99,7 @@ async def fetch_with_scraper(
     data: Optional[Dict[str, Any]] = None,
     headers: Optional[Dict[str, str]] = None,
     timeout: int = 30,
+    semaphore: asyncio.Semaphore,
 ) -> Optional[str]:
     """Fetch a URL using the shared Cloudscraper session with concurrency control."""
     async with semaphore:
@@ -124,10 +126,10 @@ async def fetch_with_scraper(
             return None
 
 
-async def fetch_sitemap_index() -> List[str]:
+async def fetch_sitemap_index(semaphore: asyncio.Semaphore) -> List[str]:
     """Fetch the main sitemap index and return job sitemap URLs."""
     try:
-        content = await fetch_with_scraper(SITEMAP_URL)
+        content = await fetch_with_scraper(SITEMAP_URL, semaphore=semaphore)
         if not content:
             return []
 
@@ -154,10 +156,10 @@ async def fetch_sitemap_index() -> List[str]:
         return []
 
 
-async def fetch_job_sitemap(sitemap_url: str) -> List[Dict[str, Optional[str]]]:
+async def fetch_job_sitemap(sitemap_url: str, semaphore: asyncio.Semaphore) -> List[Dict[str, Optional[str]]]:
     """Fetch a job sitemap shard and return URL + lastmod entries."""
     try:
-        content = await fetch_with_scraper(sitemap_url)
+        content = await fetch_with_scraper(sitemap_url, semaphore=semaphore)
         if not content:
             return []
 
@@ -187,16 +189,16 @@ async def fetch_job_sitemap(sitemap_url: str) -> List[Dict[str, Optional[str]]]:
         return []
 
 
-async def collect_recent_job_urls() -> List[str]:
+async def collect_recent_job_urls(semaphore: asyncio.Semaphore) -> List[str]:
     """Collect recent job URLs by walking the sitemap index."""
-    sitemap_urls = await fetch_sitemap_index()
+    sitemap_urls = await fetch_sitemap_index(semaphore)
     all_entries: List[Dict[str, Optional[str]]] = []
 
     if not sitemap_urls:
         logger.warning("No sitemap shards discovered; falling back to root sitemap parsing")
-        all_entries.extend(await fetch_job_sitemap(SITEMAP_URL))
+        all_entries.extend(await fetch_job_sitemap(SITEMAP_URL, semaphore))
     else:
-        tasks = [fetch_job_sitemap(sitemap_url) for sitemap_url in sitemap_urls]
+        tasks = [fetch_job_sitemap(sitemap_url, semaphore) for sitemap_url in sitemap_urls]
         results = await asyncio.gather(*tasks)
         for entries in results:
             all_entries.extend(entries)
@@ -211,8 +213,12 @@ async def collect_recent_job_urls() -> List[str]:
         lastmod = entry.get("lastmod")
         if not url or url in seen:
             continue
-        if lastmod and not is_within_last_two_months(lastmod):
-            continue
+        # Only include jobs with recent lastmod OR missing lastmod (with warning)
+        if lastmod:
+            if not is_within_last_60_days(lastmod):
+                continue
+        else:
+            logger.debug(f"Job URL {url} has no lastmod date, including anyway")
         seen.add(url)
         recent_urls.append(url)
 
@@ -226,26 +232,26 @@ class CrunchboardDescriptionParser(HTMLParser):
     def __init__(self):
         super().__init__()
         self.description = []
-        self.in_description = False
+        self.in_job_body = False
         self.current_tag = None
     
     def handle_starttag(self, tag, attrs):
         self.current_tag = tag
         attrs_dict = dict(attrs)
         
-        # Look for description containers
-        if tag == 'div' and ('class' in attrs_dict and 'description' in attrs_dict['class']):
-            self.in_description = True
-        elif tag == 'div' and ('itemprop' in attrs_dict and attrs_dict['itemprop'] == 'description'):
-            self.in_description = True
+        # Look for the job-body div which contains the description
+        if tag == 'div' and 'class' in attrs_dict:
+            classes = attrs_dict['class'].split()
+            if 'job-body' in classes:
+                self.in_job_body = True
     
     def handle_endtag(self, tag):
-        if tag == 'div' and self.in_description:
-            self.in_description = False
+        if tag == 'div' and self.in_job_body:
+            self.in_job_body = False
         self.current_tag = None
     
     def handle_data(self, data):
-        if self.in_description:
+        if self.in_job_body:
             text = data.strip()
             if text:
                 self.description.append(text)
@@ -255,24 +261,59 @@ class CrunchboardDescriptionParser(HTMLParser):
 
 
 def extract_job_data(html_content: str, url: str) -> Optional[Dict[str, Any]]:
-    """Extract job data from HTML page."""
+    """Extract job data from HTML page using JSON-LD and HTML parsing."""
     try:
+        # First, try to extract from JSON-LD (most reliable)
+        json_ld_pattern = r'<script type="application/ld\+json">(.*?)</script>'
+        json_match = re.search(json_ld_pattern, html_content, re.DOTALL)
+        
+        if json_match:
+            try:
+                json_data = json.loads(json_match.group(1))
+                
+                # Extract data from JSON-LD
+                title = json_data.get('title', '')
+                company = ''
+                if 'hiringOrganization' in json_data:
+                    company = json_data['hiringOrganization'].get('name', '')
+                
+                description = json_data.get('description', '')
+                # Clean HTML from description
+                if description:
+                    description = re.sub(r'<[^>]+>', ' ', description)
+                    description = re.sub(r'\s+', ' ', description).strip()
+                
+                location = ''
+                posted_date = json_data.get('datePosted', '')
+                
+                if title and description:
+                    return {
+                        "title": title,
+                        "company": company,
+                        "description": description,
+                        "url": url,
+                        "location": location,
+                        "posted_at": posted_date
+                    }
+            except json.JSONDecodeError:
+                pass
+        
+        # Fallback to HTML parsing
         parser = CrunchboardDescriptionParser()
         parser.feed(html_content)
         description = parser.get_description()
         
-        # Try to extract title, company, etc. from HTML
-        # This is a simplified version - you may need to enhance based on actual page structure
+        # Extract title from h1
         title = ""
-        company = ""
+        h1_match = re.search(r'<h1[^>]*class="[^"]*u-textH2[^"]*"[^>]*>(.*?)</h1>', html_content, re.IGNORECASE | re.DOTALL)
+        if h1_match:
+            title = re.sub(r'<[^>]+>', '', h1_match.group(1)).strip()
         
-        # Basic extraction (can be enhanced with BeautifulSoup if needed)
-        if '<h1' in html_content:
-            # Try to find title in h1 tag
-            import re
-            h1_match = re.search(r'<h1[^>]*>(.*?)</h1>', html_content, re.IGNORECASE | re.DOTALL)
-            if h1_match:
-                title = re.sub(r'<[^>]+>', '', h1_match.group(1)).strip()
+        # Extract company
+        company = ""
+        company_match = re.search(r'<div[^>]*class="[^"]*text-primary text-large[^"]*"[^>]*><strong>(.*?)</strong></div>', html_content, re.DOTALL)
+        if company_match:
+            company = re.sub(r'<[^>]+>', '', company_match.group(1)).strip()
         
         if not description:
             return None
@@ -281,24 +322,26 @@ def extract_job_data(html_content: str, url: str) -> Optional[Dict[str, Any]]:
             "title": title or "Job Listing",
             "company": company,
             "description": description,
-            "url": url
+            "url": url,
+            "location": "",
+            "posted_at": None
         }
     except Exception as e:
         logger.error(f"Failed to extract job data from {url}: {str(e)}")
         return None
 
 
-async def fetch_job_page(url: str) -> Optional[Dict[str, Any]]:
+async def fetch_job_page(url: str, semaphore: asyncio.Semaphore) -> Optional[Dict[str, Any]]:
     """Fetch a single job page and extract job data."""
-    html_content = await fetch_with_scraper(url)
+    html_content = await fetch_with_scraper(url, semaphore=semaphore)
     if not html_content:
         return None
     return extract_job_data(html_content, url)
 
 
-async def fetch_job_pages(urls: List[str]) -> List[Dict[str, Any]]:
+async def fetch_job_pages(urls: List[str], semaphore: asyncio.Semaphore) -> List[Dict[str, Any]]:
     """Fetch multiple job pages concurrently."""
-    tasks = [fetch_job_page(url) for url in urls]
+    tasks = [fetch_job_page(url, semaphore) for url in urls]
     results = await asyncio.gather(*tasks)
     return [job for job in results if job]
 
@@ -333,7 +376,9 @@ def build_job_postings(jobs: List[Dict[str, Any]]) -> Dict[str, List[Any]]:
             desc_snippet = description[:200] + "..." if len(description) > 200 else description
             formatted_title += f" | {desc_snippet}"
         
-        job_postings["ids"].append(url.split('/')[-1] or url)
+        # Extract ID from URL, handling trailing slashes
+        job_id = url.rstrip('/').split('/')[-1] or url
+        job_postings["ids"].append(job_id)
         job_postings["urls"].append(url)
         job_postings["titles"].append(formatted_title)
         
@@ -350,29 +395,32 @@ def build_job_postings(jobs: List[Dict[str, Any]]) -> Dict[str, List[Any]]:
     return job_postings
 
 
-async def main():
+async def main() -> Optional[Dict[str, Any]]:
     """Main function to fetch Crunchboard jobs and extract hiring information."""
     start_time = time.time()
     logger.info("Starting Crunchboard hiring ingestion...")
     
+    # Create semaphore for rate limiting
+    semaphore = asyncio.Semaphore(MAX_CONCURRENT)
+    
     try:
         # Collect job URLs from sitemap shards
-        job_urls = await collect_recent_job_urls()
+        job_urls = await collect_recent_job_urls(semaphore)
         
         if not job_urls:
             logger.warning("No recent job URLs found from Crunchboard sitemap")
-            return
+            return None
         
         # Warm up session to obtain cookies before hitting individual job pages
-        await fetch_with_scraper(f"{BASE_URL}/")
+        await fetch_with_scraper(f"{BASE_URL}/", semaphore=semaphore)
 
         # Fetch job pages
         logger.info(f"Fetching {len(job_urls)} job pages...")
-        jobs = await fetch_job_pages(job_urls[:50])  # Limit to 50 for testing
+        jobs = await fetch_job_pages(job_urls[:50], semaphore)  # Limit to 50 for testing
         
         if not jobs:
             logger.warning("No job postings extracted from Crunchboard")
-            return {}
+            return None
         
         # Build job postings structure
         job_postings = build_job_postings(jobs)
@@ -387,7 +435,7 @@ async def main():
             except Exception as extraction_error:
                 logger.error(f"Failed to extract AI content from Crunchboard data: {extraction_error}")
 
-        llm_results = {}
+        llm_results = None
         if extracted_data:
             llm_results = copy.deepcopy(hiring_fetched_data)
             for key, value in extracted_data.items():
@@ -398,19 +446,26 @@ async def main():
 
             llm_results["source"] = "crunchboard"
             llm_results["type"] = "hiring"
-            llm_results["link"] = job_postings.get("urls", [])
+            # Validate that job_postings has expected keys
+            if "urls" in job_postings:
+                llm_results["link"] = job_postings["urls"]
+            else:
+                logger.warning("job_postings missing 'urls' key")
+                llm_results["link"] = []
         else:
             logger.warning("AI extraction for Crunchboard returned no data")
 
         elapsed = time.time() - start_time
+        # Validate job_postings has 'urls' before accessing
+        job_count = len(job_postings.get('urls', []))
         logger.info(
-            f"Crunchboard hiring ingestion completed in {elapsed:.2f} seconds with {len(job_postings['urls'])} extracted articles."
+            f"Crunchboard hiring ingestion completed in {elapsed:.2f} seconds with {job_count} extracted articles."
         )
-        return llm_results if llm_results else {}
+        return llm_results
     
     except Exception as e:
         logger.error(f"Error in Crunchboard hiring ingestion: {str(e)}", exc_info=True)
-        return {}
+        return None
 
 
 if __name__ == "__main__":
