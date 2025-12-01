@@ -11,9 +11,6 @@ from orchestration.main import main as orchestration_main
 
 #==============================APP SETUP====================================
 # Configure logging before creating Flask app
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
 # File handler
 file_handler = RotatingFileHandler(
     "main_log.log",
@@ -24,7 +21,10 @@ file_handler = RotatingFileHandler(
 file_handler.setFormatter(
     logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 )
-logger.addHandler(file_handler)
+
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.INFO)
+root_logger.addHandler(file_handler)
 
 #The Database in use
 DB_URL = os.getenv("DEV_DATABASE_URL")
@@ -43,7 +43,7 @@ async def main():
         await orchestration_main()
         return jsonify({"success": "Main function done"}), 200
     except Exception as e:
-        return jsonify({"Error": "An unexpected error occured", "Message": str(e) })
+        return jsonify({"Error": "An unexpected error occured", "Message": str(e) }), 500
 
 #Database API for fetching companies
 @app.route('/fetch-companies', methods=["GET"])

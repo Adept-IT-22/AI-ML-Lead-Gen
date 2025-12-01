@@ -48,6 +48,9 @@ def normalize_date(date_str: str) -> str:
 def normalize_city(city: str) -> str:
     if not city:
         return ""
+
+    if isinstance(city, list):
+        city = city[0]
     
     return city.replace("_", " ").strip().title()
 

@@ -5,9 +5,6 @@ from typing import Dict
 from datetime import date
 from utils.icp import icp, weights
 from utils.ai_keywords import marking_scheme_keywords
-from scoring_module.ai_extraction import extract_work_category
-from utils.prompts.work_category_prompt import get_work_category
-from services.db_service import store_icp_score, update_company_icp_score
 from scoring_module.keyword_scoring.keyword_scoring import TfIdfScorer
 
 logger = logging.getLogger()
@@ -148,7 +145,7 @@ class ICPScorer:
             "category_breakdown": category_breakdown,
             "top_matches": top_matches,
             "interpretation": interpretation,
-            "total_score": total_score
+            "total_score": round(total_score, 2)
         }
 
 
@@ -156,7 +153,7 @@ if __name__ == "__main__":
     async def main():
         from services.db_service import fetch_company_details
 
-        fetched_company = await fetch_company_details(128)
+        fetched_company = await fetch_company_details(150)
 
         name = fetched_company.get('name')
         founded_year = fetched_company.get('founded_year')

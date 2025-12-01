@@ -198,7 +198,6 @@ async def main():
     duration = time.perf_counter() - start_time
     logger.info(f"betakit took {duration:.2f} seconds")
 
-    logger.info(llm_results)
     return llm_results
 
 if __name__ == "__main__":

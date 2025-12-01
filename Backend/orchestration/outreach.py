@@ -1,5 +1,4 @@
 import asyncio
-import asyncpg
 import logging
 from services.email_sending import send_email
 from services.db_service import fetch_uncontacted_people, fetch_company_by_apollo_id, get_hiring_area
@@ -65,12 +64,4 @@ async def main(pool):
     logger.info("Email sending complete")
 
 if __name__ == "__main__":
-    import os
-    from dotenv import load_dotenv
-    load_dotenv(override=True)
-    DB_URL = os.getenv("DEV_DATABASE_URL")
-    async def demo():
-        async with asyncpg.create_pool(dsn=DB_URL) as pool:
-            await main(pool)
-
-    asyncio.run(demo())
+    pass
