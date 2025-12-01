@@ -24,6 +24,7 @@ from ingestion_module.funding.hyper_latam.fetch import main as hyper_latam_main
 from ingestion_module.funding.inc42.fetch import main as inc42_main
 from ingestion_module.funding.smart_company.fetch import main as smart_company_main
 from ingestion_module.funding.silicon_republic.fetch import main as silicon_republic_main
+from ingestion_module.funding.american_bazaar_online import main as american_bazaar_online_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 
@@ -56,7 +57,8 @@ async def run_ingestion_modules()->Dict:
         ("hyper_latam", hyper_latam_main()),
         ("inc42", inc42_main()),
         ("silicon_republic", silicon_republic_main()),
-        ("smart_company", smart_company_main())
+        ("smart_company", smart_company_main()),
+        ("american_bazaar_online", american_bazaar_online_main())
     ]
 
     #A list of wrap coroutine objects to be run
