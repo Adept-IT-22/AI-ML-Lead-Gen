@@ -100,7 +100,7 @@ async def bulk_organization_enrichment(searched_orgs: List, client: httpx.AsyncC
         await bulk_org_enrichment_file.write(json.dumps(bulk_enriched_orgs, indent=2))
 
     logger.info("Completed Bulk Org Enrichment")
-    return bulk_enriched_orgs[0]
+    return bulk_enriched_orgs
 
     # ========Single Org Enrichment===========
 
@@ -141,13 +141,14 @@ async def search_for_people(bulk_enriched_orgs: List, client: httpx.AsyncClient)
     #Get org ids
     org_ids = []
     org_domains = []
-    for orgs in bulk_enriched_orgs:
-        org_data = orgs.get("organizations") #returns a list of dicts
-        for each_org in org_data:
-            org_id = each_org.get("id")
-            org_ids.append(org_id)
-            org_domain = each_org.get("primary_domain")
-            org_domains.append(org_domain)
+    for bulk_enriched_org_list in bulk_enriched_orgs:
+        for orgs in bulk_enriched_org_list:
+            org_data = orgs.get("organizations") #returns a list of dicts
+            for each_org in org_data:
+                org_id = each_org.get("id")
+                org_ids.append(org_id)
+                org_domain = each_org.get("primary_domain")
+                org_domains.append(org_domain)
     
     searched_people = await people_search(client=client, org_ids=org_ids, org_domains=org_domains)
 
@@ -17782,7 +17783,7 @@ if __name__ == "__main__":
             ]
             ]
         async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
-            await single_organization_enrichment(bulk_enriched_orgs, client)
+            await search_for_people(bulk_enriched_orgs, client)
 
 
     asyncio.run(demo())
