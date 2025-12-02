@@ -16,7 +16,6 @@ except:
 
 from ingestion_module.funding.crunchbase import fetch as fetch_mod
 
-import pytest_asyncio
 import pytest
 import asyncio
 from unittest.mock import patch, MagicMock, AsyncMock

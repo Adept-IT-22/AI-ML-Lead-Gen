@@ -13,12 +13,10 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../..")))
 from ingestion_module.hiring.hacker_news import fetch as fetch_mod
 
-
 @pytest_asyncio.fixture
 def mock_client():
     """Create a mock httpx.AsyncClient."""
     return MagicMock()
-
 
 @pytest.mark.asyncio
 async def test_is_within_last_month_recent_date():
@@ -29,7 +27,6 @@ async def test_is_within_last_month_recent_date():
     result = fetch_mod.is_within_last_month(rfc_date)
     assert result
 
-
 @pytest.mark.asyncio
 async def test_is_within_last_month_old_date():
     """Test that old dates (beyond 1 month) return False."""
@@ -39,20 +36,17 @@ async def test_is_within_last_month_old_date():
     result = fetch_mod.is_within_last_month(rfc_date)
     assert not result
 
-
 @pytest.mark.asyncio
 async def test_is_within_last_month_invalid_date():
     """Test that invalid dates return False."""
     result = fetch_mod.is_within_last_month("invalid date")
     assert not result
 
-
 @pytest.mark.asyncio
 async def test_is_within_last_month_none():
     """Test that None date returns False."""
     result = fetch_mod.is_within_last_month(None)
     assert not result
-
 
 @pytest.mark.asyncio
 async def test_fetch_who_is_hiring_threads_filters_correctly(mock_client):
@@ -100,7 +94,6 @@ async def test_fetch_who_is_hiring_threads_filters_correctly(mock_client):
         assert len(threads) == 1
         assert threads[0]['id'] == '12345678'
         assert 'Who is hiring' in threads[0]['title']
-
 
 @pytest.mark.asyncio
 async def test_fetch_who_is_hiring_threads_filters_by_date(mock_client):
@@ -150,7 +143,6 @@ async def test_fetch_who_is_hiring_threads_filters_by_date(mock_client):
         assert len(threads) == 1
         assert threads[0]['id'] == '12345678'
 
-
 @pytest.mark.asyncio
 async def test_fetch_thread_comments_returns_comments(mock_client):
     """Test that thread comments are fetched correctly."""
@@ -193,7 +185,6 @@ async def test_fetch_thread_comments_returns_comments(mock_client):
     
     assert len(comments) == 3  # Should fetch all 3 comments
 
-
 @pytest.mark.asyncio
 async def test_is_tech_related_job_filters_correctly():
     """Test that tech-related job filtering works correctly."""
@@ -208,7 +199,6 @@ async def test_is_tech_related_job_filters_correctly():
     # Empty text
     assert not fetch_mod.is_tech_related_job("")
     assert not fetch_mod.is_tech_related_job(None)
-
 
 @pytest.mark.asyncio
 async def test_extract_job_postings_filters_tech_jobs():
@@ -238,7 +228,6 @@ async def test_extract_job_postings_filters_tech_jobs():
     assert "111" in job_postings["ids"]
     assert "333" in job_postings["ids"]
     assert "222" not in job_postings["ids"]
-
 
 @pytest.mark.asyncio
 async def test_main_success_with_mocked_data(monkeypatch):
@@ -314,7 +303,6 @@ async def test_main_success_with_mocked_data(monkeypatch):
             assert "TechCorp" in result["company_name"]
             assert len(result["link"]) > 0
 
-
 @pytest.mark.asyncio
 async def test_main_no_threads_found(monkeypatch):
     """Test main function when no threads are found."""
@@ -344,7 +332,6 @@ async def test_main_no_threads_found(monkeypatch):
             result = await fetch_mod.main()
             
             assert result == {}
-
 
 @pytest.mark.asyncio
 async def test_main_no_tech_jobs_found(monkeypatch):

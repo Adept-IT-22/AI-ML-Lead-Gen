@@ -13,12 +13,10 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../..")))
 from ingestion_module.hiring.remoteok import fetch as fetch_mod
 
-
 @pytest_asyncio.fixture
 def mock_client():
     """Create a mock httpx.AsyncClient."""
     return MagicMock()
-
 
 @pytest.mark.asyncio
 async def test_parse_posted_date_iso_format():
@@ -32,7 +30,6 @@ async def test_parse_posted_date_iso_format():
     assert result.month == 11
     assert result.day == 10
 
-
 @pytest.mark.asyncio
 async def test_parse_posted_date_simple_format():
     """Test that simple date format is parsed correctly."""
@@ -44,7 +41,6 @@ async def test_parse_posted_date_simple_format():
     assert result.year == 2025
     assert result.month == 11
     assert result.day == 10
-
 
 @pytest.mark.asyncio
 async def test_parse_posted_date_relative_format():
@@ -58,7 +54,6 @@ async def test_parse_posted_date_relative_format():
     days_diff = (datetime.now() - result).days
     assert 4 <= days_diff <= 6
 
-
 @pytest.mark.asyncio
 async def test_is_within_last_two_months_recent():
     """Test that recent dates (within 2 months) return True."""
@@ -66,14 +61,12 @@ async def test_is_within_last_two_months_recent():
     result = fetch_mod.is_within_last_two_months(recent_date)
     assert result
 
-
 @pytest.mark.asyncio
 async def test_is_within_last_two_months_old():
     """Test that old dates (beyond 2 months) return False."""
     old_date = datetime.now() - timedelta(days=90)
     result = fetch_mod.is_within_last_two_months(old_date)
     assert not result
-
 
 @pytest.mark.asyncio
 async def test_extract_jobs_sitemap_urls_finds_all_job_sitemaps():
@@ -105,7 +98,6 @@ async def test_extract_jobs_sitemap_urls_finds_all_job_sitemaps():
     assert "sitemap-jobs-2.xml" in result[1]
     assert "sitemap-jobs-3.xml" in result[2]
 
-
 @pytest.mark.asyncio
 async def test_extract_jobs_sitemap_urls_not_found():
     """Test that empty list is returned when no job sitemaps are found."""
@@ -123,7 +115,6 @@ async def test_extract_jobs_sitemap_urls_not_found():
     result = fetch_mod.extract_jobs_sitemap_urls(sitemap_xml)
     
     assert result == []
-
 
 @pytest.mark.asyncio
 async def test_extract_job_urls_extracts_jobs():
@@ -156,7 +147,6 @@ async def test_extract_job_urls_extracts_jobs():
     assert jobs[2]["id"] == "1128910"
     assert "1128910" in jobs[2]["url"]
 
-
 @pytest.mark.asyncio
 async def test_extract_job_urls_filters_old_jobs():
     """Test that old jobs (beyond 2 months) are filtered out."""
@@ -174,7 +164,6 @@ async def test_extract_job_urls_filters_old_jobs():
     
     # Should be filtered out because it's older than 2 months
     assert len(jobs) == 0
-
 
 @pytest.mark.asyncio
 async def test_extract_job_urls_skips_base_url():
@@ -198,7 +187,6 @@ async def test_extract_job_urls_skips_base_url():
     assert len(jobs) == 1
     assert jobs[0]["id"] == "12345"
 
-
 @pytest.mark.asyncio
 async def test_extract_job_urls_only_processes_remote_jobs():
     """Test that only URLs containing /remote-jobs/ are processed."""
@@ -221,7 +209,6 @@ async def test_extract_job_urls_only_processes_remote_jobs():
     assert len(jobs) == 1
     assert jobs[0]["id"] == "12345"
 
-
 @pytest.mark.asyncio
 async def test_extract_job_postings_formats_correctly():
     """Test that job postings are formatted correctly for AI extraction."""
@@ -242,7 +229,6 @@ async def test_extract_job_postings_formats_correctly():
     assert len(job_postings["titles"]) == 1
     assert "1128913" in job_postings["ids"]
     assert "Remote Account Executive | Stealth Startup | Remote" in job_postings["titles"]
-
 
 @pytest.mark.asyncio
 async def test_fetch_sitemap_index_success(mock_client):
@@ -266,7 +252,6 @@ async def test_fetch_sitemap_index_success(mock_client):
         
         assert result is not None
         assert result == sitemap_xml
-
 
 @pytest.mark.asyncio
 async def test_fetch_sitemap_index_handles_gzip(mock_client):
@@ -294,7 +279,6 @@ async def test_fetch_sitemap_index_handles_gzip(mock_client):
         assert result is not None
         assert result == sitemap_xml
 
-
 @pytest.mark.asyncio
 async def test_fetch_jobs_sitemap_success(mock_client):
     """Test that jobs sitemap is fetched successfully."""
@@ -318,7 +302,6 @@ async def test_fetch_jobs_sitemap_success(mock_client):
         
         assert result is not None
         assert result == jobs_sitemap_xml
-
 
 @pytest.mark.asyncio
 async def test_main_success_with_mocked_data(monkeypatch):
@@ -385,7 +368,6 @@ async def test_main_success_with_mocked_data(monkeypatch):
                         # If main() returns {} or None, that's also acceptable for this test
                         assert result == {} or result is None
 
-
 @pytest.mark.asyncio
 async def test_main_no_jobs_found(monkeypatch):
     """Test main function when no jobs are found."""
@@ -420,7 +402,6 @@ async def test_main_no_jobs_found(monkeypatch):
             
             assert result == {}
 
-
 @pytest.mark.asyncio
 async def test_main_sitemap_fetch_failure(monkeypatch):
     """Test main function when sitemap fetch fails."""
@@ -434,7 +415,6 @@ async def test_main_sitemap_fetch_failure(monkeypatch):
             result = await fetch_mod.main()
             
             assert result == {}
-
 
 @pytest.mark.asyncio
 async def test_extract_job_urls_handles_job_id_at_end():

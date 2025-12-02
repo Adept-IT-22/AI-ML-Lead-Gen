@@ -13,12 +13,10 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../..")))
 from ingestion_module.hiring.stackoverflow_jobs import fetch as fetch_mod
 
-
 @pytest_asyncio.fixture
 def mock_client():
     """Create a mock httpx.AsyncClient."""
     return MagicMock()
-
 
 @pytest.mark.asyncio
 async def test_parse_posted_date_recent():
@@ -32,7 +30,6 @@ async def test_parse_posted_date_recent():
     days_diff = (datetime.now() - result).days
     assert 4 <= days_diff <= 6
 
-
 @pytest.mark.asyncio
 async def test_parse_posted_date_old():
     """Test that old dates are parsed correctly."""
@@ -45,13 +42,11 @@ async def test_parse_posted_date_old():
     days_diff = (datetime.now() - result).days
     assert 85 <= days_diff <= 95
 
-
 @pytest.mark.asyncio
 async def test_parse_posted_date_invalid():
     """Test that invalid dates return None."""
     result = fetch_mod.parse_posted_date("Invalid date")
     assert result is None
-
 
 @pytest.mark.asyncio
 async def test_is_within_last_two_months_recent():
@@ -60,7 +55,6 @@ async def test_is_within_last_two_months_recent():
     result = fetch_mod.is_within_last_two_months(recent_date)
     assert result
 
-
 @pytest.mark.asyncio
 async def test_is_within_last_two_months_old():
     """Test that old dates (beyond 2 months) return False."""
@@ -68,13 +62,11 @@ async def test_is_within_last_two_months_old():
     result = fetch_mod.is_within_last_two_months(old_date)
     assert not result
 
-
 @pytest.mark.asyncio
 async def test_is_within_last_two_months_none():
     """Test that None date returns False."""
     result = fetch_mod.is_within_last_two_months(None)
     assert not result
-
 
 @pytest.mark.asyncio
 async def test_parse_job_listings_extracts_jobs():
@@ -104,7 +96,6 @@ async def test_parse_job_listings_extracts_jobs():
     assert jobs[0]["company"] == "TechCorp"
     assert jobs[0]["location"] == "San Francisco"
 
-
 @pytest.mark.asyncio
 async def test_parse_job_listings_filters_old_jobs():
     """Test that old jobs (beyond 2 months) are filtered out."""
@@ -129,7 +120,6 @@ async def test_parse_job_listings_filters_old_jobs():
     
     # Should be filtered out because it's older than 2 months
     assert len(jobs) == 0
-
 
 @pytest.mark.asyncio
 async def test_extract_job_postings_formats_correctly():
@@ -160,7 +150,6 @@ async def test_extract_job_postings_formats_correctly():
     assert "67890" in job_postings["ids"]
     assert "Software Engineer | TechCorp | San Francisco" in job_postings["titles"]
 
-
 @pytest.mark.asyncio
 async def test_fetch_page_with_selenium_success(monkeypatch):
     """Test that Selenium page fetching works correctly."""
@@ -185,7 +174,6 @@ async def test_fetch_page_with_selenium_success(monkeypatch):
                 assert "job-list" in result
                 mock_driver.quit.assert_called_once()
 
-
 @pytest.mark.asyncio
 async def test_fetch_job_listings_page_success(monkeypatch):
     """Test that job listings page is fetched successfully."""
@@ -200,7 +188,6 @@ async def test_fetch_job_listings_page_success(monkeypatch):
         
         assert result is not None
         assert result == mock_html
-
 
 @pytest.mark.asyncio
 async def test_main_success_with_mocked_data(monkeypatch):
@@ -247,7 +234,6 @@ async def test_main_success_with_mocked_data(monkeypatch):
             assert result["source"] == "StackOverflowJobs"
             assert "TechCorp" in result["company_name"]
 
-
 @pytest.mark.asyncio
 async def test_main_no_jobs_found(monkeypatch):
     """Test main function when no jobs are found."""
@@ -261,7 +247,6 @@ async def test_main_no_jobs_found(monkeypatch):
         
         # main() returns {} when no jobs found, or None if there's an exception
         assert result == {} or result is None
-
 
 @pytest.mark.asyncio
 async def test_main_empty_html(monkeypatch):
