@@ -18,11 +18,14 @@ from ingestion_module.funding.thenextweb.fetch import main as thenextweb_main
 from ingestion_module.funding.vestbee.fetch import main as vestbee_main
 from ingestion_module.funding.pr_news_wire.fetch import main as pr_news_wire_main
 from ingestion_module.funding.geekwire.fetch import main as geekwire_main
+from ingestion_module.funding.pr_news_wire.fetch import main as pr_news_wire_main
 from ingestion_module.funding.eu_entrepreneur.fetch import main as eu_entrepreneur_main
 from ingestion_module.funding.hyper_latam.fetch import main as hyper_latam_main
 from ingestion_module.funding.inc42.fetch import main as inc42_main
 from ingestion_module.funding.smart_company.fetch import main as smart_company_main
 from ingestion_module.funding.silicon_republic.fetch import main as silicon_republic_main
+from ingestion_module.funding.american_bazaar_online.fetch import main as american_bazaar_online_main
+from ingestion_module.funding.startup_daily_net.fetch import main as startup_daily_net_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 from ingestion_module.hiring.active_jobs_db.fetch import main as active_jobs_db_main
@@ -58,6 +61,8 @@ async def run_ingestion_modules()->Dict:
         ("silicon_republic", silicon_republic_main()),
         ("smart_company", smart_company_main()),
         ("active_jobs_db", active_jobs_db_main())
+        ("american_bazaar_online", american_bazaar_online_main()),
+        ("startup_daily_net", startup_daily_net_main())
     ]
 
     #A list of wrap coroutine objects to be run
