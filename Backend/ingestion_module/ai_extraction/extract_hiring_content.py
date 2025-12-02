@@ -2,6 +2,7 @@ import os
 import time
 import json
 import logging
+import traceback
 import asyncio
 from tenacity import retry, wait_exponential, stop_after_attempt, RetryCallState
 from dotenv import load_dotenv
@@ -26,7 +27,6 @@ try:
     genai.configure(api_key=GEMINI_API_KEY)
     # Try to use GenerativeModel (newer API)
     if hasattr(genai, 'GenerativeModel'):
-        from google.generativeai import types
         model = genai.GenerativeModel(
             model_name="gemini-2.5-flash",
         )
@@ -44,11 +44,17 @@ except Exception as e:
     USE_NEW_API = False
     MODEL_NAME = None
 
-BATCH_SIZE = 5 #How many jobs we want to feed the llm at a time
+BATCH_SIZE = 5 #How many jobs we want to feed the LLM at a time
 
 #=============REQUEST CONCURRENCY==============
-MAX_CONCURRENT_REQUEST = 1 #How many API request we can send the llm at a time
+MAX_CONCURRENT_REQUEST = 1 #How many API request we can send the LLM at a time
 semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUEST)
+
+#========================HELPER CLASSES=============================
+class MockResponse:
+    """Mock response object for older API compatibility."""
+    def __init__(self, text):
+        self.text = text
 
 #============API RATE LIMITS==============
 RATE_LIMIT_SECONDS = 6
@@ -127,7 +133,7 @@ async def _call_gemini_api_with_retry(prompt: str):
     # Calculate timeout based on prompt length (longer prompts need more time)
     # Base timeout of 60 seconds, add 1 second per 1000 characters
     prompt_length = len(prompt)
-    timeout = max(60.0, 60.0 + (prompt_length / 1000))
+    timeout = 60.0 + (prompt_length / 1000)
     
     try:
         if USE_NEW_API and model:
@@ -152,29 +158,29 @@ async def _call_gemini_api_with_retry(prompt: str):
             # generate_text returns a result object with .result attribute
             # Use to_thread if available (Python 3.9+), otherwise use executor (Python 3.8)
             if hasattr(asyncio, 'to_thread'):
-                result = await asyncio.to_thread(
-                    genai.generate_text,
-                    model=MODEL_NAME,
-                    prompt=prompt,
-                    temperature=0.5,
+                result = await asyncio.wait_for(
+                    asyncio.to_thread(
+                        genai.generate_text,
+                        model=MODEL_NAME,
+                        prompt=prompt,
+                        temperature=0.5,
+                    ),
+                    timeout=timeout
                 )
             else:
                 # Fallback for Python 3.8
                 loop = asyncio.get_event_loop()
-                result = await loop.run_in_executor(
-                    None,
-                    lambda: genai.generate_text(
-                        model=MODEL_NAME,
-                        prompt=prompt,
-                        temperature=0.5,
-                    )
+                result = await asyncio.wait_for(
+                    loop.run_in_executor(
+                        None,
+                        lambda: genai.generate_text(
+                            model=MODEL_NAME,
+                            prompt=prompt,
+                            temperature=0.5,
+                        )
+                    ),
+                    timeout=timeout
                 )
-            
-            # Create a mock response object with .text attribute
-            # Older API returns result.result (the generated text)
-            class MockResponse:
-                def __init__(self, text):
-                    self.text = text
             
             # Extract text from result object
             response_text = result.result if hasattr(result, 'result') else str(result)
@@ -186,12 +192,11 @@ async def _call_gemini_api_with_retry(prompt: str):
         error_msg = f"Request timed out after {timeout:.1f}s (prompt length: {prompt_length} chars)"
         logger.error(f"Gemini API call for hiring failed: TimeoutError - {error_msg}")
         # Re-raise as TimeoutError so retry logic can catch it
-        raise asyncio.TimeoutError(error_msg) from e
+        raise asyncio.TimeoutError() from e
     except Exception as e:
         error_msg = str(e) if str(e) else repr(e)
         error_type = type(e).__name__
         logger.error(f"Gemini API call for hiring failed: {error_type} - {error_msg}")
-        import traceback
         logger.debug(f"Full traceback:\n{traceback.format_exc()}")
         raise
 
@@ -246,7 +251,6 @@ async def process_hiring_data_batch(batch: Dict[str, List[Union[str, int]]])->Di
             error_msg = str(e) if str(e) else repr(e)
             error_type = type(e).__name__
             logger.error(f"Error during Gemini API call: {error_type} - {error_msg}")
-            import traceback
             logger.debug(f"Full traceback:\n{traceback.format_exc()}")
             return return_data
 
