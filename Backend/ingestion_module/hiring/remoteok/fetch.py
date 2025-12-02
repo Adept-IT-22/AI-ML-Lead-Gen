@@ -25,10 +25,23 @@ async def fetch_jobs() -> List[Dict[str, Any]]:
         try:
             async with session.get(API_URL, headers=headers) as response:
                 if response.status == 200:
-                    data = await response.json()
-                    # The first element in the list is often legal/metadata info, so we might need to skip it if it doesn't look like a job
-                    jobs = [item for item in data if "title" in item and "company" in item]
-                    return jobs
+                    try:
+                        data = await response.json()
+                        logger.info(f"RemoteOK API returned {len(data)} items")
+                        if data:
+                            logger.info(f"First item keys: {list(data[0].keys())}")
+                            if len(data) > 1:
+                                logger.info(f"Second item keys: {list(data[1].keys())}")
+                        
+                        # The first element in the list is often legal/metadata info
+                        jobs = [item for item in data if "position" in item and "company" in item]
+                        logger.info(f"Filtered down to {len(jobs)} valid jobs")
+                        return jobs
+                    except Exception as e:
+                        logger.error(f"Failed to parse RemoteOK JSON: {str(e)}")
+                        text = await response.text()
+                        logger.debug(f"Response text start: {text[:200]}")
+                        return []
                 else:
                     logger.error(f"Failed to fetch RemoteOK jobs: HTTP {response.status}")
                     return []
@@ -40,7 +53,7 @@ def normalize_job_data(job: Dict[str, Any]) -> Dict[str, Any]:
     """Normalize RemoteOK job data to our internal format."""
     return {
         "id": str(job.get("id", "")),
-        "title": job.get("title", ""),
+        "title": job.get("position", ""),
         "company": job.get("company", ""),
         "url": job.get("url", ""),
         "description": job.get("description", ""),

@@ -16,7 +16,7 @@ async def test_fetch_jobs_success(monkeypatch):
     mock_response_data = [
         {
             "id": "123",
-            "title": "Software Engineer",
+            "position": "Software Engineer",
             "company": "TechCorp",
             "url": "https://remoteok.com/job/123",
             "description": "Great job",
@@ -51,7 +51,7 @@ async def test_fetch_jobs_success(monkeypatch):
         jobs = await fetch.fetch_jobs()
         
     assert len(jobs) == 1
-    assert jobs[0]["title"] == "Software Engineer"
+    assert jobs[0]["position"] == "Software Engineer"
     assert jobs[0]["company"] == "TechCorp"
 
 @pytest.mark.asyncio
@@ -77,7 +77,7 @@ def test_normalize_job_data():
     """Test job data normalization"""
     raw_job = {
         "id": 123, # Int ID
-        "title": "Dev",
+        "position": "Dev",
         "company": "Comp",
         "url": "http://url",
         "description": "Desc",
@@ -101,7 +101,8 @@ async def test_main_success(monkeypatch):
     async def mock_fetch_jobs():
         return [{
             "id": "1",
-            "title": "Job 1",
+            "position": "Job 1",
+            "title": "Job 1", # Add title for compatibility if needed, but fetch_jobs returns raw data which has position
             "company": "Comp 1",
             "url": "url1",
             "description": "desc1",
