@@ -6,6 +6,7 @@ __pycache__/
 #.txt files related to the program
 normalized.txt
 org_search.txt
+email_prompts.txt
 people_search.txt
 people_enrichment.txt
 bulk_org_enrichment.txt

@@ -196,11 +196,10 @@ _Insert change history here_
 This section is a to-do list for me as the programmer.
 
 + See if I can get event attendees on eventbrite
-+ Fetch from google news
 + During email sending, if company isn't found enrich it 
 + Fix keyword scoring to only include services we provide
-+ Some companies e.g. envive ai, are getting enriched repeatedly because 
-pre the enrichment phase they're not getting filtered. fix that by checking
-the normalization db immediately the links are fetched, even before they
-get fed to the llm.
-+ Return funding stage and amount to scoring
++ Check if funded company is hiring and if hiring company has been funded
++ Generate emails via llm
++ Implement drip feeding
++ Migrate from sendgrid to apollo
++ Integrate with odoo
