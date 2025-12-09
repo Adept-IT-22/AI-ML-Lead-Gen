@@ -72,10 +72,6 @@ async def main(pool):
                 # 2. Parse the JSON string into a Python dictionary
                 email_data = json.loads(json_string)
                 
-                # 3. Rename "body" to "body_html" for consistency with your previous code
-                #email_data["subject"] = email_data.pop("subject")
-                #email_data["body_html"] = email_data.pop("body")
-
                 subject = email_data['subject']
                 content = email_data['content']
 

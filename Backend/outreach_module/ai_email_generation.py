@@ -50,7 +50,7 @@ def log_failure():
 )
 #Internal function to call Gemini API with retry logic.
 async def call_gemini_api(prompt: str) -> types.GenerateContentResponse:
-    logger.info("Attempting Gemini API call for funding...")
+    logger.info("Attempting Gemini API call for email generation...")
     try:
         response = await asyncio.wait_for(
             model.generate_content_async(
@@ -62,10 +62,10 @@ async def call_gemini_api(prompt: str) -> types.GenerateContentResponse:
             ),
         timeout=30.0
         )
-        logger.info("Gemini API call for funding successful.")
+        logger.info("Gemini API call for email generation.")
         return response
     except Exception as e:
-        logger.error(f"Gemini API call for funding failed: {str(e)}")
+        logger.error(f"Gemini API call for email generation failed: {str(e)}")
         return 
 
 

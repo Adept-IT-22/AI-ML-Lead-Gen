@@ -44,6 +44,7 @@ def get_email_generation_prompt(company_description, first_name, company_name, t
         1. **Data Solutions:** Data annotation, data labeling, data quality assurance (QA).
         2. **ML Services:** Model validation, human-in-the-loop support, specialized data collection.
         3. **Customer Engagement:** Handling complex customer interactions, filtering/qualifying leads that require human review, and analytics.
+        Adept also provides afforability and speed without compromising on quality. Ensure you highlight this in your email.
 
         ---
         ### **Prospect Company Profile**
@@ -59,6 +60,7 @@ def get_email_generation_prompt(company_description, first_name, company_name, t
             * **Crucially,** the email must mention **two (2) specific ways** Adept Technologies' services (from the list above) can directly support or enhance the prospective company's current operations.
         4. **Tone:** Professional and direct, with a congratulatory or observant opening.
         5. **Call to Action (CTA):** End with a clear, low-friction request for a quick chat.
+        6. 1. **Format:** The content must be formatted as raw HTML body content with all actual values filled in (no placeholders).
 
         ---
         ### **Email Output Template to Follow (Adapt the content within the tags):**
@@ -77,7 +79,7 @@ def get_email_generation_prompt(company_description, first_name, company_name, t
                 
                 <p>This allows your team to focus on [PROSPECT'S CORE MISSION] while we handle [TIME-CONSUMING TASK].</p>
                 
-                <p>Would you be open to a quick chat this week to explore how we can specifically support **{{company_name}}**’s next phase of growth?</p>
+                <p>Would you be open to a quick chat this week to explore how we can specifically support **{company_name}**’s next phase of growth?</p>
             </body>
         </html>
         ```
