@@ -2,16 +2,16 @@
 RemoteOK Jobs Fetcher
 Fetches remote job listings from RemoteOK API.
 """
-
+import re
 import logging
 import aiohttp
 import asyncio
 import copy
 from datetime import datetime
 from typing import List, Dict, Any, Optional
-
 from ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction
 from utils.data_structures.hiring_data_structure import fetched_hiring_data
+from utils.software_dev_keywords import software_dev_keywords
 
 logger = logging.getLogger(__name__)
 
@@ -74,11 +74,17 @@ async def main() -> Optional[Dict[str, Any]]:
 
     logger.info(f"Fetched {len(raw_jobs)} jobs from RemoteOK")
 
-    # Filter for software/developer jobs if needed, but for now we take all relevant ones
-    # RemoteOK API returns a lot, maybe limit to recent ones or specific tags?
-    # For this implementation, let's process the top 50 to avoid overwhelming the LLM
-    
-    processed_jobs = [normalize_job_data(job) for job in raw_jobs[:50]]
+    # Filter for software/developer jobs 
+    final_raw_jobs = []
+    for job in raw_jobs:
+        url = job.get("url", "")
+        if not any(re.search(rf'\b{re.escape(keyword)}\b', url.lower()) for keyword in software_dev_keywords):
+            continue
+        else:
+            final_raw_jobs.append(job)
+            
+    logger.info("Filtered out %s non-sware jobs. %s left", (len(final_raw_jobs) - len(raw_jobs)), len(final_raw_jobs))
+    processed_jobs = [normalize_job_data(job) for job in final_raw_jobs]
     
     ids_urls_titles = {
         "ids": [job["id"] for job in processed_jobs],
