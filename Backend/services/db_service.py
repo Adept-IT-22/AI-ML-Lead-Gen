@@ -1,4 +1,5 @@
 import os
+import copy
 import json
 import logging
 import asyncio
@@ -9,9 +10,6 @@ from utils.db_queries import *
 from utils.set_conversion import convert_sets
 
 load_dotenv(verbose=True, override=True)
-
-#When running the backend locally I use the 2nd DB_URL. When using docker, I use the 1st.
-#=======================================================================================
 
 DB_URL = os.getenv("DEV_DATABASE_URL")
 
@@ -27,6 +25,7 @@ async def initialize_db():
         logger.error("Connection not made!")
 
 #Fetches all companies from the database
+#CHANGED
 async def fetch_companies() -> List[Dict[str, Any]]:
     """
     Fetches all companies and their associated people in a single query (Eager Loading)
@@ -154,7 +153,7 @@ async def fetch_people()->List[Dict[str, Any]]:
 
 async def fetch_uncontacted_people(pool: asyncpg.Pool)->List:
     logger.info("Fetching uncontacted people from DB...")
-    query = "SELECT organization_id, email FROM people WHERE contacted_status = 'uncontacted' AND email IS NOT NULL AND email <> ''"
+    query = "SELECT first_name, organization_id, email FROM people WHERE contacted_status = 'uncontacted' AND email IS NOT NULL AND email <> ''"
 
     try: 
         async with pool.acquire() as conn:
@@ -196,7 +195,7 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
                 #Transform record to dict
                 result_dict = dict(result)
                 #Copy result dict to avoid manipulating the original one
-                result_copy = result_dict.copy()
+                result_copy = copy.deepcopy(result_dict)
                 #If result is not in final_results, create a people key, remove the shown keys
                 #then add it to final_results with its key as the apollo_id
                 result_id = result.get('apollo_id')
@@ -209,7 +208,7 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
                     final_results[result_id] = result_copy
 
                 stored_result = final_results.get(result_id)
-                if result_copy.get('full_name'):
+                if result_dict.get('full_name'):
                     person = {
                         'full_name': result_dict.get('full_name'),
                         'title': result_dict.get('title'),
@@ -659,6 +658,7 @@ async def store_icp_score(pool, company_id, age_score, employee_count_score,
     return
 
 #Store icp score in icp_score column in companies table. Changes status to mcp if score >= 70
+#CHANGED
 async def update_company_icp_score(pool, company_id: int, total_score: float):
     logger.info(f"Updating icp_score for company_id {company_id} to {total_score}")
 
@@ -693,6 +693,8 @@ if __name__ == "__main__":
             #["Jane Doe", "Michael Chan"]                       # investor_people
         #]
 
-        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-            await fetch_uncontacted_people(pool)
+        #async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+        x = await fetch_company_details(160)
+        print(x)
+
     asyncio.run(main())

@@ -1,7 +1,4 @@
 import os
-from flask import Flask, jsonify, request, send_file
-from flask_cors import CORS
-from services.sendgrid_webhook import update_contacted_status
 import asyncpg
 import asyncio
 import logging
@@ -58,9 +55,9 @@ async def main():
             pool
         )
 
-        await outreach_main(
-            pool
-        )
+        #await outreach_main(
+            #pool
+        #)
 
 if __name__ == "__main__":
     asyncio.run(main())
