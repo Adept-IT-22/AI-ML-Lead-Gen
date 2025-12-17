@@ -18,6 +18,7 @@ from xml.etree import ElementTree as ET
 from html.parser import HTMLParser
 from ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction
 from utils.data_structures.hiring_data_structure import fetched_hiring_data as hiring_fetched_data
+from utils.software_dev_keywords import software_dev_keywords
 
 logger = logging.getLogger(__name__)
 
@@ -340,6 +341,7 @@ async def fetch_job_page(url: str, semaphore: asyncio.Semaphore) -> Optional[Dic
 
 
 async def fetch_job_pages(urls: List[str], semaphore: asyncio.Semaphore) -> List[Dict[str, Any]]:
+    
     """Fetch multiple job pages concurrently."""
     tasks = [fetch_job_page(url, semaphore) for url in urls]
     results = await asyncio.gather(*tasks)
@@ -410,13 +412,25 @@ async def main() -> Optional[Dict[str, Any]]:
         if not job_urls:
             logger.warning("No recent job URLs found from Crunchboard sitemap")
             return None
+
+        logger.info("Job urls are: %s", job_urls)
         
         # Warm up session to obtain cookies before hitting individual job pages
         await fetch_with_scraper(f"{BASE_URL}/", semaphore=semaphore)
 
+        relevant_urls = []
+
+        for url in job_urls:
+            if not any(re.search(rf'\b{re.escape(keyword)}\b', url.lower()) for keyword in software_dev_keywords):
+                logger.warning("Skipping %s. Not s/ware related", url)
+                continue
+            else:
+                relevant_urls.append(url)
+
+        logger.info("Relevant urls are: %s", relevant_urls)
         # Fetch job pages
-        logger.info(f"Fetching {len(job_urls)} job pages...")
-        jobs = await fetch_job_pages(job_urls[:50], semaphore)  # Limit to 50 for testing
+        logger.info(f"Fetching {len(relevant_urls)} job pages...")
+        jobs = await fetch_job_pages(relevant_urls[:50], semaphore)  # Limit to 50 for testing
         
         if not jobs:
             logger.warning("No job postings extracted from Crunchboard")
@@ -461,6 +475,7 @@ async def main() -> Optional[Dict[str, Any]]:
         logger.info(
             f"Crunchboard hiring ingestion completed in {elapsed:.2f} seconds with {job_count} extracted articles."
         )
+        logger.info(llm_results)
         return llm_results
     
     except Exception as e:

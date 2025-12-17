@@ -8,6 +8,7 @@ import aiofiles
 from typing import List, Dict, Union, Any
 from ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction
 from utils.data_structures.hiring_data_structure import fetched_hiring_data as hiring_fetched_data
+from utils.software_dev_keywords import software_dev_keywords
 
 logger = logging.getLogger()
 
@@ -72,10 +73,8 @@ def dict_of_lists(all_jobs: List[Dict])->Dict[str, List[Any]]:
         "url": []
     }
 
-    ai_keywords = ["ai", "artificial intelligence", "machine learning", "ml", "deep learning", "nlp", "computer vision"]
-
     for job in all_jobs:
-        if any(keyword in job.get("url", "").lower() or keyword in job.get("title", "").lower() for keyword in ai_keywords):
+        if any(keyword in job.get("url", "").lower() or keyword in job.get("title", "").lower() for keyword in software_dev_keywords):
             for key in all_jobs_well_arranged:
                 if key != "type":
                     value = job.get(key)
