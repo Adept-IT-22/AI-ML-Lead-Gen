@@ -94,7 +94,6 @@ async def test_fetch_betakit_data_happy_path(monkeypatch):
     assert "Paragraph from https://betakit.com/artificial-intelligence-firm-lands-capital/" in results["paragraphs"]
     assert "Paragraph from https://betakit.com/innovation-funding-ai-tech/" in results["paragraphs"]
 
-
 @pytest.mark.asyncio
 async def test_extract_paragraphs_from_betakit_html(monkeypatch):
     """
@@ -131,7 +130,6 @@ async def test_extract_paragraphs_from_betakit_html(monkeypatch):
     assert paragraphs[0] == "This is the first paragraph."
     assert paragraphs[1] == "This is the second, with bold text."
     assert paragraphs[2] == "This is a nested paragraph."
-
 
 @pytest.mark.asyncio
 async def test_main_integration_with_ai_extraction(monkeypatch):

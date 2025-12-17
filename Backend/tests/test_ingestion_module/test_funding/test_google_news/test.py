@@ -9,9 +9,7 @@ sys.modules['ingestion_module.ai_extraction.extract_funding_content'].finalize_a
 
 from ingestion_module.funding.google_news import fetch as fetch_mod
 
-import pytest_asyncio
 import pytest
-import asyncio
 from unittest.mock import patch, MagicMock, AsyncMock
 
 # Test that fetch_rss_feed extracts articles from RSS

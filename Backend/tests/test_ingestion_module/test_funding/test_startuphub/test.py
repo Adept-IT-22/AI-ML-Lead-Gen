@@ -1,13 +1,10 @@
 import pytest
-import pytest_asyncio
-import asyncio
 from unittest.mock import patch
 
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../")))
 from ingestion_module.funding.startup_hub import fetch
-
 
 @pytest.mark.asyncio
 async def test_fetch_startuphub_data_filters_ai_funding_links(monkeypatch):
@@ -52,7 +49,6 @@ async def test_fetch_startuphub_data_filters_ai_funding_links(monkeypatch):
     assert "https://www.startuphub.ai/2025/11/other-news" not in results["urls"]
     assert all("Paragraph for" in para for para in results["paragraphs"])
 
-
 @pytest.mark.asyncio
 async def test_extract_paragraphs_returns_paragraphs(monkeypatch):
     html_content = """
@@ -79,7 +75,6 @@ async def test_extract_paragraphs_returns_paragraphs(monkeypatch):
     url, paragraphs = await fetch.extract_paragraphs(client, "http://test.com")
     assert url == "http://test.com"
     assert paragraphs == ["First paragraph.", "Second paragraph."]
-
 
 @pytest.mark.asyncio
 @pytest.mark.asyncio
