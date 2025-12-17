@@ -6,6 +6,7 @@ import os
 from typing import List, Dict, Any, Optional
 from utils.data_structures.hiring_data_structure import fetched_hiring_data
 from ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction
+from utils.locations import locations
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +16,10 @@ API_URL = "https://active-jobs-db.p.rapidapi.com/active-ats-7d"
 
 # Methodology: Search for remote Software jobs in target regions
 SEARCH_QUERY = "Software"
-TARGET_REGIONS = ["Germany", "Poland", "Switzerland", "Ireland", "Netherlands", "Kenya"]
+TARGET_REGIONS = []
+for keys, values in locations.items():
+    for value in values:
+        TARGET_REGIONS.append(value)
 LOCATION_FILTER = " OR ".join([f'"{region}"' for region in TARGET_REGIONS])
 
 async def fetch_jobs_from_api(client: httpx.AsyncClient, query: str, location_filter: str) -> List[Dict]:
@@ -141,3 +145,6 @@ async def main() -> Optional[Dict[str, Any]]:
     logger.info(f"Active Jobs DB ingestion took {duration:.2f} seconds")
     
     return llm_results
+
+if __name__ == "__main__":
+    asyncio.run(main())
