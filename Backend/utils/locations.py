@@ -16,4 +16,9 @@ locations ={
     "montenegro", "north macedonia", "norway", "serbia",
     "switzerland", "ukraine", "united kingdom", "vatican city"},
 
+    #African Countries
+    "african countries": {
+        "kenya", "south africa"
+    }
+
 }
