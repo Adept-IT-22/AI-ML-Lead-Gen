@@ -66,7 +66,7 @@ async def call_gemini_api(prompt: str) -> types.GenerateContentResponse:
         return response
     except Exception as e:
         logger.error(f"Gemini API call for email generation failed: {str(e)}")
-        return 
+        raise 
 
 
 if __name__ == "__main__":
@@ -78,6 +78,12 @@ if __name__ == "__main__":
         ttype = "funding"
         fround = "seed"
         prompt = get_email_generation_prompt(desc, fname, cname, ttype, fround)
-        result = await call_gemini_api(prompt)
-        print(result.text)
+        try:
+            response = await call_gemini_api(prompt)
+            print(response)
+            x = response.candidates[0].content.parts[0].text
+            print(x["subject"])
+        except Exception as e:
+            print("Error")
+            
     asyncio.run(main())

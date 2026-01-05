@@ -58,9 +58,10 @@ async def send_email(
     return response
 
 if __name__ == "__main__":
+    from outreach_module.ai_email_generation import call_gemini_api
     async def main():
         response = await send_email(
-            email_to = 'william.gateri@adept-techno.com',
+            email_to = 'm10mathenge@gmail.com',
             subject= "Greetings",
             content= "Hello"
         )
@@ -69,43 +70,3 @@ if __name__ == "__main__":
         print(response.headers)
     
     asyncio.run(main())
-
-
-#if data_source == 'funding':
-    #if latest_funding_round.lower() == 'seed':
-        #funding_data = email_prompts.get('funding').get('seed')
-        #subject = funding_data.get('subject')
-        #content = funding_data.get('content').format(
-            #first_name = first_name.title(),
-        #)
-    #elif latest_funding_round.lower() == 'series a' or latest_funding_round.lower() == 'series b':
-        #funding_data = email_prompts.get('funding').get('series')
-        #subject = funding_data.get('subject')
-        #content = funding_data.get('content').format(
-            #first_name = first_name.title(),
-        #)
-    #else:
-        #funding_data = email_prompts.get('funding').get("generic")
-        #subject = funding_data.get('subject')
-        #content = funding_data.get('content').format(
-            #first_name = first_name.title(),
-            #company_name = company_name.title(),
-            #funding_round = extra_info.title()
-        #)
-
-#elif data_source == 'hiring':
-    #hiring_data = email_prompts.get('hiring')
-    #subject = hiring_data.get('subject')
-    #content = hiring_data.get('content').format(
-        #first_name = first_name.title(),
-        #company_name = company_name.title(),
-        #hiring_area = extra_info.title()
-    #)
-#elif data_source == 'events':
-    #event_data = email_prompts.get('events')
-    #subject = event_data.get('subject')
-    #content = event_data.get('content').format(
-        #first_name = first_name.title(),
-        #company_name = company_name.title(),
-        #event_name = extra_info.title()
-    #)
