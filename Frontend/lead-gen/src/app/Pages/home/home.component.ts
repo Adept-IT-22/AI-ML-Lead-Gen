@@ -155,7 +155,8 @@ export class HomeComponent implements OnInit {
     { optionType: 'BY DATE', options: ['All', 'Today', 'This Week', 'This Month'], key: 'updated_at' },
     { optionType: 'BY SCORE', options: ['All', '90+', '80-89', '70-79', '60-69', '<60'], key: 'icp_score' },
     { optionType: 'BY CONTACTED STATUS', options: ['All', 'Uncontacted', 'Contacted', 'Pending', 'Requested', 'Engaged', 'Failed', 'Opted Out'], key: 'contacted_status' },
-    { optionType: 'BY SOURCE', options: ['All', 'Funding', 'Hiring', 'Events'], key: 'company_data_source' }
+    { optionType: 'BY SOURCE', options: ['All', 'Funding', 'Hiring', 'Events'], key: 'company_data_source' },
+    { optionType: 'BY EMAIL FOUND', options: ['All', 'Email Found', 'No Email'], key: 'email_found' }
   ];
 
   filtersState: { [key: string]: string } = {};
@@ -204,6 +205,17 @@ export class HomeComponent implements OnInit {
             return leadDate >= startOfMonth && leadDate <= endOfMonth;
           }
         }
+        
+        if (key === 'email_found'){
+          const people = lead.people ?? [];
+
+          const hasEmail = people.some(p => 
+            typeof p.email === 'string' && p.email.trim().length > 0
+          )
+
+          if (value == 'Email Found') return hasEmail;
+          if (value == 'No Email') return !hasEmail;
+        }
 
         return true;
       })
@@ -236,7 +248,5 @@ export class HomeComponent implements OnInit {
     '[2025-07-21] New Lead 02 from Google News',
     '[2025-07-21] Meeting scheduled for Lead 03'
   ];
-
-
 
 }

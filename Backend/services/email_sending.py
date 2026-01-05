@@ -60,6 +60,16 @@ async def send_email(
 if __name__ == "__main__":
     from outreach_module.ai_email_generation import call_gemini_api
     async def main():
+        desc = "Darwin AI is a technology company that specializes in artificial intelligence solutions to enhance business processes, particularly in sales and marketing. The company focuses on data-driven creative testing and analytics, offering software that analyzes advertising creatives to identify effective design elements and messaging. This helps clients tailor their ads to specific audiences and continuously improve their creative strategies.\n\nIn 2023, Darwin AI introduced a dedicated AI platform for consultative sales in high-value B2C sectors such as real estate, automotive, education, and online courses. This platform efficiently filters leads and identifies customer needs, ensuring that only qualified prospects are passed to sales agents, which boosts sales efficiency and reduces costs for small and medium-sized businesses.\n\nDarwin AI's offerings include creative analytics and testing software, consultative sales AI solutions, and personalized tools for SMBs, all aimed at optimizing marketing effectiveness and sales processes. The company serves a range of clients looking to enhance their sales strategies through AI-driven insights."
+        fname = "mark"
+        cname = "adept"
+        ttype = "funding"
+        fround = "seed"
+        prompt = get_email_generation_prompt(desc, fname, cname, ttype, fround)
+        result = await call_gemini_api(prompt)
+
+        
+
         response = await send_email(
             email_to = 'm10mathenge@gmail.com',
             subject= "Greetings",
