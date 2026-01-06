@@ -11,6 +11,7 @@ people_search.txt
 people_enrichment.txt
 bulk_org_enrichment.txt
 single_org_enrichment.txt
+unfound_people.txt
 
 #db
 mock_lead_gen_db.sql

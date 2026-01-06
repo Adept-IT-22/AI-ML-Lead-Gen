@@ -25,7 +25,7 @@ async def fetch_from_normalization_to_enrichment_queue(normalization_to_enrichme
 
     # =======Organization Search to Get Org Website=========
 
-async def organization_search(data_to_enrich_list: List, client: httpx.AsyncClient)->List[Dict[str, str | Dict | List]]:
+async def organization_search(data_to_enrich_list: List[Dict] | List[str], client: httpx.AsyncClient)->List[Dict[str, str | Dict | List]]:
     if not data_to_enrich_list:
         logger.error("Org search failed. Normalization to enrichment queue was empty")
         return []
@@ -34,30 +34,44 @@ async def organization_search(data_to_enrich_list: List, client: httpx.AsyncClie
     set_of_orgs_to_search = set()
     searched_orgs = []
 
-    for normalized_company in data_to_enrich_list:
-        company_names = normalized_company.get("company_name", [])
-
-    # Check if company exists in DB first
-        for each_company in company_names:
-            lowercase_company = each_company.lower()
-            company_is_in_db = await is_company_in_db(company_name=lowercase_company)
-            if not company_is_in_db:
-                set_of_orgs_to_search.add(each_company)
-
     logger.info("Organizational search started...")
 
-    orgs_to_search = list(set_of_orgs_to_search)
-    searched_tasks = [apollo_org_search(client=client, company_name=name) for name in orgs_to_search]
-    search_results = await asyncio.gather(*searched_tasks, return_exceptions=True)
+    #If we're dealing with company names ...
+    if isinstance(data_to_enrich_list[0], dict):
+        for normalized_company in data_to_enrich_list:
+            company_names = normalized_company.get("company_name", [])
+
+        # Check if company exists in DB first
+            for each_company in company_names:
+                lowercase_company = each_company.lower()
+                company_is_in_db = await is_company_in_db(company_name=lowercase_company)
+                if not company_is_in_db:
+                    set_of_orgs_to_search.add(each_company)
+
+        orgs_to_search = list(set_of_orgs_to_search)
+        searched_tasks = [apollo_org_search(client=client, company_name=name) for name in orgs_to_search]
+        search_results = await asyncio.gather(*searched_tasks, return_exceptions=True)
+
+        for result in search_results:
+            if isinstance(result, Exception):
+                logger.error(f"Search task failed {result}")
+            else:
+                searched_orgs.append(result)
+
+        logger.info(f"Completed organization seach for {len(searched_orgs)} companies")
+
+    # If we're dealing with org ids
+    else:
+        searched_tasks = [apollo_org_search(client=client, organization_ids=[organization_id]) for organization_id in data_to_enrich_list]
+        search_results = await asyncio.gather(*searched_tasks, return_exceptions=True)
+        for result in search_results:
+            if isinstance(result, Exception):
+                logger.error(f"Search task failed {result}")
+            else:
+                searched_orgs.append(result)
+
+        logger.info(f"Completed organization seach for {len(data_to_enrich_list)} companies")
     
-    for result in search_results:
-        if isinstance(result, Exception):
-            logger.error(f"Search task failed {result}")
-        else:
-            searched_orgs.append(result)
-
-    logger.info(f"Completed organization seach for {len(searched_orgs)} companies")
-
     async with aiofiles.open(f"org_search.txt", "a") as org_search_file:
         await org_search_file.write(json.dumps(searched_orgs, indent=2))
 
@@ -17783,7 +17797,11 @@ if __name__ == "__main__":
             ]
             ]
         async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
-            await search_for_people(bulk_enriched_orgs, client)
+            #await search_for_people(bulk_enriched_orgs, client)
+
+            org_ids = ["632d58f35af1c200a4421ff1", "6605a2c9ec3b5304394889b4","6610cf7c242c9d01c711fa87", "54a1201f69702d97c1554802"]
+            results = await organization_search(data_to_enrich_list=org_ids, client=client)
+            logger.info("Results:\n%r", results)
 
 
     asyncio.run(demo())
