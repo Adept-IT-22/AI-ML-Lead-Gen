@@ -78,7 +78,7 @@ async def main() -> Optional[Dict[str, Any]]:
     relevant_jobs = []
     for job in raw_jobs:
         # Check title and description for keywords
-        text_to_check = (job.get("title", "") + " " + job.get("url", "")).lower()
+        text_to_check = (job.get("title", "") + " " + job.get("url", "")).lower().replace("-", " ")
         if any(re.search(rf'\b{re.escape(keyword)}\b', text_to_check) for keyword in software_dev_keywords):
              relevant_jobs.append(job)
             
