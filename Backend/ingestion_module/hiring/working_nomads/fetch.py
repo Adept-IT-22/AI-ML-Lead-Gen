@@ -119,11 +119,11 @@ async def main():
         if not all_urls:
             return copy.deepcopy(fetched_hiring_data)
             
-        # Filter for software development jobs based on keywords in URL slug
+        # Filter for software development jobs based on keywords in URL
         filtered_urls = []
         for url in all_urls:
-            slug = url.split("/")[-1].lower()
-            if any(re.search(rf'\b{re.escape(kw)}\b', slug) for kw in software_dev_keywords):
+            url_lower = url.lower().replace("-", " ")
+            if any(re.search(rf'\b{re.escape(kw)}\b', url_lower) for kw in software_dev_keywords):
                 filtered_urls.append(url)
         
         logger.info(f"Found {len(filtered_urls)} potentially relevant URLs.")
