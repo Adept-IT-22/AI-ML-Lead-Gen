@@ -5,9 +5,8 @@ import asyncio
 from tenacity import retry, wait_exponential, stop_after_attempt, RetryCallState
 from dotenv import load_dotenv
 from typing import List, Any, Dict
-import google.generativeai as genai
-from google.generativeai import types
-from google.api_core.exceptions import ResourceExhausted
+from google import genai
+from google.genai import types
 from utils.prompts.funding_prompt import get_funding_extraction_prompt
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -16,14 +15,13 @@ logger = logging.getLogger()
 #Import env variables
 load_dotenv(verbose=True, override=True)
 
-#Gemini API Key
+#Gemini Client
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 if not GEMINI_API_KEY:
     raise ValueError("Gemini API Key not found in env variables")
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel(
-    model_name="gemini-2.5-flash",
-)
+
+client = genai.Client(api_key=GEMINI_API_KEY)
+MODEL_NAME = "gemini-2.0-flash" 
 
 BATCH_SIZE = 4 #How many jobs we want to feed the llm at a time
 
@@ -70,11 +68,11 @@ def split_into_batches(links_and_paragraphs: Dict[str, List[str]], BATCH_SIZE)->
     logger.info("Splitting funding data into batches done")
     return result
     
-#===============================HANDLE RETRIES====================================
-#Check if exception is a ResourceExhaustedException
+#Check if exception is related to rate limits/quota
 def retry_if_resource_exhausted(exception: BaseException) -> bool:
-    """Returns True if the exception is a ResourceExhausted exception."""
-    return isinstance(exception, ResourceExhausted)
+    """Returns True if the exception is a quota/resource exception."""
+    err_str = str(exception).lower()
+    return "429" in err_str or "quota" in err_str or "limit" in err_str
 
 def log_before_retry(retry_state: RetryCallState):
     logger.info(f"Retrying Gemini API call... attempt #{retry_state.attempt_number}")
@@ -96,24 +94,21 @@ def log_failure():
     retry_error_callback=log_failure
 )
 #Internal function to call Gemini API with retry logic.
-async def _call_gemini_api_with_retry(prompt: str) -> types.GenerateContentResponse:
+async def _call_gemini_api_with_retry(prompt: str):
     logger.info("Attempting Gemini API call for funding...")
-    try:
-        response = await asyncio.wait_for(
-            model.generate_content_async(
-                contents=prompt,
-                generation_config=types.GenerationConfig(
-                    response_mime_type="application/json",
-                    temperature=0,
-                )
-            ),
-        timeout=30.0
-        )
-        logger.info("Gemini API call for funding successful.")
-        return response
-    except Exception as e:
-        logger.error(f"Gemini API call for funding failed: {str(e)}")
-        return 
+    response = await asyncio.wait_for(
+        client.aio.models.generate_content(
+            model=MODEL_NAME,
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json",
+                temperature=0,
+            )
+        ),
+    timeout=30.0
+    )
+    logger.info("Gemini API call for funding successful.")
+    return response
 
 #=======================PROCESS EACH BATCH=========================
 async def process_articles_batch(batch: Dict[str, List[Any]])->Dict[str, List[Any]]:
