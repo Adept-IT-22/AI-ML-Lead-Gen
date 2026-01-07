@@ -11,9 +11,9 @@ from utils.set_conversion import convert_sets
 
 load_dotenv(verbose=True, override=True)
 
-DB_URL = os.getenv("DEV_DATABASE_URL")
+DB_URL = os.getenv("MOCK_DATABASE_URL")
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 async def initialize_db():
@@ -130,6 +130,26 @@ async def fetch_people_from_company(organization_id: str)->List[Dict[str, str]]:
     await conn.close()
     return [dict(record) for record in people_results]
 
+#CHANGED
+async def store_email(
+        pool: asyncpg.Pool,
+        recipient_id: int,
+        company_id: int,
+        subject: str,
+        body: str,
+):
+    logger.info("Storing email...")
+    try:
+        query = """
+            INSERT INTO mock_emails_sent 
+            (recipient_id, company_id, subject, body)
+            VALUES ($1, $2, $3, $4)
+            """
+        async with pool.acquire(timeout=10.0) as conn:
+            await conn.execute(query, recipient_id, company_id, subject, body)
+        logger.info("Done storing email")
+    except Exception as e:
+        logger.exception("Failed to store email: %r", str(e))
 
 #Fetch people from database
 async def fetch_people()->List[Dict[str, Any]]:
@@ -151,9 +171,10 @@ async def fetch_people()->List[Dict[str, Any]]:
         logger.error(f"An unexpected error occured: {str(e)}")
         return []
 
+#CHANGED
 async def fetch_uncontacted_people(pool: asyncpg.Pool)->List:
     logger.info("Fetching uncontacted people from DB...")
-    query = "SELECT first_name, organization_id, email FROM people WHERE contacted_status = 'uncontacted' AND email IS NOT NULL AND email <> ''"
+    query = "SELECT id, first_name, organization_id, email FROM mock_people WHERE contacted_status = 'uncontacted' AND email IS NOT NULL AND email <> ''"
 
     try: 
         async with pool.acquire() as conn:
@@ -235,9 +256,10 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
         return {}
 
 #Fetch company by apollo id
+#CHANGED
 async def fetch_company_by_apollo_id(apollo_id: str)->Dict:
     logger.info(f"Fetching company with apollo ID {apollo_id}")
-    query = "SELECT * FROM companies WHERE apollo_id = $1 LIMIT 1"
+    query = "SELECT * FROM mock_companies WHERE apollo_id = $1 LIMIT 1"
 
     try:
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
@@ -678,6 +700,18 @@ async def update_company_icp_score(pool, company_id: int, total_score: float):
 
     logger.info("Company icp_score and status updated")
 
+#CHANGED
+async def fetch_people_by_ids(pool, ids: List[int]):
+    if not ids:
+        return []
+
+    logger.info("Fetching people by ids...")
+    query = "SELECT id, first_name, organization_id, email FROM mock_people WHERE id = ANY($1::int[])"
+    async with pool.acquire() as conn:
+        results = await conn.fetch(query, ids)
+
+    return [dict(row) for row in results]
+
 
 if __name__ == "__main__":
     async def main():
@@ -693,8 +727,10 @@ if __name__ == "__main__":
             #["Jane Doe", "Michael Chan"]                       # investor_people
         #]
 
-        #async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-        x = await fetch_company_details(160)
-        print(x)
+        async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
+        #x = await fetch_company_details(160)
+        #x = await fetch_company_by_apollo_id("671cebecf4941a02b6460f53")
+            x = await fetch_people_by_ids(pool, [3, 7, 4, 5])
+            print(x)
 
     asyncio.run(main())

@@ -10,6 +10,8 @@ from services.db_service import (
     fetch_uncontacted_people,
     fetch_company_by_apollo_id,
     get_hiring_area,
+    store_email,
+    fetch_people_by_ids
 )
 from outreach_module.ai_email_generation import call_gemini_api
 from utils.prompts.email_generation_prompt import get_email_generation_prompt
@@ -47,53 +49,67 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
 
     if not persons_company:
         logger.warning(
-            f"No company found for {person.get('first_name', 'Unknown')} "
+            f"No company found for {person.get('first_name', 'Unknown')}, id = {person.get("id")}"
             f"(apollo_id={persons_company_apollo_id})"
         )
         return False
-    # ------------------------------------------------------------------
-    # Your original logic (left commented intentionally)
-    # ------------------------------------------------------------------
 
-    # company_description = persons_company.get("short_description")
-    # data_source = persons_company.get("company_data_source", "")
-    # latest_funding_round = persons_company.get("latest_funding_round", "latest")
-    # first_name = person.get("first_name")
-    # company_name = persons_company.get("name")
+    company_description = persons_company.get("short_description")
+    data_source = persons_company.get("company_data_source", "")
+    latest_funding_round = persons_company.get("latest_funding_round", "latest")
+    first_name = person.get("first_name")
+    company_name = persons_company.get("name")
 
-    # if data_source == "funding":
-    #     prompt = get_email_generation_prompt(
-    #         company_description=company_description,
-    #         first_name=first_name,
-    #         company_name=company_name,
-    #         trigger_type=data_source,
-    #         funding_round=latest_funding_round,
-    #     )
-    #
-    # elif data_source == "hiring":
-    #     hiring_area = await get_hiring_area(company_name, pool) or "various areas"
-    #     prompt = get_email_generation_prompt(
-    #         company_description=company_description,
-    #         first_name=first_name,
-    #         company_name=company_name,
-    #         trigger_type=data_source,
-    #         hiring_area=hiring_area,
-    #     )
-    # else:
-    #     logger.warning(f"Unknown data source {data_source} for {company_name}")
-    #     return True
-    #
-    # ai_response = await call_gemini_api(prompt)
-    # email_json = json.loads(ai_response.text)
-    #
+    if data_source == "funding":
+        prompt = get_email_generation_prompt(
+            company_description=company_description,
+            first_name=first_name,
+            company_name=company_name,
+            trigger_type=data_source,
+            funding_round=latest_funding_round,
+        )
+    elif data_source == "hiring":
+        hiring_area = await get_hiring_area(company_name, pool) or "various areas"
+        prompt = get_email_generation_prompt(
+            company_description=company_description,
+            first_name=first_name,
+            company_name=company_name,
+            trigger_type=data_source,
+            hiring_area=hiring_area,
+        )
+    else:
+        logger.warning(f"Unknown data source {data_source} for {company_name}")
+        return True
+
+    ai_response = await call_gemini_api(prompt)
+
+    try:
+        email_json = json.loads(ai_response.text)
+    except json.JSONDecodeError:
+        logger.error("Invalid json from llm for person_id = %r", person.get("id"))
+        return True
+        
+    email_subject=email_json["subject"]
+    email_content=email_json["content"]
+
+    # Email Sending
     # response = await send_email(
     #     email_to=persons_email,
-    #     subject=email_json["subject"],
-    #     content=email_json["content"],
+    #     subject=email_subject,
+    #     content=email_content,
     # )
 
-    return True
+    ## Store email
+    #if response.status = ???
+    await store_email(
+        pool,
+        recipient_id=person.get("id"),
+        company_id=persons_company.get("id"),
+        subject=email_subject,
+        body=email_content
+    )
 
+    return True
 
 # ---------------------------------------------------------
 # Processing phase (batch)
@@ -109,15 +125,20 @@ async def process_people(
     Returns:
         List of organization_ids that were missing
     """
-    unfound_people: List[str] = []
+    unfound_people: List[dict[str, str | int]] = []
 
     for person in people:
         try:
             success = await process_person(person, pool)
             if not success:
                 org_id = person.get("organization_id")
+
                 if org_id:
-                    unfound_people.append(org_id)
+                    unfound_person_details = {}
+                    unfound_person_details["id"] = person.get("id", '')
+                    unfound_person_details["organization_id"] = person.get("organization_id", '')
+                    unfound_people.append(unfound_person_details)
+
         except Exception as e:
             logger.exception(
                 f"Failed processing {person.get('first_name', 'Unknown')}: {e}"
@@ -130,7 +151,7 @@ async def process_people(
 # ---------------------------------------------------------
 
 async def resolve_missing_companies(
-    unfound_people: List[str],
+    unfound_people: List[Dict[str, str | int]],
     pool,
 ):
     if not unfound_people:
@@ -139,10 +160,16 @@ async def resolve_missing_companies(
     logger.info(f"Resolving {len(unfound_people)} missing companies...")
 
     async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
+
+        org_ids = []
+        for unfound_person in unfound_people:
+            org_id = unfound_person.get("organization_id")
+            org_ids.append(org_id)
+
         await find_missing_companies(
             pool,
             client,
-            organization_ids=unfound_people,
+            organization_ids=org_ids,
         )
 
 
@@ -151,7 +178,7 @@ async def resolve_missing_companies(
 # ---------------------------------------------------------
 
 async def retry_unfound_people(
-    unfound_people: List[str],
+    unfound_people:List[Dict[str, str | int]],
     pool,
 ):
     if not unfound_people:
@@ -159,12 +186,14 @@ async def retry_unfound_people(
 
     logger.info("Retrying people after company resolution...")
 
-    retry_people = [
-        {"organization_id": org_id}
-        for org_id in unfound_people
-    ]
+    ids = []
+    for person in unfound_people:
+        persons_id = person.get('id')
+        ids.append(persons_id)
+        
+    people_to_retry = await fetch_people_by_ids(pool, ids)
 
-    await process_people(retry_people, pool)
+    await process_people(people_to_retry, pool)
 
 
 # ---------------------------------------------------------
