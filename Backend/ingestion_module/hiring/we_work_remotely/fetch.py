@@ -1,7 +1,5 @@
-"""
-We Work Remotely Jobs Fetcher
-Fetches remote job listings from We Work Remotely RSS feed.
-"""
+import sys
+import os
 import re
 import logging
 import httpx
@@ -10,6 +8,12 @@ import copy
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 import xml.etree.ElementTree as ET
+
+# Add the Backend directory to sys.path to allow imports like 'utils' and 'ingestion_module'
+backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
+if backend_dir not in sys.path:
+    sys.path.append(backend_dir)
+
 from ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction
 from utils.data_structures.hiring_data_structure import fetched_hiring_data
 from utils.software_dev_keywords import software_dev_keywords
