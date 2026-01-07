@@ -12,23 +12,14 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Add the project root to sys.path to allow imports from Backend
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../")))
+# Add the Backend directory to sys.path to allow imports like 'utils' and 'ingestion_module'
+backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
+if backend_dir not in sys.path:
+    sys.path.append(backend_dir)
 
-try:
-    from Backend.ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction
-    from Backend.utils.data_structures.hiring_data_structure import fetched_hiring_data
-    from Backend.utils.software_dev_keywords import software_dev_keywords
-except ImportError:
-    logger.error("Failed to import Backend modules. Ensure sys.path is correct.")
-    # For local execution if main sys.path fails
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.abspath(os.path.join(current_dir, "../../../"))
-    if project_root not in sys.path:
-        sys.path.append(project_root)
-    from Backend.ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction
-    from Backend.utils.data_structures.hiring_data_structure import fetched_hiring_data
-    from Backend.utils.software_dev_keywords import software_dev_keywords
+from ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction
+from utils.data_structures.hiring_data_structure import fetched_hiring_data
+from utils.software_dev_keywords import software_dev_keywords
 
 SITEMAP_URL = "https://www.workingnomads.com/sitemap.xml"
 
