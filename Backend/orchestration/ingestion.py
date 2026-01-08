@@ -27,6 +27,8 @@ from ingestion_module.funding.silicon_republic.fetch import main as silicon_repu
 from ingestion_module.funding.american_bazaar_online.fetch import main as american_bazaar_online_main
 from ingestion_module.funding.startup_daily_net.fetch import main as startup_daily_net_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
+from ingestion_module.hiring.arc_dev.fetch import main as arc_dev_main
+from ingestion_module.hiring.arbeitnow.fetch import main as arbeitnow_main
 from ingestion_module.hiring.crunchboard.fetch import main as crunchboard_main
 from ingestion_module.hiring.remoteok.fetch import main as remoteok_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
@@ -64,7 +66,9 @@ async def run_ingestion_modules()->Dict:
         ("inc42", inc42_main()),
         ("silicon_republic", silicon_republic_main()),
         ("smart_company", smart_company_main()),
-        ("active_jobs_db", active_jobs_db_main())
+        ("arc_dev", arc_dev_main()),
+        ("arbeitnow", arbeitnow_main()),
+        ("active_jobs_db", active_jobs_db_main()),
         ("american_bazaar_online", american_bazaar_online_main()),
         ("startup_daily_net", startup_daily_net_main())
     ]
