@@ -113,7 +113,7 @@ async def main() -> Optional[Dict[str, Any]]:
         # Take latest 10
         targets = relevant_urls[:10]
 
-        #Add code to check if url is already in normalized_mmaster
+        # CHECK IF TARGETS IN NORMALIZED_MASTER!!!
         
         processed_jobs = []
         for url in targets:
