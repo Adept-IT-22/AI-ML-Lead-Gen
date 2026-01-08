@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 # Store company data
+#CHANGED
 async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searched_orgs: List, bulk_enriched_orgs: List, single_enriched_orgs: List):
     logger.info("Storing company data...")
     company_data_to_store = []
