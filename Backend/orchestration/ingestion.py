@@ -31,6 +31,7 @@ from ingestion_module.hiring.crunchboard.fetch import main as crunchboard_main
 from ingestion_module.hiring.remoteok.fetch import main as remoteok_main
 from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 from ingestion_module.hiring.active_jobs_db.fetch import main as active_jobs_db_main
+from ingestion_module.hiring.remotive.fetch import main as remotive_main
 from ingestion_module.hiring.we_work_remotely.fetch import main as we_work_remotely_main
 
 logger = logging.getLogger(__name__)
@@ -65,6 +66,7 @@ async def run_ingestion_modules()->Dict:
         ("silicon_republic", silicon_republic_main()),
         ("smart_company", smart_company_main()),
         ("active_jobs_db", active_jobs_db_main()),
+        ("remotive", remotive_main()),
         ("american_bazaar_online", american_bazaar_online_main()),
         ("we_work_remotely", we_work_remotely_main()),
         ("startup_daily_net", startup_daily_net_main())
