@@ -11,7 +11,8 @@ from utils.set_conversion import convert_sets
 
 load_dotenv(verbose=True, override=True)
 
-DB_URL = os.getenv("MOCK_DATABASE_URL")
+#CHANGED
+DB_URL = os.getenv("DEV_DATABASE_URL")
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -712,6 +713,24 @@ async def fetch_people_by_ids(pool, ids: List[int]):
 
     return [dict(row) for row in results]
 
+#CHANGED
+async def fetch_emails_sent(pool, company_id):
+    logger.info("Fetching emails sent...")
+    query = "SELECT * FROM mock_emails_sent WHERE company_id = $1"
+    query = """
+        SELECT
+            e.subject, e.body, e.status, e.sent_at, 
+            p.first_name,
+            p.last_name
+        FROM mock_emails_sent e
+        JOIN mock_people p
+            ON p.id = e.recipient_id
+        WHERE e.company_id = $1; 
+    """
+    async with pool.acquire() as conn:
+        emails = await conn.fetch(query, company_id)
+
+    return [dict(email) for email in emails]
 
 if __name__ == "__main__":
     async def main():
@@ -730,7 +749,7 @@ if __name__ == "__main__":
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
         #x = await fetch_company_details(160)
         #x = await fetch_company_by_apollo_id("671cebecf4941a02b6460f53")
-            x = await fetch_people_by_ids(pool, [3, 7, 4, 5])
+            x = await fetch_emails_sent(pool, 41)
             print(x)
 
     asyncio.run(main())

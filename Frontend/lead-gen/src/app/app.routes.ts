@@ -22,6 +22,11 @@ export const routes: Routes = [
             import('./@shared/Components/company-details/company-details.component').then(m => m.CompanyDetailsComponent),
     },
 
+    {   path: 'emails/:company_id',
+        loadComponent: () =>
+            import('./Pages/emails/emails.component').then(m => m.EmailsComponent)
+    },
+
     {
         path: 'leads',
         component: LeadsPageComponent

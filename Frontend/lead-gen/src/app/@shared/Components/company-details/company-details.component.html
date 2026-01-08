@@ -1,5 +1,17 @@
 <div *ngIf="companyDetails; else noData" class="company-details-component">
-  <h2 style="color: var(--color-yellow)">{{ companyDetails.name }}</h2>
+  <div class="company-header">
+    <h2 style="color: var(--color-yellow); display: flex; gap: 2rem;">
+      {{ companyDetails.name }}
+      <app-button 
+        [buttonText]="'VIEW EMAILS SENT'"
+        [icon]="'visibility'"
+        [iconPosition]="'left'"
+        [routerLink]="['/emails', companyDetails.id]"
+        (click)="getSentEmails(companyDetails.id)">
+      </app-button>
+    </h2>
+  </div>
+
 
   <div class="company-sections-grid">
     <div *ngFor="let section of companySections" class="company-section">

@@ -3,6 +3,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
+from services.db_service import fetch_emails_sent
 from services.email_sending import *
 from services.sendgrid_webhook import *
 from services.export_to_excel import export_to_excel
@@ -27,6 +28,7 @@ root_logger.setLevel(logging.INFO)
 root_logger.addHandler(file_handler)
 
 #The Database in use
+#CHANGED
 DB_URL = os.getenv("DEV_DATABASE_URL")
 
 #Create Flask App
@@ -158,6 +160,11 @@ async def import_leads():
     except Exception as e:
         logger.error(f"Failed to import excdl file: {str(e)}")
         return jsonify({"Error": "Failed to import file", "details": str(e)})
+
+@app.route('/view-sent-emails/<company_id>', methods=["GET"])
+async def get_sent_emails(company_id):
+    async with asyncpg.create_pool(dsn=DB_URL) as pool:
+        return await fetch_emails_sent(pool, int(company_id))
 
 if __name__ == "__main__":
     logger.info("Application running....")
