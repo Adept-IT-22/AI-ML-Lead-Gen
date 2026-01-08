@@ -29,8 +29,10 @@ from ingestion_module.funding.startup_daily_net.fetch import main as startup_dai
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
 from ingestion_module.hiring.crunchboard.fetch import main as crunchboard_main
 from ingestion_module.hiring.remoteok.fetch import main as remoteok_main
-from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 from ingestion_module.hiring.active_jobs_db.fetch import main as active_jobs_db_main
+from ingestion_module.hiring.himalayas.fetch import main as himalayas_main
+from ingestion_module.hiring.python_org.fetch import main as python_org_main
+from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 
 
 logger = logging.getLogger(__name__)
@@ -64,7 +66,9 @@ async def run_ingestion_modules()->Dict:
         ("inc42", inc42_main()),
         ("silicon_republic", silicon_republic_main()),
         ("smart_company", smart_company_main()),
-        ("active_jobs_db", active_jobs_db_main())
+        ("active_jobs_db", active_jobs_db_main()),
+        ("himalayas", himalayas_main()),
+        ("python_org", python_org_main()),
         ("american_bazaar_online", american_bazaar_online_main()),
         ("startup_daily_net", startup_daily_net_main())
     ]
