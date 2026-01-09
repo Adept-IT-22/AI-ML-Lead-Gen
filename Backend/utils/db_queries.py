@@ -1,5 +1,6 @@
+#CHANGED
 company_query = """
-        INSERT INTO companies (apollo_id, name, website_url, linkedin_url,
+        INSERT INTO mock_companies (apollo_id, name, website_url, linkedin_url,
                     phone, founded_year, market_cap, annual_revenue, industries,
                     estimated_num_employees, keywords, organization_headcount_six_month_growth,
                     organization_headcount_twelve_month_growth, city, state, country, short_description,
@@ -45,22 +46,22 @@ normalized_events_query = """
 
 fetch_link_query = """
         SELECT nm.link
-        FROM normalized_master nm
-        JOIN normalized_funding nf ON nf.master_id = nm.id
+        FROM mock_normalized_master nm
+        JOIN mock_normalized_funding nf ON nf.master_id = nm.id
         WHERE LOWER(nf.company_name) = $1
 
         UNION
 
         SELECT nm.link
-        FROM normalized_master nm
-        JOIN normalized_hiring nh ON nh.master_id = nm.id
+        FROM mock_normalized_master nm
+        JOIN mock_normalized_hiring nh ON nh.master_id = nm.id
         WHERE LOWER(nh.company_name) = $1
 
         UNION
 
         SELECT nm.link
-        FROM normalized_master nm
-        JOIN normalized_events ne ON ne.master_id = nm.id
+        FROM mock_normalized_master nm
+        JOIN mock_normalized_events ne ON ne.master_id = nm.id
         WHERE LOWER(ne.company_name) = $1;
 
         """

@@ -1,0 +1,52 @@
+.emails-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.email-box {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  color: #ffffff; /* ensure white text */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.email-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  background:red;
+}
+
+.email-recipient {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.email-date {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.email-subject {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.email-body {
+  color: #ffffff;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+.loading, .error, .no-emails {
+  padding: 1rem;
+  color: #ffffff;
+}
