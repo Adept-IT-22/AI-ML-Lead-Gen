@@ -196,10 +196,9 @@ _Insert change history here_
 This section is a to-do list for me as the programmer.
 
 + See if I can get event attendees on eventbrite
-+ During email sending, if company isn't found enrich it 
 + Fix keyword scoring to only include services we provide
 + Check if funded company is hiring and if hiring company has been funded
-+ Generate emails via llm
 + Implement drip feeding
 + Migrate from sendgrid to apollo
 + Integrate with odoo
++ Upgrade from Gemini free tier

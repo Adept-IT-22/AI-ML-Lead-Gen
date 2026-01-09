@@ -1,7 +1,7 @@
 <div *ngIf="loading" class="loading">Loading…</div>
 <div *ngIf="error" class="error">{{ error }}</div>
 
-<div *ngIf="!loading && emails?.length" class="emails-container">
+<div *ngIf="!loading && emails.length" class="emails-container">
   <div *ngFor="let e of emails" class="email-box">
     <div class="email-recipient">
         <p style="font-weight: bold; color: var(--color-yellow)">Name: </p>
@@ -24,4 +24,4 @@
   </div>
 </div>
 
-<div *ngIf="!loading && !emails?.length" class="no-emails">No sent emails found.</div>
+<div *ngIf="!loading && !emails.length" class="no-emails">No sent emails found.</div>
