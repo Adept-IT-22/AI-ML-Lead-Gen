@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-button',
@@ -19,4 +20,5 @@ export class ButtonComponent {
   @Input() buttonStyleClass: string = '';
   @Input() routerLink?: any[] | string;  // ✅ make routerLink work directly
   @Input() buttonLink: string = ''; // for external links
+  @Output() clicked = new EventEmitter<Event>();
 }

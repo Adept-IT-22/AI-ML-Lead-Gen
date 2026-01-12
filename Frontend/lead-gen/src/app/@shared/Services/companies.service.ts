@@ -4,6 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ICompany } from '../../Libs/interfaces/company.interface';
 import { IPeople } from '../../Libs/interfaces/people.interface';
+import { IEmail } from '../../Libs/interfaces/email.interface';
 
 interface CompanyField {
   label: string;
@@ -20,8 +21,8 @@ export interface CompanySection {
 })
 export class CompaniesService {
   //FOR USE IN DEV
-  private readonly backend_url: string = 'http://192.168.1.54:5000'; //(For the office)
-  //private readonly backend_url: string = 'http://127.0.0.1:5000'; //(For at home)
+  //private readonly backend_url: string = 'http://192.168.1.54:5000'; //(For the office)
+  private readonly backend_url: string = 'http://127.0.0.1:5000'; //(For at home)
 
   //FOR USE IN PROD
   //private readonly backend_url: string = 'api';
@@ -45,6 +46,11 @@ export class CompaniesService {
     return this.http.get(`${this.backend_url}/export`, {
       responseType: 'blob'  // <-- important to handle file download
     });
+  }
+
+  viewSentEmails(company_id: number): Observable<IEmail> {
+    console.log("Still fetching emails...")
+    return this.http.get<IEmail>(`${this.backend_url}/view-sent-emails/${company_id}`);
   }
 
   // ✅ Mapper function to structure company into sections

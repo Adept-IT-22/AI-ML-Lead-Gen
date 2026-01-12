@@ -1,3 +1,4 @@
+<!--
 <div class="button-component">
     <button
         matButton="filled"
@@ -10,4 +11,25 @@
         <mat-icon>{{icon}}</mat-icon>
     }
     {{buttonText}}</button>
+</div>
+-->
+
+<div class="button-component">
+    <button
+        mat-button
+        class="btn"
+        [type]="buttonType"
+        [routerLink]="routerLink"
+        [ngClass]="buttonStyleClass"
+         (click)="clicked.emit($event)"
+    >
+    @if(icon){
+        <mat-icon>{{icon}}</mat-icon>
+    }
+    {{buttonText}}</button>
+    <!--
+        <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
+        {{ buttonText }}
+    </button>
+-->
 </div>

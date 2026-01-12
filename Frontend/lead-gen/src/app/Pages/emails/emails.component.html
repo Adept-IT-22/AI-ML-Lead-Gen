@@ -1,0 +1,27 @@
+<div *ngIf="loading" class="loading">Loading…</div>
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<div *ngIf="!loading && emails.length" class="emails-container">
+  <div *ngFor="let e of emails" class="email-box">
+    <div class="email-recipient">
+        <p style="font-weight: bold; color: var(--color-yellow)">Name: </p>
+        {{(e.first_name + ' ' + e.last_name) }}
+    </div>
+    <div class="email-date">
+        <p style="font-weight: bold; color: var(--color-yellow)">Sent At: </p>
+        {{ e.sent_at || 'N/A'}}
+    </div>
+
+    <div class="email-subject">
+        <p style="font-weight: bold; color: var(--color-yellow)">Subject: </p>
+        {{ e.subject || '(no subject)' }}
+    </div>
+
+    <div class="email-body">
+        <p style="font-weight: bold; color: var(--color-yellow)">Body: </p>
+    {{ $any(e).plainBody || e.body || 'No body available' }}
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!loading && !emails.length" class="no-emails">No sent emails found.</div>

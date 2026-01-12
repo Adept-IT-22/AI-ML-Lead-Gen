@@ -6,11 +6,12 @@ import { MatCardModule } from '@angular/material/card';
 import { ICompany } from '../../../Libs/interfaces/company.interface';
 import { LoaderComponent } from '../loader/loader.component';
 import { NotesComponent } from '../notes/notes.component';
+import { ButtonComponent } from "../button/button.component";
 
 @Component({
   selector: 'app-company-details',
   standalone: true,
-  imports: [CommonModule, MatCardModule, LoaderComponent, NotesComponent],
+  imports: [CommonModule, MatCardModule, LoaderComponent, NotesComponent, ButtonComponent],
   templateUrl: './company-details.component.html',
   styleUrls: ['./company-details.component.scss']
 })
@@ -163,4 +164,10 @@ export class CompanyDetailsComponent implements OnInit {
     if (value == null) return 'N/A';
     return Number(value).toLocaleString();
   }
+
+  getSentEmails(company_id: number){
+    console.log("Fetching emails...")
+    return this.companiesService.viewSentEmails(company_id);
+  }
+
 }

@@ -1,7 +1,6 @@
 .btn {
   cursor: pointer;
   background-color: var(--color-green);
-  color: var(--color-black);
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-header);
   font-size: var(--font-size-base);
@@ -11,6 +10,7 @@
   padding-right: 10px;
   margin: 0;
   width: 100%;
+  color: black;
 
   &:hover{
     background-color: lightgreen;
