@@ -98,7 +98,6 @@ async def main() -> Optional[Dict[str, Any]]:
                 llm_results[key] = extracted_data[key]
 
     logger.info(f"Jobicy ingestion completed. Extracted {len(llm_results['title'])} jobs.")
-    logger.info("RESULTS:\n%r", llm_results)
     return llm_results
 
 if __name__ == "__main__":
