@@ -28,6 +28,8 @@ from ingestion_module.funding.american_bazaar_online.fetch import main as americ
 from ingestion_module.funding.startup_daily_net.fetch import main as startup_daily_net_main
 from ingestion_module.hiring.active_jobs_db.fetch import main as active_jobs_db_main
 from ingestion_module.hiring.jobspresso.fetch import main as jobspresso_main
+from ingestion_module.hiring.arc_dev.fetch import main as arc_dev_main
+from ingestion_module.hiring.arbeitnow.fetch import main as arbeitnow_main
 from ingestion_module.hiring.crunchboard.fetch import main as crunchboard_main
 from ingestion_module.hiring.python_org.fetch import main as python_org_main
 from ingestion_module.hiring.arc_dev.fetch import main as arc_dev_main
@@ -73,7 +75,9 @@ async def run_ingestion_modules()->Dict:
         ("inc42", inc42_main()),
         ("silicon_republic", silicon_republic_main()),
         ("smart_company", smart_company_main()),
-        ("active_jobs_db", active_jobs_db_main()),
+        ("arc_dev", arc_dev_main()),
+        ("arbeitnow", arbeitnow_main()),
+        ("active_jobs_db", active_jobs_db_main()),,
         ("himalayas", himalayas_main()),
         ("python_org", python_org_main()),
         ("working_nomads", working_nomads_main()),
