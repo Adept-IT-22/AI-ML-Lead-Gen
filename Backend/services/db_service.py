@@ -125,7 +125,7 @@ async def fetch_people_from_company(organization_id: str)->List[Dict[str, str]]:
     logger.info(f"Fetching people from org id {organization_id}...")
     conn = await asyncpg.connect(dsn=DB_URL)
     #CHANGED
-    people_query = "SELECT full_name, title, email, linkedin_url FROM people WHERE organization_id = $1"
+    people_query = "SELECT full_name, title, email, linkedin_url FROM mock_people WHERE organization_id = $1"
     people_results = await conn.fetch(people_query, organization_id)
     logger.info(f"Done fetching people from org id {organization_id}")
     await conn.close()
@@ -168,11 +168,12 @@ async def store_email(
         logger.exception("Failed to store email: %r", str(e))
 
 #Fetch people from database
+#CHANGED
 async def fetch_people()->List[Dict[str, Any]]:
     logger.info("Fetching people from DB...")
     try:
         conn = await asyncpg.connect(dsn=DB_URL) 
-        query = "SELECT * FROM people"
+        query = "SELECT * FROM mock_people"
         results = await conn.fetch(query)
         await conn.close()
         json_serializable_results = [dict(record) for record in results]
@@ -343,9 +344,10 @@ async def is_company_in_db(company_name: str)->bool:
     return False
 
 #Check if company exists in db based on ID
+#CHANGED
 async def is_company_id_in_db(company_apollo_id: str)->bool:
     logger.info(f"Checking if {company_apollo_id} is in DB")
-    query = f"SELECT 1 FROM companies WHERE apollo_id = $1 LIMIT 1"
+    query = f"SELECT 1 FROM mock_companies WHERE apollo_id = $1 LIMIT 1"
 
     try:
         #Create a connection pool to avoid creating repeated tcp connections
@@ -368,9 +370,10 @@ async def is_company_id_in_db(company_apollo_id: str)->bool:
     return False
 
 #Check if person exists in db based on apollo id
+#CHANGED
 async def is_person_in_db(apollo_id: str)->bool:
     logger.info(f"Checking if {apollo_id} is in DB")
-    query = f"SELECT 1 FROM people WHERE apollo_id = $1 LIMIT 1"
+    query = f"SELECT 1 FROM mock_people WHERE apollo_id = $1 LIMIT 1"
 
     try:
         #Create a connection pool to avoid creating repeated tcp connections
@@ -457,10 +460,11 @@ async def store_in_normalized_master(normalized_master_data_to_store: List[any],
         return 0
 
 #Check if data already exists in normalization table
+#CHANGED
 async def is_data_in_db(pool: asyncpg.pool, company_or_event_link: str = None)->bool:
 
     logger.info(f"Checking if {company_or_event_link} exists in normalized_master table")
-    query = f"SELECT 1 FROM normalized_master WHERE link = $1 LIMIT 1"
+    query = f"SELECT 1 FROM mock_normalized_master WHERE link = $1 LIMIT 1"
 
     try:
         async with pool.acquire() as conn:
@@ -639,11 +643,12 @@ async def fetch_keywords(pool):
         logger.error(f"Failed to fetch keywords: {str(e)}")
 
 #Select all unscored companies
+#CHANGED
 async def company_is_unscored(pool)->List[Dict[str, int]]:
     logger.info("Fetching all unscored companies...")
     
     #CHANGED
-    query = "SELECT id FROM companies WHERE icp_score IS NULL"
+    query = "SELECT id FROM mock_companies WHERE icp_score IS NULL"
 
     try:
         async with pool.acquire() as conn:
@@ -671,7 +676,7 @@ async def store_icp_score(pool, company_id, age_score, employee_count_score,
     logger.info(f"Storing ICP scores for company_id {company_id}...")
     #CHANGED
     query = """
-    INSERT INTO icp_scores (
+    INSERT INTO mock_icp_scores (
         company_id, age_score, employee_count_score, funding_stage_score, keyword_score,
         contactability_score, geography_score, total_score, category_breakdown, top_matches,
         interpretation
@@ -706,7 +711,7 @@ async def update_company_icp_score(pool, company_id: int, total_score: float):
 
     # Update both icp_score and status (conditionally)
     query = """
-        UPDATE companies
+        UPDATE mock_companies
         SET icp_score = CAST($1 AS numeric(4,1)),
             status = CASE
                         WHEN $1 > 69 THEN 'mql'
@@ -769,7 +774,7 @@ if __name__ == "__main__":
         #x = await fetch_company_details(160)
         #x = await fetch_company_by_apollo_id("671cebecf4941a02b6460f53")
             #x = await fetch_emails_sent(pool, 41)
-            x = await fetch_uncontacted_people(pool)
+            #x = await fetch_uncontacted_people(pool)
             print(x)
 
     asyncio.run(main())

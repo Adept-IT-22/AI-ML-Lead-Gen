@@ -56,7 +56,6 @@ async def run_ingestion_modules()->Dict:
         ("techcrunch", techcrunch_main()),
         ("sifted_eu", sifted_eu_main()),
         ("cbinsights", cbinsights_main()),
-        ("active_jobs_db", active_jobs_db_main()),
         ("jobspresso", jobspresso_main()),
         ("crunchboard", crunchboard_main()),
         ("remoteok", remoteok_main()),

@@ -19,31 +19,36 @@ people_query = """
                 ON CONFLICT (apollo_id) DO NOTHING
             """
 
+#CHANGED
 normalized_master_query = """
-        INSERT INTO normalized_master (type, source, link, title, city, country, tags) 
+        INSERT INTO mock_normalized_master (type, source, link, title, city, country, tags) 
                 VALUES ($1, $2, $3, $4, $5, $6, $7)
                 ON CONFLICT (link) DO NOTHING
                 RETURNING id
                 """
 
+#CHANGED
 normalized_funding_query = """
-        INSERT INTO normalized_funding (master_id, company_name, company_decision_makers,
+        INSERT INTO mock_normalized_funding (master_id, company_name, company_decision_makers,
                 company_decision_makers_position, funding_round, amount_raised,
                 currency, investor_companies, investor_people) VALUES ($1, $2, $3,
                 $4, $5, $6, $7, $8, $9)
                 """
 
+#CHANGED
 normalized_hiring_query = """
-        INSERT INTO normalized_hiring (master_id, company_name, company_decision_makers,
+        INSERT INTO mock_normalized_hiring (master_id, company_name, company_decision_makers,
                 company_decision_makers_position, job_roles, hiring_reasons)
                 VALUES ($1, $2, $3, $4, $5, $6)
                 """ 
 
+#CHANGED
 normalized_events_query = """
-        INSERT INTO normalized_events (master_id, event_id, event_summary, event_is_online,
+        INSERT INTO mock_normalized_events (master_id, event_id, event_summary, event_is_online,
                 event_organizer_id) VALUES ($1, $2, $3, $4, $5)
                 """
 
+#CHANGED
 fetch_link_query = """
         SELECT nm.link
         FROM mock_normalized_master nm
