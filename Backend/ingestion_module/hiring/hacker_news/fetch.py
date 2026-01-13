@@ -4,7 +4,6 @@ import time
 import httpx
 import asyncio
 import logging
-import aiofiles
 from typing import List, Dict, Union, Any
 from ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction
 from utils.data_structures.hiring_data_structure import fetched_hiring_data as hiring_fetched_data
@@ -103,28 +102,43 @@ async def main():
             extracted_data = {}
 
     #put extracted data to llm_results
-    llm_results = None
+    # Final result structure
+    llm_results = copy.deepcopy(hiring_fetched_data)
+    llm_results["source"] = "HackerNews"
+    llm_results["type"] = "hiring"
+
+    # Use the filtered list as the base
+    num_jobs = len(jobs_arranged_and_filtered.get("id", []))
+    
+    if num_jobs == 0:
+        return llm_results
+
+    # Populate basic fields from raw data
+    llm_results["title"] = jobs_arranged_and_filtered.get("title", [])
+    llm_results["link"] = jobs_arranged_and_filtered.get("url", [])
+    llm_results["article_id"] = jobs_arranged_and_filtered.get("id", [])
+    # Convert Unix timestamps to readable date if needed, or keep as is. 
+    # HN returns Unix time. simple cast to string for now or formatted date
+    llm_results["article_date"] = [str(t) for t in jobs_arranged_and_filtered.get("time", [])]
+    
+    # "by" field in HN is the user, treating as decision maker placeholder
+    llm_results["company_decision_makers"] = [[author] for author in jobs_arranged_and_filtered.get("by", [])]
+
+    # Initialize AI fields with empty defaults to ensure alignment
+    for key in ["company_name", "hiring_reasons", "job_roles", "tags", "city", "country"]:
+        if key == "company_name" or key == "city" or key == "country":
+             llm_results[key] = [""] * num_jobs
+        else:
+             llm_results[key] = [[] for _ in range(num_jobs)]
+
+    # Merge AI data if available
     if extracted_data:
-        llm_results = copy.deepcopy(hiring_fetched_data)
-        for key, value in extracted_data.items():
-            if key in llm_results and isinstance(llm_results[key], list):
-                llm_results[key].extend(value)
-            elif key in llm_results:
-                llm_results[key] = value
-
-        #"by" in jobs_arranged_and_filtered = "company_decision_makers" in llm_results
-        llm_results["company_decision_makers"].extend(jobs_arranged_and_filtered["by"])
-        llm_results["source"] = "HackerNews"
-        llm_results["link"] = jobs_arranged_and_filtered.get("url", [])
-
-        for by_value in jobs_arranged_and_filtered["by"]:
-            llm_results["company_decision_makers"].append([by_value])
-
-    else:
-        logger.warning("AI extraction for HackerNews returned no data. No logging will happen")
+        for key, values in extracted_data.items():
+            if key in llm_results and len(values) == num_jobs:
+                 llm_results[key] = values
 
     duration = time.perf_counter() - start_time
-    logger.info(f"This task took {duration:.2f} seconds")
+    logger.info(f"Hacker News ingestion took {duration:.2f} seconds. Extracted {num_jobs} jobs.")
 
     return llm_results
 
