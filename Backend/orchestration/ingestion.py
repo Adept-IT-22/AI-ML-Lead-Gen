@@ -29,6 +29,8 @@ from ingestion_module.funding.startup_daily_net.fetch import main as startup_dai
 from ingestion_module.hiring.active_jobs_db.fetch import main as active_jobs_db_main
 from ingestion_module.hiring.jobspresso.fetch import main as jobspresso_main
 from ingestion_module.hiring.crunchboard.fetch import main as crunchboard_main
+from ingestion_module.hiring.python_org.fetch import main as python_org_main
+from ingestion_module.hiring.arc_dev.fetch import main as arc_dev_main
 from ingestion_module.hiring.remoteok.fetch import main as remoteok_main
 from ingestion_module.hiring.active_jobs_db.fetch import main as active_jobs_db_main
 from ingestion_module.hiring.remotive.fetch import main as remotive_main
@@ -78,7 +80,8 @@ async def run_ingestion_modules()->Dict:
         ("remotive", remotive_main()),
         ("we_work_remotely", we_work_remotely_main()),
         ("startup_daily_net", startup_daily_net_main()),
-        ("nodesk", nodesk_main())
+        ("nodesk", nodesk_main()),
+        ("arc_dev", arc_dev_main())
     ]
 
     #A list of wrap coroutine objects to be run
