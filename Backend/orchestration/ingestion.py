@@ -36,6 +36,7 @@ from ingestion_module.hiring.remotive.fetch import main as remotive_main
 from ingestion_module.hiring.we_work_remotely.fetch import main as we_work_remotely_main
 from ingestion_module.hiring.working_nomads.fetch import main as working_nomads_main
 from ingestion_module.hiring.nodesk.fetch import main as nodesk_main
+from ingestion_module.hiring.himalayas.fetch import main as himalayas_main
 
 
 logger = logging.getLogger(__name__)
@@ -71,6 +72,7 @@ async def run_ingestion_modules()->Dict:
         ("silicon_republic", silicon_republic_main()),
         ("smart_company", smart_company_main()),
         ("active_jobs_db", active_jobs_db_main()),
+        ("himalayas", himalayas_main()),
         ("working_nomads", working_nomads_main()),
         ("remotive", remotive_main()),
         ("we_work_remotely", we_work_remotely_main()),
