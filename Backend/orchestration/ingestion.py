@@ -42,7 +42,7 @@ from ingestion_module.hiring.four_day_week.fetch import main as four_day_week_ma
 from ingestion_module.hiring.djinni.fetch import main as djinni_main
 from ingestion_module.hiring.berlin_startup_jobs.fetch import main as berlin_startup_jobs_main
 from ingestion_module.hiring.hacker_news.fetch import main as hacker_news_main
-
+from ingestion_module.hiring.remote_frontend_jobs.fetch import main as remote_frontend_jobs_main
 
 
 logger = logging.getLogger(__name__)
@@ -91,7 +91,8 @@ async def run_ingestion_modules()->Dict:
         ("four_day_week", four_day_week_main()),
         ("djinni", djinni_main()),
         ("berlin_startup_jobs", berlin_startup_jobs_main()),
-        ("hacker_news", hacker_news_main())
+        ("hacker_news", hacker_news_main()),
+        ("remote_frontend_jobs", remote_frontend_jobs_main())
     ]
 
     #A list of wrap coroutine objects to be run
