@@ -30,13 +30,15 @@ from ingestion_module.hiring.active_jobs_db.fetch import main as active_jobs_db_
 from ingestion_module.hiring.jobspresso.fetch import main as jobspresso_main
 from ingestion_module.hiring.crunchboard.fetch import main as crunchboard_main
 from ingestion_module.hiring.remoteok.fetch import main as remoteok_main
-from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 from ingestion_module.hiring.active_jobs_db.fetch import main as active_jobs_db_main
 from ingestion_module.hiring.remotive.fetch import main as remotive_main
 from ingestion_module.hiring.we_work_remotely.fetch import main as we_work_remotely_main
 from ingestion_module.hiring.working_nomads.fetch import main as working_nomads_main
 from ingestion_module.hiring.nodesk.fetch import main as nodesk_main
 from ingestion_module.hiring.himalayas.fetch import main as himalayas_main
+from ingestion_module.hiring.himalayas.fetch import main as himalayas_main
+from ingestion_module.hiring.python_org.fetch import main as python_org_main
+from ingestion_module.events.eventbrite.fetch import main as eventbrite_main
 
 
 logger = logging.getLogger(__name__)
@@ -72,6 +74,8 @@ async def run_ingestion_modules()->Dict:
         ("silicon_republic", silicon_republic_main()),
         ("smart_company", smart_company_main()),
         ("active_jobs_db", active_jobs_db_main()),
+        ("himalayas", himalayas_main()),
+        ("python_org", python_org_main()),,
         ("himalayas", himalayas_main()),
         ("working_nomads", working_nomads_main()),
         ("remotive", remotive_main()),
