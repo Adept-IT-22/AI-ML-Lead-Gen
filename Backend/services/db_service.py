@@ -25,6 +25,7 @@ async def initialize_db():
         logger.error("Connection not made!")
 
 #Fetches all companies from the database
+#CHANGED
 async def fetch_companies() -> List[Dict[str, Any]]:
     """
     Fetches all companies and their associated people in a single query (Eager Loading)
@@ -485,7 +486,7 @@ async def is_data_in_db(pool: asyncpg.pool, company_or_event_link: str = None)->
 #Change person contacted_status from uncontacted to contacted
 async def change_person_contacted_status(apollo_id: str, pool):
     logger.info(f"Changing {apollo_id}'s contacted status...")
-    query = "UPDATE people SET contacted_status = 'contacted' WHERE apollo_id = $1 RETURNING organization_id"
+    query = "UPDATE mock_people SET contacted_status = 'contacted' WHERE apollo_id = $1 RETURNING organization_id"
 
     try:
         async with pool.acquire() as conn:
@@ -505,7 +506,7 @@ async def change_person_contacted_status(apollo_id: str, pool):
 #Change company contacted_status from uncontacted to contacted
 async def change_company_contacted_status(apollo_id: str, pool):
     logger.info(f"Changing company {apollo_id}'s contacted status...")
-    query = "UPDATE companies SET contacted_status = 'contacted' WHERE apollo_id = $1"
+    query = "UPDATE mock_companies SET contacted_status = 'contacted' WHERE apollo_id = $1"
 
     try:
         async with pool.acquire() as conn:
@@ -518,7 +519,7 @@ async def change_company_contacted_status(apollo_id: str, pool):
 
 async def check_master_normalization(pool: asyncpg.pool):
     async with pool.acquire() as conn:
-        query = "SELECT * FROM normalized_master"
+        query = "SELECT * FROM mock_normalized_master"
         results = await conn.execute(query)
     return results
 
@@ -569,7 +570,7 @@ async def fetch_funding_details(pool: asyncpg.Pool, company_name: str)->Dict:
 #Get companies with no funding details
 async def return_companies_with_no_funding_details(pool: asyncpg.Pool)->List:
     logger.info("Fetching companies with null funding details")
-    query = "SELECT name FROM companies WHERE latest_funding_round IS NULL AND latest_funding_amount IS NULL AND latest_funding_currency IS NULL"
+    query = "SELECT name FROM mock_companies WHERE latest_funding_round IS NULL AND latest_funding_amount IS NULL AND latest_funding_currency IS NULL"
     companies = []
 
     try:
@@ -610,8 +611,8 @@ async def fetch_events(pool: asyncpg.Pool)->List[Dict[str, str]]:
     logger.info("Fetching events from database")
     query = """
             SELECT m.id, m.source, m.link, e.event_summary
-            FROM normalized_master m
-            LEFT JOIN normalized_events e ON m.id = e.master_id
+            FROM mock_normalized_master m
+            LEFT JOIN mock_normalized_events e ON m.id = e.master_id
             WHERE m.type = 'event';
             """
     try: 
@@ -631,7 +632,7 @@ async def fetch_events(pool: asyncpg.Pool)->List[Dict[str, str]]:
 
 #Fetch company keywords
 async def fetch_keywords(pool):
-    query = "SELECT keywords FROM companies"
+    query = "SELECT keywords FROM mock_companies"
     try:
         async with pool.acquire() as conn:
             results = await conn.fetch(query)
@@ -735,6 +736,7 @@ async def fetch_people_by_ids(pool, ids: List[int]):
 
     return [dict(row) for row in results]
 
+#CHANGED
 async def fetch_emails_sent(pool, company_id):
     logger.info("Fetching emails sent...")
     query = "SELECT * FROM emails_sent WHERE company_id = $1"

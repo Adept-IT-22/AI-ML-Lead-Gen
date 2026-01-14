@@ -30,7 +30,7 @@ if __name__ == "__main__":
     import os
     from dotenv import load_dotenv
     load_dotenv(override=True)
-    DB_URL = os.getenv("DEV_DATABASE_URL")
+    DB_URL = os.getenv("MOCK_DATABASE_URL")
 
     async def main():
         print("Running...")

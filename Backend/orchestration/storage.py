@@ -43,7 +43,7 @@ if __name__ == "__main__":
     from dotenv import load_dotenv
     load_dotenv(override=True)
 
-    DB_URL = os.getenv("DEV_DATABASE_URL")
+    DB_URL = os.getenv("MOCK_DATABASE_URL")
 
     async def demo():
         n2s = asyncio.Queue()
