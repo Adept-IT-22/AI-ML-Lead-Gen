@@ -17,7 +17,7 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
     company_data_to_store = []
 
     searched_organizations = [orgs[0] for dictionary in searched_orgs if (orgs := dictionary.get("organizations"))]
-    bulk_enriched_organizations = bulk_enriched_orgs[0].get("organizations") if bulk_enriched_orgs else []
+    bulk_enriched_organizations = [each_bulk_enriched_org for bulk_enriched_orgs_list in bulk_enriched_orgs for each_bulk_enriched_org in bulk_enriched_orgs_list[0].get("organizations", [])]
     single_enriched_organizations = [item.get("organization", []) for item in single_enriched_orgs]
 
     #Iterate over orgs
@@ -137,7 +137,7 @@ if __name__ == "__main__":
         from dotenv import load_dotenv
         load_dotenv(override=True)
 
-        DB_URL = os.getenv("DEV_DATABASE_URL")
+        DB_URL = os.getenv("MOCK_DATABASE_URL")
 
         null = None
         false = False
