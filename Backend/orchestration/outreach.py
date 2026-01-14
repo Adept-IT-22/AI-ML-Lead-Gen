@@ -49,7 +49,7 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
 
     if not persons_company:
         logger.warning(
-            f"No company found for {person.get('first_name', 'Unknown')}, id = {person.get("id")}"
+            f"No company found for {person.get('first_name', 'Unknown')}, id = {person.get('id')}"
             f"(apollo_id={persons_company_apollo_id})"
         )
         return False
