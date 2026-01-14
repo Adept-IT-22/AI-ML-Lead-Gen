@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { ICompany } from '../../Libs/interfaces/company.interface';
 import { IPeople } from '../../Libs/interfaces/people.interface';
 import { IEmail } from '../../Libs/interfaces/email.interface';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment.prod';
 
 interface CompanyField {
   label: string;
