@@ -14,7 +14,7 @@ from orchestration.outreach import main as outreach_main
 
 #Set up DB_URL
 load_dotenv(override=True)
-DB_URL = os.getenv("DEV_DATABASE_URL")
+DB_URL = os.getenv("MOCK_DATABASE_URL")
 
 #Set up logger
 logger = logging.getLogger()

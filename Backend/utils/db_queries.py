@@ -1,4 +1,4 @@
-#CHANGED
+
 company_query = """
         INSERT INTO mock_companies (apollo_id, name, website_url, linkedin_url,
                     phone, founded_year, market_cap, annual_revenue, industries,
@@ -11,7 +11,7 @@ company_query = """
             """
 
 people_query = """
-                INSERT INTO people (apollo_id, first_name, last_name, full_name,
+                INSERT INTO mock_people (apollo_id, first_name, last_name, full_name,
                 linkedin_url, title, email_status, headline, organization_id,
                 seniority, departments, subdepartments, functions, email,
                 number, notes) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
@@ -19,7 +19,7 @@ people_query = """
                 ON CONFLICT (apollo_id) DO NOTHING
             """
 
-#CHANGED
+
 normalized_master_query = """
         INSERT INTO mock_normalized_master (type, source, link, title, city, country, tags) 
                 VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -27,7 +27,7 @@ normalized_master_query = """
                 RETURNING id
                 """
 
-#CHANGED
+
 normalized_funding_query = """
         INSERT INTO mock_normalized_funding (master_id, company_name, company_decision_makers,
                 company_decision_makers_position, funding_round, amount_raised,
@@ -35,20 +35,20 @@ normalized_funding_query = """
                 $4, $5, $6, $7, $8, $9)
                 """
 
-#CHANGED
+
 normalized_hiring_query = """
         INSERT INTO mock_normalized_hiring (master_id, company_name, company_decision_makers,
                 company_decision_makers_position, job_roles, hiring_reasons)
                 VALUES ($1, $2, $3, $4, $5, $6)
                 """ 
 
-#CHANGED
+
 normalized_events_query = """
         INSERT INTO mock_normalized_events (master_id, event_id, event_summary, event_is_online,
                 event_organizer_id) VALUES ($1, $2, $3, $4, $5)
                 """
 
-#CHANGED
+
 fetch_link_query = """
         SELECT nm.link
         FROM mock_normalized_master nm

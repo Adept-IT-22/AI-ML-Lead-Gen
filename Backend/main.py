@@ -28,7 +28,6 @@ root_logger.setLevel(logging.INFO)
 root_logger.addHandler(file_handler)
 
 #The Database in use
-#CHANGED
 DB_URL = os.getenv("MOCK_DATABASE_URL")
 
 #Create Flask App
