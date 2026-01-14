@@ -10,7 +10,7 @@ logger = logging.getLogger()
 
 load_dotenv(override=True)
 
-DB_URL = os.getenv("DEV_DATABASE_URL")
+DB_URL = os.getenv("PROD_DATABASE_URL")
 
 # We use a dictionary to map SendGrid events to a value in the contacted_status db column.
 # The 'status' is the value to be set in the database.

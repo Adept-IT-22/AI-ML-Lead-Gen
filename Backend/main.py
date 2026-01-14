@@ -28,7 +28,7 @@ root_logger.setLevel(logging.INFO)
 root_logger.addHandler(file_handler)
 
 #The Database in use
-DB_URL = os.getenv("DEV_DATABASE_URL")
+DB_URL = os.getenv("PROD_DATABASE_URL")
 
 #Create Flask App
 app = Flask(__name__)

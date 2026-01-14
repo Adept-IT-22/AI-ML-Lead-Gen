@@ -11,7 +11,7 @@ from utils.set_conversion import convert_sets
 
 load_dotenv(verbose=True, override=True)
 
-DB_URL = os.getenv("DEV_DATABASE_URL")
+DB_URL = os.getenv("PROD_DATABASE_URL")
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
