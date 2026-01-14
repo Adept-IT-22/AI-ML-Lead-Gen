@@ -773,8 +773,7 @@ if __name__ == "__main__":
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
         #x = await fetch_company_details(160)
         #x = await fetch_company_by_apollo_id("671cebecf4941a02b6460f53")
-            #x = await fetch_emails_sent(pool, 41)
-            #x = await fetch_uncontacted_people(pool)
+            x = await fetch_emails_sent(pool, 41)
             print(x)
 
     asyncio.run(main())
