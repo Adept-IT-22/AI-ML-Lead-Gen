@@ -99,8 +99,7 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
     #     content=email_content,
     # )
 
-    ## Store email
-    #if response.status = ???
+    # Store email
     await store_email(
         pool,
         recipient_id=person.get("id"),
