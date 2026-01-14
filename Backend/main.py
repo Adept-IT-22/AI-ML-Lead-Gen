@@ -167,5 +167,5 @@ async def get_sent_emails(company_id):
 
 if __name__ == "__main__":
     logger.info("Application running....")
-    app.run(debug=True)
+    app.run(port=5001, debug=True)
     logger.info("Application Done")
