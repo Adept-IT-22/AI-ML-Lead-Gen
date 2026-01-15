@@ -28,10 +28,6 @@ async def fetch_jobs() -> List[Dict[str, Any]]:
                     try:
                         data = await response.json()
                         logger.info(f"RemoteOK API returned {len(data)} items")
-                        if data:
-                            logger.info(f"First item keys: {list(data[0].keys())}")
-                            if len(data) > 1:
-                                logger.info(f"Second item keys: {list(data[1].keys())}")
                         
                         # The first element in the list is often legal/metadata info
                         jobs = [item for item in data if "position" in item and "company" in item]
