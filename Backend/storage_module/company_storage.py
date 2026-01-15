@@ -5,6 +5,7 @@ from typing import List
 from utils.db_queries import company_query
 from helpers.helpers import safe_int, safe_decimal
 from utils.data_normalization import normalize_amount_raised
+from utils.safety_checker import safe_dict, safe_list
 from services.db_service import store_to_db, is_company_in_db, fetch_source_link, fetch_funding_details
 
 logger = logging.getLogger(__name__)
@@ -15,9 +16,25 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
     logger.info("Storing company data...")
     company_data_to_store = []
 
-    searched_organizations = [orgs[0] for dictionary in searched_orgs if (orgs := dictionary.get("organizations"))]
-    bulk_enriched_organizations = [each_bulk_enriched_org for bulk_enriched_orgs_list in bulk_enriched_orgs for each_bulk_enriched_org in bulk_enriched_orgs_list[0].get("organizations", [])]
-    single_enriched_organizations = [item.get("organization", []) for item in single_enriched_orgs]
+    searched_organizations = [
+        orgs[0]
+        for d in safe_list(searched_orgs)
+        for orgs in [safe_list(safe_dict(d).get("organizations"))]
+        if orgs
+    ]
+
+    bulk_enriched_organizations = [
+        org
+        for bulk_list in safe_list(bulk_enriched_orgs)
+        for org in safe_list(safe_dict(bulk_list[0]).get("organizations")) if bulk_list
+    ]
+
+    single_enriched_organizations = [
+        safe_dict(item).get("organization")
+        for item in safe_list(single_enriched_orgs)
+        if safe_dict(item).get("organization") is not None
+    ]
+
 
     #Iterate over orgs
     if searched_organizations and bulk_enriched_organizations and single_enriched_organizations:

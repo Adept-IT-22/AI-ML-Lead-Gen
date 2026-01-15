@@ -1,19 +1,21 @@
 <div class="leads-component">
   <div class="lead-table-header">
     <div class="lead-table-title">{{ title }}</div>
-    <app-button 
-      [buttonText]="'EXPORT'" 
-      [icon]="'download'" 
-      [iconPosition]="'left'" 
-      (click)="exportToExcel()">
-    </app-button>
+    <div class="lead-table-title-buttons">
+      <app-button 
+        [buttonText]="'EXPORT'" 
+        [icon]="'download'" 
+        [iconPosition]="'left'" 
+        (click)="exportToExcel()">
+      </app-button>
 
-    <app-button 
-      [buttonText]="'IMPORT'" 
-      [icon]="'upload'" 
-      [iconPosition]="'left'" 
-      (click)="importLeads()">
-    </app-button>
+      <app-button 
+        [buttonText]="'IMPORT'" 
+        [icon]="'upload'" 
+        [iconPosition]="'left'" 
+        (click)="importLeads()">
+      </app-button>
+    </div>
   </div>
 
   <input
