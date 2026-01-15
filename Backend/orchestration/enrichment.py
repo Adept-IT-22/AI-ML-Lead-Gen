@@ -96,6 +96,8 @@ async def bulk_organization_enrichment(searched_orgs: List, client: httpx.AsyncC
         #Extract websites from batch
         bulk_org_websites = []
         for bulk_org_data in batch:
+            if bulk_org_data is None:
+                continue
             if 'organizations' in bulk_org_data and bulk_org_data['organizations']:
                 logger.info(f"Enriching {bulk_org_data.get('organizations')[0].get('name')}")
                 website = bulk_org_data.get('organizations')[0].get('website_url')
