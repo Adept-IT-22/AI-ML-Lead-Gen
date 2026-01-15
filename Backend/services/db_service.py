@@ -191,7 +191,7 @@ async def fetch_people()->List[Dict[str, Any]]:
 
 async def fetch_uncontacted_people(pool: asyncpg.Pool)->List:
     logger.info("Fetching uncontacted people from DB...")
-    query = "SELECT id, first_name, organization_id, email FROM mock_people WHERE contacted_status = 'uncontacted' AND email IS NOT NULL AND email <> ''"
+    query = "SELECT id, first_name, organization_id, email FROM mock_people WHERE contacted_status = 'uncontacted' AND email IS NOT NULL AND email <> '' ORDER BY id LIMIT 10"
 
     try: 
         async with pool.acquire() as conn:
