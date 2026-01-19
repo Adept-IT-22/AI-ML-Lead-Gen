@@ -27,6 +27,99 @@ async def initialize_db():
 
 #Fetches all companies from the database
 
+async def fetch_companies_temporary():
+    logger.info("Fetch companies from DB temporary")
+    conn = None
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL)
+        company_query = """
+        SELECT 
+            c.*, 
+            p.full_name, p.title, p.email, p.linkedin_url,
+            i.top_matches, i.interpretation
+        FROM 
+            mock_companies c 
+        LEFT JOIN 
+            mock_people p ON c.apollo_id = p.organization_id
+
+        LEFT JOIN
+            mock_icp_scores i ON c.id = i.company_id
+            
+        WHERE c.name <> 'ICARUS Sports' AND
+
+        c.created_at >= '2026-01-01 00:00:00'
+        
+        """
+        results = await conn.fetch(company_query)
+        
+        # 3. Close connection immediately after fetching data
+        await conn.close()
+        
+        # 4. CONSOLIDATION LOGIC: Re-structure the flat 99 rows into 62 nested objects
+        companies_map: Dict[str, Dict[str, Any]] = {}
+
+        for record in results:
+            # Convert asyncpg.Record to dict for easier manipulation
+            record_dict = dict(record)
+            company_apollo_id = record_dict.get("apollo_id")
+
+            if company_apollo_id is None:
+                # Skip records if the primary company ID is somehow missing
+                continue
+
+            # --- CONSOLIDATE COMPANY DATA ---
+            if company_apollo_id not in companies_map:
+                # A. First time seeing this company: Initialize the master object
+                company_data = record_dict.copy()
+                company_data["people"] = []
+
+                # Also, add the companies alignment to our services.
+                company_data["top_matches"] = record_dict.get('top_matches')
+                company_data["interpretation"] = record_dict.get('interpretation')
+                
+                # Clean up the root object by removing the scattered people data
+                del company_data["full_name"]
+                del company_data["title"]
+                del company_data["email"]
+                del company_data["linkedin_url"]
+                
+                companies_map[company_apollo_id] = company_data
+            
+            # Get the reference to the master company object
+            master_company = companies_map[company_apollo_id]
+
+            # --- CONSOLIDATE PEOPLE DATA ---
+            # The 'full_name' field is NULL if the LEFT JOIN found no matching person.
+            if record_dict["full_name"]:
+                person = {
+                    "full_name": record_dict["full_name"],
+                    "title": record_dict["title"],
+                    "email": record_dict["email"],
+                    "linkedin_url": record_dict["linkedin_url"]
+                }
+                if person not in master_company.get('people'):
+                    master_company["people"].append(person)
+
+        # Convert the dictionary values (the 62 unique company objects) back to a list
+        final_all_companies = list(companies_map.values())
+        logger.info(f"Done fetching and consolidating {len(final_all_companies)} companies.")
+        return final_all_companies
+
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while trying to fetch companies: {str(e)}")
+        return []
+    except Exception as e:
+        logger.error(f"An unexpected error occurred: {str(e)}")
+        return []
+    finally:
+        if conn:
+            # Ensure connection is closed even if an error occurs during fetch
+            try:
+                await conn.close()
+            except Exception:
+                pass # Ignore close errors
+
+
 async def fetch_companies() -> List[Dict[str, Any]]:
     """
     Fetches all companies and their associated people in a single query (Eager Loading)

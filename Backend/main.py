@@ -47,9 +47,10 @@ async def main():
         return jsonify({"Error": "An unexpected error occured", "Message": str(e) }), 500
 
 #Database API for fetching companies
+#TO BE CHANGED!!!!
 @app.route('/fetch-companies', methods=["GET"])
 async def fetch_company_data():
-    company_data = await fetch_companies()
+    company_data = await fetch_companies_temporary()
     if not company_data:
         return jsonify({"Error": "No company data found"}), 404
     return jsonify(company_data), 200
