@@ -202,3 +202,44 @@ This section is a to-do list for me as the programmer.
 + Migrate from sendgrid to apollo
 + Integrate with odoo
 + Upgrade from Gemini free tier
+
+# People Table update
+```
+ALTER TABLE mock_people
+ADD COLUMN times_contacted INTEGER NOT NULL DEFAULT 0;
+
+ALTER TABLE mock_people
+ADD COLUMN last_contacted_at TIMESTAMP WITH TIME ZONE;
+
+ALTER TABLE mock_people
+ADD COLUMN subscribed BOOLEAN NOT NULL DEFAULT TRUE;
+
+ALTER TABLE mock_people
+ADD COLUMN has_replied BOOLEAN NOT NULL DEFAULT FALSE;
+```
+
+# Emails Sent Table update
+```
+ALTER TABLE mock_emails_sent
+ADD COLUMN sequence_number INTEGER NOT NULL;
+```
+
+# Add Times Contacted range
+```
+ALTER TABLE mock_people
+ADD CONSTRAINT times_contacted_range
+CHECK (times_contacted BETWEEN 0 AND 4);
+```
+
+# Add sequence number for emails sent
+```
+ALTER TABLE mock_emails_sent
+ADD CONSTRAINT sequence_number_range
+CHECK (sequence_number BETWEEN 1 AND 4);
+```
+
+# Add mock_people status index
+```
+CREATE INDEX idx_mock_people_drip
+ON mock_people (subscribed, has_replied, times_contacted, last_contacted_at);
+```
