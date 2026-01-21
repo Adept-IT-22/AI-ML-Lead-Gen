@@ -20,7 +20,7 @@ services:
   lead-gen-backend:
     build: 
       context: ./
-      dockerfile: dockerfile
+      dockerfile: backend/dockerfile
     ports: 
       - "5000:5000"
     environment:
