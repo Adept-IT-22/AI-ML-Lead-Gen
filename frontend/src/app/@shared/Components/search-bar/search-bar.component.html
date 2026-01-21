@@ -1,0 +1,20 @@
+<div class="search-component">
+  
+    <input
+      matInput
+      class="search-bar"
+      placeholder="SEARCH HERE:"
+      [value]="searchText"
+      (input)="onSearchChange($event)" />
+  
+
+  <div class="button-container">
+    <app-button
+      [icon]="'search'"
+      [iconPosition]="'left'"
+      [buttonText]="'GO'"
+      [buttonStyleClass]="'btn-search-bar'"
+      (click)="onSearch()">
+    </app-button>
+  </div>
+</div>

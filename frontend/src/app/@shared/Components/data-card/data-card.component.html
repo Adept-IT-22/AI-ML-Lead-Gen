@@ -1,0 +1,28 @@
+<div class="data-card">
+  <!-- Title -->
+  <div class="title" [ngStyle]="{ color: color }">
+    {{ title }}
+  </div>
+
+  <!-- Data -->
+  <div class="data" [ngStyle]="{ color: color }">
+    {{ data }}
+  </div>
+
+  <!-- Progress Bar -->
+  <div 
+    class="progress-bar"
+    [ngStyle]="{
+      color: progressColor,
+      borderTop: '2px ' + progressColor
+    }"
+  >
+    <mat-icon class="progress-mat-icon">
+      {{ progress > 0 ? 'arrow_drop_up' : (progress < 0 ? 'arrow_drop_down' : 'remove') }}
+    </mat-icon>
+
+    <span class="progress-text">
+      {{ progress >= 0 ? '+' : '' }}{{ progress }}% (vs. LW)
+    </span>
+  </div>
+</div>

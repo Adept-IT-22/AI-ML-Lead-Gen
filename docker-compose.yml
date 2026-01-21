@@ -1,6 +1,8 @@
 services:
   mock-lead-gen-backend:
-    build: ./Backend
+    build: 
+      context: ./
+      dockerfile: backend/dockerfile
     container_name: mock-lead-gen-backend
     ports: 
       - "5050:5050"
