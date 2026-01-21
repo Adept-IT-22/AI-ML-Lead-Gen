@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from logging.handlers import RotatingFileHandler
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, send_from_directory
 from flask_cors import CORS
 from services.db_service import fetch_emails_sent
 from services.email_sending import *
@@ -31,12 +31,46 @@ root_logger.addHandler(file_handler)
 DB_URL = os.getenv("PROD_DATABASE_URL")
 
 #Create Flask App
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static", static_url_path="")
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SECURE=False,
+    SESSION_COOKIE_SAMESITE="Strict",
+)
 app.logger.handlers = [] #Remove Flask's default logging
 app.logger.propagate = True #Use our configured logger
-CORS(app)
+CORS(app, resources={
+    r"/*": {
+        "origins": [
+            "http://13.222.181.103:5000",
+        ],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "support_credentials": True
+    }
+})
 
 #=================================APIs=======================================
+
+# ============================================================================
+# Serve React App
+# ============================================================================
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, "index.html")
+@app.route("/debug")
+def debug():
+    return {
+        "static_folder": app.static_folder,
+        "static_folder_exists": os.path.exists(app.static_folder),
+        "static_folder_contents": os.listdir(app.static_folder) if os.path.exists(app.static_folder) else [],
+        "cwd": os.getcwd(),
+        "index_exists": os.path.exists(os.path.join(app.static_folder, "index.html"))
+    }
 
 @app.route('/run', methods=["GET", "POST"])
 async def main():

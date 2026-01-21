@@ -1,0 +1,89 @@
+<div class="leads-component">
+  <div class="lead-table-header">
+    <div class="lead-table-title">{{ title }}</div>
+    <div class="lead-table-title-buttons">
+      <app-button 
+        [buttonText]="'EXPORT'" 
+        [icon]="'download'" 
+        [iconPosition]="'left'" 
+        (click)="exportToExcel()">
+      </app-button>
+
+      <app-button 
+        [buttonText]="'IMPORT'" 
+        [icon]="'upload'" 
+        [iconPosition]="'left'" 
+        (click)="importLeads()">
+      </app-button>
+    </div>
+  </div>
+
+  <input
+    type="file"
+    #fileInput
+    (change)="onFileSelected($event)"
+    accept=".xlsx"
+    hidden
+  />
+
+  <div class="lead-table" [ngClass]="{ 'preview': !fullTable, 'full': fullTable }">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th *ngFor="let column of columns">
+            {{ column.header }}
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let row of filteredData; let i = index">
+          <td>{{i+1}}</td>
+          <td *ngFor="let column of columns">
+            <ng-container *ngIf="column.header !== 'Action'; else actionButtons">
+              <span *ngIf="column.key === 'status' || column.key === 'company_data_source' || column.key === 'contacted_status'; else normalText">
+                {{row[column.key] | titlecase }}
+              </span>
+              <ng-template #normalText>
+                <span *ngIf="column.key === 'industries'; else regularText">
+                  {{row[column.key]?.[0] | titlecase}}
+                </span>
+                <ng-template #regularText>
+                  {{(row)[column.key]}}
+                </ng-template>
+              </ng-template>
+            </ng-container>
+
+            <ng-template #actionButtons>
+              <div class="action-buttons">
+                <app-button 
+                  [buttonText]="'VIEW'"
+                  [icon]="'visibility'"
+                  [iconPosition]="'left'"
+                  [routerLink]="['/company', row.id]"
+                  (click)="onView(row)">
+                </app-button>
+
+                <app-button 
+                  [buttonText]="'ACTION'"
+                  [icon]="'more_vert'"
+                  [iconPosition]="'left'">
+                </app-button>
+              </div>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ✅ Modal -->
+<div class="modal" *ngIf="selectedRow">
+  <div class="modal-content">
+    <h3>Lead Details</h3>
+    <pre>{{ selectedRow | json }}</pre>
+    <app-button [buttonText]="'Close'" (click)="closeModal()"></app-button>
+  </div>
+</div>
