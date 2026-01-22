@@ -2,9 +2,6 @@
 .git
 .gitignore
 
-# Frontend (entire directory)
-frontend/
-
 # Python
 **/__pycache__
 **/*.pyc
@@ -16,11 +13,17 @@ frontend/
 *.egg-info
 dist/
 build/
-.venv/
-venv/
-env/
+backend/.venv/
+backend/venv/
+backend/env/
 .pytest_cache/
 .coverage
+
+# Frontend build artifacts
+frontend/node_modules/
+frontend/.angular/
+frontend/dist/
+frontend/.cache/
 
 # IDE
 .vscode/
@@ -33,11 +36,9 @@ env/
 Thumbs.db
 
 # Docker
-Dockerfile
 docker-compose.yml
 .dockerignore
 
-# Docs & tests (if you have them)
+# Docs
 *.md
-tests/
-docs/
+README.md
