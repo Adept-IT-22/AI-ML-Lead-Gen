@@ -1,0 +1,18 @@
+# Git
+.git
+.gitignore
+
+# Frontend junk
+frontend/node_modules
+frontend/.angular
+frontend/.cache
+frontend/dist
+
+# Python junk
+__pycache__
+*.pyc
+.venv
+
+# OS junk
+.DS_Store
+Thumbs.db
