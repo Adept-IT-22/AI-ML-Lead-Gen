@@ -32,7 +32,7 @@ COPY ./backend .
 COPY --from=frontend-build /frontend/dist/lead-gen/browser/ ./static/
 
 # Expose the port your Flask app runs on
-EXPOSE 5050
+EXPOSE 5000
 
 # Set environment variable for Flask
 ENV FLASK_APP=main.py

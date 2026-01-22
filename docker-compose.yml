@@ -32,7 +32,8 @@ services:
       POSTGRES_HOST: lead-gen-db
       POSTGRES_PORT: 5432
     depends_on:
-      - lead-gen-db
+      lead-gen-db:
+        condition: service_healthy
     restart: always
 
 volumes:
