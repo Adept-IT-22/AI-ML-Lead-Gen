@@ -2,17 +2,42 @@
 .git
 .gitignore
 
-# Frontend junk
-frontend/node_modules
-frontend/.angular
-frontend/.cache
-frontend/dist
+# Frontend (entire directory)
+frontend/
 
-# Python junk
-__pycache__
-*.pyc
-.venv
+# Python
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist/
+build/
+.venv/
+venv/
+env/
+.pytest_cache/
+.coverage
 
-# OS junk
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
 Thumbs.db
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Docs & tests (if you have them)
+*.md
+tests/
+docs/
