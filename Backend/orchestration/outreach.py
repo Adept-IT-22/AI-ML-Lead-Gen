@@ -110,7 +110,7 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
         funding_round=latest_funding_round
     )
 
-    # Email Sending
+    # Email Sending. NEVER UNCOMMENT THIS CODE!!!
     # response = await send_email(
     #     email_to=persons_email,
     #     subject=final_subject,
@@ -127,8 +127,6 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
          body=final_content,
          sequence_number=sequence_number
      )
-
-    logger.info("SENT: %r => %r, %r", first_name, final_subject, final_content)
 
     return True
 
@@ -229,9 +227,8 @@ async def main(pool):
     unfound_people = await process_people(people, pool)
 
     if unfound_people:
-        #await resolve_missing_companies(unfound_people, pool)
-        #await retry_unfound_people(unfound_people, pool)
-        logger.info("%r people not found", len(unfound_people))
+        await resolve_missing_companies(unfound_people, pool)
+        await retry_unfound_people(unfound_people, pool)
 
     logger.info("Email sending complete")
 
