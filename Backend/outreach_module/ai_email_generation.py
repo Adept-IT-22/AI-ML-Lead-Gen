@@ -1,3 +1,4 @@
+import json
 from tenacity import retry, wait_exponential, stop_after_attempt, RetryCallState
 import google.generativeai as genai
 from google.generativeai import types
@@ -77,13 +78,34 @@ if __name__ == "__main__":
         cname = "Adept"
         ttype = "funding"
         fround = "seed"
-        prompt = get_email_generation_prompt(desc, fname, cname, ttype, fround)
+        seq_no = 1
+        prompt = get_email_generation_prompt(desc, fname, cname, ttype, seq_no, fround)
         try:
             response = await call_gemini_api(prompt)
             print(response)
             x = response.candidates[0].content.parts[0].text
-            print(x["subject"])
-        except Exception as e:
-            print("Error")
+            
+            email_json = json.loads(x)
+        except json.JSONDecodeError:
+            logger.error("Invalid json from llm")
+            return True
+            
+        email_subject=email_json["subject"]
+        email_content=email_json["content"]
+
+        final_subject = email_subject.format(
+            first_name=fname if fname else None,
+            company_name=cname if cname else None,
+            company_description=desc if desc else None,
+        )
+
+        final_content = email_content.format(
+            first_name=fname if fname else None,
+            company_name=cname if cname else None,
+            company_description=desc if desc else None,
+        )
+
+        print(final_subject)
+        print(final_content)
             
     asyncio.run(main())
