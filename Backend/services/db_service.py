@@ -41,13 +41,16 @@ async def fetch_companies_temporary():
             mock_companies c 
         LEFT JOIN 
             mock_people p ON c.apollo_id = p.organization_id
-
         LEFT JOIN
             mock_icp_scores i ON c.id = i.company_id
-            
-        WHERE c.name <> 'ICARUS Sports' AND
-
-        c.created_at >= '2026-01-01 00:00:00'
+        WHERE 
+            c.name <> 'ICARUS Sports' 
+        AND EXISTS (
+            SELECT 1
+            FROM mock_emails_sent es
+            JOIN mock_people p2 ON es.recipient_id = p2.id
+            WHERE p2.organization_id = c.apollo_id
+        );
         
         """
         results = await conn.fetch(company_query)

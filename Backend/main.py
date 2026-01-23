@@ -43,6 +43,7 @@ CORS(app, resources={
     r"/*": {
         "origins": [
             "http://localhost:4200",
+            "http://192.168.1.250"
         ],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
@@ -84,7 +85,7 @@ async def main():
 #TO BE CHANGED!!!!
 @app.route('/fetch-companies', methods=["GET"])
 async def fetch_company_data():
-    company_data = await fetch_companies()
+    company_data = await fetch_companies_temporary()
     if not company_data:
         return jsonify({"Error": "No company data found"}), 404
     return jsonify(company_data), 200
