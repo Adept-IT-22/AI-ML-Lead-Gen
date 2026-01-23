@@ -7,7 +7,7 @@ from typing import Dict, Any, List
 
 from services.email_sending import send_email
 from services.db_service import (
-    fetch_uncontacted_people,
+    fetch_eligible_people,
     fetch_company_by_apollo_id,
     get_hiring_area,
     store_email,
@@ -26,9 +26,8 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------
 
 async def fetch_people(pool) -> List[Dict[str, Any]]:
-    logger.info("Fetching uncontacted people...")
-    return await fetch_uncontacted_people(pool)
-
+    logger.info("Fetching eligible people...")
+    return await fetch_eligible_people(pool)
 
 # ---------------------------------------------------------
 # Processing phase (single person)
@@ -59,6 +58,8 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
     latest_funding_round = persons_company.get("latest_funding_round", "latest")
     first_name = person.get("first_name")
     company_name = persons_company.get("name")
+    sequence_number = person.get("times_contacted") + 1
+    hiring_area = await get_hiring_area(company_name, pool) 
 
     if data_source == "funding":
         prompt = get_email_generation_prompt(
@@ -66,15 +67,16 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
             first_name=first_name,
             company_name=company_name,
             trigger_type=data_source,
+            sequence_number=sequence_number,
             funding_round=latest_funding_round,
         )
     elif data_source == "hiring":
-        hiring_area = await get_hiring_area(company_name, pool) or "various areas"
         prompt = get_email_generation_prompt(
             company_description=company_description,
             first_name=first_name,
             company_name=company_name,
             trigger_type=data_source,
+            sequence_number=sequence_number,
             hiring_area=hiring_area,
         )
     else:
@@ -84,7 +86,8 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
     ai_response = await call_gemini_api(prompt)
 
     try:
-        email_json = json.loads(ai_response.text)
+        text_response = ai_response.candidates[0].content.parts[0].text
+        email_json = json.loads(text_response)
     except json.JSONDecodeError:
         logger.error("Invalid json from llm for person_id = %r", person.get("id"))
         return True
@@ -92,21 +95,40 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
     email_subject=email_json["subject"]
     email_content=email_json["content"]
 
+    final_subject = email_subject.format(
+        first_name=first_name,
+        company_name=company_name,
+        company_description=company_description,
+        hiring_area=hiring_area,
+        funding_round=latest_funding_round
+    )
+    final_content = email_content.format(
+        first_name=first_name,
+        company_name=company_name,
+        company_description=company_description,
+        hiring_area=hiring_area,
+        funding_round=latest_funding_round
+    )
+
     # Email Sending
     # response = await send_email(
     #     email_to=persons_email,
-    #     subject=email_subject,
-    #     content=email_content,
+    #     subject=final_subject,
+    #     content=final_content,
     # )
 
-    # Store email
+    # Store email. Do not increment times_contacted in the people table. That's only incremented
+    # when the sendgrid webhook says delivered/sent etc
     await store_email(
-        pool,
-        recipient_id=person.get("id"),
-        company_id=persons_company.get("id"),
-        subject=email_subject,
-        body=email_content
-    )
+         pool,
+         recipient_id=person.get("id"),
+         company_id=persons_company.get("id"),
+         subject=final_subject,
+         body=final_content,
+         sequence_number=sequence_number
+     )
+
+    logger.info("SENT: %r => %r, %r", first_name, final_subject, final_content)
 
     return True
 
@@ -140,7 +162,7 @@ async def process_people(
 
         except Exception as e:
             logger.exception(
-                f"Failed processing {person.get('first_name', 'Unknown')}: {e}"
+                f"Failed processing {person.get('first_name', 'Unknown')} from org_id: {org_id}: {e}"
             )
 
     return unfound_people
@@ -207,8 +229,9 @@ async def main(pool):
     unfound_people = await process_people(people, pool)
 
     if unfound_people:
-        await resolve_missing_companies(unfound_people, pool)
-        await retry_unfound_people(unfound_people, pool)
+        #await resolve_missing_companies(unfound_people, pool)
+        #await retry_unfound_people(unfound_people, pool)
+        logger.info("%r people not found", len(unfound_people))
 
     logger.info("Email sending complete")
 

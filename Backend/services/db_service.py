@@ -231,13 +231,14 @@ async def store_email(
         company_id: int,
         subject: str,
         body: str,
+        sequence_number: int
 ):
     logger.info("Storing email...")
     try:
         query_insert_email = """
             INSERT INTO mock_emails_sent 
-            (recipient_id, company_id, subject, body)
-            VALUES ($1, $2, $3, $4)
+            (recipient_id, company_id, subject, body, sequence_number)
+            VALUES ($1, $2, $3, $4, $5)
             """
 
         query_update_company = """
@@ -253,7 +254,7 @@ async def store_email(
             """
         async with pool.acquire(timeout=10.0) as conn:
             async with conn.transaction():
-                await conn.execute(query_insert_email, recipient_id, company_id, subject, body)
+                await conn.execute(query_insert_email, recipient_id, company_id, subject, body, sequence_number)
                 await conn.execute(query_update_company, company_id)
                 await conn.execute(query_update_person, recipient_id)
         logger.info("Done storing email")
@@ -618,26 +619,35 @@ async def check_master_normalization(pool: asyncpg.pool):
     return results
 
 #Get company from normalization_hiring table and return hiring area
-
-async def get_hiring_area(company_name: str, pool)->str:
+async def get_hiring_area(company_name: str, pool) -> str:
     logger.info(f"Get hiring area for {company_name}")
 
     try:
-        query = "SELECT * FROM mock_normalized_hiring WHERE LOWER(company_name) = $1 LIMIT 1"
+        query = """
+        SELECT job_roles
+        FROM mock_normalized_hiring
+        WHERE LOWER(company_name) = $1
+        LIMIT 1
+        """
+
         async with pool.acquire() as conn:
-            results = await conn.fetch(query, company_name.lower())
-            company_json_list = [dict(result) for result in results]
-            company_json = company_json_list[0] 
+            row = await conn.fetchrow(query, company_name.lower())
 
-            job_roles = company_json.get("job_roles")
-            hiring_area = job_roles[0] if job_roles else "various areas"
-            logger.info(hiring_area)
+            if not row:
+                logger.warning(f"No hiring data found for {company_name}. Returning 'various areas'")
+                return "various areas"
 
-            return hiring_area
+            job_roles = row["job_roles"]
+
+            if not job_roles:
+                return "various areas"
+
+            return job_roles[0]
 
     except Exception as e:
-        logger.error(f"Couldn't get hiring area for {company_name}: {str(e)}")
-        return ""
+        logger.exception(f"Couldn't get hiring area for {company_name}")
+        return "various areas"
+
     
 #Get company funding details from normalized_funding
 
@@ -849,6 +859,32 @@ async def fetch_emails_sent(pool, company_id):
 
     return [dict(email) for email in emails]
 
+async def fetch_eligible_people(pool)->List:
+    query = """
+        SELECT 
+            *
+        FROM 
+            mock_people
+        WHERE
+            subscribed = TRUE
+        AND has_replied = FALSE
+        AND times_contacted < 4
+        AND (
+            times_contacted = 0
+            OR last_contacted_at <= now() - interval '7 days'
+        );
+    """
+    try:
+        async with pool.acquire() as conn:
+            people = await conn.fetch(query)
+            return [dict(person) for person in people]
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while trying to fetch uncontacted people", str(e))
+        return []
+    except Exception as e:
+        logger.error(f"An unexpected error occured")
+        return []
+
 if __name__ == "__main__":
     async def main():
         logger.info(f"THE DB URL IS: {DB_URL}")
@@ -866,7 +902,6 @@ if __name__ == "__main__":
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
         #x = await fetch_company_details(160)
         #x = await fetch_company_by_apollo_id("671cebecf4941a02b6460f53")
-            x = await fetch_emails_sent(pool, 41)
-            print(x)
+            x = await get_hiring_area("14.ai", pool)
 
     asyncio.run(main())

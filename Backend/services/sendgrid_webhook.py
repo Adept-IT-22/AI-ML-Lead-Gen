@@ -94,12 +94,14 @@ async def update_contacted_status(events):
                     # Update each person's contacted_status to the status of their latest email
                     await conn.execute("""
                         UPDATE people p
-                        SET contacted_status = e.status
-                        FROM emails_sent e
-                        WHERE e.recipient_id = p.id
-                        AND p.contacted_status IS DISTINCT FROM e.status;
-                    """
-                    )
+                        SET 
+                            contacted_status = t.status,
+                            times_contacted = times_contacted + 1
+                        FROM tmp_email_status t
+                        WHERE LOWER(p.email) = LOWER(t.email)
+                        AND t.status IN ('contacted', 'engaged')  -- only these events increment
+                    """)
+
 
                     # Get all affected organization_ids
                     org_ids = await conn.fetch("""
