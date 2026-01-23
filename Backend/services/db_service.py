@@ -25,7 +25,6 @@ async def initialize_db():
         logger.error("Connection not made!")
 
 #Fetches all companies from the database
-#CHANGED
 async def fetch_companies() -> List[Dict[str, Any]]:
     """
     Fetches all companies and their associated people in a single query (Eager Loading)
@@ -137,13 +136,14 @@ async def store_email(
         company_id: int,
         subject: str,
         body: str,
+        sequence_number: int
 ):
     logger.info("Storing email...")
     try:
         query_insert_email = """
             INSERT INTO emails_sent 
-            (recipient_id, company_id, subject, body)
-            VALUES ($1, $2, $3, $4)
+            (recipient_id, company_id, subject, body, sequence_number)
+            VALUES ($1, $2, $3, $4, $5)
             """
 
         query_update_company = """
@@ -159,7 +159,7 @@ async def store_email(
             """
         async with pool.acquire(timeout=10.0) as conn:
             async with conn.transaction():
-                await conn.execute(query_insert_email, recipient_id, company_id, subject, body)
+                await conn.execute(query_insert_email, recipient_id, company_id, subject, body, sequence_number)
                 await conn.execute(query_update_company, company_id)
                 await conn.execute(query_update_person, recipient_id)
         logger.info("Done storing email")
@@ -190,7 +190,7 @@ async def fetch_people()->List[Dict[str, Any]]:
 
 async def fetch_uncontacted_people(pool: asyncpg.Pool)->List:
     logger.info("Fetching uncontacted people from DB...")
-    query = "SELECT id, first_name, organization_id, email FROM mock_people WHERE contacted_status = 'uncontacted' AND email IS NOT NULL AND email <> '' ORDER BY id LIMIT 10"
+    query = "SELECT id, first_name, organization_id, email FROM people WHERE contacted_status = 'uncontacted' AND email IS NOT NULL AND email <> '' ORDER BY id LIMIT 10"
 
     try: 
         async with pool.acquire() as conn:
@@ -486,7 +486,7 @@ async def is_data_in_db(pool: asyncpg.pool, company_or_event_link: str = None)->
 #Change person contacted_status from uncontacted to contacted
 async def change_person_contacted_status(apollo_id: str, pool):
     logger.info(f"Changing {apollo_id}'s contacted status...")
-    query = "UPDATE mock_people SET contacted_status = 'contacted' WHERE apollo_id = $1 RETURNING organization_id"
+    query = "UPDATE people SET contacted_status = 'contacted' WHERE apollo_id = $1 RETURNING organization_id"
 
     try:
         async with pool.acquire() as conn:
@@ -506,7 +506,7 @@ async def change_person_contacted_status(apollo_id: str, pool):
 #Change company contacted_status from uncontacted to contacted
 async def change_company_contacted_status(apollo_id: str, pool):
     logger.info(f"Changing company {apollo_id}'s contacted status...")
-    query = "UPDATE mock_companies SET contacted_status = 'contacted' WHERE apollo_id = $1"
+    query = "UPDATE companies SET contacted_status = 'contacted' WHERE apollo_id = $1"
 
     try:
         async with pool.acquire() as conn:
@@ -519,31 +519,40 @@ async def change_company_contacted_status(apollo_id: str, pool):
 
 async def check_master_normalization(pool: asyncpg.pool):
     async with pool.acquire() as conn:
-        query = "SELECT * FROM mock_normalized_master"
+        query = "SELECT * FROM normalized_master"
         results = await conn.execute(query)
     return results
 
 #Get company from normalization_hiring table and return hiring area
-
-async def get_hiring_area(company_name: str, pool)->str:
+async def get_hiring_area(company_name: str, pool) -> str:
     logger.info(f"Get hiring area for {company_name}")
 
     try:
-        query = "SELECT * FROM normalized_hiring WHERE LOWER(company_name) = $1 LIMIT 1"
+        query = """
+        SELECT job_roles
+        FROM normalized_hiring
+        WHERE LOWER(company_name) = $1
+        LIMIT 1
+        """
+
         async with pool.acquire() as conn:
-            results = await conn.fetch(query, company_name.lower())
-            company_json_list = [dict(result) for result in results]
-            company_json = company_json_list[0] 
+            row = await conn.fetchrow(query, company_name.lower())
 
-            job_roles = company_json.get("job_roles")
-            hiring_area = job_roles[0] if job_roles else "various areas"
-            logger.info(hiring_area)
+            if not row:
+                logger.warning(f"No hiring data found for {company_name}. Returning 'various areas'")
+                return "various areas"
 
-            return hiring_area
+            job_roles = row["job_roles"]
+
+            if not job_roles:
+                return "various areas"
+
+            return job_roles[0]
 
     except Exception as e:
-        logger.error(f"Couldn't get hiring area for {company_name}: {str(e)}")
-        return ""
+        logger.exception(f"Couldn't get hiring area for {company_name}")
+        return "various areas"
+
     
 #Get company funding details from normalized_funding
 
@@ -570,7 +579,7 @@ async def fetch_funding_details(pool: asyncpg.Pool, company_name: str)->Dict:
 #Get companies with no funding details
 async def return_companies_with_no_funding_details(pool: asyncpg.Pool)->List:
     logger.info("Fetching companies with null funding details")
-    query = "SELECT name FROM mock_companies WHERE latest_funding_round IS NULL AND latest_funding_amount IS NULL AND latest_funding_currency IS NULL"
+    query = "SELECT name FROM companies WHERE latest_funding_round IS NULL AND latest_funding_amount IS NULL AND latest_funding_currency IS NULL"
     companies = []
 
     try:
@@ -611,8 +620,8 @@ async def fetch_events(pool: asyncpg.Pool)->List[Dict[str, str]]:
     logger.info("Fetching events from database")
     query = """
             SELECT m.id, m.source, m.link, e.event_summary
-            FROM mock_normalized_master m
-            LEFT JOIN mock_normalized_events e ON m.id = e.master_id
+            FROM normalized_master m
+            LEFT JOIN normalized_events e ON m.id = e.master_id
             WHERE m.type = 'event';
             """
     try: 
@@ -632,7 +641,7 @@ async def fetch_events(pool: asyncpg.Pool)->List[Dict[str, str]]:
 
 #Fetch company keywords
 async def fetch_keywords(pool):
-    query = "SELECT keywords FROM mock_companies"
+    query = "SELECT keywords FROM companies"
     try:
         async with pool.acquire() as conn:
             results = await conn.fetch(query)
@@ -755,6 +764,32 @@ async def fetch_emails_sent(pool, company_id):
 
     return [dict(email) for email in emails]
 
+async def fetch_eligible_people(pool)->List:
+    query = """
+        SELECT 
+            *
+        FROM 
+            people
+        WHERE
+            subscribed = TRUE
+        AND has_replied = FALSE
+        AND times_contacted < 4
+        AND (
+            times_contacted = 0
+            OR last_contacted_at <= now() - interval '7 days'
+        );
+    """
+    try:
+        async with pool.acquire() as conn:
+            people = await conn.fetch(query)
+            return [dict(person) for person in people]
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while trying to fetch uncontacted people", str(e))
+        return []
+    except Exception as e:
+        logger.error(f"An unexpected error occured")
+        return []
+
 if __name__ == "__main__":
     async def main():
         logger.info(f"THE DB URL IS: {DB_URL}")
@@ -772,7 +807,6 @@ if __name__ == "__main__":
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
         #x = await fetch_company_details(160)
         #x = await fetch_company_by_apollo_id("671cebecf4941a02b6460f53")
-            x = await fetch_emails_sent(pool, 41)
-            print(x)
+            x = await get_hiring_area("14.ai", pool)
 
     asyncio.run(main())
