@@ -65,3 +65,7 @@ services:
 
 volumes:
   mock_lead_gen_pgdata:
+
+networks:
+  mock-lead-gen-network:
+    external: true
