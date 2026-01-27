@@ -201,45 +201,29 @@ This section is a to-do list for me as the programmer.
 + Implement drip feeding
 + Migrate from sendgrid to apollo
 + Integrate with odoo
-+ Upgrade from Gemini free tier
 
-# People Table update
-```
-ALTER TABLE mock_people
-ADD COLUMN times_contacted INTEGER NOT NULL DEFAULT 0;
+## Database Changes Required
 
-ALTER TABLE mock_people
-ADD COLUMN last_contacted_at TIMESTAMP WITH TIME ZONE;
+### Unsubscribe Feature - Mock People Table Updates
+-IMPORTANT: Make these changes in prod server
 
-ALTER TABLE mock_people
-ADD COLUMN subscribed BOOLEAN NOT NULL DEFAULT TRUE;
+The following SQL commands need to be executed on the `people` table to support email unsubscribe functionality:
 
-ALTER TABLE mock_people
-ADD COLUMN has_replied BOOLEAN NOT NULL DEFAULT FALSE;
-```
+```sql
+-- Add unsubscribe token column
+ALTER TABLE people 
+ADD COLUMN IF NOT EXISTS unsubscribe_token UUID UNIQUE DEFAULT gen_random_uuid();
 
-# Emails Sent Table update
-```
-ALTER TABLE mock_emails_sent
-ADD COLUMN sequence_number INTEGER NOT NULL;
+-- Add unsubscribe timestamp for audit trail
+ALTER TABLE people
+ADD COLUMN IF NOT EXISTS unsubscribed_at TIMESTAMP;
+
+-- Create index for fast token lookups
+CREATE INDEX IF NOT EXISTS idx_people_unsubscribe_token ON people(unsubscribe_token);
 ```
 
-# Add Times Contacted range
-```
-ALTER TABLE mock_people
-ADD CONSTRAINT times_contacted_range
-CHECK (times_contacted BETWEEN 0 AND 4);
-```
+**Purpose:**
+- `unsubscribe_token`: Unique UUID for each person to generate secure unsubscribe links
+- `unsubscribed_at`: Timestamp to track when a person unsubscribed (audit trail)
+- Index: Improves query performance when validating unsubscribe tokens
 
-# Add sequence number for emails sent
-```
-ALTER TABLE mock_emails_sent
-ADD CONSTRAINT sequence_number_range
-CHECK (sequence_number BETWEEN 1 AND 4);
-```
-
-# Add mock_people status index
-```
-CREATE INDEX idx_mock_people_drip
-ON mock_people (subscribed, has_replied, times_contacted, last_contacted_at);
-```

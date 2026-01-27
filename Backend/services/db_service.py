@@ -888,6 +888,71 @@ async def fetch_eligible_people(pool)->List:
         logger.error(f"An unexpected error occured")
         return []
 
+async def get_user_by_token(pool: asyncpg.Pool, token: str) -> Dict:
+    """
+    Fetch user details by unsubscribe token.
+    Returns user dict or empty dict if not found.
+    """
+    logger.info(f"Fetching user by unsubscribe token...")
+    query = """
+        SELECT id, first_name, email, subscribed, unsubscribe_token
+        FROM mock_people
+        WHERE unsubscribe_token = $1
+        LIMIT 1
+    """
+    
+    try:
+        async with pool.acquire() as conn:
+            result = await conn.fetchrow(query, token)
+            
+            if result:
+                logger.info("User found by token")
+                return dict(result)
+            else:
+                logger.warning("No user found with provided token")
+                return {}
+                
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while fetching user by token: {str(e)}")
+        return {}
+    except Exception as e:
+        logger.error(f"Unexpected error while fetching user by token: {str(e)}")
+        return {}
+
+async def unsubscribe_user(pool: asyncpg.Pool, token: str) -> bool:
+    """
+    Unsubscribe user by token. Returns True if successful, False otherwise.
+    """
+    logger.info(f"Attempting to unsubscribe user with token...")
+    
+    query = """
+        UPDATE mock_people
+        SET subscribed = FALSE,
+            unsubscribed_at = NOW()
+        WHERE unsubscribe_token = $1
+        AND subscribed = TRUE
+        RETURNING id, email
+    """
+    
+    try:
+        async with pool.acquire() as conn:
+            result = await conn.fetchrow(query, token)
+            
+            if result:
+                logger.info(f"Successfully unsubscribed user: {result['email']} (ID: {result['id']})")
+                return True
+            else:
+                logger.warning("No user found with provided token or user already unsubscribed")
+                return False
+                
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while unsubscribing user: {str(e)}")
+        return False
+    except Exception as e:
+        logger.error(f"Unexpected error while unsubscribing user: {str(e)}")
+        return False
+
+
 if __name__ == "__main__":
     async def main():
         logger.info(f"THE DB URL IS: {DB_URL}")

@@ -43,6 +43,7 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
     """
     persons_email = person.get("email", "")
     persons_company_apollo_id = person.get("organization_id", "")
+    unsubscribe_token = person.get("unsubscribe_token", "")
 
     persons_company = await fetch_company_by_apollo_id(persons_company_apollo_id)
 
@@ -115,6 +116,7 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
     #     email_to=persons_email,
     #     subject=final_subject,
     #     content=final_content,
+    #     unsubscribe_token=unsubscribe_token,
     # )
 
     # Store email. Do not increment times_contacted in the people table. That's only incremented
@@ -129,6 +131,7 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
      )
 
     return True
+
 
 # ---------------------------------------------------------
 # Processing phase (batch)

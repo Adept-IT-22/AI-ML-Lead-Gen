@@ -24,16 +24,31 @@ email_headers = {
 async def send_email(
         email_to: str,
         subject: str,
-        content: str ,
+        content: str,
+        unsubscribe_token: str,
         email_from = EMAIL_FROM
 ):
     sendgrid_client = SendGridAPIClient(SENDGRID_API_KEY)
+    
+    # Add unsubscribe footer to email content
+    unsubscribe_footer = f"""
+    <br><br>
+    <hr style="border: 1px solid #ddd;">
+    <p style="font-size: 12px; color: #666;">
+        If you no longer wish to receive these emails, 
+        <a href="http://20.121.43.237:5000/unsubscribe?token={unsubscribe_token}">
+            click here to unsubscribe
+        </a>.
+    </p>
+    """
+    
+    full_content = content + unsubscribe_footer
     
     email = Mail(
         from_email=email_from, 
         to_emails=email_to,
         subject=subject,
-        html_content=content,
+        html_content=full_content,
         )
 
     #Add who to reply to
@@ -57,6 +72,7 @@ async def send_email(
     logger.info(f"Email sent to {email_to}")
     return response
 
+
 if __name__ == "__main__":
     from outreach_module.ai_email_generation import call_gemini_api
     async def main():
@@ -65,14 +81,16 @@ if __name__ == "__main__":
         cname = "Adept"
         ttype = "funding"
         fround = "seed"
-        prompt = get_email_generation_prompt(desc, fname, cname, ttype, fround)
+        seq_no = 1
+        prompt = get_email_generation_prompt(desc, fname, cname, ttype, seq_no, fround)
         result = await call_gemini_api(prompt)
 
         try:
             response = await send_email(
                 email_to = 'm10mathenge@gmail.com',
                 subject= "Greetings",
-                content= "Hello"
+                content= "Hello",
+                unsubscribe_token = "e3a3c375-cde9-420b-9001-2b188cb2fac8"
             )
             print(response.status_code)
             print(response.body)
