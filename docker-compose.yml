@@ -1,8 +1,32 @@
+#services:
+#mock-lead-gen-backend:
+#build: 
+#context: ./
+#dockerfile: dockerfile
+#container_name: mock-lead-gen-backend
+#ports: 
+#- "5050:5050"
+#environment:
+#FLASK_APP: main.py
+#FLASK_RUN_HOST: 0.0.0.0
+#POSTGRES_DB: mock_lead_gen_db
+#POSTGRES_USER: mock_lead_gen_user
+#POSTGRES_PASSWORD: mock_lead_gen_password
+#POSTGRES_HOST: mock-lead-gen-db
+#POSTGRES_PORT: 5432
+#networks:
+#- mock-lead-gen-network
+#restart: always
+
+#networks:
+#mock-lead-gen-network:
+#external: true
+
 services:
   lead-gen-db:
     image: postgres:17
     restart: always
-    ports: 
+    ports:
       - "2345:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -11,17 +35,17 @@ services:
       POSTGRES_USER: lead_gen_user
       POSTGRES_PASSWORD: lead_gen_password
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U lead_gen_user -d lead_gen_db"]
+      test: [ "CMD-SHELL", "pg_isready -U lead_gen_user -d lead_gen_db" ]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 30s
 
   lead-gen-backend:
-    build: 
+    build:
       context: ./
       dockerfile: dockerfile
-    ports: 
+    ports:
       - "5000:5000"
     environment:
       FLASK_APP: main.py

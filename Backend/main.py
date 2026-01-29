@@ -3,7 +3,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from flask import Flask, jsonify, request, send_file, send_from_directory
 from flask_cors import CORS
-from services.db_service import fetch_emails_sent
+from services.db_service import fetch_emails_sent, unsubscribe_user, get_user_by_token
 from services.email_sending import *
 from services.sendgrid_webhook import *
 from services.export_to_excel import export_to_excel
@@ -198,6 +198,45 @@ async def import_leads():
 async def get_sent_emails(company_id):
     async with asyncpg.create_pool(dsn=DB_URL) as pool:
         return await fetch_emails_sent(pool, int(company_id))
+
+@app.route('/unsubscribe', methods=['POST'])
+async def unsubscribe():
+    """
+    Handle email unsubscribe requests.
+    Expects JSON body with 'token' field.
+    """
+    try:
+        data = request.json
+        
+        if not data:
+            return jsonify({"success": False, "message": "No data provided"}), 400
+        
+        token = data.get('token')
+        
+        if not token:
+            return jsonify({"success": False, "message": "Token is required"}), 400
+        
+        async with asyncpg.create_pool(dsn=DB_URL) as pool:
+            success = await unsubscribe_user(pool, token)
+            
+            if success:
+                return jsonify({
+                    "success": True, 
+                    "message": "You have been successfully unsubscribed"
+                }), 200
+            else:
+                return jsonify({
+                    "success": False, 
+                    "message": "Invalid or expired unsubscribe token"
+                }), 404
+                
+    except Exception as e:
+        logger.error(f"Unsubscribe error: {str(e)}")
+        return jsonify({
+            "success": False, 
+            "message": "An error occurred"
+        }), 500
+
 
 if __name__ == "__main__":
     logger.info("Application running....")
