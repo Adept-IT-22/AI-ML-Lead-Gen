@@ -97,6 +97,8 @@ class ICPScorer:
             return contactability["email"]
         elif linkedin:
             return contactability["linkedin"]
+        
+        return 50
 
     async def score_geography(self, country):
         if not country:
