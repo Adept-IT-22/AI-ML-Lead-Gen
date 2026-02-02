@@ -202,3 +202,4 @@ This section is a to-do list for me as the programmer.
 + Migrate from sendgrid to apollo
 + Integrate with odoo
 
++ Nodesk, working_nomads => Unknown company name

@@ -45,7 +45,7 @@ async def main():
             enrichment_to_storage_queue=enrichment_to_storage_queue
         )
 
-        await storage_main(
+        org_ids = await storage_main(
             pool,
             normalization_to_storage_queue=normalization_to_storage,
             enrichment_to_storage_queue=enrichment_module_queue
@@ -56,7 +56,8 @@ async def main():
         )
 
         await outreach_main(
-            pool
+            pool,
+            organization_ids=org_ids
         )
 
 if __name__ == "__main__":

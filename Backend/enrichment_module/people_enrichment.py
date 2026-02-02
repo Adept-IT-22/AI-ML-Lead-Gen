@@ -46,7 +46,6 @@ async def no_rate_limit_people_enrichment(
       )
 
       logger.info(f"Completed people enrichment for {user_name}")
-
       return response.json()
 
     except Exception as e:
@@ -65,11 +64,12 @@ async def people_enrichment(
 if __name__ == "__main__":
     async def main():
       async with AsyncClient(timeout=30.0) as client:
-        await people_enrichment(
+        x = await people_enrichment(
            client=client, 
            user_id="610c3e23d4d76a0001aa35b3",
            user_name="Charles Hayter"
                 )
+        logger.info("%r", x)
 
     asyncio.run(main())
       

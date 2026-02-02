@@ -25,9 +25,9 @@ logger = logging.getLogger(__name__)
 # Fetch phase
 # ---------------------------------------------------------
 
-async def fetch_people(pool) -> List[Dict[str, Any]]:
+async def fetch_people(pool, organization_ids: List[str] = None) -> List[Dict[str, Any]]:
     logger.info("Fetching eligible people...")
-    return await fetch_eligible_people(pool)
+    return await fetch_eligible_people(pool, organization_ids=organization_ids)
 
 # ---------------------------------------------------------
 # Processing phase (single person)
@@ -60,7 +60,6 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
     first_name = person.get("first_name")
     company_name = persons_company.get("name")
     sequence_number = person.get("times_contacted") + 1
-    hiring_area = await get_hiring_area(company_name, pool) 
 
     if data_source == "funding":
         prompt = get_email_generation_prompt(
@@ -78,7 +77,7 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
             company_name=company_name,
             trigger_type=data_source,
             sequence_number=sequence_number,
-            hiring_area=hiring_area,
+            hiring_area = await get_hiring_area(company_name, pool) 
         )
     else:
         logger.warning(f"Unknown data source {data_source} for {company_name}")
@@ -100,14 +99,14 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
         first_name=first_name,
         company_name=company_name,
         company_description=company_description,
-        hiring_area=hiring_area,
+        hiring_area=await get_hiring_area(company_name, pool),
         funding_round=latest_funding_round
     )
     final_content = email_content.format(
         first_name=first_name,
         company_name=company_name,
         company_description=company_description,
-        hiring_area=hiring_area,
+        hiring_area=await get_hiring_area(company_name, pool),
         funding_round=latest_funding_round
     )
 
@@ -147,6 +146,10 @@ async def process_people(
     Returns:
         List of organization_ids that were missing
     """
+    if not people:
+        logger.warning("No eligible people found")
+        return []
+
     unfound_people: List[dict[str, str | int]] = []
 
     for person in people:
@@ -222,10 +225,10 @@ async def retry_unfound_people(
 # Main orchestrator
 # ---------------------------------------------------------
 
-async def main(pool):
+async def main(pool, organization_ids: List[str] = None):
     logger.info("Starting outreach pipeline...")
 
-    people = await fetch_people(pool)
+    people = await fetch_people(pool, organization_ids=organization_ids)
 
     unfound_people = await process_people(people, pool)
 
