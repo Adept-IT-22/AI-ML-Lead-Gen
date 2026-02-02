@@ -23,7 +23,7 @@ async def no_rate_limit_people_search(
         api_url: str = PEOPLE_SEARCH_URL, 
         headers: Dict[str, str] = APOLLO_HEADERS
     )->Dict[str, Any]:
-    logger.info(f"Performing people search using NEW api_search endpoint...")
+    logger.info("Performing people search for %r...", org_domains)
 
     # Clean org_ids and org_domains to remove None values
     org_ids = [oid for oid in org_ids if oid]
@@ -39,8 +39,6 @@ async def no_rate_limit_people_search(
         "page": 1,
         "per_page": 10
     }
-
-    logger.info(f"Apollo api_search Payload: {json.dumps(payload, indent=2)}")
 
     try:
         #API call then check for errors
@@ -81,8 +79,8 @@ if __name__ == "__main__":
         async with httpx.AsyncClient(timeout=10.0) as client:
             results = await people_search(
                 client=client, 
-                org_ids=["64523d489cad5100a35209c7", "5569f0e5736964254fc3bd00"], 
-                org_domains=["coloop.ai", "beyondtype1.org"])
+                org_ids=["5f50a22da4560d00e3eddf31"], 
+                org_domains=["nvidia.com"])
             logger.info(f"People search results are: \n{results}")
 
         duration = time.perf_counter() - start_time

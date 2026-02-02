@@ -862,7 +862,10 @@ async def fetch_emails_sent(pool, company_id):
 
     return [dict(email) for email in emails]
 
-async def fetch_eligible_people(pool)->List:
+async def fetch_eligible_people(pool, organization_ids: List[str] = None)->List:
+    if organization_ids == []:
+        return []
+
     query = """
         SELECT 
             *
@@ -875,11 +878,19 @@ async def fetch_eligible_people(pool)->List:
         AND (
             times_contacted = 0
             OR last_contacted_at <= now() - interval '7 days'
-        );
+        )
     """
+    
+    params = []
+    if organization_ids:
+        query += " AND organization_id = ANY($1)"
+        params.append(organization_ids)
+        
+    query += ";"
+    
     try:
         async with pool.acquire() as conn:
-            people = await conn.fetch(query)
+            people = await conn.fetch(query, *params)
             return [dict(person) for person in people]
     except asyncpg.PostgresError as e:
         logger.error(f"Database error while trying to fetch uncontacted people", str(e))
