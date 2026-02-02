@@ -230,8 +230,9 @@ async def main(pool):
     unfound_people = await process_people(people, pool)
 
     if unfound_people:
-        await resolve_missing_companies(unfound_people, pool)
-        await retry_unfound_people(unfound_people, pool)
+        #await resolve_missing_companies(unfound_people, pool)
+        #await retry_unfound_people(unfound_people, pool)
+        logger.warning("Found %r unfound people", len(unfound_people))
 
     logger.info("Email sending complete")
 

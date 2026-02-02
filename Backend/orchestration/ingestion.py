@@ -51,7 +51,7 @@ logging.basicConfig(level=logging.INFO)
 async def run_ingestion_modules()->Dict:
     #Each coroutine and it's name
     coroutines = [
-        ("finsmes", finsmes_main()),
+        #("finsmes", finsmes_main()),
         #("tech_eu", tech_eu_main()),
         #("techcrunch", techcrunch_main()),
         #("sifted_eu", sifted_eu_main()),
@@ -66,7 +66,7 @@ async def run_ingestion_modules()->Dict:
         #("venture_beat", venture_beat_main()),
         #("betakit", betakit_main()),
         #("startup_hub", startup_hub_main()),
-        #("eu_startups", eu_startups_main()),
+        ("eu_startups", eu_startups_main()),
         #("thenextweb", thenextweb_main()),
         #("pr_news_wire", pr_news_wire_main()),
         #("vestbee", vestbee_main()),
@@ -82,8 +82,8 @@ async def run_ingestion_modules()->Dict:
         #("python_org", python_org_main()),
         #("working_nomads", working_nomads_main()),
         #("remotive", remotive_main()),
-        ("we_work_remotely", we_work_remotely_main()),
-        #("startup_daily_net", startup_daily_net_main()),
+        #("we_work_remotely", we_work_remotely_main()),
+        ("startup_daily_net", startup_daily_net_main()),
         #("nodesk", nodesk_main()),
         #("arc_dev", arc_dev_main()),
         #("jobicy", jobicy_main()),

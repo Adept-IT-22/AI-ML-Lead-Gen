@@ -13,7 +13,7 @@ limiter = AsyncLimiter(max_rate=180, time_period=60)
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-ORGANIZATION_SEARCH_URL = "https://api.apollo.io/api/v1/mixed_companies/search"
+ORGANIZATION_SEARCH_URL = "https://api.apollo.io/api/v1/organizations/search"
 
 async def no_rate_limit_org_search(
         client: httpx.AsyncClient, 

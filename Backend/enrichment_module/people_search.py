@@ -1,4 +1,5 @@
 import time
+import json
 import httpx
 import logging
 import asyncio
@@ -13,7 +14,7 @@ limiter = AsyncLimiter(max_rate=180, time_period=60)
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-PEOPLE_SEARCH_URL = "https://api.apollo.io/api/v1/mixed_people/search"
+PEOPLE_SEARCH_URL = "https://api.apollo.io/api/v1/mixed_people/api_search"
 
 async def no_rate_limit_people_search(
         client: httpx.AsyncClient, 
@@ -22,19 +23,24 @@ async def no_rate_limit_people_search(
         api_url: str = PEOPLE_SEARCH_URL, 
         headers: Dict[str, str] = APOLLO_HEADERS
     )->Dict[str, Any]:
-    logger.info(f"Performing people search...")
+    logger.info(f"Performing people search using NEW api_search endpoint...")
 
-    #Payload going into request body
+    # Clean org_ids and org_domains to remove None values
+    org_ids = [oid for oid in org_ids if oid]
+    org_domains = [od for od in org_domains if od]
+
     payload = {
         "person_titles": ["ceo", "sales", "founder"],
         "include_similar_titles": True,
-        "person_seniorities": ["owner", "founder", "c-suite", "partner", "vp", "head", "director", "manager"],
-        "contact_email_status": ["verified", "unverified", "likely to engage"],
+        "person_seniorities": ["owner", "founder", "c_suite", "partner", "vp", "head", "director", "manager"],
+        "contact_email_status": ["verified", "unverified", "likely_to_engage"],
         "organization_ids": org_ids,
         "q_organization_domains_list": org_domains,
         "page": 1,
         "per_page": 10
     }
+
+    logger.info(f"Apollo api_search Payload: {json.dumps(payload, indent=2)}")
 
     try:
         #API call then check for errors
@@ -43,6 +49,10 @@ async def no_rate_limit_people_search(
             headers=headers, 
             json=payload
         )
+        
+        if response.status_code != 200:
+            logger.error(f"Apollo API Error {response.status_code}: {response.text}")
+            
         response.raise_for_status()
 
         logger.info(f"Completed people search")

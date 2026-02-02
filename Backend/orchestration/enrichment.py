@@ -17799,11 +17799,17 @@ if __name__ == "__main__":
             ]
             ]
         async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
-            #await search_for_people(bulk_enriched_orgs, client)
+            searched_people = await search_for_people(bulk_enriched_orgs, client)
+            logger.info("SEARCHED PEOPLE FOUND")
+            #logger.info("SEARCHED PEOPLE\n%r", searched_people)
 
-            org_ids = ["632d58f35af1c200a4421ff1", "6605a2c9ec3b5304394889b4","6610cf7c242c9d01c711fa87", "54a1201f69702d97c1554802"]
-            results = await organization_search(data_to_enrich_list=org_ids, client=client)
-            logger.info("Results:\n%r", results)
+            enriched_people = await enrich_people(searched_people, client)
+            logger.info("ENRICHED PEOPLE DONE")
+            logger.info("SAMPLE ENRICHED PERSON: %r", enriched_people[0] if enriched_people else "None")
+
+            #org_ids = ["632d58f35af1c200a4421ff1", "6605a2c9ec3b5304394889b4","6610cf7c242c9d01c711fa87", "54a1201f69702d97c1554802"]
+            #results = await organization_search(data_to_enrich_list=org_ids, client=client)
+            #logger.info("Results:\n%r", results)
 
 
     asyncio.run(demo())

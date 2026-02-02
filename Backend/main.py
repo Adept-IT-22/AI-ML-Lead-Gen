@@ -99,7 +99,7 @@ async def main():
 #TO BE CHANGED!!!!
 @app.route('/fetch-companies', methods=["GET"])
 async def fetch_company_data():
-    company_data = await fetch_companies_temporary()
+    company_data = await fetch_companies()
     if not company_data:
         return jsonify({"Error": "No company data found"}), 404
     return jsonify(company_data), 200
