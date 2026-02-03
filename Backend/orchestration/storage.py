@@ -25,7 +25,7 @@ async def main(
     searched_people = enrichment_data.get('searched_people') 
     enriched_people = enrichment_data.get('enriched_people')
 
-    await company_storage(
+    org_ids = await company_storage(
         pool,
         all_normalized_data=all_normalized_data,
         searched_orgs=searched_orgs,
@@ -37,6 +37,8 @@ async def main(
         searched_people=searched_people,
         enriched_people=enriched_people
     )
+
+    return org_ids
 
 if __name__ == "__main__":
     import os
