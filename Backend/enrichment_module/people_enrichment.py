@@ -6,6 +6,10 @@ from httpx import AsyncClient
 from typing import Dict, List
 from config.apollo_config import headers as APOLLO_HEADERS
 from helpers.apollo_rate_limiter import rate_limited_apollo_call
+from aiolimiter import AsyncLimiter
+
+#Apollo allows 200 requests per minute
+limiter = AsyncLimiter(max_rate=180, time_period=60)
 
 #This API is necessary to get user emails and numbers
 API_URL = "https://api.apollo.io/api/v1/people/match"
@@ -42,7 +46,6 @@ async def no_rate_limit_people_enrichment(
       )
 
       logger.info(f"Completed people enrichment for {user_name}")
-
       return response.json()
 
     except Exception as e:
@@ -56,16 +59,17 @@ async def people_enrichment(
       headers=APOLLO_HEADERS
     )->Dict:
 
-      return await rate_limited_apollo_call(no_rate_limit_people_enrichment, client, user_id, user_name, url, headers)
+      return await rate_limited_apollo_call(no_rate_limit_people_enrichment, client, user_id, user_name, url, headers, limiter=limiter)
 
 if __name__ == "__main__":
     async def main():
       async with AsyncClient(timeout=30.0) as client:
-        await people_enrichment(
+        x = await people_enrichment(
            client=client, 
            user_id="610c3e23d4d76a0001aa35b3",
            user_name="Charles Hayter"
                 )
+        logger.info("%r", x)
 
     asyncio.run(main())
       

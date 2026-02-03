@@ -7,6 +7,10 @@ import asyncio
 from typing import Dict, Any, List
 from config.apollo_config import headers as APOLLO_HEADERS
 from helpers.apollo_rate_limiter import rate_limited_apollo_call
+from aiolimiter import AsyncLimiter
+
+#Apollo allows 200 requests per minute
+limiter = AsyncLimiter(max_rate=180, time_period=60)
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -53,7 +57,7 @@ async def single_org_enrichment(
         headers: Dict[str, str] = APOLLO_HEADERS
     )->Dict[str, Any]:
 
-    return await rate_limited_apollo_call(no_rate_limit_single_org_enrichment, client, company_website, api_url, headers)
+    return await rate_limited_apollo_call(no_rate_limit_single_org_enrichment, client, company_website, api_url, headers, limiter=limiter)
 
 if __name__ == "__main__":
     async def main():

@@ -19,14 +19,9 @@ async def people_storage(searched_people: Dict[str, List | str | Dict], enriched
             try:
                 #From people search API
                 apollo_user_id = person_search_data.get("id", "")
-                user_first_name = person_search_data.get("first_name", "")
-                user_last_name = person_search_data.get("last_name", "")
-                user_full_name = person_search_data.get("name", "")
-                user_linkedin_url = person_search_data.get("linkedin_url")
                 user_title = person_search_data.get("title", "")
                 user_email_status = person_search_data.get("email_status", "")
                 user_headline = person_search_data.get("headline", "")
-                user_organization_id = person_search_data.get("organization_id", "")
                 user_seniority = person_search_data.get("seniority", "")
                 user_departments = person_search_data.get("departments", [])
                 user_subdepartments = person_search_data.get("subdepartments", [])
@@ -34,6 +29,11 @@ async def people_storage(searched_people: Dict[str, List | str | Dict], enriched
 
                 #From people enrichment API
                 user_email = person_enrichment_data.get("person", {}).get("email", "")
+                user_organization_id = person_enrichment_data.get("person", {}).get("organization_id", "")
+                user_first_name = person_enrichment_data.get("person", {}).get("first_name", "")
+                user_last_name = person_enrichment_data.get("person", {}).get("last_name", "")
+                user_full_name = person_enrichment_data.get("person", {}).get("name", "")
+                user_linkedin_url = person_enrichment_data.get("person", {}).get("linkedin_url", "")
                 user_phone_number = None
 
                 #user_phone_number_data = person_enrichment_data.get("phone_numbers", [])

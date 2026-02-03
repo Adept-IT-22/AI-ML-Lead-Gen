@@ -68,7 +68,7 @@ async def run_ingestion_modules()->Dict:
         #("startup_hub", startup_hub_main()),
         #("eu_startups", eu_startups_main()),
         #("thenextweb", thenextweb_main()),
-        #("pr_news_wire", pr_news_wire_main()),
+        ("pr_news_wire", pr_news_wire_main()),
         #("vestbee", vestbee_main()),
         #("geekwire", geekwire_main()),
         #("eu_entrepreneur", eu_entrepreneur_main()),
@@ -91,7 +91,7 @@ async def run_ingestion_modules()->Dict:
         #("djinni", djinni_main()),
         #("berlin_startup_jobs", berlin_startup_jobs_main()),
         #("hacker_news", hacker_news_main()),
-        ("remote_frontend_jobs", remote_frontend_jobs_main())
+        #("remote_frontend_jobs", remote_frontend_jobs_main())
     ]
 
     #A list of wrap coroutine objects to be run

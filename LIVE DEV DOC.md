@@ -202,28 +202,4 @@ This section is a to-do list for me as the programmer.
 + Migrate from sendgrid to apollo
 + Integrate with odoo
 
-## Database Changes Required
-
-### Unsubscribe Feature - Mock People Table Updates
--IMPORTANT: Make these changes in prod server
-
-The following SQL commands need to be executed on the `people` table to support email unsubscribe functionality:
-
-```sql
--- Add unsubscribe token column
-ALTER TABLE people 
-ADD COLUMN IF NOT EXISTS unsubscribe_token UUID UNIQUE DEFAULT gen_random_uuid();
-
--- Add unsubscribe timestamp for audit trail
-ALTER TABLE people
-ADD COLUMN IF NOT EXISTS unsubscribed_at TIMESTAMP;
-
--- Create index for fast token lookups
-CREATE INDEX IF NOT EXISTS idx_people_unsubscribe_token ON people(unsubscribe_token);
-```
-
-**Purpose:**
-- `unsubscribe_token`: Unique UUID for each person to generate secure unsubscribe links
-- `unsubscribed_at`: Timestamp to track when a person unsubscribed (audit trail)
-- Index: Improves query performance when validating unsubscribe tokens
-
++ Nodesk, working_nomads => Unknown company name

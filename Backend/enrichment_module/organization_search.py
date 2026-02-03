@@ -5,11 +5,15 @@ import asyncio
 from typing import Dict, Any, List
 from config.apollo_config import headers as APOLLO_HEADERS
 from helpers.apollo_rate_limiter import rate_limited_apollo_call
+from aiolimiter import AsyncLimiter
+
+#Apollo allows 200 requests per minute
+limiter = AsyncLimiter(max_rate=180, time_period=60)
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-ORGANIZATION_SEARCH_URL = "https://api.apollo.io/api/v1/mixed_companies/search"
+ORGANIZATION_SEARCH_URL = "https://api.apollo.io/api/v1/organizations/search"
 
 async def no_rate_limit_org_search(
         client: httpx.AsyncClient, 
@@ -83,9 +87,9 @@ async def org_search(
         #raise ValueError("Pass one of company name or organization ids")
 
     if company_name:
-        return await rate_limited_apollo_call(no_rate_limit_org_search, client, company_name=company_name, api_url=api_url, headers=headers)
+        return await rate_limited_apollo_call(no_rate_limit_org_search, client, company_name=company_name, api_url=api_url, headers=headers, limiter=limiter)
     elif organization_ids:
-        return await rate_limited_apollo_call(no_rate_limit_org_search, client, organization_ids=organization_ids, api_url=api_url, headers=headers)
+        return await rate_limited_apollo_call(no_rate_limit_org_search, client, organization_ids=organization_ids, api_url=api_url, headers=headers, limiter=limiter)
         
 
 if __name__ == "__main__":

@@ -1,15 +1,20 @@
 import time
+import json
 import httpx
 import logging
 import asyncio
 from typing import Dict, Any, List
 from config.apollo_config import headers as APOLLO_HEADERS
 from helpers.apollo_rate_limiter import rate_limited_apollo_call
+from aiolimiter import AsyncLimiter
+
+#Apollo allows 200 requests per minute
+limiter = AsyncLimiter(max_rate=180, time_period=60)
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-PEOPLE_SEARCH_URL = "https://api.apollo.io/api/v1/mixed_people/search"
+PEOPLE_SEARCH_URL = "https://api.apollo.io/api/v1/mixed_people/api_search"
 
 async def no_rate_limit_people_search(
         client: httpx.AsyncClient, 
@@ -18,14 +23,17 @@ async def no_rate_limit_people_search(
         api_url: str = PEOPLE_SEARCH_URL, 
         headers: Dict[str, str] = APOLLO_HEADERS
     )->Dict[str, Any]:
-    logger.info(f"Performing people search...")
+    logger.info("Performing people search for %r...", org_domains)
 
-    #Payload going into request body
+    # Clean org_ids and org_domains to remove None values
+    org_ids = [oid for oid in org_ids if oid]
+    org_domains = [od for od in org_domains if od]
+
     payload = {
         "person_titles": ["ceo", "sales", "founder"],
         "include_similar_titles": True,
-        "person_seniorities": ["owner", "founder", "c-suite", "partner", "vp", "head", "director", "manager"],
-        "contact_email_status": ["verified", "unverified", "likely to engage"],
+        "person_seniorities": ["owner", "founder", "c_suite", "partner", "vp", "head", "director", "manager"],
+        "contact_email_status": ["verified", "unverified", "likely_to_engage"],
         "organization_ids": org_ids,
         "q_organization_domains_list": org_domains,
         "page": 1,
@@ -39,6 +47,10 @@ async def no_rate_limit_people_search(
             headers=headers, 
             json=payload
         )
+        
+        if response.status_code != 200:
+            logger.error(f"Apollo API Error {response.status_code}: {response.text}")
+            
         response.raise_for_status()
 
         logger.info(f"Completed people search")
@@ -57,7 +69,7 @@ async def people_search(
     )->Dict[str, Any]:
 
     return await rate_limited_apollo_call(
-        no_rate_limit_people_search, client, org_ids, org_domains, api_url, headers
+        no_rate_limit_people_search, client, org_ids, org_domains, api_url, headers, limiter=limiter
         )
         
 
@@ -67,8 +79,8 @@ if __name__ == "__main__":
         async with httpx.AsyncClient(timeout=10.0) as client:
             results = await people_search(
                 client=client, 
-                org_ids=["64523d489cad5100a35209c7", "5569f0e5736964254fc3bd00"], 
-                org_domains=["coloop.ai", "beyondtype1.org"])
+                org_ids=["5f50a22da4560d00e3eddf31"], 
+                org_domains=["nvidia.com"])
             logger.info(f"People search results are: \n{results}")
 
         duration = time.perf_counter() - start_time
