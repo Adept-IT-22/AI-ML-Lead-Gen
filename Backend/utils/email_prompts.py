@@ -5,31 +5,31 @@ email_prompts = {
         Your goal is to secure a meeting by demonstrating a specific understanding of the prospect's business and connecting it directly to the services offered by your company.
 
         ---
-        ### **Context & Services Offered (Your Company)**
-        Your company, Adept Technologies, provides **scalable support services** to AI/ML companies, specifically:
-        1. **Data Solutions:** Data annotation, data labeling, data quality assurance (QA).
-        2. **ML Services:** Model validation, human-in-the-loop support, specialized data collection.
-        3. **Customer Engagement:** Handling complex customer interactions, filtering/qualifying leads that require human review, and analytics.
+        ### Context & Services Offered (Your Company)
+        Your company, Adept Technologies, provides <strong>scalable support services</strong> to AI/ML companies, specifically:
+        1. <strong>Data Solutions:</strong> Data annotation, data labeling, data quality assurance (QA).
+        2. <strong>ML Services:</strong> Model validation, human-in-the-loop support, specialized data collection.
+        3. <strong>Customer Engagement:</strong> Handling complex customer interactions, filtering/qualifying leads that require human review, and analytics.
         Adept also provides afforability and speed without compromising on quality. Ensure you highlight this in your email.
 
         ---
-        ### **Prospect Company Profile**
-        The company's growth status is: **{growth_status}**
+        ### Prospect Company Profile
+        The company's growth status is: <strong>{growth_status}</strong>
         Use the following company description to identify the core challenges, primary products, and target audience:
         {company_description}
 
         ---
-        ### **Email Requirements**
-        /1. **Format:** The content must be formatted as raw HTML body content. Use the placeholders: `{{first_name}}`, `{{company_name}}`, `{{funding_round}}` (if trigger is 'funding'), and `{{hiring_area}}` (if trigger is 'hiring').
-        2. **Subject Line:** Create a subject line that is relevant to the prospect's vertical *and* their growth status.
-        3. **Personalization:**
-            * **Crucially,** the email must mention **two (2) specific ways** Adept Technologies' services (from the list above) can directly support or enhance the prospective company's current operations.
-        4. **Tone:** Professional and direct, with a congratulatory or observant opening.
-        5. **Call to Action (CTA):** End with a clear, low-friction request for a quick chat.
-        6. **Length:** Keep the email concise and impactful.
+        ### Email Requirements
+        /1. <strong>Format:</strong> The content must be formatted as raw HTML body content. Use the placeholders: `{{first_name}}`, `{{company_name}}`, `{{funding_round}}` (if trigger is 'funding'), and `{{hiring_area}}` (if trigger is 'hiring').
+        2. <strong>Subject Line:</strong> Create a subject line that is relevant to the prospect's vertical *and* their growth status.
+        3. <strong>Personalization:</strong>
+            * <strong>Crucially,</strong> the email must mention <strong>two (2) specific ways</strong> Adept Technologies' services (from the list above) can directly support or enhance the prospective company's current operations.
+        4. <strong>Tone:</strong> Professional and direct, with a congratulatory or observant opening.
+        5. <strong>Call to Action (CTA):</strong> End with a clear, low-friction request for a quick chat.
+        6. <strong>Length:</strong> Keep the email concise and impactful.
 
         ---
-        ### **Email Output Template to Follow (Adapt the content within the tags):**
+        ### Email Output Template to Follow (Adapt the content within the tags):
 ```html
         <html>
             <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -61,31 +61,31 @@ email_prompts = {
         Your goal is to re-engage the prospect with a different angle while maintaining professionalism and respecting their time.
 
         ---
-        ### **Context & Services Offered (Your Company)**
-        Your company, Adept Technologies, provides **scalable support services** to AI/ML companies, specifically:
-        1. **Data Solutions:** Data annotation, data labeling, data quality assurance (QA).
-        2. **ML Services:** Model validation, human-in-the-loop support, specialized data collection.
-        3. **Customer Engagement:** Handling complex customer interactions, filtering/qualifying leads that require human review, and analytics.
+        ### Context & Services Offered (Your Company)
+        Your company, Adept Technologies, provides <strong>scalable support services</strong> to AI/ML companies, specifically:
+        1. <strong>Data Solutions:</strong> Data annotation, data labeling, data quality assurance (QA).
+        2. <strong>ML Services:</strong> Model validation, human-in-the-loop support, specialized data collection.
+        3. <strong>Customer Engagement:</strong> Handling complex customer interactions, filtering/qualifying leads that require human review, and analytics.
         Adept also provides afforability and speed without compromising on quality. Ensure you highlight this in your email.
 
         ---
-        ### **Prospect Company Profile**
-        The company's growth status is: **{growth_status}**
+        ### Prospect Company Profile
+        The company's growth status is: <strong>{growth_status}</strong>
         Use the following company description to identify the core challenges, primary products, and target audience:
         {company_description}
 
         ---
-        ### **Email Requirements**
-        1. **Format:** The content must be formatted as raw HTML body content. Use the placeholders: `{{first_name}}`, {{company_name}}`, `{{funding_round}}` (if trigger is 'funding'), and `{{hiring_area}}` (if trigger is 'hiring').
-        2. **Subject Line:** Create a short, follow-up oriented subject line that is still personalized to the company's growth trigger.
-        3. **Personalization:**
-            * **Crucially,** the email must briefly reference your previous email and highlight **one (1) high-impact way** Adept Technologies can help them, focusing on speed, cost-efficiency, or freeing internal teams.
-        4. **Tone:** Polite, professional, and confident (assume relevance, not rejection).
-        5. **Call to Action (CTA):** End with a simple yes/no question or short meeting request.
-        6. **Length:** Keep this email **shorter than the first email** - concise and to the point.
+        ### Email Requirements
+        1. <strong>Format:</strong> The content must be formatted as raw HTML body content. Use the placeholders: `{{first_name}}`, {{company_name}}`, `{{funding_round}}` (if trigger is 'funding'), and `{{hiring_area}}` (if trigger is 'hiring').
+        2. <strong>Subject Line:</strong> Create a short, follow-up oriented subject line that is still personalized to the company's growth trigger.
+        3. <strong>Personalization:</strong>
+            * <strong>Crucially,</strong> the email must briefly reference your previous email and highlight <strong>one (1) high-impact way</strong> Adept Technologies can help them, focusing on speed, cost-efficiency, or freeing internal teams.
+        4. <strong>Tone:</strong> Polite, professional, and confident (assume relevance, not rejection).
+        5. <strong>Call to Action (CTA):</strong> End with a simple yes/no question or short meeting request.
+        6. <strong>Length:</strong> Keep this email <strong>shorter than the first email</strong> - concise and to the point.
 
         ---
-        ### **Email Output Template to Follow (Adapt the content within the tags):**
+        ### Email Output Template to Follow (Adapt the content within the tags):
 ```html
         <html>
             <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -113,32 +113,32 @@ email_prompts = {
         Your goal is to reframe the value proposition with a fresh angle and provide a new reason for the prospect to engage.
 
         ---
-        ### **Context & Services Offered (Your Company)**
-        Your company, Adept Technologies, provides **scalable support services** to AI/ML companies, specifically:
-        1. **Data Solutions:** Data annotation, data labeling, data quality assurance (QA).
-        2. **ML Services:** Model validation, human-in-the-loop support, specialized data collection.
-        3. **Customer Engagement:** Handling complex customer interactions, filtering/qualifying leads that require human review, and analytics.
+        ### Context & Services Offered (Your Company)
+        Your company, Adept Technologies, provides <strong>scalable support services</strong> to AI/ML companies, specifically:
+        1. <strong>Data Solutions:</strong> Data annotation, data labeling, data quality assurance (QA).
+        2. <strong>ML Services:</strong> Model validation, human-in-the-loop support, specialized data collection.
+        3. <strong>Customer Engagement:</strong> Handling complex customer interactions, filtering/qualifying leads that require human review, and analytics.
         Adept also provides afforability and speed without compromising on quality. Ensure you highlight this in your email.
 
         ---
-        ### **Prospect Company Profile**
-        The company's growth status is: **{growth_status}**
+        ### Prospect Company Profile
+        The company's growth status is: <strong>{growth_status}</strong>
         Use the following company description to identify the core challenges, primary products, and target audience:
         {company_description}
 
         ---
-        ### **Email Requirements**
-        1. **Format:** The content must be formatted as raw HTML body content. Use the placeholders: `{{first_name}}`, `{{company_name}}`, `{{funding_round}}` (if trigger is 'funding'), and `{{hiring_area}}` (if trigger is 'hiring').
-        2. **Subject Line:** Create a subject line with a **different angle** than previous emails - can be problem-oriented rather than congratulatory.
-        3. **Personalization:**
-            * **Crucially,** acknowledge that timing may not have been ideal, then introduce a **new benefit or use case** (e.g., risk reduction, quality improvement, speed-to-market) that hasn't been emphasized before.
+        ### Email Requirements
+        1. <strong>Format:</strong> The content must be formatted as raw HTML body content. Use the placeholders: `{{first_name}}`, `{{company_name}}`, `{{funding_round}}` (if trigger is 'funding'), and `{{hiring_area}}` (if trigger is 'hiring').
+        2. <strong>Subject Line:</strong> Create a subject line with a <strong>different angle</strong> than previous emails - can be problem-oriented rather than congratulatory.
+        3. <strong>Personalization:</strong>
+            * <strong>Crucially,</strong> acknowledge that timing may not have been ideal, then introduce a <strong>new benefit or use case</strong> (e.g., risk reduction, quality improvement, speed-to-market) that hasn't been emphasized before.
             * Use a concrete example relevant to their product or market.
-        4. **Tone:** Respectful, insight-driven, and non-pushy. Assume they are busy, not uninterested.
-        5. **Call to Action (CTA):** Give them control with options like "Worth a quick conversation?" or "Should I reach out later this quarter?"
-        6. **Length:** Keep this email **very concise** - shorter than the first follow-up.
+        4. <strong>Tone:</strong> Respectful, insight-driven, and non-pushy. Assume they are busy, not uninterested.
+        5. <strong>Call to Action (CTA):</strong> Give them control with options like "Worth a quick conversation?" or "Should I reach out later this quarter?"
+        6. <strong>Length:</strong> Keep this email <strong>very concise</strong> - shorter than the first follow-up.
 
         ---
-        ### **Email Output Template to Follow (Adapt the content within the tags):**
+        ### Email Output Template to Follow (Adapt the content within the tags):
 ```html
         <html>
             <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -166,31 +166,31 @@ email_prompts = {
         Your goal is to provide a graceful exit while leaving the door open for future engagement and giving the prospect full control.
 
         ---
-        ### **Context & Services Offered (Your Company)**
-        Your company, Adept Technologies, provides **scalable support services** to AI/ML companies, specifically:
-        1. **Data Solutions:** Data annotation, data labeling, data quality assurance (QA).
-        2. **ML Services:** Model validation, human-in-the-loop support, specialized data collection.
-        3. **Customer Engagement:** Handling complex customer interactions, filtering/qualifying leads that require human review, and analytics.
+        ### Context & Services Offered (Your Company)
+        Your company, Adept Technologies, provides <strong>scalable support services</strong> to AI/ML companies, specifically:
+        1. <strong>Data Solutions:</strong> Data annotation, data labeling, data quality assurance (QA).
+        2. <strong>ML Services:</strong> Model validation, human-in-the-loop support, specialized data collection.
+        3. <strong>Customer Engagement:</strong> Handling complex customer interactions, filtering/qualifying leads that require human review, and analytics.
         Adept also provides afforability and speed without compromising on quality.
 
         ---
-        ### **Prospect Company Profile**
-        The company's growth status is: **{growth_status}**
+        ### Prospect Company Profile
+        The company's growth status is: <strong>{growth_status}</strong>
         Use the following company description to identify the core challenges, primary products, and target audience:
         {company_description}
 
         ---
-        ### **Email Requirements**
-        1. **Format:** The content must be formatted as raw HTML body content. Use the placeholders: `{{first_name}}`, `{{company_name}}`, `{{funding_round}}` (if trigger is 'funding'), and `{{hiring_area}}` (if trigger is 'hiring').
-        2. **Subject Line:** Create a clear and honest subject line that signals closure (e.g., "Closing the loop", "Last note", "One final thought").
-        3. **Personalization:**
-            * **Crucially,** acknowledge the lack of response professionally, restate the core value in **one sentence**, and give them full control (opt-in or opt-out).
-        4. **Tone:** Polite, calm, professional, with zero guilt or pressure. This is about respect, not persuasion.
-        5. **Call to Action (CTA):** Provide options like "Should I close the loop?", "Worth revisiting later?", or "Happy to reconnect if priorities change."
-        6. **Length:** This should be the **shortest email in the entire sequence** - ultra-concise and respectful.
+        ### Email Requirements
+        1. <strong>Format:</strong> The content must be formatted as raw HTML body content. Use the placeholders: `{{first_name}}`, `{{company_name}}`, `{{funding_round}}` (if trigger is 'funding'), and `{{hiring_area}}` (if trigger is 'hiring').
+        2. <strong>Subject Line:</strong> Create a clear and honest subject line that signals closure (e.g., "Closing the loop", "Last note", "One final thought").
+        3. <strong>Personalization:</strong>
+            * <strong>Crucially,</strong> acknowledge the lack of response professionally, restate the core value in <strong>one sentence</strong>, and give them full control (opt-in or opt-out).
+        4. <strong>Tone:</strong> Polite, calm, professional, with zero guilt or pressure. This is about respect, not persuasion.
+        5. <strong>Call to Action (CTA):</strong> Provide options like "Should I close the loop?", "Worth revisiting later?", or "Happy to reconnect if priorities change."
+        6. <strong>Length:</strong> This should be the <strong>shortest email in the entire sequence</strong> - ultra-concise and respectful.
 
         ---
-        ### **Email Output Template to Follow (Adapt the content within the tags):**
+        ### Email Output Template to Follow (Adapt the content within the tags):
         <html>
             <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
                 <p>Hello {first_name},</p>
