@@ -252,17 +252,20 @@ async def main(
         organization_ids or [],
     )
 
-    retry_people = await fetch_people_for_retry(
-        pool,
-        limit=RETRY_LIMIT_PER_DAY,
-    )
+    #retry_people = await fetch_people_for_retry(
+        #pool,
+        #limit=RETRY_LIMIT_PER_DAY,
+    #)
 
-    people_to_contact = dedupe_people(discovery_people + retry_people)
+    #people_to_contact = dedupe_people(discovery_people + retry_people)
+
+    people_to_contact = discovery_people
 
     logger.info(
-        "People to contact today: discovery=%d retry=%d total=%d",
+        #"People to contact today: discovery=%d retry=%d total=%d",
+        "People to contact today: discovery=%d total=%d",
         len(discovery_people),
-        len(retry_people),
+        #len(retry_people),
         len(people_to_contact),
     )
 
