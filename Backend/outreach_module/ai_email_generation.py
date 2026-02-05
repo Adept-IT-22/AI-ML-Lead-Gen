@@ -73,12 +73,12 @@ async def call_gemini_api(prompt: str) -> types.GenerateContentResponse:
 if __name__ == "__main__":
     from utils.prompts.email_generation_prompt import get_email_generation_prompt
     async def main():
-        desc = "Darwin AI is a technology company that specializes in artificial intelligence solutions to enhance business processes, particularly in sales and marketing. The company focuses on data-driven creative testing and analytics, offering software that analyzes advertising creatives to identify effective design elements and messaging. This helps clients tailor their ads to specific audiences and continuously improve their creative strategies.\n\nIn 2023, Darwin AI introduced a dedicated AI platform for consultative sales in high-value B2C sectors such as real estate, automotive, education, and online courses. This platform efficiently filters leads and identifies customer needs, ensuring that only qualified prospects are passed to sales agents, which boosts sales efficiency and reduces costs for small and medium-sized businesses.\n\nDarwin AI's offerings include creative analytics and testing software, consultative sales AI solutions, and personalized tools for SMBs, all aimed at optimizing marketing effectiveness and sales processes. The company serves a range of clients looking to enhance their sales strategies through AI-driven insights."
-        fname = "Mark"
-        cname = "Adept"
+        desc = "Enquire AI is a technology company based in Washington DC that has developed the world's first agentic research platform. This platform combines expert human judgment with the efficiency of large language models to provide real-time, verifiable insights across business, finance, and policy sectors. Enquire AI aims to enhance how organizations access and utilize expert knowledge, making them more knowledge-efficient for improved business outcomes. The platform features a multi-agent system that synthesizes expert input and produces decision-ready outputs quickly, often in hours. It allows users to engage in real-time dialogues with vetted subject-matter experts, streamlining the research process. Enquire AI also emphasizes compliance and security, ensuring that its services are reliable for various industries. The company serves a diverse clientele, including business leaders, researchers, and analysts, all seeking faster and more accurate answers to complex questions."
+        fname = "Cenk"
+        cname = "Enquire AI" 
         ttype = "funding"
-        fround = "seed"
-        seq_no = 1
+        fround = "latest"
+        seq_no = 4
         prompt = get_email_generation_prompt(desc, fname, cname, ttype, seq_no, fround)
         try:
             response = await call_gemini_api(prompt)
@@ -97,12 +97,14 @@ if __name__ == "__main__":
             first_name=fname if fname else None,
             company_name=cname if cname else None,
             company_description=desc if desc else None,
+            funding_round=fround if ttype == "funding" and fround else None
         )
 
         final_content = email_content.format(
             first_name=fname if fname else None,
             company_name=cname if cname else None,
             company_description=desc if desc else None,
+            funding_round=fround if ttype == "funding" and fround else None
         )
 
         print(final_subject)
