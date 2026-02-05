@@ -45,7 +45,7 @@ email_prompts = {
                 
                 <p>This allows your team to focus on [PROSPECT'S CORE MISSION] while we handle [TIME-CONSUMING TASK].</p>
                 
-                <p>Would you be open to a quick chat this week to explore how we can specifically support **{company_name}**'s next phase of growth?</p>
+                <p>Would you be open to a quick chat this week to explore how we can specifically support <strong>{company_name}'s</strong> next phase of growth?</p>
             </body>
         </html>
 ```
@@ -95,7 +95,7 @@ email_prompts = {
                 
                 <p>I know timing isn't always ideal, but many AI/ML teams we work with find that [SPECIFIC, HIGH-VALUE SOLUTION] becomes critical as they [RELATE TO GROWTH STATUS].</p>
                 
-                <p>For **{company_name}**, this could mean [CONCRETE BENEFIT - e.g., faster iteration cycles, reduced bottlenecks, improved data quality].</p>
+                <p>For <strong>{company_name}</strong>, this could mean [CONCRETE BENEFIT - e.g., faster iteration cycles, reduced bottlenecks, improved data quality].</p>
                 
                 <p>Worth a quick 15-minute conversation?</p>
             </body>
@@ -146,7 +146,7 @@ email_prompts = {
                 
                 <p>I realize my timing may not have been ideal with my previous messages.</p>
                 
-                <p>One thing I've seen with companies like **{company_name}** working on [THEIR PRODUCT/FOCUS]: [NEW ANGLE - e.g., risk mitigation, quality assurance, compliance requirements] often becomes a bottleneck as [GROWTH TRIGGER CONTEXT].</p>
+                <p>One thing I've seen with companies like <strong>{company_name}</strong> working on [THEIR PRODUCT/FOCUS]: [NEW ANGLE - e.g., risk mitigation, quality assurance, compliance requirements] often becomes a bottleneck as [GROWTH TRIGGER CONTEXT].</p>
                 
                 <p>We've helped similar teams [CONCRETE EXAMPLE - e.g., reduce model validation time by 40%, maintain 99%+ data quality during rapid scaling].</p>
                 
@@ -191,12 +191,11 @@ email_prompts = {
 
         ---
         ### **Email Output Template to Follow (Adapt the content within the tags):**
-```html
         <html>
             <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
                 <p>Hello {first_name},</p>
                 
-                <p>I haven't heard back, so I'm assuming now isn't the right time to explore how Adept could support **{company_name}** with [ONE-SENTENCE VALUE - e.g., scalable data solutions as you grow your AI capabilities].</p>
+                <p>I haven't heard back, so I'm assuming now isn't the right time to explore how Adept could support <strong>{company_name}</strong> with [ONE-SENTENCE VALUE - e.g., scalable data solutions as you grow your AI capabilities].</p>
                 
                 <p>I'll close the loop on my end unless I hear otherwise.</p>
                 

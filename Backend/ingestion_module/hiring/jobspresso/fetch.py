@@ -62,14 +62,26 @@ async def fetch_job_details(client: httpx.AsyncClient, url: str) -> Dict[str, An
 
         # Company extraction
         company = "Unknown"
-        company_match = re.search(r'<div[^>]*class="[^"]*company[^"]*"[^>]*>.*?<strong[^>]*>(.*?)</strong>', html, re.IGNORECASE | re.DOTALL)
+        # 1. Try job-company class
+        company_match = re.search(r'<li[^>]*class="job-company"[^>]*>.*?<a[^>]*>(.*?)</a>', html, re.IGNORECASE | re.DOTALL)
+        if not company_match:
+             # 2. Try JSON-LD
+             company_match = re.search(r'"hiringOrganization":\s*{[^}]*"name":\s*"(.*?)"', html, re.IGNORECASE | re.DOTALL)
+        
         if company_match:
             company = re.sub('<[^<]+?>', '', company_match.group(1)).strip()
-        else:
-             # Try another pattern
-             comp_link = re.search(r'target="_blank">Browse all jobs from (.*?)</a>', html)
-             if comp_link:
-                 company = comp_link.group(1).strip()
+
+        # Location extraction
+        location = ""
+        loc_match = re.search(r'<li[^>]*class="location"[^>]*>(.*?)</li>', html, re.IGNORECASE | re.DOTALL)
+        if loc_match:
+            location = re.sub('<[^<]+?>', '', loc_match.group(1)).strip()
+
+        # Date extraction
+        posted_date = ""
+        date_match = re.search(r'<li[^>]*class="date-posted"[^>]*>.*?<date>(.*?)</date>', html, re.IGNORECASE | re.DOTALL)
+        if date_match:
+            posted_date = date_match.group(1).replace("Posted ", "").strip()
 
         # Description
         description = ""
@@ -81,9 +93,10 @@ async def fetch_job_details(client: httpx.AsyncClient, url: str) -> Dict[str, An
             "id": job_id,
             "title": title,
             "company": company,
+            "location": location,
             "description": description[:3000],
             "url": url,
-            "date": "" # Date not easily in sitemap, AI can help or just use current
+            "date": posted_date
         }
     except Exception as e:
         logger.error(f"Error scraping job {url}: {e}")
@@ -162,4 +175,16 @@ async def main() -> Optional[Dict[str, Any]]:
         return llm_results
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    import pprint
+    import yappi
+    from profiling_module.profiling import handle_profiling
+    
+    yappi.set_clock_type("wall") # Use wall time for asyncio
+    yappi.start()
+    
+    results = asyncio.run(main())
+    
+    yappi.stop()
+    asyncio.run(handle_profiling()) # handle_profiling is async
+    
+    pprint.pprint(results)
