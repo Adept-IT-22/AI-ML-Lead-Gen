@@ -21,7 +21,7 @@ if not GEMINI_API_KEY:
     raise ValueError("Gemini API Key not found in env variables")
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel(
-    model_name="gemini-2.5-flash",
+    model_name="gemini-2.0-flash",
 )
 
 #===============================HANDLE RETRIES====================================
