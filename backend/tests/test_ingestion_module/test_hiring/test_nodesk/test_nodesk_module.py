@@ -6,7 +6,7 @@ from unittest.mock import patch, MagicMock, AsyncMock
 # Add project root to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../")))
 
-from Backend.ingestion_module.hiring.nodesk.fetch import fetch_sitemap_urls, fetch_job_details, main
+from backend.ingestion_module.hiring.nodesk.fetch import fetch_sitemap_urls, fetch_job_details, main
 
 @pytest.mark.asyncio
 async def test_fetch_sitemap_urls():
@@ -56,10 +56,10 @@ async def test_fetch_job_details():
     assert "knows Python" in job["description"]
 
 @pytest.mark.asyncio
-@patch("Backend.ingestion_module.hiring.nodesk.fetch.fetch_sitemap_urls")
-@patch("Backend.ingestion_module.hiring.nodesk.fetch.fetch_job_details")
-@patch("Backend.ingestion_module.hiring.nodesk.fetch.finalize_ai_extraction")
-@patch("Backend.ingestion_module.hiring.nodesk.fetch.software_dev_keywords", ["developer"])
+@patch("backend.ingestion_module.hiring.nodesk.fetch.fetch_sitemap_urls")
+@patch("backend.ingestion_module.hiring.nodesk.fetch.fetch_job_details")
+@patch("backend.ingestion_module.hiring.nodesk.fetch.finalize_ai_extraction")
+@patch("backend.ingestion_module.hiring.nodesk.fetch.software_dev_keywords", ["developer"])
 async def test_main_orchestration(mock_ai, mock_details, mock_sitemap):
     mock_sitemap.return_value = ["https://nodesk.co/remote-jobs/developer/"]
     mock_details.return_value = {

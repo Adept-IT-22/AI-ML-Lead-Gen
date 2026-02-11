@@ -87,10 +87,14 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
                 company_data_source = None
                 for normalized_company_info in all_normalized_data:
                     normalized_names = normalized_company_info.get("company_name", [])
+                    found_match = False
                     for normalized_name in normalized_names:
                         if normalized_name.lower() in company_name.lower() or company_name.lower() in normalized_name.lower():
                             company_data_source = normalized_company_info.get("type")
+                            found_match = True
                             break
+                    if found_match:
+                        break
 
                 #Fix the source link fetch
                 try:
