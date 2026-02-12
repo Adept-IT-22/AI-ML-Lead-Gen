@@ -164,16 +164,17 @@ async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, Li
 async def main():
     start_time = time.perf_counter()
     links_and_paragraphs = await fetch_prnewswire_data()
+    async with limiter:
 
-    if links_and_paragraphs and (links_and_paragraphs.get("urls") and links_and_paragraphs.get("paragraphs")):
-        try:
-            result = await finalize_ai_extraction(links_and_paragraphs=links_and_paragraphs)
-        except Exception as e:
-            logger.error(f"Failed to extract AI content from prnewswire beat's data: {str(e)}")
+        if links_and_paragraphs and (links_and_paragraphs.get("urls") and links_and_paragraphs.get("paragraphs")):
+            try:
+                result = await finalize_ai_extraction(links_and_paragraphs=links_and_paragraphs)
+            except Exception as e:
+                logger.error(f"Failed to extract AI content from prnewswire beat's data: {str(e)}")
+                result = {}
+        else:
+            logger.error("No links or paragraphs found for AI extraction. Skipping LLM call")
             result = {}
-    else:
-        logger.error("No links or paragraphs found for AI extraction. Skipping LLM call")
-        result = {}
 
     llm_results = copy.deepcopy(funding_data_dict)
     if result:
