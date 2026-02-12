@@ -68,7 +68,7 @@ def normalize_tags(tags: List[str])->List[str]:
     normalized_tags = []
     for tag in tags:
         clean_tag = tag.strip().lower()
-        if clean_tag and not clean_tag not in seen:
+        if clean_tag and clean_tag not in seen:
             seen.add(clean_tag)
             normalized_tags.append(clean_tag)
 

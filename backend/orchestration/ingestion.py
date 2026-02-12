@@ -56,7 +56,7 @@ async def run_ingestion_modules()->Dict:
         #("techcrunch", techcrunch_main()),
         #("sifted_eu", sifted_eu_main()),
         #("cbinsights", cbinsights_main()),
-        ("jobspresso", jobspresso_main()),
+        #("jobspresso", jobspresso_main()),
         #("crunchboard", crunchboard_main()),
         #("remoteok", remoteok_main()),
         #("american_bazaar_online", american_bazaar_online_main()),
@@ -88,7 +88,7 @@ async def run_ingestion_modules()->Dict:
         #("arc_dev", arc_dev_main()),
         #("jobicy", jobicy_main()),
         #("four_day_week", four_day_week_main()),
-        ("djinni", djinni_main()),
+        #("djinni", djinni_main()),
         #("berlin_startup_jobs", berlin_startup_jobs_main()),
         #("hacker_news", hacker_news_main()),
         #("remote_frontend_jobs", remote_frontend_jobs_main())

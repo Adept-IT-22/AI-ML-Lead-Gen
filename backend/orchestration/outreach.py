@@ -10,6 +10,8 @@ from services.db_service import (
     fetch_eligible_people,
     fetch_company_by_apollo_id,
     get_hiring_area,
+    get_painpoints,
+    fetch_funding_details,
     store_email,
     fetch_people_by_ids,
 )
@@ -81,8 +83,13 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
     funding_round = company.get("latest_funding_round", "latest")
 
     hiring_area = None
+    painpoints = []
     if data_source == "hiring":
         hiring_area = await get_hiring_area(company_name, pool)
+        painpoints = await get_painpoints(company_name, pool, "hiring")
+    
+    elif data_source == "funding":
+        painpoints = await get_painpoints(company_name, pool, "funding")
 
     if data_source not in {"funding", "hiring"}:
         logger.warning(
@@ -100,6 +107,7 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
         sequence_number=sequence_number,
         funding_round=funding_round,
         hiring_area=hiring_area,
+        painpoints=painpoints
     )
 
     ai_response = await call_gemini_api(prompt)

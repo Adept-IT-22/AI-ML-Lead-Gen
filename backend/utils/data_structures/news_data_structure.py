@@ -17,6 +17,7 @@ class FundingData(TypedDict):
     investor_companies: List[List[str]]
     investor_people: List[List[str]]
     tags: List[List[str]]
+    painpoints: List[List[str]]
 
 fetched_funding_data = {
     "type": "funding",
@@ -34,5 +35,6 @@ fetched_funding_data = {
     "currency": [],
     "investor_companies": [],
     "investor_people": [],
-    "tags": []
+    "tags": [],
+    "painpoints": []
 }
