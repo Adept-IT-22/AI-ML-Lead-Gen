@@ -165,8 +165,17 @@ if __name__ == "__main__":
         ttype = "funding"
         fround = "latest"
         seq_no = 1
+        painpoints = ['manual data labeling bottlenecks slowing down model iteration', 'high costs of maintaining in-house QA teams for ML', 'difficulty scaling customer support for global users']
         
-        prompt = get_email_generation_prompt(desc, fname, cname, ttype, seq_no, fround)
+        prompt = get_email_generation_prompt(
+            company_description=desc,
+            first_name=fname,
+            company_name=cname,
+            trigger_type=ttype,
+            sequence_number=seq_no,
+            funding_round=fround,
+            painpoints=painpoints
+        )
         
         try:
             response = await call_gemini_api(prompt)
