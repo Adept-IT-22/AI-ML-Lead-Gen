@@ -159,13 +159,13 @@ if __name__ == "__main__":
     from utils.prompts.email_generation_prompt import get_email_generation_prompt
     
     async def main():
-        desc = "Enquire AI is a technology company based in Washington DC that has developed the world's first agentic research platform. This platform combines expert human judgment with the efficiency of large language models to provide real-time, verifiable insights across business, finance, and policy sectors. Enquire AI aims to enhance how organizations access and utilize expert knowledge, making them more knowledge-efficient for improved business outcomes. The platform features a multi-agent system that synthesizes expert input and produces decision-ready outputs quickly, often in hours. It allows users to engage in real-time dialogues with vetted subject-matter experts, streamlining the research process. Enquire AI also emphasizes compliance and security, ensuring that its services are reliable for various industries. The company serves a diverse clientele, including business leaders, researchers, and analysts, all seeking faster and more accurate answers to complex questions."
-        fname = "Cenk"
-        cname = "Enquire AI" 
+        desc = "ManageMy is a SaaS technology company based in Charlotte, North Carolina, founded in 2018. The company specializes in an AI-driven digital platform designed for insurance carriers. This platform helps streamline various processes such as buying, underwriting, servicing, and claims, while also driving sales growth and enhancing customer experiences without the need to overhaul existing legacy systems. One of the key offerings is XPerience Studio, a no-code API-based solution that allows carriers to quickly configure workflows, forms, and digital journeys across multiple platforms. The digital front-end platform supports the entire policy lifecycle, including quoting, onboarding, and claims management. Additionally, ManageMy provides integrated marketing services through MyCustomer, which focuses on data-driven campaigns for upselling and retention. The company leverages a team with extensive insurance expertise, emphasizing cybersecurity and regulatory compliance to support its clients effectively."
+        fname = "Chris"
+        cname = "ManageMy" 
         ttype = "funding"
         fround = "latest"
         seq_no = 1
-        painpoints = ['manual data labeling bottlenecks slowing down model iteration', 'high costs of maintaining in-house QA teams for ML', 'difficulty scaling customer support for global users']
+        painpoints = ['insurers are under growing pressure to improve speed, accuracy, and customer experience while increasing sales and reducing costs', 'insurance industry has struggled to modernise its business models']
         
         prompt = get_email_generation_prompt(
             company_description=desc,
@@ -186,15 +186,20 @@ if __name__ == "__main__":
             text = response.candidates[0].content.parts[0].text
             email_json = json.loads(text)
             
-            final_subject = email_json["subject"].format(
-                first_name=fname,
-                company_name=cname,
-                company_description=desc,
-                funding_round=fround if ttype == "funding" else None
-            )
+            # Safety net: format both subject and content with provided variables
+            format_dict = {
+                "first_name": fname,
+                "company_name": cname,
+                "company_description": desc,
+                "funding_round": fround if ttype == "funding" else "",
+                "hiring_area": hiring_area if ttype == "hiring" else ""
+            }
+            
+            final_subject = email_json["subject"].format(**format_dict)
+            final_content = email_json["content"].format(**format_dict)
             
             print(f"\nSUBJECT: {final_subject}")
-            print(f"CONTENT: {email_json['content']}")
+            print(f"CONTENT: {final_content}")
             
         except Exception as e:
             logger.error(f"Test failed: {str(e)}")
