@@ -17,7 +17,8 @@ def get_hiring_extraction_prompt(combined_input_for_llm: str):
         - Job Roles (as a list of strings. Extract the specific job roles, positions, or departments the company is hiring for, e.g., "software engineer", "data scientist", "marketing", "product design".)  
         - Hiring Reason (e.g., "expansion", "product launch", "new funding", "team growth", etc. If not clear, leave as an empty string "")  
         - Tags (as a list of strings relevant to the article or company, such as "AI", "healthtech", "startup", "remote", "growth")  
-        - Pain Points (as a list of strings. Identify specific business or technical challenges mentioned in the article. **CRITICAL:** For hiring-related articles, extrapolate pain points based on the job roles being hired for. For example, if they are hiring for "Software Engineers", a pain point would be "scaling the software engineering team").
+        - Pain Points (as a list of strings. Extrapolate pain points based on the job roles being hired for. For example, if they are hiring for "Software Engineers", a pain point would be "scaling the software engineering team").
+        - Service (as a string. Classify the company's primary service offering as either "AI/ML" or "Software Development International". "AI/ML" includes ML Engineers, Data Scientists, AI Researchers. "Software Development International" includes Software Engineers, DevOps, Web Developers.)
 
         If any field is missing or not confidently extractable, return an empty string `""` for single values or an empty list `[]` for lists. Do **not** make up any data.
 
@@ -40,7 +41,8 @@ def get_hiring_extraction_prompt(combined_input_for_llm: str):
             "job_roles": [["software engineer", "machine learning"], ["sales", "business development"]],
             "hiring_reason": ["expansion", "new product launch"],
             "tags": [["AI", "startup", "engineering"], ["fintech", "europe", "growth"]],
-            "painpoints": [["bottleneck in model validation"], ["overhead in compliance reporting"]]
+            "painpoints": [["scaling the software engineering team"], ["scaling the sales team"]],
+            "service": ["AI/ML", "Software Development International"]
         }}
         Articles Text:
         \"\"\"

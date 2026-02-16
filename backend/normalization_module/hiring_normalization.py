@@ -43,7 +43,8 @@ async def normalize_hiring_data(ingested_data: Dict[str, List[Any]]) -> Dict[str
         "job_roles": [normalize_company_decision_makers(job_role_list) for job_role_list in ingested_data.get("job_roles", [])],
         "hiring_reasons": [normalize_company_decision_makers(hiring_reasons_list) for hiring_reasons_list in ingested_data.get("hiring_reasons", [])],
         "tags": [normalize_tags(tag) for tag in ingested_data.get("tags", [])],
-        "painpoints": [normalize_tags(painpoint) for painpoint in ingested_data.get("painpoints", [])]
+        "painpoints": [normalize_tags(painpoint) for painpoint in ingested_data.get("painpoints", [])],
+        "service": [str(service).strip().lower() for service in ingested_data.get("service", [])]
     })
 
     logger.info("Normalizing hiring data")

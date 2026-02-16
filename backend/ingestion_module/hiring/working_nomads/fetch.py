@@ -171,11 +171,9 @@ async def main():
 
         # Overwrite defaults with AI-extracted data if available
         if extracted_data:
-            for key in ["company_decision_makers", "hiring_reasons", "job_roles", "tags", "city", "country"]:
-                if key in extracted_data:
-                    # Ensure the lists alignment matches (AI module should handle this, but let's be safe)
-                    if isinstance(extracted_data[key], list) and len(extracted_data[key]) == len(processed_jobs):
-                        llm_results[key] = extracted_data[key]
+            for key, value_list in extracted_data.items():
+                if key in llm_results and isinstance(value_list, list) and len(value_list) == len(targets):
+                    llm_results[key] = value_list
 
         logger.info(f"Working Nomads ingestion completed. Extracted {len(llm_results['title'])} jobs.")
         return llm_results

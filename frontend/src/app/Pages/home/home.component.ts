@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   filteredLeads: ICompany[] = [];
   loading = true;
 
-  constructor(private companiesService: CompaniesService) {}
+  constructor(private companiesService: CompaniesService) { }
 
   ngOnInit(): void {
     this.loading = true;
@@ -205,11 +205,11 @@ export class HomeComponent implements OnInit {
             return leadDate >= startOfMonth && leadDate <= endOfMonth;
           }
         }
-        
-        if (key === 'email_found'){
+
+        if (key === 'email_found') {
           const people = lead.people ?? [];
 
-          const hasEmail = people.some(p => 
+          const hasEmail = people.some(p =>
             typeof p.email === 'string' && p.email.trim().length > 0
           )
 
@@ -230,6 +230,7 @@ export class HomeComponent implements OnInit {
     { key: 'icp_score', header: 'ICP Score' },
     { key: 'company_data_source', header: 'Source' },
     { key: 'industries', header: 'Industry' },
+    { key: 'service', header: 'Service' },
     { key: 'contacted_status', header: 'Contact Status' },
     { key: 'action', header: 'Action' },
   ];

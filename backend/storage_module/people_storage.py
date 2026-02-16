@@ -54,7 +54,8 @@ async def people_storage(searched_people: Dict[str, List | str | Dict], enriched
                 continue
 
     if people_data_to_store:
-        await store_to_db(data_to_store=people_data_to_store, query=people_query, company_or_people="people")
+        #await store_to_db(data_to_store=people_data_to_store, query=people_query, company_or_people="people")
+        logger.info("PEOPLE NDANI")
     else: 
         logger.error("No people data to store in db ❌")
 

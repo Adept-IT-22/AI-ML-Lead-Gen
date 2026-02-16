@@ -209,9 +209,7 @@ This section is a to-do list for me as the programmer.
 + ALTER TABLE mock_companies ADD COLUMN painpoints text[];
 + ALTER TABLE mock_normalized_funding ADD COLUMN painpoints text[];
 + ALTER TABLE mock_normalized_hiring ADD COLUMN painpoints text[];
++ CREATE TYPE company_service AS ENUM ('AI/ML', 'Software Development International');
++ ALTER TABLE mock_companies ADD COLUMN service company_service;
 
 
-+ ** ManageMy**
-
-+ ManageMy is a SaaS technology company based in Charlotte, North Carolina, founded in 2018. The company specializes in an AI-driven digital platform designed for insurance carriers. This platform helps streamline various processes such as buying, underwriting, servicing, and claims, while also driving sales growth and enhancing customer experiences without the need to overhaul existing legacy systems. One of the key offerings is XPerience Studio, a no-code API-based solution that allows carriers to quickly configure workflows, forms, and digital journeys across multiple platforms. The digital front-end platform supports the entire policy lifecycle, including quoting, onboarding, and claims management. Additionally, ManageMy provides integrated marketing services through MyCustomer, which focuses on data-driven campaigns for upselling and retention. The company leverages a team with extensive insurance expertise, emphasizing cybersecurity and regulatory compliance to support its clients effectively.
-+ ['insurers are under growing pressure to improve speed, accuracy, and customer experience while increasing sales and reducing costs', 'insurance industry has struggled to modernise its business models']

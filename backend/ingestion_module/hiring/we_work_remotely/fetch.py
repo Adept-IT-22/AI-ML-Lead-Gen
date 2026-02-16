@@ -116,9 +116,9 @@ async def main() -> Optional[Dict[str, Any]]:
 
     # Merge extracted data
     if extracted_data:
-        for key in ["company_decision_makers", "hiring_reasons", "job_roles", "tags", "company_name", "city", "country"]:
-            if key in extracted_data:
-                llm_results[key] = extracted_data[key]
+        for key, value_list in extracted_data.items():
+            if key in llm_results and isinstance(value_list, list):
+                llm_results[key] = value_list
         
         # Ensure we have all the base fields populated if AI didn't do it (AI usually does)
         # But we align lists. 

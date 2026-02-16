@@ -86,6 +86,7 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
                 #Get data source (funding, events, hiring) from normalized data
                 company_data_source = None
                 painpoints = []
+                service = ""
                 for normalized_company_info in all_normalized_data:
                     normalized_names = normalized_company_info.get("company_name", [])
                     found_match = False
@@ -97,6 +98,11 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
                             all_painpoints = normalized_company_info.get("painpoints", [])
                             if idx < len(all_painpoints):
                                 painpoints = all_painpoints[idx]
+                            
+                            # Extract service if available
+                            all_services = normalized_company_info.get("service", [])
+                            if idx < len(all_services):
+                                service = all_services[idx]
                                 
                             found_match = True
                             break
@@ -139,7 +145,8 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
                     latest_funding_amount,
                     latest_funding_currency,
                     source_link,
-                    painpoints
+                    painpoints,
+                    service
                 )
 
                 company_data_to_store.append(company_row)
@@ -153,7 +160,8 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
         #Check if company is in db
         company_in_db = await is_company_in_db(company_name=company_name)
         if not company_in_db:
-            await store_to_db(data_to_store=company_data_to_store, query=company_query, company_or_people="company")
+            #await store_to_db(data_to_store=company_data_to_store, query=company_query, company_or_people="company")
+            logger.info("NDANI")
             return [row[0] for row in company_data_to_store] # Return apollo_ids
         else:
             logger.warning(f"{company_name} is already in DB")
@@ -434,6 +442,31 @@ if __name__ == "__main__":
             [],
             [],
             []
+            ],
+            "painpoints": [
+            ["scaling AI services"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"]
+            ],
+            "service": [
+            "AI/ML",
+            "AI/ML",
+            "AI/ML",
+            "AI/ML",
+            "AI/ML",
+            "AI/ML",
+            "AI/ML",
+            "AI/ML",
+            "AI/ML",
+            "AI/ML"
             ]
         }
         ]
@@ -508,7 +541,7 @@ if __name__ == "__main__":
         }
         ]
 
-        bulk_enriched_orgs = [
+        bulk_enriched_orgs = [[
         {
             "status": "success",
             "error_code": null,
@@ -657,7 +690,7 @@ if __name__ == "__main__":
             }
         ]
         }
-        ]
+        ]]
 
         single_enriched_orgs = [
         {

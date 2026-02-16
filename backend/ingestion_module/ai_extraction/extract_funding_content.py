@@ -67,8 +67,8 @@ def log_after(retry_state: RetryCallState):
     logger.info(f"Attempt #{retry_state.attempt_number} done")
 
 def log_failure(retry_state: RetryCallState):
-    logger.error("Gemini API failed after retries.")
-    return {}
+    logger.error(f"Gemini API failed after retries. Last exception: {retry_state.outcome.exception()}")
+    return ""
 
 # -------------------------------------------------------------------
 # Rate-limited, retried call to Vertex AI Gemini
@@ -100,6 +100,15 @@ async def _call_gemini_api_with_retry(prompt: str) -> str:
         response = await client.post(VERTEX_ENDPOINT, headers=headers, json=payload)
         response.raise_for_status()
         data = response.json()
+
+    # DEBUG: Log the keys in data to understand why extraction might fail
+    # logger.info(f"Gemini Response Keys: {list(data.keys())}")
+    
+    if "candidates" not in data or not data["candidates"]:
+        logger.error(f"Gemini response missing candidates. Data: {str(data)[:500]}")
+        # Raising ValueError here might trigger retry if we're not careful, 
+        # but retry_if_resource_exhausted shouldn't catch it unless "limit" is in message.
+        raise ValueError("Gemini response missing candidates")
 
     logger.info("Gemini API call successful.")
     return data["candidates"][0]["content"]["parts"][0]["text"]
@@ -144,7 +153,7 @@ async def process_articles_batch(batch: Dict[str, List[Any]]) -> Dict[str, List[
         "title": [], "link": [], "article_date": [], "company_name": [],
         "city": [], "country": [], "company_decision_makers": [],
         "funding_round": [], "amount_raised": [], "currency": [],
-        "investor_companies": [], "investor_people": [], "tags": [], "painpoints": []
+        "investor_companies": [], "investor_people": [], "tags": [], "painpoints": [], "service": []
     }
 
     try:
