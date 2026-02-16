@@ -160,8 +160,7 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
         #Check if company is in db
         company_in_db = await is_company_in_db(company_name=company_name)
         if not company_in_db:
-            #await store_to_db(data_to_store=company_data_to_store, query=company_query, company_or_people="company")
-            logger.info("NDANI")
+            await store_to_db(data_to_store=company_data_to_store, query=company_query, company_or_people="company")
             return [row[0] for row in company_data_to_store] # Return apollo_ids
         else:
             logger.warning(f"{company_name} is already in DB")
