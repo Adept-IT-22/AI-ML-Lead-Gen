@@ -18,6 +18,7 @@ def get_funding_extraction_prompt(combined_input_for_llm):
     - Investor People (as a list of strings. Include names of all identifiable investor people associated with the above mentioned companies.)
     - Tags (as a list of strings, relevant to the company/funding event.)
     - Pain Points (as a list of strings. Identify specific business or technical challenges mentioned in the article, e.g., "high latency in robotics", "security vulnerabilities in code", "expert supply elasticity").
+    - Service (as a string. Classify the company's primary service offering as either "AI/ML" or "Software Development International". "AI/ML" includes ML Engineers, Data Scientists, AI Researchers. "Software Development International" includes Software Engineers, DevOps, Web Developers.)
     - Original Article ID (the 'Article_ID' provided for each article in the input. This is crucial for matching results.)
 
     If any information on a particular field is not present or cannot be confidently extracted, return an empty string "" for string fields or an empty list [] for list fields. Do not make up information.
@@ -40,7 +41,8 @@ def get_funding_extraction_prompt(combined_input_for_llm):
         "investor_companies": [["VC Firm Alpha", "Angel Investor Beta"], ["GreenTech Investments"]],
         "investor_people": [["John Doe", "John Smith"], ["Jane Doe"]],
         "tags": [["tech", "startup", "funding", "SaaS", "innovation"], ["energy", "sustainability"]],
-        "painpoints": [["high latency in robotics", "safety vs speed tradeoff"], ["carbon emission reporting compliance"]]
+        "painpoints": [["high latency in robotics", "safety vs speed tradeoff"], ["carbon emission reporting compliance"]],
+        "service": ["AI/ML", "Software Development International"]
     }}
 
     Articles Text:

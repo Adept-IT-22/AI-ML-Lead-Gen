@@ -358,6 +358,7 @@ async def fetch_techfundingnews_data() -> Dict[str, List[str]]:
             logger.info(f"Found {len(recent_articles)} articles from last 2 months")
             
             # Step 5: Extract content and filter by AI funding keywords
+            recent_articles = recent_articles[:5]
             results = {"urls": [], "paragraphs": []}
             semaphore = asyncio.Semaphore(MAX_CONNECTIONS)
             

@@ -111,36 +111,11 @@ async def main() -> Optional[Dict[str, Any]]:
         llm_results["city"].append("") # RemoteOK often just says "Remote" or "Worldwide"
         llm_results["country"].append(job["location"]) # Often contains "Remote" or region
 
-        llm_results["company_decision_makers"].append([])
-        llm_results["job_roles"].append([])
-        llm_results["hiring_reasons"].append([])
-        llm_results["tags"].append(job["tags"])
-
     # Merge LLM data
     if extracted_data:
-        for key in ["company_decision_makers", "hiring_reasons", "job_roles", "tags"]:
-            if key in extracted_data:
-                # We need to be careful with merging lists. 
-                # finalize_ai_extraction returns a dict where keys map to lists of results corresponding to the input order.
-                # However, the current implementation of finalize_ai_extraction seems to return a flat dict if I recall correctly, 
-                # or it might need alignment. 
-                # Let's assume extracted_data[key] is a list of lists corresponding to our inputs.
-                
-                # Wait, looking at previous implementations (e.g. crunchboard), it seems we just overwrite or extend?
-                # Actually, finalize_ai_extraction returns a dict of lists.
-                # Let's verify the structure in extract_hiring_content.py if possible, but following the pattern:
-                if isinstance(extracted_data[key], list) and len(extracted_data[key]) == len(processed_jobs):
-                     llm_results[key] = extracted_data[key]
-                elif isinstance(extracted_data[key], list):
-                     # If lengths don't match (e.g. batching issues), we might have a problem.
-                     # But for now, let's assume it works as intended or just take what we have if it's a direct mapping.
-                     # Actually, looking at other modules, they often just do:
-                     # llm_results[key] = extracted_data[key]
-                     # But we must ensure the list length matches the job list length for correct alignment.
-                     # If finalize_ai_extraction returns a consolidated list of all extracted items, we might need to be careful.
-                     
-                     # Let's stick to the pattern used in other modules for safety.
-                     llm_results[key] = extracted_data[key]
+        for key, value_list in extracted_data.items():
+            if key in llm_results and isinstance(value_list, list):
+                llm_results[key] = value_list
 
     logger.info("RemoteOK ingestion completed")
     return llm_results

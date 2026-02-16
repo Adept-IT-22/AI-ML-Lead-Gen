@@ -163,15 +163,14 @@ async def main() -> Optional[Dict[str, Any]]:
             llm_results["company_name"].append(job["company"])
             llm_results["article_date"].append(job["date"] or datetime.now().strftime("%Y-%m-%d"))
             llm_results["article_id"].append(job["id"])
-            for key in ["company_decision_makers", "hiring_reasons", "job_roles", "tags", "city", "country"]:
-                llm_results[key].append([]) if key in ["company_decision_makers", "hiring_reasons", "job_roles", "tags"] else llm_results[key].append("")
 
         # Merge AI
         if extracted_data:
-             for key in ["company_decision_makers", "hiring_reasons", "job_roles", "tags", "city", "country"]:
-                 if key in extracted_data and len(extracted_data[key]) == len(processed_jobs):
-                     llm_results[key] = extracted_data[key]
+            for key, value_list in extracted_data.items():
+                if key in llm_results and isinstance(value_list, list) and len(value_list) == len(processed_jobs):
+                    llm_results[key] = value_list
 
+        
         return llm_results
 
 if __name__ == "__main__":

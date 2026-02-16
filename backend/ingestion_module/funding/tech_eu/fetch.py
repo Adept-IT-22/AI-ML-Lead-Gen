@@ -112,6 +112,8 @@ async def main():
     duration = time.perf_counter() - start_time
     logger.info(f"Tech_eu took {duration:.2f} seconds")
 
+
+    logger.info("RESUKTS: %r", llm_results)
     return llm_results
 
 if __name__ == "__main__":

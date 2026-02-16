@@ -58,7 +58,7 @@ if __name__ == "__main__":
         all_normalized_data = [
         {
             "type": "funding",
-            "source": "FinSMEs",
+            "source": "finsmes",
             "title": [],
             "link": [
             "https://www.finsmes.com/2025/09/salt-ai-raises-10m-in-funding.html",
@@ -103,94 +103,94 @@ if __name__ == "__main__":
             "country": [],
             "company_decision_makers": [
             [
-                "Aber Whitcomb"
+                "aber whitcomb"
             ],
             [
-                "Gregory Mostyn"
+                "gregory mostyn"
             ],
             [
-                "Dr. Siddhartha Mukherjee",
-                "Reid Hoffman",
-                "Ujjwal Singh"
+                "dr. siddhartha mukherjee",
+                "reid hoffman",
+                "ujjwal singh"
             ],
             [
-                "Matt Blumberg"
+                "matt blumberg"
             ],
             [
-                "Sheng Liang"
+                "sheng liang"
             ],
             [
-                "Vikram Chennai"
+                "vikram chennai"
             ],
             [
-                "Divya Aathresh"
+                "divya aathresh"
             ],
             [
-                "Barun Kar",
-                "Rajiv Khemani"
+                "barun kar",
+                "rajiv khemani"
             ],
             [
-                "Arjun Prakash",
-                "Derek Ho"
+                "arjun prakash",
+                "derek ho"
             ],
             [
-                "Gregory Scott Henson"
+                "gregory scott henson"
             ],
             [
-                "Aniket Deosthali"
+                "aniket deosthali"
             ]
             ],
             "company_decision_makers_position": [
             [
-                "Ceo"
+                "ceo"
             ],
             [
-                "Ceo"
+                "ceo"
             ],
             [
-                "Co-Founder",
-                "Co-Founder",
-                "Co-Founder"
+                "co-founder",
+                "co-founder",
+                "co-founder"
             ],
             [
-                "Ceo"
+                "ceo"
             ],
             [
-                "Ceo"
+                "ceo"
             ],
             [
-                "Ceo"
+                "ceo"
             ],
             [
-                "Founder"
+                "founder"
             ],
             [
-                "Ceo",
-                "Founder"
+                "ceo",
+                "founder"
             ],
             [
-                "Founder",
-                "Founder"
+                "founder",
+                "founder"
             ],
             [
-                "Founder And Ceo"
+                "founder and ceo"
             ],
             [
-                "Ceo"
+                "ceo"
             ]
             ],
             "funding_round": [
             "",
-            "Seed",
-            "Seed Extension",
+            "seed",
+            "seed extension",
             "",
-            "Seed",
-            "Pre-Seed",
-            "Seed",
-            "Seed",
-            "Venture",
-            "Seed",
-            "Series A"
+            "seed",
+            "pre-seed",
+            "seed",
+            "seed",
+            "venture",
+            "seed",
+            "series a"
             ],
             "amount_raised": [
             "10000000",
@@ -206,80 +206,80 @@ if __name__ == "__main__":
             "15000000"
             ],
             "currency": [
-            "US Dollar",
-            "US Dollar",
-            "US Dollar",
-            "US Dollar",
-            "US Dollar",
-            "US Dollar",
-            "US Dollar",
-            "US Dollar",
-            "US Dollar",
-            "US Dollar",
-            "US Dollar"
+            "us dollar",
+            "us dollar",
+            "us dollar",
+            "us dollar",
+            "us dollar",
+            "us dollar",
+            "us dollar",
+            "us dollar",
+            "us dollar",
+            "us dollar",
+            "us dollar"
             ],
             "investor_companies": [
             [
-                "Morpheus Ventures",
-                "Struck Capital",
-                "Marbruck Investments",
-                "Coreweave"
+                "morpheus ventures",
+                "struck capital",
+                "marbruck investments",
+                "coreweave"
             ],
             [
-                "Pear Vc",
-                "Seedcamp",
-                "The Legaltech Fund",
-                "Myriad Venture Partners"
+                "pear vc",
+                "seedcamp",
+                "the legaltech fund",
+                "myriad venture partners"
             ],
             [
-                "The General Partnership",
-                "Wisdom Ventures",
-                "Blitzscaling Ventures",
-                "Westbound Equity Partners",
-                "Mosaic Ventures"
+                "the general partnership",
+                "wisdom ventures",
+                "blitzscaling ventures",
+                "westbound equity partners",
+                "mosaic ventures"
             ],
             [
-                "Genui Partners",
-                "Emh Partners",
-                "Capital Factory"
+                "genui partners",
+                "emh partners",
+                "capital factory"
             ],
             [
-                "Mayfield Fund",
-                "Nexus Venture Partners"
+                "mayfield fund",
+                "nexus venture partners"
             ],
             [
-                "Crane Venture Partners",
-                "Active Capital"
+                "crane venture partners",
+                "active capital"
             ],
             [
-                "Fika Ventures",
-                "Bbg Ventures",
-                "1Sharpe Ventures",
-                "Four Acres Capital"
+                "fika ventures",
+                "bbg ventures",
+                "1sharpe ventures",
+                "four acres capital"
             ],
             [
-                "Mayfield",
-                "Maverick Silicon",
-                "Stepstone Group",
-                "Celesta Capital",
-                "Xora",
-                "Qualcomm Ventures",
-                "Cota Capital",
-                "Mvp Ventures",
-                "Stanford University"
+                "mayfield",
+                "maverick silicon",
+                "stepstone group",
+                "celesta capital",
+                "xora",
+                "qualcomm ventures",
+                "cota capital",
+                "mvp ventures",
+                "stanford university"
             ],
             [
-                "Lightspeed Venture Partners",
-                "Khosla Ventures",
-                "Dst Global",
-                "Coatue",
-                "Dell Technologies Capital"
+                "lightspeed venture partners",
+                "khosla ventures",
+                "dst global",
+                "coatue",
+                "dell technologies capital"
             ],
             [
-                "Ember Venture Capital"
+                "ember venture capital"
             ],
             [
-                "Fuse Vc"
+                "fuse vc"
             ]
             ],
             "investor_people": [
@@ -287,18 +287,18 @@ if __name__ == "__main__":
             [],
             [],
             [
-                "Brad Feld",
-                "Scott Dorsey",
-                "David Fox",
-                "Jake Heller",
-                "David Kidder",
-                "Bernd-Michael Rumpf",
-                "Greg Sands",
-                "Kindra Tatarsky"
+                "brad feld",
+                "scott dorsey",
+                "david fox",
+                "jake heller",
+                "david kidder",
+                "bernd-michael rumpf",
+                "greg sands",
+                "kindra tatarsky"
             ],
             [],
             [
-                "Zach Wilson"
+                "zach wilson"
             ],
             [],
             []
@@ -315,6 +315,31 @@ if __name__ == "__main__":
             [],
             [],
             []
+            ],
+            "painpoints": [
+            ["scaling ai services"],
+            ["ai/ml development"],
+            ["ai/ml development"],
+            ["ai/ml development"],
+            ["ai/ml development"],
+            ["ai/ml development"],
+            ["ai/ml development"],
+            ["ai/ml development"],
+            ["ai/ml development"],
+            ["ai/ml development"],
+            ["ai/ml development"]
+            ],
+            "service": [
+            "ai/ml",
+            "ai/ml",
+            "ai/ml",
+            "ai/ml",
+            "ai/ml",
+            "ai/ml",
+            "ai/ml",
+            "ai/ml",
+            "ai/ml",
+            "ai/ml"
             ]
         }
         ]
@@ -323,7 +348,7 @@ if __name__ == "__main__":
         {
             "breadcrumbs": [
             {
-                "label": "Company Name",
+                "label": "company name",
                 "signal_field_name": "q_organization_name",
                 "value": "salt ai",
                 "display_name": "salt ai"
@@ -343,7 +368,7 @@ if __name__ == "__main__":
             "organizations": [
             {
                 "id": "655081d888b7c60001d3aae0",
-                "name": "Salt AI",
+                "name": "salt ai",
                 "website_url": "http://www.salt.ai",
                 "blog_url": null,
                 "angellist_url": null,
@@ -389,7 +414,7 @@ if __name__ == "__main__":
         }
         ]
 
-        bulk_enriched_orgs = [
+        bulk_enriched_orgs = [[
         {
             "status": "success",
             "error_code": null,
@@ -401,7 +426,7 @@ if __name__ == "__main__":
             "organizations": [
             {
                 "id": "67461f4cebc98801b0aa0f1e",
-                "name": "SalesPatriot (YC W25)",
+                "name": "salespatriot (yc w25)",
                 "website_url": "http://www.salespatriot.com",
                 "blog_url": null,
                 "angellist_url": null,
@@ -410,7 +435,7 @@ if __name__ == "__main__":
                 "facebook_url": null,
                 "primary_phone": {
                 "number": "+1 262-215-8573",
-                "source": "Account",
+                "source": "account",
                 "sanitized_number": "+12622158573"
                 },
                 "languages": [],
@@ -500,12 +525,12 @@ if __name__ == "__main__":
                 "retail_location_count": 0,
                 "raw_address": "san francisco, california, united states",
                 "street_address": "",
-                "city": "San Francisco",
-                "state": "California",
-                "country": "United States",
+                "city": "san francisco",
+                "state": "california",
+                "country": "united states",
                 "postal_code": null,
                 "owned_by_organization_id": null,
-                "short_description": "Find solicitations. Bid. Win.\n\nHelping DoD manufacturers find the best solicitations and streamlining the bidding process. Get in touch and grow your business with SalesPatriot!",
+                "short_description": "find solicitations. bid. win.\n\nhelping dod manufacturers find the best solicitations and streamlining the bidding process. get in touch and grow your business with salespatriot!",
                 "departmental_head_count": {
                 "engineering": 7,
                 "consulting": 1,
@@ -538,13 +563,13 @@ if __name__ == "__main__":
             }
         ]
         }
-        ]
+        ]]
 
         single_enriched_orgs = [
         {
             "organization": {
             "id": "67461f4cebc98801b0aa0f1e",
-            "name": "SalesPatriot (YC W25)",
+            "name": "salespatriot (yc w25)",
             "website_url": "http://www.salespatriot.com",
             "blog_url": null,
             "angellist_url": null,
@@ -553,7 +578,7 @@ if __name__ == "__main__":
             "facebook_url": null,
             "primary_phone": {
                 "number": "+1 262-215-8573",
-                "source": "Account",
+                "source": "account",
                 "sanitized_number": "+12622158573"
             },
             "languages": [],
@@ -643,12 +668,12 @@ if __name__ == "__main__":
             "retail_location_count": 0,
             "raw_address": "san francisco, california, united states",
             "street_address": "",
-            "city": "San Francisco",
-            "state": "California",
+            "city": "san francisco",
+            "state": "california",
             "postal_code": null,
-            "country": "United States",
+            "country": "united states",
             "owned_by_organization_id": null,
-            "short_description": "Find solicitations. Bid. Win.\n\nHelping DoD manufacturers find the best solicitations and streamlining the bidding process. Get in touch and grow your business with SalesPatriot!",
+            "short_description": "find solicitations. bid. win.\n\nhelping dod manufacturers find the best solicitations and streamlining the bidding process. get in touch and grow your business with salespatriot!",
             "suborganizations": [],
             "num_suborganizations": 0,
             "total_funding": null,
@@ -657,43 +682,43 @@ if __name__ == "__main__":
             "latest_funding_stage": null,
             "funding_events": [],
             "technology_names": [
-                "CloudFlare Hosting",
-                "Cloudflare DNS",
-                "Gmail",
-                "Google Apps",
-                "Google Cloud Hosting",
-                "Mobile Friendly"
+                "cloudflare hosting",
+                "cloudflare dns",
+                "gmail",
+                "google apps",
+                "google cloud hosting",
+                "mobile friendly"
             ],
             "current_technologies": [
                 {
                 "uid": "cloudflare_hosting",
-                "name": "CloudFlare Hosting",
-                "category": "Hosting"
+                "name": "cloudflare hosting",
+                "category": "hosting"
                 },
                 {
                 "uid": "cloudflare_dns",
-                "name": "Cloudflare DNS",
-                "category": "Domain Name Services"
+                "name": "cloudflare dns",
+                "category": "domain name services"
                 },
                 {
                 "uid": "gmail",
-                "name": "Gmail",
-                "category": "Email Providers"
+                "name": "gmail",
+                "category": "email providers"
                 },
                 {
                 "uid": "google_apps",
-                "name": "Google Apps",
-                "category": "Other"
+                "name": "google apps",
+                "category": "other"
                 },
                 {
                 "uid": "google_cloud_hosting",
-                "name": "Google Cloud Hosting",
-                "category": "Hosting"
+                "name": "google cloud hosting",
+                "category": "hosting"
                 },
                 {
                 "uid": "mobile_friendly",
-                "name": "Mobile Friendly",
-                "category": "Other"
+                "name": "mobile friendly",
+                "category": "other"
                 }
             ],
             "org_chart_root_people_ids": [
@@ -727,6 +752,7 @@ if __name__ == "__main__":
             }
         }
         ]
+
 
         await n2s.put(all_normalized_data)
 

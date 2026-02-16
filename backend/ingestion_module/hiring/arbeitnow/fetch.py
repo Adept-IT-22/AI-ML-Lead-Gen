@@ -88,19 +88,12 @@ async def main() -> Optional[Dict[str, Any]]:
         llm_results["company_name"].append(job.get("company_name", ""))
         llm_results["article_date"].append(datetime.now().strftime("%Y-%m-%d")) # API doesn't always have date
         llm_results["article_id"].append(job.get("slug", ""))
-        
-        # Placeholders
-        for key in ["company_decision_makers", "hiring_reasons", "job_roles", "tags", "city", "country"]:
-            if key in ["company_decision_makers", "hiring_reasons", "job_roles", "tags"]:
-                llm_results[key].append([])
-            else:
-                llm_results[key].append("")
 
     # Merge AI
     if extracted_data:
-        for key in ["company_decision_makers", "hiring_reasons", "job_roles", "tags", "city", "country"]:
-            if key in extracted_data and len(extracted_data[key]) == len(targets):
-                llm_results[key] = extracted_data[key]
+        for key, value_list in extracted_data.items():
+            if key in llm_results and isinstance(value_list, list) and len(value_list) == len(targets):
+                llm_results[key] = value_list
 
     logger.info(f"Arbeitnow ingestion completed. Extracted {len(llm_results['title'])} jobs.")
     return llm_results

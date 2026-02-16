@@ -67,8 +67,8 @@ def log_after(retry_state: RetryCallState):
     logger.info(f"Attempt #{retry_state.attempt_number} done")
 
 def log_failure(retry_state: RetryCallState):
-    logger.error("Gemini API failed after retries.")
-    return {}
+    logger.error(f"Gemini API failed after retries. Last exception: {retry_state.outcome.exception()}")
+    return ""
 
 # -------------------------------------------------------------------
 # Vertex AI Gemini call with retry
@@ -99,6 +99,10 @@ async def _call_gemini_api_with_retry(prompt: str) -> str:
         response = await client.post(VERTEX_ENDPOINT, headers=headers, json=payload)
         response.raise_for_status()
         data = response.json()
+
+    if "candidates" not in data or not data["candidates"]:
+        logger.error(f"Gemini response missing candidates. Data: {str(data)[:500]}")
+        raise ValueError("Gemini response missing candidates")
 
     return data["candidates"][0]["content"]["parts"][0]["text"]
 
@@ -143,7 +147,7 @@ async def process_hiring_data_batch(batch: Dict[str, List[Union[str, int]]]) -> 
         "type": "hiring",
         "source": [], "article_id": [], "title": [], "link": [],
         "article_date": [], "company_name": [], "city": [], "country": [],
-        "company_decision_makers": [], "job_roles": [], "hiring_reasons": [], "tags": [], "painpoints": [],
+        "company_decision_makers": [], "job_roles": [], "hiring_reasons": [], "tags": [], "painpoints": [], "service": [],
     }
 
     try:
