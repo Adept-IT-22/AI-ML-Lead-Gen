@@ -17,8 +17,8 @@ def get_funding_extraction_prompt(combined_input_for_llm):
     - Investor Companies (as a list of strings. Include names of all identifiable investor companies.)
     - Investor People (as a list of strings. Include names of all identifiable investor people associated with the above mentioned companies.)
     - Tags (as a list of strings, relevant to the company/funding event.)
-    - Pain Points (as a list of strings. Identify specific business or technical challenges mentioned in the article, e.g., "high latency in robotics", "security vulnerabilities in code", "expert supply elasticity").
-    - Service (as a string. Classify the company's primary service offering as either "AI/ML" or "Software Development International". "AI/ML" includes ML Engineers, Data Scientists, AI Researchers. "Software Development International" includes Software Engineers, DevOps, Web Developers.)
+    - Pain Points (as a list of strings. Identify specific business or technical challenges mentioned in the article, e.g., "high latency in robotics", "security vulnerabilities in code", "expert supply elasticity"). This must never be left empty.
+    - Service (as a string. Classify the company's primary service offering as either "AI/ML" or "Software Development International". "AI/ML" includes ML Engineers, Data Scientists, AI Researchers. "Software Development International" includes Software Engineers, DevOps, Web Developers). This must never be left empty.
     - Original Article ID (the 'Article_ID' provided for each article in the input. This is crucial for matching results.)
 
     If any information on a particular field is not present or cannot be confidently extracted, return an empty string "" for string fields or an empty list [] for list fields. Do not make up information.
