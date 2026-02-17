@@ -209,7 +209,7 @@ This section is a to-do list for me as the programmer.
 + ALTER TABLE mock_companies ADD COLUMN painpoints text[];
 + ALTER TABLE mock_normalized_funding ADD COLUMN painpoints text[];
 + ALTER TABLE mock_normalized_hiring ADD COLUMN painpoints text[];
-+ CREATE TYPE company_service AS ENUM ('AI/ML', 'Software Development International');
++ CREATE TYPE company_service AS ENUM ('ai/ml', 'software development international');
 + ALTER TABLE mock_companies ADD COLUMN service company_service;
 
 
