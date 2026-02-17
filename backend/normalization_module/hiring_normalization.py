@@ -47,5 +47,4 @@ async def normalize_hiring_data(ingested_data: Dict[str, List[Any]]) -> Dict[str
         "service": [str(service).strip().lower() for service in ingested_data.get("service", [])]
     })
 
-    logger.info("Normalizing hiring data")
     return normalized_hiring_data

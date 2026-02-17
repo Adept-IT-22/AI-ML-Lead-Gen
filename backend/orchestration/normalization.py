@@ -38,8 +38,6 @@ async def main(
             logger.warning(f"Unknown data type: {data_type}")
             return
 
-        logger.info(normalized_data.get("painpoints", []))
-
         # Step 2: Insert master (one row per dataset)
         for i, normalized_link in enumerate(normalized_data.get("link")):
             normalized_master_data_to_store = [
