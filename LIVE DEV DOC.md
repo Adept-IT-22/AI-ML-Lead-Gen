@@ -203,3 +203,13 @@ This section is a to-do list for me as the programmer.
 + Integrate with odoo
 
 + Nodesk, working_nomads => Unknown company name
+
+
++ **Add to DB**
++ ALTER TABLE mock_companies ADD COLUMN painpoints text[];
++ ALTER TABLE mock_normalized_funding ADD COLUMN painpoints text[];
++ ALTER TABLE mock_normalized_hiring ADD COLUMN painpoints text[];
++ CREATE TYPE company_service AS ENUM ('ai/ml', 'software development international');
++ ALTER TABLE mock_companies ADD COLUMN service company_service;
+
+

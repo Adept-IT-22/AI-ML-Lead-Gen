@@ -553,6 +553,24 @@ async def get_hiring_area(company_name: str, pool) -> str:
         logger.exception(f"Couldn't get hiring area for {company_name}")
         return "various areas"
 
+async def get_painpoints(company_name: str, pool, data_source: str) -> List[str]:
+    """Retrieves pain points for a company from the specified data source table."""
+    logger.info(f"Fetching painpoints for {company_name} from {data_source}")
+    
+    table = "mock_normalized_hiring" if data_source == "hiring" else "mock_normalized_funding"
+    query = f"SELECT painpoints FROM {table} WHERE LOWER(company_name) = $1 LIMIT 1"
+    
+    try:
+        async with pool.acquire() as conn:
+            row = await conn.fetchrow(query, company_name.lower())
+            if row and row["painpoints"]:
+                # Painpoints are stored as List[str] in the database
+                return row["painpoints"]
+    except Exception as e:
+        logger.error(f"Error fetching painpoints for {company_name}: {str(e)}")
+    
+    return []
+
     
 #Get company funding details from normalized_funding
 

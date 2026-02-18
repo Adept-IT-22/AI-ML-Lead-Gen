@@ -6,11 +6,23 @@ email_prompts = {
 
         ---
         ### Context & Services Offered (Your Company)
-        Your company, Adept Technologies, provides <strong>scalable support services</strong> to AI/ML companies, specifically:
+        Your company, Adept Technologies, provides <strong>scalable support services</strong> to tech companies in two key areas:
+        
+        **AI/ML Services** (for companies working with AI, data science, machine learning):
         1. <strong>Data Solutions:</strong> Data annotation, data labeling, data quality assurance (QA).
         2. <strong>ML Services:</strong> Model validation, human-in-the-loop support, specialized data collection.
         3. <strong>Customer Engagement:</strong> Handling complex customer interactions, filtering/qualifying leads that require human review, and analytics.
-        Adept also provides afforability and speed without compromising on quality. Ensure you highlight this in your email.
+        
+        **Software Development Services** (for companies building software products):
+        1. <strong>Product Build and Feature Delivery:</strong> Designing and building new software products or delivering features within existing product roadmaps (discovery, UI/UX, prototyping, engineering, testing, iterative releases).
+        2. <strong>Support and Optimisation:</strong> Post-go-live support team ensuring system stability and continuous improvement.
+        3. <strong>Modernisation and Refactoring:</strong> Upgrading legacy applications to improve maintainability, performance and scalability.
+        4. <strong>Cloud-native Delivery and DevOps:</strong> Building and deploying software using cloud infrastructure (AWS, Azure) and automated pipelines for frequent releases without sacrificing quality.
+        5. <strong>Integration and Platform Connectivity:</strong> Connecting systems for seamless data and process flow across platforms (internal systems, third-party tools, payment gateways, CRMs, ERPs).
+        
+        **CRITICAL:** Match the services you mention to the company's hiring needs. If they're hiring Software Engineers, DevOps, Backend/Frontend developers, focus on Software Development Services. If they're hiring ML Engineers, Data Scientists, Data Analysts, focus on AI/ML Services. You may blend both if relevant.
+        
+        Adept also provides affordability and speed without compromising on quality. Ensure you highlight this in your email.
 
         ---
         ### Prospect Company Profile
@@ -19,14 +31,22 @@ email_prompts = {
         {company_description}
 
         ---
+        ### Identified Challenges & Focus Areas
+        The following key focus areas and business challenges have been identified for <strong>{company_name}</strong>:
+        {painpoints}
+
+        ---
         ### Email Requirements
-        /1. <strong>Format:</strong> The content must be formatted as raw HTML body content. Use the placeholders: `{{first_name}}`, `{{company_name}}`, `{{funding_round}}` (if trigger is 'funding'), and `{{hiring_area}}` (if trigger is 'hiring').
-        2. <strong>Subject Line:</strong> Create a subject line that is relevant to the prospect's vertical *and* their growth status.
-        3. <strong>Personalization:</strong>
-            * <strong>Crucially,</strong> the email must mention <strong>two (2) specific ways</strong> Adept Technologies' services (from the list above) can directly support or enhance the prospective company's current operations.
-        4. <strong>Tone:</strong> Professional and direct, with a congratulatory or observant opening.
-        5. <strong>Call to Action (CTA):</strong> End with a clear, low-friction request for a quick chat.
-        6. <strong>Length:</strong> Keep the email concise and impactful.
+        1. <strong>Format:</strong> The content must be formatted as raw HTML body content.
+        2. <strong>Subject Line:</strong> Create a short, punchy subject line (under 7 words) that focuses on <strong>solving a specific Identified Pain Point</strong> or delivering a <strong>quantified outcome</strong> (e.g., "Solving Enquire AI's billing bottlenecks").
+        3. <strong>Personalization & Narrative Flow:</strong>
+            * Use the provided <strong>{first_name}</strong> and <strong>{company_name}</strong> directly in the email content.
+            * <strong>The Hook:</strong> Immediately after the opening, lead with a sentence that <strong>directly references</strong> the most critical <strong>Identified Pain Point</strong>. Do not be vague; use the specific language or concept from the list.
+            * <strong>The Solution:</strong> Mention <strong>two (2) specific ways</strong> Adept Technologies' services (from the list above) can directly solve their pain points or accelerate their growth.
+            * <strong>Quantified Outcomes:</strong> For every solution mentioned, you <strong>MUST</strong> include a quantified outcome (e.g., "reduce overhead by 40%", "accelerate labeling speed by 3x", "ensure 99%+ accuracy"). Use realistic estimates based on industry standards for Adept's services.
+        4. <strong>Tone:</strong> Professional and outcome-oriented. Avoid flowery language; focus on efficiency and scalability.
+        5. <strong>Call to Action (CTA):</strong> End with a specific, low-friction request (e.g., "Do you have 10 minutes on Tuesday or Wednesday for a brief chat?").
+        6. <strong>Length:</strong> Keep the email ultra-concise (under 150 words).
 
         ---
         ### Email Output Template to Follow (Adapt the content within the tags):
@@ -62,11 +82,23 @@ email_prompts = {
 
         ---
         ### Context & Services Offered (Your Company)
-        Your company, Adept Technologies, provides <strong>scalable support services</strong> to AI/ML companies, specifically:
+        Your company, Adept Technologies, provides <strong>scalable support services</strong> to tech companies in two key areas:
+        
+        **AI/ML Services** (for companies working with AI, data science, machine learning):
         1. <strong>Data Solutions:</strong> Data annotation, data labeling, data quality assurance (QA).
         2. <strong>ML Services:</strong> Model validation, human-in-the-loop support, specialized data collection.
         3. <strong>Customer Engagement:</strong> Handling complex customer interactions, filtering/qualifying leads that require human review, and analytics.
-        Adept also provides afforability and speed without compromising on quality. Ensure you highlight this in your email.
+        
+        **Software Development Services** (for companies building software products):
+        1. <strong>Product Build and Feature Delivery:</strong> Designing and building new software products or delivering features within existing product roadmaps (discovery, UI/UX, prototyping, engineering, testing, iterative releases).
+        2. <strong>Support and Optimisation:</strong> Post-go-live support team ensuring system stability and continuous improvement.
+        3. <strong>Modernisation and Refactoring:</strong> Upgrading legacy applications to improve maintainability, performance and scalability.
+        4. <strong>Cloud-native Delivery and DevOps:</strong> Building and deploying software using cloud infrastructure (AWS, Azure) and automated pipelines for frequent releases without sacrificing quality.
+        5. <strong>Integration and Platform Connectivity:</strong> Connecting systems for seamless data and process flow across platforms (internal systems, third-party tools, payment gateways, CRMs, ERPs).
+        
+        **CRITICAL:** Match the services you mention to the company's hiring needs. If they're hiring Software Engineers, DevOps, Backend/Frontend developers, focus on Software Development Services. If they're hiring ML Engineers, Data Scientists, Data Analysts, focus on AI/ML Services. You may blend both if relevant.
+        
+        Adept also provides affordability and speed without compromising on quality. Ensure you highlight this in your email.
 
         ---
         ### Prospect Company Profile
@@ -75,14 +107,21 @@ email_prompts = {
         {company_description}
 
         ---
+        ### Identified Challenges & Focus Areas
+        The following key focus areas and business challenges have been identified for <strong>{company_name}</strong>:
+        {painpoints}
+
+        ---
         ### Email Requirements
-        1. <strong>Format:</strong> The content must be formatted as raw HTML body content. Use the placeholders: `{{first_name}}`, {{company_name}}`, `{{funding_round}}` (if trigger is 'funding'), and `{{hiring_area}}` (if trigger is 'hiring').
-        2. <strong>Subject Line:</strong> Create a short, follow-up oriented subject line that is still personalized to the company's growth trigger.
-        3. <strong>Personalization:</strong>
-            * <strong>Crucially,</strong> the email must briefly reference your previous email and highlight <strong>one (1) high-impact way</strong> Adept Technologies can help them, focusing on speed, cost-efficiency, or freeing internal teams.
-        4. <strong>Tone:</strong> Polite, professional, and confident (assume relevance, not rejection).
-        5. <strong>Call to Action (CTA):</strong> End with a simple yes/no question or short meeting request.
-        6. <strong>Length:</strong> Keep this email <strong>shorter than the first email</strong> - concise and to the point.
+        1. <strong>Format:</strong> The content must be formatted as raw HTML body content. 
+        2. <strong>Subject Line:</strong> Create a short, follow-up oriented subject line that references a specific benefit or outcome (e.g., "A better way to handle ManageMy's data annotation").
+        3. <strong>Personalization & Narrative Flow:</strong>
+            * Use the provided <strong>{first_name}</strong> and <strong>{company_name}</strong> directly in the email content.
+            * <strong>Impact Hook:</strong> Reference your previous note and immediately highlight <strong>one (1) high-impact, quantified outcome</strong> Adept Technologies can deliver regarding their specific <strong>Identified Pain Points</strong>.
+            * Focus on how we can free up their internal teams by X% or reduce costs by Y%.
+        4. <strong>Tone:</strong> Polite, confident, and insight-driven.
+        5. <strong>Call to Action (CTA):</strong> End with a simple, direct question (e.g., "Worth a 5-minute sync this week?").
+        6. <strong>Length:</strong> Shorter than the first email - concise and high-impact.
 
         ---
         ### Email Output Template to Follow (Adapt the content within the tags):
@@ -114,11 +153,23 @@ email_prompts = {
 
         ---
         ### Context & Services Offered (Your Company)
-        Your company, Adept Technologies, provides <strong>scalable support services</strong> to AI/ML companies, specifically:
+        Your company, Adept Technologies, provides <strong>scalable support services</strong> to tech companies in two key areas:
+        
+        **AI/ML Services** (for companies working with AI, data science, machine learning):
         1. <strong>Data Solutions:</strong> Data annotation, data labeling, data quality assurance (QA).
         2. <strong>ML Services:</strong> Model validation, human-in-the-loop support, specialized data collection.
         3. <strong>Customer Engagement:</strong> Handling complex customer interactions, filtering/qualifying leads that require human review, and analytics.
-        Adept also provides afforability and speed without compromising on quality. Ensure you highlight this in your email.
+        
+        **Software Development Services** (for companies building software products):
+        1. <strong>Product Build and Feature Delivery:</strong> Designing and building new software products or delivering features within existing product roadmaps (discovery, UI/UX, prototyping, engineering, testing, iterative releases).
+        2. <strong>Support and Optimisation:</strong> Post-go-live support team ensuring system stability and continuous improvement.
+        3. <strong>Modernisation and Refactoring:</strong> Upgrading legacy applications to improve maintainability, performance and scalability.
+        4. <strong>Cloud-native Delivery and DevOps:</strong> Building and deploying software using cloud infrastructure (AWS, Azure) and automated pipelines for frequent releases without sacrificing quality.
+        5. <strong>Integration and Platform Connectivity:</strong> Connecting systems for seamless data and process flow across platforms (internal systems, third-party tools, payment gateways, CRMs, ERPs).
+        
+        **CRITICAL:** Match the services you mention to the company's hiring needs. If they're hiring Software Engineers, DevOps, Backend/Frontend developers, focus on Software Development Services. If they're hiring ML Engineers, Data Scientists, Data Analysts, focus on AI/ML Services. You may blend both if relevant.
+        
+        Adept also provides affordability and speed without compromising on quality. Ensure you highlight this in your email.
 
         ---
         ### Prospect Company Profile
@@ -127,15 +178,21 @@ email_prompts = {
         {company_description}
 
         ---
+        ### Identified Challenges & Focus Areas
+        The following key focus areas and business challenges have been identified for <strong>{company_name}</strong>:
+        {painpoints}
+
+        ---
         ### Email Requirements
-        1. <strong>Format:</strong> The content must be formatted as raw HTML body content. Use the placeholders: `{{first_name}}`, `{{company_name}}`, `{{funding_round}}` (if trigger is 'funding'), and `{{hiring_area}}` (if trigger is 'hiring').
-        2. <strong>Subject Line:</strong> Create a subject line with a <strong>different angle</strong> than previous emails - can be problem-oriented rather than congratulatory.
-        3. <strong>Personalization:</strong>
-            * <strong>Crucially,</strong> acknowledge that timing may not have been ideal, then introduce a <strong>new benefit or use case</strong> (e.g., risk reduction, quality improvement, speed-to-market) that hasn't been emphasized before.
-            * Use a concrete example relevant to their product or market.
-        4. <strong>Tone:</strong> Respectful, insight-driven, and non-pushy. Assume they are busy, not uninterested.
-        5. <strong>Call to Action (CTA):</strong> Give them control with options like "Worth a quick conversation?" or "Should I reach out later this quarter?"
-        6. <strong>Length:</strong> Keep this email <strong>very concise</strong> - shorter than the first follow-up.
+        1. <strong>Format:</strong> The content must be formatted as raw HTML body content. 
+        2. <strong>Subject Line:</strong> Use a problem-oriented subject line focused on <strong>Risk or Efficiency</strong> (e.g., "Protecting ManageMy's roadmap from scaling bottlenecks").
+        3. <strong>Personalization & Narrative Flow:</strong>
+            * Use the provided <strong>{first_name}</strong> and <strong>{company_name}</strong> directly in the email content.
+            * <strong>Insight Hook:</strong> Introduce a <strong>new benefit or quantified outcome</strong> (e.g., "reduce model validation time by 40%", "maintain 99%+ data quality") directly tied to an <strong>Identified Pain Point</strong>.
+            * Use a concrete comparison or case-study style example in one sentence.
+        4. <strong>Tone:</strong> Respectful, authoritative, and helpful.
+        5. <strong>Call to Action (CTA):</strong> Give them a low-friction choice: "Worth a quick chat, or should I reach out in 3 months?"
+        6. <strong>Length:</strong> Very concise - get straight to the value.
 
         ---
         ### Email Output Template to Follow (Adapt the content within the tags):
@@ -167,11 +224,23 @@ email_prompts = {
 
         ---
         ### Context & Services Offered (Your Company)
-        Your company, Adept Technologies, provides <strong>scalable support services</strong> to AI/ML companies, specifically:
+        Your company, Adept Technologies, provides <strong>scalable support services</strong> to tech companies in two key areas:
+        
+        **AI/ML Services** (for companies working with AI, data science, machine learning):
         1. <strong>Data Solutions:</strong> Data annotation, data labeling, data quality assurance (QA).
         2. <strong>ML Services:</strong> Model validation, human-in-the-loop support, specialized data collection.
         3. <strong>Customer Engagement:</strong> Handling complex customer interactions, filtering/qualifying leads that require human review, and analytics.
-        Adept also provides afforability and speed without compromising on quality.
+        
+        **Software Development Services** (for companies building software products):
+        1. <strong>Product Build and Feature Delivery:</strong> Designing and building new software products or delivering features within existing product roadmaps (discovery, UI/UX, prototyping, engineering, testing, iterative releases).
+        2. <strong>Support and Optimisation:</strong> Post-go-live support team ensuring system stability and continuous improvement.
+        3. <strong>Modernisation and Refactoring:</strong> Upgrading legacy applications to improve maintainability, performance and scalability.
+        4. <strong>Cloud-native Delivery and DevOps:</strong> Building and deploying software using cloud infrastructure (AWS, Azure) and automated pipelines for frequent releases without sacrificing quality.
+        5. <strong>Integration and Platform Connectivity:</strong> Connecting systems for seamless data and process flow across platforms (internal systems, third-party tools, payment gateways, CRMs, ERPs).
+        
+        **CRITICAL:** Match the services you mention to the company's hiring needs. If they're hiring Software Engineers, DevOps, Backend/Frontend developers, focus on Software Development Services. If they're hiring ML Engineers, Data Scientists, Data Analysts, focus on AI/ML Services. You may blend both if relevant.
+        
+        Adept also provides affordability and speed without compromising on quality.
 
         ---
         ### Prospect Company Profile
@@ -180,14 +249,20 @@ email_prompts = {
         {company_description}
 
         ---
+        ### Identified Challenges & Focus Areas
+        The following key focus areas and business challenges have been identified for <strong>{company_name}</strong>:
+        {painpoints}
+
+        ---
         ### Email Requirements
-        1. <strong>Format:</strong> The content must be formatted as raw HTML body content. Use the placeholders: `{{first_name}}`, `{{company_name}}`, `{{funding_round}}` (if trigger is 'funding'), and `{{hiring_area}}` (if trigger is 'hiring').
-        2. <strong>Subject Line:</strong> Create a clear and honest subject line that signals closure (e.g., "Closing the loop", "Last note", "One final thought").
+        1. <strong>Format:</strong> The content must be formatted as raw HTML body content.
+        2. <strong>Subject Line:</strong> Create a clear and honest subject line that signals closure (e.g., "Closing the loop on ManageMy's operations").
         3. <strong>Personalization:</strong>
-            * <strong>Crucially,</strong> acknowledge the lack of response professionally, restate the core value in <strong>one sentence</strong>, and give them full control (opt-in or opt-out).
-        4. <strong>Tone:</strong> Polite, calm, professional, with zero guilt or pressure. This is about respect, not persuasion.
+            * Use the provided <strong>{first_name}</strong> and <strong>{company_name}</strong> directly in the email content.
+            * <strong>Crucially,</strong> acknowledge the lack of response professionally, restate the core value in <strong>one sentence</strong> tied to solving an <strong>Identified Pain Point</strong>, and give them full control (opt-in or opt-out).
+        4. <strong>Tone:</strong> Polite, calm, professional, with zero guilt or pressure. 
         5. <strong>Call to Action (CTA):</strong> Provide options like "Should I close the loop?", "Worth revisiting later?", or "Happy to reconnect if priorities change."
-        6. <strong>Length:</strong> This should be the <strong>shortest email in the entire sequence</strong> - ultra-concise and respectful.
+        6. <strong>Length:</strong> Ultra-concise and respectful.
 
         ---
         ### Email Output Template to Follow (Adapt the content within the tags):

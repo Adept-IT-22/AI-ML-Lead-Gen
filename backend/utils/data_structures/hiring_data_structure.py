@@ -15,6 +15,8 @@ class HiringData(TypedDict):
     job_roles: List[List[str]]
     hiring_reasons: List[List[str]]
     tags: List[List[str]]
+    painpoints: List[List[str]]
+    service: List[str]
 
 fetched_hiring_data = {
     "type": "hiring",
@@ -30,5 +32,7 @@ fetched_hiring_data = {
     "company_decision_makers_position": [],
     "job_roles": [],
     "hiring_reasons": [],
-    "tags": []
+    "tags": [],
+    "painpoints": [],
+    "service": [],
 }

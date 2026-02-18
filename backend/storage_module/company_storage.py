@@ -85,12 +85,25 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
 
                 #Get data source (funding, events, hiring) from normalized data
                 company_data_source = None
+                painpoints = []
+                service = ""
                 for normalized_company_info in all_normalized_data:
                     normalized_names = normalized_company_info.get("company_name", [])
                     found_match = False
-                    for normalized_name in normalized_names:
+                    for idx, normalized_name in enumerate(normalized_names):
                         if normalized_name.lower() in company_name.lower() or company_name.lower() in normalized_name.lower():
                             company_data_source = normalized_company_info.get("type")
+                            
+                            # Extract painpoints if available
+                            all_painpoints = normalized_company_info.get("painpoints", [])
+                            if idx < len(all_painpoints):
+                                painpoints = all_painpoints[idx]
+                            
+                            # Extract service if available
+                            all_services = normalized_company_info.get("service", [])
+                            if idx < len(all_services):
+                                service = all_services[idx]
+                                
                             found_match = True
                             break
                     if found_match:
@@ -131,7 +144,9 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
                     latest_funding_round,
                     latest_funding_amount,
                     latest_funding_currency,
-                    source_link
+                    source_link,
+                    painpoints,
+                    service
                 )
 
                 company_data_to_store.append(company_row)
@@ -426,6 +441,31 @@ if __name__ == "__main__":
             [],
             [],
             []
+            ],
+            "painpoints": [
+            ["scaling AI services"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"],
+            ["AI/ML development"]
+            ],
+            "service": [
+            "AI/ML",
+            "AI/ML",
+            "AI/ML",
+            "AI/ML",
+            "AI/ML",
+            "AI/ML",
+            "AI/ML",
+            "AI/ML",
+            "AI/ML",
+            "AI/ML"
             ]
         }
         ]
@@ -500,7 +540,7 @@ if __name__ == "__main__":
         }
         ]
 
-        bulk_enriched_orgs = [
+        bulk_enriched_orgs = [[
         {
             "status": "success",
             "error_code": null,
@@ -649,7 +689,7 @@ if __name__ == "__main__":
             }
         ]
         }
-        ]
+        ]]
 
         single_enriched_orgs = [
         {

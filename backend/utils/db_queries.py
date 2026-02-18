@@ -4,9 +4,9 @@ company_query = """
                     phone, founded_year, market_cap, annual_revenue, industries,
                     estimated_num_employees, keywords, organization_headcount_six_month_growth,
                     organization_headcount_twelve_month_growth, city, state, country, short_description,
-                    total_funding, technology_names, icp_score, notes, company_data_source, latest_funding_round,
-                    latest_funding_amount, latest_funding_currency, source_link) VALUES ($1, $2, $3, $4, $5, $6, $7, 
-                    $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26) 
+                     total_funding, technology_names, icp_score, notes, company_data_source, latest_funding_round,
+                     latest_funding_amount, latest_funding_currency, source_link, painpoints, service) VALUES ($1, $2, $3, $4, $5, $6, $7, 
+                    $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28) 
                 ON CONFLICT (apollo_id) DO NOTHING
             """
 
@@ -31,15 +31,21 @@ normalized_master_query = """
 normalized_funding_query = """
         INSERT INTO normalized_funding (master_id, company_name, company_decision_makers,
                 company_decision_makers_position, funding_round, amount_raised,
-                currency, investor_companies, investor_people) VALUES ($1, $2, $3,
-                $4, $5, $6, $7, $8, $9)
+                currency, investor_companies, investor_people, painpoints) VALUES ($1, $2, $3,
+                $4, $5, $6, $7, $8, $9, $10)
                 """
 
 
 normalized_hiring_query = """
+<<<<<<< HEAD
         INSERT INTO normalized_hiring (master_id, company_name, company_decision_makers,
                 company_decision_makers_position, job_roles, hiring_reasons)
                 VALUES ($1, $2, $3, $4, $5, $6)
+=======
+        INSERT INTO mock_normalized_hiring (master_id, company_name, company_decision_makers,
+                company_decision_makers_position, job_roles, hiring_reasons, painpoints)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
+>>>>>>> staging
                 """ 
 
 

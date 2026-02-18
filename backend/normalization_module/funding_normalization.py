@@ -46,7 +46,9 @@ async def normalize_funding_data(ingested_data: Dict[str, List[Any]]) -> Dict[st
         "currency": [normalize_currency(currency) for currency in ingested_data.get("currency", [])],
         "investor_companies": [normalize_company_decision_makers(investor_company_list) for investor_company_list in ingested_data.get("investor_companies", [])],
         "investor_people": [normalize_company_decision_makers(investor_people_list) for investor_people_list in ingested_data.get("investor_people", [])],
-        "tags": [normalize_tags(tag) for tag in ingested_data.get("tags", [])]
+        "tags": [normalize_tags(tag) for tag in ingested_data.get("tags", [])],
+        "painpoints": [normalize_tags(painpoint) for painpoint in ingested_data.get("painpoints", [])],
+        "service": [str(service).strip().lower() for service in ingested_data.get("service", [])]
     })
 
     logger.info("Done normalizing funding data")

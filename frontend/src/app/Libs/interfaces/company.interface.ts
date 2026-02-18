@@ -1,4 +1,4 @@
-import { IPeople } from "./people.interface"; 
+import { IPeople } from "./people.interface";
 
 export interface ICompany {
   annual_revenue: string | null;
@@ -9,7 +9,7 @@ export interface ICompany {
   country: string | null;
   created_at: string | null;
   estimated_num_employees: number | null;
-  founded_year: number| null;
+  founded_year: number | null;
   icp_score: string | null;
   id: number;
   industries: string[] | null;
@@ -27,6 +27,7 @@ export interface ICompany {
   people?: IPeople[];
   phone: string | null;
   short_description: string | null;
+  service: string | null;
   source_link: string | null;
   state: string | null;
   status: string | null;

@@ -2,20 +2,22 @@
   <!-- Confirmation State -->
   <div *ngIf="state === 'confirm'" class="card">
     <div class="icon-container">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="warning-icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="warning-icon">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
       </svg>
     </div>
-    <h1>Unsubscribe from Emails</h1>
-    <p class="message">Are you sure you want to unsubscribe from our emails?</p>
-    <p class="sub-message">You will no longer receive updates and outreach from us.</p>
-    
+    <h1>Opt out from Emails</h1>
+    <p class="message">Are you sure you want to opt out from our emails?</p>
+    <p class="sub-message">You will no longer receive outreach from us.</p>
+
     <div class="button-group">
       <button class="btn btn-danger" (click)="confirmUnsubscribe()">
-        Yes, Unsubscribe
+        Yes, opt out
       </button>
       <button class="btn btn-secondary" (click)="cancelUnsubscribe()">
-        No, Keep Me Subscribed
+        No, don't opt out
       </button>
     </div>
   </div>
@@ -30,24 +32,28 @@
   <!-- Success State -->
   <div *ngIf="state === 'success'" class="card">
     <div class="icon-container">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="success-icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="success-icon">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     </div>
-    <h1>Unsubscription Successful</h1>
-    <p class="message">You have been successfully unsubscribed from our emails.</p>
-    <p class="sub-message">We're sorry to see you go. You will no longer receive emails from us.</p>
+    <h1>Opt out Successful</h1>
+    <p class="message">You have been successfully opted out from our emails.</p>
+    <p class="sub-message">We're sorry to see you go. You will no longer receive outreach from us.</p>
   </div>
 
   <!-- Error State -->
   <div *ngIf="state === 'error'" class="card">
     <div class="icon-container">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="error-icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="error-icon">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
       </svg>
     </div>
-    <h1>Unsubscribe Failed</h1>
+    <h1>Opting out Failed</h1>
     <p class="message">{{ errorMessage }}</p>
-    <p class="sub-message">Please contact support if this issue persists.</p>
+    <p class="sub-message">Please contact antony&#64;adept-techno.co.ke</p>
   </div>
 </div>

@@ -134,12 +134,9 @@ async def main() -> Optional[Dict[str, Any]]:
 
     # Merge LLM extracted data if available
     if extracted_data:
-        if extracted_data.get("company_decision_makers"):
-            llm_results["company_decision_makers"] = extracted_data["company_decision_makers"]
-        if extracted_data.get("hiring_reasons"):
-            llm_results["hiring_reasons"] = extracted_data["hiring_reasons"]
-        if extracted_data.get("job_roles"):
-            llm_results["job_roles"] = extracted_data["job_roles"]
+        for key, value_list in extracted_data.items():
+            if key in llm_results and isinstance(value_list, list):
+                llm_results[key] = value_list
 
     duration = asyncio.get_running_loop().time() - start_time
     logger.info(f"Active Jobs DB ingestion took {duration:.2f} seconds")

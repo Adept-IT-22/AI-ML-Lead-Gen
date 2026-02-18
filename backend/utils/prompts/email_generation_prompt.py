@@ -1,6 +1,6 @@
 from utils.email_prompts import email_prompts
 
-def get_email_generation_prompt(company_description, first_name, company_name, trigger_type, sequence_number, funding_round=None, hiring_area=None):
+def get_email_generation_prompt(company_description, first_name, company_name, trigger_type, sequence_number, funding_round=None, hiring_area=None, painpoints=None):
     """
     Generates a prompt for an LLM to create a highly personalized outreach email.
 
@@ -11,6 +11,7 @@ def get_email_generation_prompt(company_description, first_name, company_name, t
         trigger_type (str): 'funding' or 'hiring'.
         funding_round (str, optional): The funding round (e.g., 'Series A'). Required if trigger_type is 'funding'.
         hiring_area (str, optional): The area/role they are hiring for (e.g., 'Data Science'). Required if trigger_type is 'hiring'.
+        painpoints (list, optional): List of specific pain points identified for the company.
     """
 
     # 1. Define the custom opening based on the trigger type
@@ -19,7 +20,6 @@ def get_email_generation_prompt(company_description, first_name, company_name, t
     if trigger_type == 'funding':
         custom_opening = f"""
             <p>Congrats to the <strong>{company_name}</strong> team on raising your <strong>{funding_round}</strong> round!</p>
-            <p>We work with fast-growing AI/ML companies like yours to help scale operations.</p>
         """
         # Define the main focus for the Subject line and CTA (Growth/Scaling)
         growth_status = f"Funded - {funding_round}"
@@ -27,7 +27,6 @@ def get_email_generation_prompt(company_description, first_name, company_name, t
     elif trigger_type == 'hiring':
         custom_opening = f"""
             <p>I noticed <strong>{company_name}</strong> is expanding the team with roles in <strong>{hiring_area}</strong> — that’s exciting!</p>
-            <p>As you grow, some tasks can start pulling focus from your core engineering/product roadmap.</p>
         """
         # Define the main focus for the Subject line and CTA (Hiring/Expansion)
         growth_status = f"Hiring - {hiring_area}"
@@ -44,7 +43,8 @@ def get_email_generation_prompt(company_description, first_name, company_name, t
         company_description=company_description if company_description else None,
         growth_status=growth_status if growth_status else None,
         custom_opening=custom_opening if custom_opening else None,
-        hiring_area=hiring_area if hiring_area else None
+        hiring_area=hiring_area if hiring_area else None,
+        painpoints="\n".join([f"- {p}" for p in painpoints]) if painpoints else "- general scaling bottlenecks"
     )
 
 if __name__ == "__main__":
