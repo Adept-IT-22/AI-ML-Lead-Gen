@@ -8,7 +8,7 @@ except ImportError:
     ConcurrentRotatingFileHandler = None
 from flask import Flask, jsonify, request, send_file, send_from_directory
 from flask_cors import CORS
-from services.db_service import fetch_emails_sent, unsubscribe_user, get_user_by_token
+from services.db_service import fetch_emails_sent, unsubscribe_user, get_user_by_token, add_company_note, delete_company_note
 from services.email_sending import *
 from services.sendgrid_webhook import *
 from services.export_to_excel import export_to_excel
@@ -252,6 +252,36 @@ async def unsubscribe():
             "success": False, 
             "message": "An error occurred"
         }), 500
+
+@app.route('/save-note/<id>', methods=["POST"])
+async def save_note(id):
+    try:
+        data = request.json
+        if not data or 'note' not in data:
+            return jsonify({"Error": "No note content provided"}), 400
+        
+        note_text = data.get('note')
+        result = await add_company_note(int(id), note_text)
+        
+        if result:
+            return jsonify(result), 201
+        else:
+            return jsonify({"Error": "Failed to save note"}), 500
+    except Exception as e:
+        logger.error(f"Error saving note: {str(e)}")
+        return jsonify({"Error": "An unexpected error occurred", "details": str(e)}), 500
+
+@app.route('/delete-note/<note_id>', methods=["DELETE"])
+async def delete_note(note_id):
+    try:
+        success = await delete_company_note(note_id)
+        if success:
+            return jsonify({"Success": "Note deleted"}), 200
+        else:
+            return jsonify({"Error": "Failed to delete note"}), 500
+    except Exception as e:
+        logger.error(f"Error deleting note: {str(e)}")
+        return jsonify({"Error": "An unexpected error occurred", "details": str(e)}), 500
 
 
 if __name__ == "__main__":

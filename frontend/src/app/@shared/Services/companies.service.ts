@@ -89,12 +89,11 @@ export class CompaniesService {
         fields: [
           { label: 'Phone', value: company.phone || 'N/A' },
           { label: 'Contacted Status', value: company.contacted_status || 'N/A' },
-          { label: 'Internal Notes', value: company.notes || 'N/A' },
           { label: 'Created At', value: company.created_at || 'N/A' },
           { label: 'Updated At', value: company.updated_at || 'N/A' },
           // Loop through people array and map them into fields
           ...((company.people || []).map((p: IPeople) => ({
-            label: `${p.full_name} (${p.title})`,
+            label: `${p.full_name || 'N/A'} (${p.title || 'N/A'})`,
             value: p.email || 'N/A'
           })))
         ],
@@ -105,21 +104,22 @@ export class CompaniesService {
           { label: 'ICP Score', value: company.icp_score || 'N/A' },
           { label: 'Head-count growth (6M)', value: company.organization_headcount_six_month_growth || 'N/A' },
           { label: 'Head-count growth (12M)', value: company.organization_headcount_twelve_month_growth || 'N/A' },
-          { label: 'Services To Provide', 
-            value: (()=>{
-                if (!company.top_matches) return 'N/A';
-                try{
-                  const arr = JSON.parse(company.top_matches);
-                  if (Array.isArray(arr) && arr.length > 0){
-                    return arr.map((item: any[]) => item[0]).join(', ');
-                  }
-                  return 'N/A'
-                } catch {
-                  return 'N/A'
+          {
+            label: 'Services To Provide',
+            value: (() => {
+              if (!company.top_matches) return 'N/A';
+              try {
+                const arr = JSON.parse(company.top_matches);
+                if (Array.isArray(arr) && arr.length > 0) {
+                  return arr.map((item: any[]) => item[0]).join(', ');
                 }
+                return 'N/A'
+              } catch {
+                return 'N/A'
+              }
             })()
           },
-          { label: 'Alignment', value: company.interpretation || 'N/A'}
+          { label: 'Alignment', value: company.interpretation || 'N/A' }
         ],
       },
       {
