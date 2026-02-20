@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CompaniesService, CompanySection } from '../../Services/companies.service';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card'; 
+import { MatCardModule } from '@angular/material/card';
 import { ICompany } from '../../../Libs/interfaces/company.interface';
 import { LoaderComponent } from '../loader/loader.component';
 import { NotesComponent } from '../notes/notes.component';
@@ -32,19 +32,14 @@ export class CompanyDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private companiesService: CompaniesService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.companyId = Number(this.route.snapshot.paramMap.get('id'));
 
     this.companiesService.getCompanyDetails(this.companyId).subscribe({
       next: (details) => {
-        // ✅ safely add remarks to your details object
-        this.companyDetails = {
-          ...details,
-          newRemarks: 'Add your new remarks here...',
-          previousRemarks: 'Previous remarks or notes can go here.'
-        };
+        this.companyDetails = details;
 
         this.companySections = [
           {
@@ -53,7 +48,9 @@ export class CompanyDetailsComponent implements OnInit {
               { key: 'Company Name', value: details.name },
               { key: 'Description', value: details.short_description, expandable: true },
               { key: 'Industry', value: details.industries?.join(', ') },
-              { key: 'Location', value: `${details.city}, ${details.state}, ${details.country}` }
+              { key: 'Location', value: `${details.city}, ${details.state}, ${details.country}` },
+              { key: 'Service', value: details.service },
+              { key: 'Pain points', value: details.painpoints || 'N/A' }
             ]
           },
           {
@@ -101,8 +98,8 @@ export class CompanyDetailsComponent implements OnInit {
             title: 'Contacts',
             entries: [
               ...(details.people?.map((p: any) => ({
-                key: p.title,
-                value: `${p.full_name} | ${p.email} | ${p.linkedin_url}`
+                key: p.title || 'Contact',
+                value: `${p.full_name || 'N/A'} | ${p.email || 'N/A'} | ${p.linkedin_url || 'N/A'}`
               })) || []),
               { key: 'Company Phone', value: details.phone },
               { key: 'Contacted Status', value: details.contacted_status }
@@ -165,7 +162,7 @@ export class CompanyDetailsComponent implements OnInit {
     return Number(value).toLocaleString();
   }
 
-  getSentEmails(company_id: number){
+  getSentEmails(company_id: number) {
     console.log("Fetching emails...")
     return this.companiesService.viewSentEmails(company_id);
   }

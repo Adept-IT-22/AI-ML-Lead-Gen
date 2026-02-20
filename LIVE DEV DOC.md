@@ -212,4 +212,9 @@ This section is a to-do list for me as the programmer.
 + CREATE TYPE company_service AS ENUM ('ai/ml', 'software development international');
 + ALTER TABLE mock_companies ADD COLUMN service company_service;
 
-
++ CREATE TABLE mock_company_notes ( 
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    company_id INTEGER REFERENCES mock_companies(id),
+    note TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
