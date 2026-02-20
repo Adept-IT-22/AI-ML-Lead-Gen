@@ -2,10 +2,7 @@
   <div class="company-header">
     <h2 style="color: var(--color-yellow); display: flex; gap: 2rem;">
       {{ companyDetails.name }}
-      <app-button
-        [buttonText]="'VIEW EMAILS SENT'"
-        [icon]="'visibility'"
-        [routerLink]="['/emails', companyDetails.id]">
+      <app-button [buttonText]="'VIEW EMAILS SENT'" [icon]="'visibility'" [routerLink]="['/emails', companyDetails.id]">
       </app-button>
     </h2>
   </div>
@@ -25,29 +22,31 @@
               </a>
 
             </ng-container>
-            
+
             <ng-container *ngIf="entry.expandable && !isExpanded(entry.key)">
-              {{ truncate(entry.value, 120) }} 
-              <a style="color: var(--color-green);" href="#" (click)="toggleField(entry.key); $event.preventDefault()">Read more</a>
+              {{ truncate(entry.value, 120) }}
+              <a style="color: var(--color-green);" href="#"
+                (click)="toggleField(entry.key); $event.preventDefault()">Read more</a>
             </ng-container>
 
             <ng-container *ngIf="entry.expandable && isExpanded(entry.key)">
               {{ entry.value }}
-              <a style="color: var(--color-green);" href="#" (click)="toggleField(entry.key); $event.preventDefault()">Show less</a>
+              <a style="color: var(--color-green);" href="#"
+                (click)="toggleField(entry.key); $event.preventDefault()">Show less</a>
             </ng-container>
 
             <ng-container *ngIf="!entry.expandable && !isLink(entry.value)">
               {{ entry.value || 'N/A'}}
-            </ng-container> 
+            </ng-container>
 
           </div>
         </mat-card-content>
       </mat-card>
     </div>
   </div>
-  
+
   <!-- all sections -->
-  <app-notes></app-notes>
+  <app-notes [companyId]="companyDetails.id" [notes]="companyDetails.notes"></app-notes>
 
 </div>
 

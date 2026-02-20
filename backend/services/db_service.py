@@ -4,10 +4,61 @@ import json
 import logging
 import asyncio
 import asyncpg
+import uuid
+from datetime import datetime
 from typing import List, Any, Tuple, Dict
 from dotenv import load_dotenv
 from utils.db_queries import *
 from utils.set_conversion import convert_sets
+
+load_dotenv(verbose=True, override=True)
+
+
+DB_URL = os.getenv("MOCK_DATABASE_URL")
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+async def add_company_note(company_id: int, note_text: str) -> Dict[str, Any]:
+    """Adds a new note for a company."""
+    logger.info(f"Adding note for company ID {company_id}")
+    query = """
+    INSERT INTO mock_company_notes (id, company_id, note)
+    VALUES ($1, $2, $3)
+    RETURNING id, company_id, note, created_at
+    """
+    note_id = str(uuid.uuid4())
+    
+    conn = None
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL)
+        result = await conn.fetchrow(query, note_id, company_id, note_text)
+        await conn.close()
+        if result:
+            return dict(result)
+        return {}
+    except Exception as e:
+        logger.error(f"Failed to add note: {str(e)}")
+        if conn:
+            await conn.close()
+        return {}
+
+async def delete_company_note(note_id: str) -> bool:
+    """Deletes a note by its ID."""
+    logger.info(f"Deleting note {note_id}")
+    query = "DELETE FROM mock_company_notes WHERE id = $1"
+    
+    conn = None
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL)
+        await conn.execute(query, note_id)
+        await conn.close()
+        return True
+    except Exception as e:
+        logger.error(f"Failed to delete note {note_id}: {str(e)}")
+        if conn:
+            await conn.close()
+        return False
 
 load_dotenv(verbose=True, override=True)
 
@@ -128,80 +179,59 @@ async def fetch_companies() -> List[Dict[str, Any]]:
     Fetches all companies and their associated people in a single query (Eager Loading)
     and correctly consolidates the denormalized join results into a nested structure.
     """
+    """
+    Fetch all companies with associated people and notes in a single, scalable query.
+    Uses JSON aggregation in Postgres to return one row per company.
+    """
     logger.info("Fetching companies from DB...")
-    conn = None # Initialize conn outside the try block
+    conn = None
     try:
-        # 1. Connect to the database
         conn = await asyncpg.connect(dsn=DB_URL)
 
-        # 2. Eager Load Query: Single query using LEFT JOIN to get all data
         company_query = """
         SELECT 
-            c.*, 
-            p.full_name, p.title, p.email, p.linkedin_url,
-            i.top_matches, i.interpretation
-        FROM 
-            mock_companies c 
-        LEFT JOIN 
-            mock_people p ON c.apollo_id = p.organization_id
-
-        LEFT JOIN
-            mock_icp_scores i ON c.id = i.company_id;
+            c.*,
+            COALESCE(
+                json_agg(DISTINCT jsonb_build_object(
+                    'full_name', p.full_name,
+                    'title', p.title,
+                    'email', p.email,
+                    'linkedin_url', p.linkedin_url
+                )) FILTER (WHERE p.id IS NOT NULL), '[]'::json
+            ) AS people,
+            COALESCE(
+                json_agg(DISTINCT jsonb_build_object(
+                    'id', n.id,
+                    'note', n.note,
+                    'created_at', n.created_at
+                )) FILTER (WHERE n.id IS NOT NULL), '[]'::json
+            ) AS notes,
+            i.top_matches,
+            i.interpretation
+        FROM mock_companies c
+        LEFT JOIN mock_people p ON c.apollo_id = p.organization_id
+        LEFT JOIN mock_icp_scores i ON c.id = i.company_id
+        LEFT JOIN mock_company_notes n ON c.id = n.company_id
+        GROUP BY c.id, i.top_matches, i.interpretation;
         """
+
         results = await conn.fetch(company_query)
-        
-        # 3. Close connection immediately after fetching data
-        await conn.close()
-        
-        # 4. CONSOLIDATION LOGIC: Re-structure the flat 99 rows into 62 nested objects
-        companies_map: Dict[str, Dict[str, Any]] = {}
 
-        for record in results:
-            # Convert asyncpg.Record to dict for easier manipulation
-            record_dict = dict(record)
-            company_apollo_id = record_dict.get("apollo_id")
+        # Convert asyncpg.Record -> dict for each company
+        companies = []
+        for r in results:
+            d = dict(r)
+            # Ensure JSON fields are parsed if they come back as strings
+            for field in ['people', 'notes']:
+                if isinstance(d.get(field), str):
+                    try:
+                        d[field] = json.loads(d[field])
+                    except:
+                        d[field] = []
+            companies.append(d)
 
-            if company_apollo_id is None:
-                # Skip records if the primary company ID is somehow missing
-                continue
-
-            # --- CONSOLIDATE COMPANY DATA ---
-            if company_apollo_id not in companies_map:
-                # A. First time seeing this company: Initialize the master object
-                company_data = record_dict.copy()
-                company_data["people"] = []
-
-                # Also, add the companies alignment to our services.
-                company_data["top_matches"] = record_dict.get('top_matches')
-                company_data["interpretation"] = record_dict.get('interpretation')
-                
-                # Clean up the root object by removing the scattered people data
-                del company_data["full_name"]
-                del company_data["title"]
-                del company_data["email"]
-                del company_data["linkedin_url"]
-                
-                companies_map[company_apollo_id] = company_data
-            
-            # Get the reference to the master company object
-            master_company = companies_map[company_apollo_id]
-
-            # --- CONSOLIDATE PEOPLE DATA ---
-            # The 'full_name' field is NULL if the LEFT JOIN found no matching person.
-            if record_dict["full_name"]:
-                person = {
-                    "full_name": record_dict["full_name"],
-                    "title": record_dict["title"],
-                    "email": record_dict["email"],
-                    "linkedin_url": record_dict["linkedin_url"]
-                }
-                if person not in master_company.get('people'):
-                    master_company["people"].append(person)
-
-        # Convert the dictionary values (the 62 unique company objects) back to a list
-        final_all_companies = list(companies_map.values())
-        logger.info(f"Done fetching and consolidating {len(final_all_companies)} companies.")
-        return final_all_companies
+        logger.info(f"Done fetching and consolidating {len(companies)} companies.")
+        return companies
 
     except asyncpg.PostgresError as e:
         logger.error(f"Database error while trying to fetch companies: {str(e)}")
@@ -211,11 +241,10 @@ async def fetch_companies() -> List[Dict[str, Any]]:
         return []
     finally:
         if conn:
-            # Ensure connection is closed even if an error occurs during fetch
             try:
                 await conn.close()
             except Exception:
-                pass # Ignore close errors
+                pass
         
 async def fetch_people_from_company(organization_id: str)->List[Dict[str, str]]:
     logger.info(f"Fetching people from org id {organization_id}...")
@@ -306,68 +335,74 @@ async def fetch_uncontacted_people(pool: asyncpg.Pool)->List:
 
 #Fetch company by ID
 async def fetch_company_details(id: int) -> Dict[str, any]:
+    """
+    Fetch a single company by ID with its associated people and notes,
+    using JSON aggregation to return one row per company.
+    """
     logger.info(f"Fetching company with ID: {id}")
+    conn = None
     try:
         conn = await asyncpg.connect(dsn=DB_URL)
-        
+
         query = """
-            SELECT c.*, p.full_name, p.title, p.email, p.linkedin_url, i.top_matches, i.interpretation
-            FROM mock_companies c 
-            LEFT JOIN mock_people p 
-            ON c.apollo_id = p.organization_id
-            LEFT JOIN mock_icp_scores i
-            ON c.id = i.company_id
-            WHERE c.id = $1
-            """
-        results = await conn.fetch(query, id)
+        SELECT 
+            c.*,
+            COALESCE(
+                json_agg(DISTINCT jsonb_build_object(
+                    'full_name', p.full_name,
+                    'title', p.title,
+                    'email', p.email,
+                    'linkedin_url', p.linkedin_url
+                )) FILTER (WHERE p.id IS NOT NULL), '[]'::json
+            ) AS people,
+            COALESCE(
+                json_agg(DISTINCT jsonb_build_object(
+                    'id', n.id,
+                    'note', n.note,
+                    'created_at', n.created_at
+                )) FILTER (WHERE n.id IS NOT NULL), '[]'::json
+            ) AS notes,
+            i.top_matches,
+            i.interpretation
+        FROM mock_companies c
+        LEFT JOIN mock_people p ON c.apollo_id = p.organization_id
+        LEFT JOIN mock_icp_scores i ON c.id = i.company_id
+        LEFT JOIN mock_company_notes n ON c.id = n.company_id
+        WHERE c.id = $1
+        GROUP BY c.id, i.top_matches, i.interpretation;
+        """
+
+        result = await conn.fetchrow(query, id)
+
         await conn.close()
 
-        if results:
-            #Since the results might be multiple as the company might have many people, 
-            #we need to create one dictionary and append the people key with all the people
-            final_results = {}
-            for result in results:
-                #Transform record to dict
-                result_dict = dict(result)
-                #Copy result dict to avoid manipulating the original one
-                result_copy = copy.deepcopy(result_dict)
-                #If result is not in final_results, create a people key, remove the shown keys
-                #then add it to final_results with its key as the apollo_id
-                result_id = result.get('apollo_id')
-                if result_id not in final_results:
-                    result_copy['people'] = []
-                    del result_copy['full_name']
-                    del result_copy['title']
-                    del result_copy['email']
-                    del result_copy['linkedin_url']
-                    final_results[result_id] = result_copy
-
-                stored_result = final_results.get(result_id)
-                if result_dict.get('full_name'):
-                    person = {
-                        'full_name': result_dict.get('full_name'),
-                        'title': result_dict.get('title'),
-                        'email': result_dict.get('email'),
-                        'linkedin_url': result_dict.get('linkedin_url'),
-                    }
-                    if person not in stored_result.get('people'):
-                        stored_result.get('people').append(person)
-
-                stored_result['top_matches'] = result_copy.get('top_matches')
-                stored_result['interpretation'] = result_copy.get('interpretation')
-
-            if final_results:
-                return next(iter(final_results.values()))
-
+        if result:
+            # Convert asyncpg.Record to dict
+            d = dict(result)
+            # Ensure JSON fields are parsed if they come back as strings
+            for field in ['people', 'notes']:
+                if isinstance(d.get(field), str):
+                    try:
+                        d[field] = json.loads(d[field])
+                    except:
+                        d[field] = []
+            return d
         else:
             logger.warning(f"No company found with ID {id}")
             return {}
+
     except asyncpg.PostgresError as e:
-        logger.error(f"Database error occured: {str(e)}")
+        logger.error(f"Database error occurred: {str(e)}")
         return {}
     except Exception as e:
         logger.error(f"Failed to fetch company details for company ID {id}: {str(e)}")
         return {}
+    finally:
+        if conn:
+            try:
+                await conn.close()
+            except Exception:
+                pass
 
 #Fetch company by apollo id
 

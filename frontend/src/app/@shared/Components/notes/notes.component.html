@@ -3,35 +3,23 @@
 
     <!-- 📝 New Remark Input -->
     <mat-form-field appearance="outline" class="note-input-field">
-        <div class="input-field-header">
-          <p>Remarks</p>
-        </div>
-        <mat-divider></mat-divider>
-      <textarea
-        matInput
-        [(ngModel)]="newNote"
-        rows="3"
-        placeholder="Type your remark here">
+      <div class="input-field-header">
+        <p>Remarks</p>
+      </div>
+      <mat-divider></mat-divider>
+      <textarea matInput [(ngModel)]="newNote" rows="3" placeholder="Type your remark here">
       </textarea>
     </mat-form-field>
 
     <!-- 🔘 Buttons Row -->
     <div class="button-row">
       <!-- Left: Save -->
-      <button
-        mat-flat-button
-        color="primary"
-        class="save-btn"
-        (click)="saveRemark()">
+      <button mat-flat-button color="primary" class="save-btn" (click)="saveRemark()">
         Save
       </button>
 
       <!-- right: View Previous -->
-      <button
-        mat-flat-button
-        color="accent"
-        class="right-btn"
-        (click)="togglePreviousRemarks()">
+      <button mat-flat-button color="accent" class="right-btn" (click)="togglePreviousRemarks()">
         {{ showPrevious ? 'Hide Previous Remarks' : 'View Previous Remarks' }}
       </button>
 
@@ -41,7 +29,21 @@
     <div *ngIf="showPrevious" class="previous-remarks">
       <h4>Previous Remarks</h4>
       <mat-divider></mat-divider>
-      <p *ngIf="previousRemarks; else noPrev">{{ previousRemarks }}</p>
+      <div *ngIf="notes && notes.length > 0; else noPrev">
+        <div *ngFor="let note of notes" class="note-item">
+          <div class="note-header">
+            <span class="note-date">{{ note.created_at | date:'medium' }}</span>
+            <button mat-icon-button color="warn" (click)="deleteNote(note.id)">
+              <div class="delete-remark">
+                <span class="material-icons">delete</span>
+                <p>Delete</p>
+              </div>
+            </button>
+          </div>
+          <p class="note-text">{{ note.note }}</p>
+          <mat-divider></mat-divider>
+        </div>
+      </div>
       <ng-template #noPrev>
         <p class="no-remarks">No previous remarks found.</p>
       </ng-template>
