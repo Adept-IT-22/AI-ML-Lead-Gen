@@ -226,7 +226,7 @@ async def fetch_companies() -> List[Dict[str, Any]]:
                 if isinstance(d.get(field), str):
                     try:
                         d[field] = json.loads(d[field])
-                    except:
+                    except json.JSONDecodeError:
                         d[field] = []
             companies.append(d)
 
