@@ -244,7 +244,7 @@ async def fetch_companies() -> List[Dict[str, Any]]:
             try:
                 await conn.close()
             except Exception:
-                pass
+                logger.debug("Failed to close DB connection: %s", e)
         
 async def fetch_people_from_company(organization_id: str)->List[Dict[str, str]]:
     logger.info(f"Fetching people from org id {organization_id}...")
