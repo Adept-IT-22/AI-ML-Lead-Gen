@@ -1,5 +1,6 @@
 import os
 import copy
+import httpx
 import asyncio
 import asyncpg
 import logging
@@ -11,6 +12,7 @@ from orchestration.enrichment import main as enrichment_main
 from orchestration.storage import main as storage_main
 from orchestration.scoring import main as scoring_main
 from orchestration.outreach import main as outreach_main
+from enrichment_module.organization_search import org_search
 
 #Set up DB_URL
 load_dotenv(override=True)
@@ -23,13 +25,15 @@ logging.basicConfig(level=logging.INFO)
 #Expected file names
 files_to_import = {
     'FUNDED_IQ':'fundediq',
-    'ADEPT_WEBSITE': 'apollo-accounts'
+    'ADEPT_WEBSITE': 'apollo-accounts',
+    'GERMANY': 'germany' # Hannover Messe
     }
 
 #Column names
 column_names = {
     'FUNDED_IQ': ['Website', 'company', 'funding type', 'funding amount'],
-    'ADEPT_WEBSITE': ['website', 'company name', 'latest funding', 'latest funding amount']
+    'ADEPT_WEBSITE': ['website', 'company name', 'latest funding', 'latest funding amount'],
+    'GERMANY': ['company name', 'location', 'founded', 'city', 'website']
     }
 
 # ===============GET FILE NAME=============
@@ -120,14 +124,35 @@ def create_normalized_data(file):
         funding_data_structure['amount_raised'].extend(amounts)
         funding_data_structure['source'].append('Adept Website')
 
+    # Example for GERMANY file
+    if files_to_import.get('GERMANY', '') in filename.lower():
+        company_names = extract_column_data('germany', filename, desired_sheet, 'company name')
+        countries = extract_column_data('germany', filename, desired_sheet, 'location')
+        cities = extract_column_data('germany', filename, desired_sheet, 'city')
+    
+
+        funding_data_structure['company_name'].extend(company_names)
+        funding_data_structure['country'].extend(countries)
+        funding_data_structure['city'].extend(cities)
+        funding_data_structure['source'].append('Hannover Messe 2026 Lead List')
+
     logger.info([funding_data_structure])
     return [funding_data_structure]
 
 # ========ENRICH, SCORE, STORE, OUTREACH==========
 
 async def main(file):
+    ORGANIZATION_SEARCH_URL = "https://api.apollo.io/api/v1/organizations/search"
+    from config.apollo_config import headers as APOLLO_HEADERS
+    import aiofiles
+    import json
 
     normalized_data = create_normalized_data(file)
+    #async with httpx.AsyncClient(timeout=10.0) as client:
+        #tasks = [org_search(client, comp, api_url = ORGANIZATION_SEARCH_URL, headers = APOLLO_HEADERS) for comp in normalized_data[0].get('company_name', [])]
+        #results = await asyncio.gather(*tasks)
+
+    #logger.info("RESULTS: %r", results)
 
     # ===========QUEUE CREATION ===============
     normalization_to_enrichment= asyncio.Queue()
@@ -143,6 +168,11 @@ async def main(file):
             normalization_to_enrichment_queue=normalization_to_enrichment,
             enrichment_to_storage_queue=enrichment_to_storage_queue
         )
+        
+        #enrichment_data = await enrichment_module_queue.get()
+
+        #async with aiofiles.open("xxx.txt", "w") as file:
+            #await file.write(json.dumps(enrichment_data, indent=2))
 
         await storage_main(
             pool,
@@ -150,13 +180,13 @@ async def main(file):
             enrichment_to_storage_queue=enrichment_module_queue
         )
 
-        await scoring_main(
-            pool
-        )
+        #await scoring_main(
+            #pool
+        #)
 
-        await outreach_main(
-            pool
-        )
+        #await outreach_main(
+            #pool
+        #)
 
 if __name__ == "__main__":
     asyncio.run(main())
