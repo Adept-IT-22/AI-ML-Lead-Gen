@@ -13,6 +13,7 @@ from orchestration.storage import main as storage_main
 from orchestration.scoring import main as scoring_main
 from orchestration.outreach import main as outreach_main
 from enrichment_module.organization_search import org_search
+from helpers.painpoints_and_service import get_painpoints_and_service
 
 #Set up DB_URL
 load_dotenv(override=True)
@@ -169,24 +170,50 @@ async def main(file):
             enrichment_to_storage_queue=enrichment_to_storage_queue
         )
         
-        #enrichment_data = await enrichment_module_queue.get()
+        painpoints_and_service = await get_painpoints_and_service(enrichment_module_queue)
+        logger.info("%r", painpoints_and_service)
 
-        #async with aiofiles.open("xxx.txt", "w") as file:
-            #await file.write(json.dumps(enrichment_data, indent=2))
+        # Fetch data from queue
+        companies_data_batch = await normalization_to_storage.get()
+        data_dict = companies_data_batch[0]
+        
+        # Initialize painpoints and service lists if they are empty
+        num_companies = len(data_dict.get("company_name", []))
+        if not data_dict.get("painpoints"):
+            data_dict["painpoints"] = [[] for _ in range(num_companies)]
+        if not data_dict.get("service"):
+            data_dict["service"] = ["" for _ in range(num_companies)]
 
+        clean_company_names = [name.strip().lower() for name in data_dict.get("company_name", [])]
+
+        # For each company data in painpoints and service, add those to the companies data dict
+        for item in painpoints_and_service:
+            ai_company_name = item.get("company_name", "").strip().lower()
+            
+            if ai_company_name in clean_company_names:
+                idx = clean_company_names.index(ai_company_name)
+                data_dict["painpoints"][idx] = item.get("painpoints", [])
+                data_dict["service"][idx] = item.get("service", "")
+            else:
+                logger.warning(f"AI returned info for company not in batch: {ai_company_name}")
+
+        # Return data to queue
+        logger.info("Integrated painpoints and service into company data batch.")
+        await normalization_to_storage.put([data_dict])
+            
         await storage_main(
             pool,
             normalization_to_storage_queue=normalization_to_storage,
             enrichment_to_storage_queue=enrichment_module_queue
         )
 
-        #await scoring_main(
-            #pool
-        #)
+        await scoring_main(
+            pool
+        )
 
-        #await outreach_main(
-            #pool
-        #)
+        await outreach_main(
+            pool
+        )
 
 if __name__ == "__main__":
     asyncio.run(main())

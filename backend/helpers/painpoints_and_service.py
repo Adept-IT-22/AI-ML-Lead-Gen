@@ -9,48 +9,61 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 async def get_painpoints_and_service(enrichment_storage_queue: asyncio.Queue)->List[Dict[str, str]]:
-    if enrichment_storage_queue.empty():
-        return []
+    results = []
 
-    # Get enrichment data
-    enrichment_data = await enrichment_storage_queue.get()
+    while not enrichment_storage_queue.empty():
+        # Get enrichment data
+        enrichment_data = await enrichment_storage_queue.get()
 
-    #Get short_descirption from bulk_enriched_orgs
-    bulk_enriched_orgs = enrichment_data.get('bulk_enriched_orgs') 
+        #Get organizations from bulk_enriched_orgs
+        bulk_enriched_orgs = enrichment_data.get('bulk_enriched_orgs', []) 
 
-    bulk_enriched_organizations = [
-        org
-        for bulk_list in safe_list(bulk_enriched_orgs)
-        for org in safe_list(safe_dict(bulk_list[0]).get("organizations")) if bulk_list
-    ]
+        bulk_enriched_organizations = [
+            org
+            for bulk_list in safe_list(bulk_enriched_orgs)
+            for org in safe_list(safe_dict(bulk_list[0]).get("organizations")) if bulk_list
+        ]
 
-    short_description = ""
-    if bulk_enriched_organizations:
-        for bulk_enriched_org in bulk_enriched_organizations:
-            short_description = bulk_enriched_org.get("short_description", "")
-            if short_description:
-                break
+        tasks = []
+        if bulk_enriched_organizations:
+            for bulk_enriched_org in bulk_enriched_organizations:
+                company_name = bulk_enriched_org.get("name", "")
+                short_description = bulk_enriched_org.get("short_description", "")
+                if short_description:
+                    tasks.append(ai_generated_painpoints_and_service(company_name, short_description))
 
-    # Get the painpoints and service using an llm
-    painpoints_and_service = await ai_generated_painpoints_and_service(short_description)
+        if tasks:
+            # Run all AI calls for this batch concurrently
+            batch_results = await asyncio.gather(*tasks)
+            results.extend(batch_results)
 
-    return painpoints_and_service
+    return results
     
 # AI call to fetch painpoints and service
-async def ai_generated_painpoints_and_service(company_description: str)->Dict[str, str]:
-    prompt = """
-        Take the following prompt and return the following data:
-        1. A list of not more than 3 most urgent pain points that the company has/might have
-        2. Which service they're most likely to need between 'ai/ml services' and 'software development services'. 
-        If it's ai/ml return 'ai/ml', if it's software development return 'software development international'
+async def ai_generated_painpoints_and_service(company_name: str, company_description: str)->Dict[str, str]:
+    prompt = f"""
+        Analyze the following company information:
+        Company Name: {company_name}
+        Description: {company_description}
 
-        {prompt}
+        Based on this, return a JSON object with:
+        1. "company_name": A string of the company name
+        2. "painpoints": A list of up to 3 most urgent technical or business pain points. 
+           CRITICAL: These MUST be extracted or directly inferred from the provided Description. 
+           DO NOT hallucinate or assume general industry problems. 
+           If the description is very short, only include what is actually there.
+        3. "service": Categorize their most needed service into EXACTLY one of these two:
+           - 'ai/ml': Use this if they need AI, machine learning, data science, or automated insights.
+           - 'software development international': Use this if they are primarily looking for general software engineering, web/mobile development, or scaling their development team.
 
-        Important! Return the data in json format with keys being painpoints and service e.g.
-        {
-            'painpoints': ['scaling the software team', 'high cost of developing software'],
-            'service': 'software development international'
-        }
+        Crucially, if the company IS a software development company looking to grow its OWN team (like a dev shop or tech firm), their service need is 'software development international', NOT 'ai/ml' unless they specifically mention AI/ML challenges.
+
+        Return ONLY valid JSON in this format:
+        {{
+            "company_name": "Company name",
+            "painpoints": ["example pain point 1", "example pain point 2"],
+            "service": "software development international"
+        }}
     """
 
     response = await call_gemini_api(prompt)
@@ -72,20 +85,41 @@ async def ai_generated_painpoints_and_service(company_description: str)->Dict[st
 
 if __name__ == "__main__":
     async def main():
-        enriched_data = {
-            "single_enriched_orgs": [{}],
+        # Test Case 1: Multiple Orgs in one batch
+        enriched_data_1 = {
             "bulk_enriched_orgs": [[{
-                "organizations": [{
-                    "name": "Darwin AI",
-                    "short_description": "Darwin AI is a technology company that specializes in artificial intelligence solutions to enhance business processes, particularly in sales and marketing. The company focuses on data-driven creative testing and analytics, offering software that analyzes advertising creatives to identify effective design elements and messaging. This helps clients tailor their ads to specific audiences and continuously improve their creative strategies.\n\nIn 2023, Darwin AI introduced a dedicated AI platform for consultative sales in high-value B2C sectors such as real estate, automotive, education, and online courses. This platform efficiently filters leads and identifies customer needs, ensuring that only qualified prospects are passed to sales agents, which boosts sales efficiency and reduces costs for small and medium-sized businesses.\n\nDarwin AI's offerings include creative analytics and testing software, consultative sales AI solutions, and personalized tools for SMBs, all aimed at optimizing marketing effectiveness and sales processes. The company serves a range of clients looking to enhance their sales strategies through AI-driven insights."
-                    }]
+                "organizations": [
+                    {
+                        "name": "Adept Technologies",
+                        "short_description": "Adept Technologies is a software development company that is currently looking to grow its software development team."
+                    },
+                    {
+                        "name": "AI Solutions Inc",
+                        "short_description": "We provide cutting-edge AI and ML solutions for healthcare data processing."
+                    }
+                ]
+            }]]
+        }
+
+        # Test Case 2: Another batch in the queue
+        enriched_data_2 = {
+            "bulk_enriched_orgs": [[{
+                "organizations": [
+                    {
+                        "name": "Web Scale Corp",
+                        "short_description": "Specializing in high-performance web applications and mobile development."
+                    }
+                ]
             }]]
         }
 
         enrichment_storage_queue = asyncio.Queue()
-        #await enrichment_storage_queue.put(enriched_data)
-        x = await get_painpoints_and_service(enrichment_storage_queue)
-        print(x)
+        await enrichment_storage_queue.put(enriched_data_1)
+        await enrichment_storage_queue.put(enriched_data_2)
+        
+        results = await get_painpoints_and_service(enrichment_storage_queue)
+        for i, res in enumerate(results):
+            print(f"Result {i+1}: {res}")
 
     asyncio.run(main())
 
