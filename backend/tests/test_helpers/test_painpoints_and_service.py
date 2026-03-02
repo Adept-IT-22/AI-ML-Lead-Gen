@@ -14,7 +14,7 @@ async def test_ai_generated_painpoints_and_service_success():
     with patch('helpers.painpoints_and_service.call_gemini_api', new_callable=AsyncMock) as mock_api:
         mock_api.return_value = mock_response
         
-        result = await ai_generated_painpoints_and_service("Some company description")
+        result = await ai_generated_painpoints_and_service("Company Name", "Some company description")
         
         assert result == {"painpoints": ["p1", "p2"], "service": "ai/ml"}
         mock_api.assert_called_once()
@@ -30,7 +30,7 @@ async def test_ai_generated_painpoints_and_service_invalid_json():
     with patch('helpers.painpoints_and_service.call_gemini_api', new_callable=AsyncMock) as mock_api:
         mock_api.return_value = mock_response
         
-        result = await ai_generated_painpoints_and_service("Some company description")
+        result = await ai_generated_painpoints_and_service("Company Name", "Some company description")
         
         assert "error" in result
         assert result["raw_text"] == "Invalid JSON"
@@ -47,6 +47,7 @@ async def test_get_painpoints_and_service_success():
     test_data = {
         "bulk_enriched_orgs": [[{
             "organizations": [{
+                "name": "Test Company",
                 "short_description": "Data driven AI sales tools"
             }]
         }]]
@@ -58,5 +59,5 @@ async def test_get_painpoints_and_service_success():
         
         result = await get_painpoints_and_service(queue)
         
-        assert result == {"painpoints": ["p1"], "service": "ai/ml"}
-        mock_ai.assert_called_with("Data driven AI sales tools")
+        assert result == [{"painpoints": ["p1"], "service": "ai/ml"}]
+        mock_ai.assert_called_with("Test Company", "Data driven AI sales tools")
