@@ -199,7 +199,6 @@ async def main(file):
 
         # Return data to queue
         logger.info("Integrated painpoints and service into company data batch.")
-        logger.info("%r", data_dict)
         await normalization_to_storage.put([data_dict])
             
         await storage_main(
