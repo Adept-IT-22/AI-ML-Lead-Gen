@@ -86,7 +86,7 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
                 #Get data source (funding, events, hiring) from normalized data
                 company_data_source = None
                 painpoints = []
-                service = ""
+                service = None
                 for normalized_company_info in all_normalized_data:
                     normalized_names = normalized_company_info.get("company_name", [])
                     found_match = False
@@ -102,7 +102,7 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
                             # Extract service if available
                             all_services = normalized_company_info.get("service", [])
                             if idx < len(all_services):
-                                service = all_services[idx]
+                                service = all_services[idx] or None
                                 
                             found_match = True
                             break

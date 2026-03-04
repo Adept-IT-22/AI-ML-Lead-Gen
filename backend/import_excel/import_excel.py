@@ -169,8 +169,22 @@ async def main(file):
             normalization_to_enrichment_queue=normalization_to_enrichment,
             enrichment_to_storage_queue=enrichment_to_storage_queue
         )
+
+        # Split the enrichment queue: Read all items and put them into two new queues
+        enrichment_items = []
+        while not enrichment_module_queue.empty():
+            enrichment_items.append(await enrichment_module_queue.get())
         
-        painpoints_and_service = await get_painpoints_and_service(enrichment_module_queue)
+        # Queue for painpoints AI call
+        enrichment_for_painpoints = asyncio.Queue()
+        # Queue for storage main
+        enrichment_for_storage = asyncio.Queue()
+        
+        for item in enrichment_items:
+            await enrichment_for_painpoints.put(item)
+            await enrichment_for_storage.put(item)
+        
+        painpoints_and_service = await get_painpoints_and_service(enrichment_for_painpoints)
         logger.info("%r", painpoints_and_service)
 
         # Fetch data from queue
@@ -182,18 +196,23 @@ async def main(file):
         if not data_dict.get("painpoints"):
             data_dict["painpoints"] = [[] for _ in range(num_companies)]
         if not data_dict.get("service"):
-            data_dict["service"] = ["" for _ in range(num_companies)]
+            data_dict["service"] = [None for _ in range(num_companies)]
 
         clean_company_names = [name.strip().lower() for name in data_dict.get("company_name", [])]
 
         # For each company data in painpoints and service, add those to the companies data dict
         for item in painpoints_and_service:
+            
+            # Items should be dicts. If its in a list, remove it
+            if isinstance(item, list):
+                item = item[0]
+
             ai_company_name = item.get("company_name", "").strip().lower()
             
             if ai_company_name in clean_company_names:
                 idx = clean_company_names.index(ai_company_name)
                 data_dict["painpoints"][idx] = item.get("painpoints", [])
-                data_dict["service"][idx] = item.get("service", "")
+                data_dict["service"][idx] = item.get("service") or None
             else:
                 logger.warning(f"AI returned info for company not in batch: {ai_company_name}")
 
@@ -204,7 +223,7 @@ async def main(file):
         await storage_main(
             pool,
             normalization_to_storage_queue=normalization_to_storage,
-            enrichment_to_storage_queue=enrichment_module_queue
+            enrichment_to_storage_queue=enrichment_for_storage
         )
 
         await scoring_main(
