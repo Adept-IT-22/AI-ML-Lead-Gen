@@ -9,11 +9,22 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 async def get_painpoints_and_service(enrichment_storage_queue: asyncio.Queue)->List[Dict[str, str]]:
+    logger.info("Getting painpoints and service...")
     results = []
 
     while not enrichment_storage_queue.empty():
         # Get enrichment data
         enrichment_data = await enrichment_storage_queue.get()
+
+        # Get original search mapping from searched_orgs
+        searched_orgs = enrichment_data.get('searched_orgs', [])
+        name_map = {} # {enriched_name.lower(): original_search_query}
+        for s_org in searched_orgs:
+            if s_org and "organizations" in s_org and s_org["organizations"]:
+                enriched_name = s_org["organizations"][0].get("name", "").lower()
+                original_name = s_org.get("search_query")
+                if enriched_name and original_name:
+                    name_map[enriched_name] = original_name
 
         #Get organizations from bulk_enriched_orgs
         bulk_enriched_orgs = enrichment_data.get('bulk_enriched_orgs', []) 
@@ -27,16 +38,20 @@ async def get_painpoints_and_service(enrichment_storage_queue: asyncio.Queue)->L
         tasks = []
         if bulk_enriched_organizations:
             for bulk_enriched_org in bulk_enriched_organizations:
-                company_name = bulk_enriched_org.get("name", "")
+                enriched_company_name = bulk_enriched_org.get("name", "")
+                # Prioritize original search name for the AI call
+                company_name_for_ai = name_map.get(enriched_company_name.lower(), enriched_company_name)
+                
                 short_description = bulk_enriched_org.get("short_description", "")
                 if short_description:
-                    tasks.append(ai_generated_painpoints_and_service(company_name, short_description))
+                    tasks.append(ai_generated_painpoints_and_service(company_name_for_ai, short_description))
 
         if tasks:
             # Run all AI calls for this batch concurrently
             batch_results = await asyncio.gather(*tasks)
             results.extend(batch_results)
 
+    logger.info("Done getting painpoints and services")
     return results
     
 # AI call to fetch painpoints and service
@@ -47,7 +62,7 @@ async def ai_generated_painpoints_and_service(company_name: str, company_descrip
         Description: {company_description}
 
         Based on this, return a JSON object with:
-        1. "company_name": A string of the company name
+        1. "company_name": {company_name} (CRITICAL: Return this EXACT string, do not modify it)
         2. "painpoints": A list of up to 3 most urgent technical or business pain points. 
            CRITICAL: These MUST be extracted or directly inferred from the provided Description. 
            DO NOT hallucinate or assume general industry problems. 
@@ -60,7 +75,7 @@ async def ai_generated_painpoints_and_service(company_name: str, company_descrip
 
         Return ONLY valid JSON in this format:
         {{
-            "company_name": "Company name",
+            "company_name": "{company_name}",
             "painpoints": ["example pain point 1", "example pain point 2"],
             "service": "software development international"
         }}

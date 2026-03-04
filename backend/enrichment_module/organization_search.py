@@ -43,11 +43,13 @@ async def no_rate_limit_org_search(
             response.raise_for_status()
 
             logger.info(f"Completed organization search for {company_name}")
-            return response.json()
+            result_json = response.json()
+            result_json["search_query"] = company_name
+            return result_json
         
         except Exception as e:
             logger.error(f"Couldnt perform organization search for {company_name}: {str(e)}")
-            return {"Error": str(e)}
+            return {"Error": str(e), "search_query": company_name}
 
     elif organization_ids:
         logger.info(f"Performing organization search for organization ids: {organization_ids}...")

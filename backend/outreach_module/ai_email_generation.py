@@ -39,10 +39,10 @@ VERTEX_ENDPOINT = (
 # Concurrency & Rate Limiting
 # -------------------------------------------------------------------
 MAX_CONCURRENT_REQUEST = 1
-semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUEST)
+semaphore = None  # Lazy initialized
 
 RATE_LIMIT_SECONDS = 6
-gemini_lock = asyncio.Lock()
+gemini_lock = None  # Lazy initialized
 last_call = 0
 
 # -------------------------------------------------------------------
@@ -117,7 +117,12 @@ async def call_gemini_api(prompt: str) -> Optional[Any]:
     Public interface for calling Gemini API. 
     Handles rate limiting and concurrency.
     """
-    global last_call
+    global semaphore, gemini_lock, last_call
+    
+    if semaphore is None:
+        semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUEST)
+    if gemini_lock is None:
+        gemini_lock = asyncio.Lock()
     
     async with semaphore:
         async with gemini_lock:
