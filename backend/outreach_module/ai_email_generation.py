@@ -158,15 +158,8 @@ async def call_gemini_api(prompt: str) -> Optional[Any]:
 if __name__ == "__main__":
     from utils.prompts.email_generation_prompt import get_email_generation_prompt
     
-    async def main():
-        desc = "ManageMy is a SaaS technology company based in Charlotte, North Carolina, founded in 2018. The company specializes in an AI-driven digital platform designed for insurance carriers. This platform helps streamline various processes such as buying, underwriting, servicing, and claims, while also driving sales growth and enhancing customer experiences without the need to overhaul existing legacy systems. One of the key offerings is XPerience Studio, a no-code API-based solution that allows carriers to quickly configure workflows, forms, and digital journeys across multiple platforms. The digital front-end platform supports the entire policy lifecycle, including quoting, onboarding, and claims management. Additionally, ManageMy provides integrated marketing services through MyCustomer, which focuses on data-driven campaigns for upselling and retention. The company leverages a team with extensive insurance expertise, emphasizing cybersecurity and regulatory compliance to support its clients effectively."
-        fname = "Chris"
-        cname = "ManageMy" 
-        ttype = "funding"
-        fround = "latest"
-        seq_no = 1
-        painpoints = ['insurers are under growing pressure to improve speed, accuracy, and customer experience while increasing sales and reducing costs', 'insurance industry has struggled to modernise its business models']
-        
+    async def test_email_generation(desc, fname, cname, ttype, seq_no, fround=None, hiring_area=None, painpoints=None):
+        print(f"\n--- TESTING {ttype.upper()} EXAMPLE ---")
         prompt = get_email_generation_prompt(
             company_description=desc,
             first_name=fname,
@@ -174,6 +167,7 @@ if __name__ == "__main__":
             trigger_type=ttype,
             sequence_number=seq_no,
             funding_round=fround,
+            hiring_area=hiring_area,
             painpoints=painpoints
         )
         
@@ -191,17 +185,40 @@ if __name__ == "__main__":
                 "first_name": fname,
                 "company_name": cname,
                 "company_description": desc,
-                "funding_round": fround if ttype == "funding" else "",
-                "hiring_area": hiring_area if ttype == "hiring" else ""
+                "funding_round": fround if fround else "",
+                "hiring_area": hiring_area if hiring_area else ""
             }
             
             final_subject = email_json["subject"].format(**format_dict)
             final_content = email_json["content"].format(**format_dict)
             
-            print(f"\nSUBJECT: {final_subject}")
+            print(f"SUBJECT: {final_subject}")
             print(f"CONTENT: {final_content}")
             
         except Exception as e:
-            logger.error(f"Test failed: {str(e)}")
+            logger.error(f"Test failed for {ttype}: {str(e)}")
+
+    async def main():
+        # Example 1: Funding
+        desc_funding = "ManageMy is a SaaS technology company based in Charlotte, North Carolina, founded in 2018. The company specializes in an AI-driven digital platform designed for insurance carriers. This platform helps streamline various processes such as buying, underwriting, servicing, and claims, while also driving sales growth and enhancing customer experiences without the need to overhaul existing legacy systems. One of the key offerings is XPerience Studio, a no-code API-based solution that allows carriers to quickly configure workflows, forms, and digital journeys across multiple platforms. The digital front-end platform supports the entire policy lifecycle, including quoting, onboarding, and claims management. Additionally, ManageMy provides integrated marketing services through MyCustomer, which focuses on data-driven campaigns for upselling and retention. The company leverages a team with extensive insurance expertise, emphasizing cybersecurity and regulatory compliance to support its clients effectively."
+        fname = "Chris"
+        cname = "ManageMy" 
+        ttype_funding = "funding"
+        fround = "latest"
+        seq_no = 1
+        painpoints = ['insurers are under growing pressure to improve speed, accuracy, and customer experience while increasing sales and reducing costs', 'insurance industry has struggled to modernise its business models']
+        
+        await test_email_generation(desc_funding, fname, cname, ttype_funding, seq_no, fround=fround, painpoints=painpoints)
+
+        # Example 2: Hiring
+        desc_hiring = "Darwin AI is a technology company that specializes in artificial intelligence solutions to enhance business processes, particularly in sales and marketing. The company focuses on data-driven creative testing and analytics, offering software that analyzes advertising creatives to identify effective design elements and messaging. This helps clients tailor their ads to specific audiences and continuously improve their creative strategies."
+        fname_hiring = "Mark"
+        cname_hiring = "Darwin AI"
+        ttype_hiring = "hiring"
+        hiring_area = "Software Engineering"
+        seq_no_hiring = 1
+        painpoints_hiring = ["businesses struggle to identify effective design elements in their ads", "manual testing of creative content is time-consuming and inefficient"]
+
+        await test_email_generation(desc_hiring, fname_hiring, cname_hiring, ttype_hiring, seq_no_hiring, hiring_area=hiring_area, painpoints=painpoints_hiring)
             
     asyncio.run(main())

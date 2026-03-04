@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
     # Example 2: Hiring Prompt
     ttype_hiring = "hiring"
-    hiring_area = "ML Engineering"
+    hiring_area = "Software Engineering"
     hiring_prompt = get_email_generation_prompt(desc, fname, cname, ttype_hiring, seq_no, hiring_area=hiring_area)
     print("\n--- HIRING PROMPT ---")
     print(hiring_prompt)
