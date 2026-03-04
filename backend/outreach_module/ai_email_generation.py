@@ -211,13 +211,13 @@ if __name__ == "__main__":
         await test_email_generation(desc_funding, fname, cname, ttype_funding, seq_no, fround=fround, painpoints=painpoints)
 
         # Example 2: Hiring
-        desc_hiring = "Darwin AI is a technology company that specializes in artificial intelligence solutions to enhance business processes, particularly in sales and marketing. The company focuses on data-driven creative testing and analytics, offering software that analyzes advertising creatives to identify effective design elements and messaging. This helps clients tailor their ads to specific audiences and continuously improve their creative strategies."
-        fname_hiring = "Mark"
-        cname_hiring = "Darwin AI"
+        desc_hiring = "Looking for a partner that can help take your Web2/Web3, Mobile, Blockchain or AI product to the next level? QIT Software is here for you. QIT Software is a software development company based in Plano, Texas. We specialize in crafting bespoke web and mobile solutions, as well as offering dedicated teams and R&D services for Web2/Web3, Mobile, Blockchain, AI and other products. Our team of top-notch engineers and innovators are dedicated to staying ahead of the curve, using the latest tools and technologies to deliver cutting-edge solutions that meet your unique needs and maximize revenue. From AI and machine learning to blockchain and beyond, we're committed to pushing the boundaries of what's possible. With our passion for innovation and commitment to excellence, we'll work with you every step of the way to bring your vision to life. We offer a full suite of outstaffing services and help global businesses scale their engineering teams via IT Staff Augmentation, Dedicated Team and Time & Material cooperation models. 👾 Tech stack we master: React, Vue.js, Angular, TypeScript, JavaScript, Java, .NET, Solidity, Blockchain, PHP, Node.js, Python, iOS, Android, React Native, Ionic, Flutter, Swift, Kotlin, Xamarin, C++, GCP, AWS, Azure, PostgreSQL, MySQL and others. ⚡️ By partnering with QIT Software you get: - a sufficiently shortened onboarding time for new members; - an outstanding cost-quality ratio; - developers who exclusively work for you, regardless of the project length - employees while we handle all the paperwork and cover all the costs; - simplified tax system to the reduced staff; - stress release. We handle all the paperwork and cover all the desk costs; - transparent direct line of communication; - full development process supervision by being in touch with your remote team. 🤝🏼 Drop us a line to discuss your project."
+        fname_hiring = "Yegor"
+        cname_hiring = "QIT Software"
         ttype_hiring = "hiring"
-        hiring_area = "Software Engineering"
+        hiring_area = "Data Engineer"
         seq_no_hiring = 1
-        painpoints_hiring = ["businesses struggle to identify effective design elements in their ads", "manual testing of creative content is time-consuming and inefficient"]
+        painpoints_hiring = ["enhancing productivity","innovation"]
 
         await test_email_generation(desc_hiring, fname_hiring, cname_hiring, ttype_hiring, seq_no_hiring, hiring_area=hiring_area, painpoints=painpoints_hiring)
             
