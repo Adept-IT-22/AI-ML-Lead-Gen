@@ -15,9 +15,16 @@ async def main(
 
     logger.info("Starting storage ...")
 
+    all_normalized_data = None
+    enrichment_data = None
+
     while not normalization_to_storage_queue.empty() and not enrichment_to_storage_queue.empty():
         all_normalized_data = await normalization_to_storage_queue.get()
         enrichment_data = await enrichment_to_storage_queue.get()
+
+    if enrichment_data is None or all_normalized_data is None:
+        logger.warning("No data found in queues. Skipping storage process.")
+        return []
 
     searched_orgs = enrichment_data.get('searched_orgs') 
     bulk_enriched_orgs = enrichment_data.get('bulk_enriched_orgs') 

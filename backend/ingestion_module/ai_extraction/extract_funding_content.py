@@ -39,10 +39,10 @@ VERTEX_ENDPOINT = (
 
 BATCH_SIZE = 4
 MAX_CONCURRENT_REQUEST = 1
-semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUEST)
+semaphore = None  # Lazy initialized
 
 RATE_LIMIT_SECONDS = 6
-gemini_lock = asyncio.Lock()
+gemini_lock = None  # Lazy initialized
 last_call = 0
 
 # -------------------------------------------------------------------
@@ -117,7 +117,9 @@ async def _call_gemini_api_with_retry(prompt: str) -> str:
 # Rate-limiting wrapper
 # -------------------------------------------------------------------
 async def rate_limited_gemini_call(prompt: str):
-    global last_call
+    global last_call, gemini_lock
+    if gemini_lock is None:
+        gemini_lock = asyncio.Lock()
     async with gemini_lock:
         now = asyncio.get_running_loop().time()
         elapsed = now - last_call
@@ -127,6 +129,9 @@ async def rate_limited_gemini_call(prompt: str):
     return await _call_gemini_api_with_retry(prompt)
 
 async def safe_process_articles_batch(batch: Dict[str, List[Any]]):
+    global semaphore
+    if semaphore is None:
+        semaphore = asyncio.Semaphore(MAX_CONCURRENT_REQUEST)
     async with semaphore:
         return await process_articles_batch(batch)
 
