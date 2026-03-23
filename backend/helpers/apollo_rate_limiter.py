@@ -16,6 +16,7 @@ def is_rate_limit_error(exception: Exception) -> bool:
     """Check if the exception is an HTTP 429 Too Many Requests error."""
     from httpx import HTTPStatusError
     if isinstance(exception, HTTPStatusError):
+        logger.error("429 error encountered")
         return exception.response.status_code == 429
     msg = str(exception).lower()
     return "429" in msg or "too many requests" in msg
