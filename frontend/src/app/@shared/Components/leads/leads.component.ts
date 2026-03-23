@@ -1,9 +1,8 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { ButtonComponent } from '../button/button.component';
-import { RouterModule } from '@angular/router'; 
+import { RouterModule } from '@angular/router';
 import { CompaniesService } from '../../Services/companies.service';
-import { ICompany } from '../../../Libs/interfaces/company.interface';
 import { SearchService } from '../../Services/search.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
@@ -24,14 +23,14 @@ export interface Column {
 export class LeadsTableComponent implements OnInit {
   @Input() title: string = "";
   @Input() columns: Column[] = [];
-  @Input() data: any[] = [];          
+  @Input() data: any[] = [];
   @Input() buttons: string[] = [];
   @Input() selectTitle: string = "";
   @Input() selectOptions: string[] = [];
-  @Input() filters: { [key: string]: string } = {}; 
-  @Input() fullTable: boolean = false; 
+  @Input() filters: { [key: string]: string } = {};
+  @Input() fullTable: boolean = false;
 
-  filteredData: any[] = [];   
+  filteredData: any[] = [];
   selectedOption: string = '';
   selectedRow: any = null;
   searchTerm: string = '';
@@ -40,10 +39,10 @@ export class LeadsTableComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   constructor(
-    private companiesService: CompaniesService, 
+    private companiesService: CompaniesService,
     private searchService: SearchService,
     private http: HttpClient
-  ) {}
+  ) { }
 
   backend_url = environment.API_URL;
 
@@ -55,7 +54,7 @@ export class LeadsTableComponent implements OnInit {
     });
   }
 
-  ngOnChanges():void {
+  ngOnChanges(): void {
     this.filteredData = [...this.data];
     this.applyFiltersAndSearch();
   }
@@ -85,7 +84,7 @@ export class LeadsTableComponent implements OnInit {
 
   onView(row: any) {
     this.selectedRow = row;
-  } 
+  }
 
   onUpdate(row: any): void {
     console.log('Update clicked', row);
@@ -95,51 +94,58 @@ export class LeadsTableComponent implements OnInit {
     this.selectedRow = null;
   }
 
+  hasEmail(row: any): boolean {
+    const people = row.people ?? [];
+    return people.some((p: any) =>
+      typeof p.email === 'string' && p.email.trim().length > 0
+    );
+  }
+
   // ✅ Export to Excel
   exportToExcel(): void {
-  this.companiesService.exportCompanies().subscribe({
-    next: (blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `leads-${new Date().toISOString().split('T')[0]}.xlsx`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    },
-    error: (err) => {
-      console.error("Export failed:", err);
-      alert("Failed to export leads.");
-    }
-  });
-}
+    this.companiesService.exportCompanies().subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `leads-${new Date().toISOString().split('T')[0]}.xlsx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error("Export failed:", err);
+        alert("Failed to export leads.");
+      }
+    });
+  }
 
-importLeads():void {
-  //Open file selector
-  this.fileInput.nativeElement.click();  
-}
+  importLeads(): void {
+    //Open file selector
+    this.fileInput.nativeElement.click();
+  }
 
-onFileSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (!input.files?.length) return;
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
 
-  const file = input.files[0];
-  const formData = new FormData();
-  formData.append('file', file);
+    const file = input.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
 
-  //Send to backend
-  this.http.post(`${this.backend_url}/import-leads`, formData).subscribe({
-    next: (res: any)=> {
-      console.log('File uploaded successfuly', res);
-      alert(res.message || 'File uploaded successfully!');
-    },
-    error: (err) => {
-      console.error('Uploaded failed', err);
-      alert('Failed to upload file');
-    }
-  });
+    //Send to backend
+    this.http.post(`${this.backend_url}/import-leads`, formData).subscribe({
+      next: (res: any) => {
+        console.log('File uploaded successfuly', res);
+        alert(res.message || 'File uploaded successfully!');
+      },
+      error: (err) => {
+        console.error('Uploaded failed', err);
+        alert('Failed to upload file');
+      }
+    });
 
-  //Reset filename to empty so that user can select the same file again
-  input.value = '';
-}
+    //Reset filename to empty so that user can select the same file again
+    input.value = '';
+  }
 
 }
