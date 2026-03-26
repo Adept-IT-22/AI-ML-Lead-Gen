@@ -22,6 +22,8 @@ import json
 import os
 import sys
 import logging
+import re
+import aiofiles
 
 # Add backend to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -221,6 +223,7 @@ async def run_test_suite():
     print("="*80)
     print(f"AI EMAIL GENERATION EXTENSIVE TEST SUITE - {len(TEST_CASES)} CASES")
     print("="*80)
+    all_results = []
     
     for i, case in enumerate(TEST_CASES, 1):
         print(f"\n[RUNNING TEST {i}/{len(TEST_CASES)}]: {case['name']}")
@@ -246,19 +249,31 @@ async def run_test_suite():
             text = response.candidates[0].content.parts[0].text
             email_data = json.loads(text)
             
-            print(f"SUBJECT: {email_data.get('subject')}")
-            print("-" * 20)
-            # Remove HTML tags for console preview but keep formatting readable
-            content = email_data.get('content', '').replace('<html>', '').replace('</html>', '').replace('<body>', '').replace('</body>', '').replace('<p>', '\n').replace('</p>', '').replace('<ul>', '').replace('</ul>', '').replace('<li>', '  - ').replace('</li>', '')
-            print(f"BODY: {content.strip()}")
+            subject = email_data.get('subject', '')
+            
+            # Simple but robust HTML tag removal
+            clean_body = re.sub(r'<(p|br|li|div|h1|h2|h3)\b[^>]*>', '\n', email_data.get('content', ''))
+            clean_body = re.sub(r'<[^>]+>', '', clean_body)
+            # Normalize whitespace and newlines
+            clean_body = re.sub(r'\n+', '\n', clean_body).strip()
+            print(f"BODY: {clean_body}")
             print("-" * 80)
             
+            # Combine test case properties with the email result
+            result_item = case.copy()
+            result_item["email_subject"] = subject
+            result_item["email_body"] = clean_body
+            all_results.append(result_item)
+
         except Exception as e:
             logger.error(f"Test Case '{case['name']}' failed: {str(e)}")
             
     print("\n" + "="*80)
     print("TEST SUITE COMPLETE")
     print("="*80)
+
+    async with aiofiles.open('emails_for_antony.json', 'w') as file:
+        await file.write(json.dumps(all_results, indent=2))
 
 if __name__ == "__main__":
     asyncio.run(run_test_suite())

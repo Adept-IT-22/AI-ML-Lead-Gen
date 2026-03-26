@@ -215,32 +215,49 @@ async def get_sent_emails(company_id):
     async with asyncpg.create_pool(dsn=DB_URL) as pool:
         return await fetch_emails_sent(pool, int(company_id))
 
-@app.route('/unsubscribe', methods=['POST'])
+@app.route('/unsubscribe', methods=['GET', 'POST'])
 async def unsubscribe():
     """
     Handle email unsubscribe requests.
-    Expects JSON body with 'token' field.
+    Supports GET (from email links) and POST (from API/frontend).
     """
     try:
-        data = request.json
-        
-        if not data:
-            return jsonify({"success": False, "message": "No data provided"}), 400
-        
-        token = data.get('token')
+        # 1. Get token based on request method
+        if request.method == 'GET':
+            token = request.args.get('token')
+        else:
+            data = request.json
+            token = data.get('token') if data else None
         
         if not token:
+            if request.method == 'GET':
+                return "<h1>Error</h1><p>Unsubscribe token is missing.</p>", 400
             return jsonify({"success": False, "message": "Token is required"}), 400
         
+        # 2. Perform unsubscribe
         async with asyncpg.create_pool(dsn=DB_URL) as pool:
             success = await unsubscribe_user(pool, token)
             
             if success:
+                if request.method == 'GET':
+                    return """
+                        <div style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+                            <h1>Unsubscribed</h1>
+                            <p>You have been successfully unsubscribed from receiving outreach.</p>
+                        </div>
+                    """, 200
                 return jsonify({
                     "success": True, 
                     "message": "You have been successfully unsubscribed"
                 }), 200
             else:
+                if request.method == 'GET':
+                    return """
+                        <div style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+                            <h1>Error</h1>
+                            <p>Invalid or expired unsubscribe token.</p>
+                        </div>
+                    """, 404
                 return jsonify({
                     "success": False, 
                     "message": "Invalid or expired unsubscribe token"
@@ -248,6 +265,8 @@ async def unsubscribe():
                 
     except Exception as e:
         logger.error(f"Unsubscribe error: {str(e)}")
+        if request.method == 'GET':
+            return "<h1>Error</h1><p>An unexpected error occurred. Please try again later.</p>", 500
         return jsonify({
             "success": False, 
             "message": "An error occurred"
