@@ -218,3 +218,5 @@ This section is a to-do list for me as the programmer.
     note TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
++ Update .env file w/SERVER_URL=http://20.121.43.237:5000 (MAKE SURE THAT'S THE SERVER'S URL!!)

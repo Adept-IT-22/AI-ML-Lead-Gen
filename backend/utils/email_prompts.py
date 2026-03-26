@@ -33,6 +33,7 @@ email_prompts = {
 
         ---
         ### Prospect Data
+        - **First Name:** {first_name}
         - **Company Name:** {company_name}
         - **Growth Status:** {growth_status}
         - **Description:** {company_description}
@@ -83,6 +84,7 @@ email_prompts = {
 
         ---
         ### Prospect Data
+        - **First Name:** {first_name}
         - **Company Name:** {company_name}
         - **Growth Status:** {growth_status}
         - **Pain Points:** {painpoints}
@@ -117,6 +119,13 @@ email_prompts = {
         - Name Cleaning: Strip all technical suffixes.
 
         ---
+        ### Prospect Data
+        - **First Name:** {first_name}
+        - **Company Name:** {company_name}
+        - **Growth Status:** {growth_status}
+        - **Pain Points:** {painpoints}
+
+        ---
         ### Email Requirements
         1. **Subject Line:** Urgency/Problem-solution focused (e.g., "Protecting {company_name}'s roadmap").
         2. **Hook:** Address the difficulty of finding specialized [Hiring Role] talent or maintaining [Pain Point] during rapid growth.
@@ -139,6 +148,12 @@ email_prompts = {
     4: """
         You are an expert Sales Development Representative (SDR) crafting a "break-up" email.
         Goal: Provide a graceful exit while leaving the door open.
+
+        ---
+        ### Prospect Data
+        - **First Name:** {first_name}
+        - **Company Name:** {company_name}
+        - **Growth Status:** {growth_status}
 
         ---
         ### Requirements
