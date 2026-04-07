@@ -135,13 +135,12 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
         funding_round=funding_round,
     )
 
-    # ⚠️ Email sending intentionally disabled
-    # await send_email(
-    #     email_to=email,
-    #     subject=subject,
-    #     content=content,
-    #     unsubscribe_token=unsubscribe_token,
-    # )
+    await send_email(
+        email_to=email,
+        subject=subject,
+        content=content,
+        unsubscribe_token=unsubscribe_token,
+    )
 
     await store_email(
         pool,

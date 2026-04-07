@@ -11,7 +11,7 @@ company_query = """
             """
 
 people_query = """
-                INSERT INTO mock_people (apollo_id, first_name, last_name, full_name,
+                INSERT INTO people (apollo_id, first_name, last_name, full_name,
                 linkedin_url, title, email_status, headline, organization_id,
                 seniority, departments, subdepartments, functions, email,
                 number, notes) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
@@ -37,15 +37,9 @@ normalized_funding_query = """
 
 
 normalized_hiring_query = """
-<<<<<<< HEAD
         INSERT INTO normalized_hiring (master_id, company_name, company_decision_makers,
-                company_decision_makers_position, job_roles, hiring_reasons)
-                VALUES ($1, $2, $3, $4, $5, $6)
-=======
-        INSERT INTO mock_normalized_hiring (master_id, company_name, company_decision_makers,
                 company_decision_makers_position, job_roles, hiring_reasons, painpoints)
                 VALUES ($1, $2, $3, $4, $5, $6, $7)
->>>>>>> staging
                 """ 
 
 

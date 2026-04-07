@@ -5,10 +5,6 @@ import asyncio
 from typing import Dict, Any, List
 from config.apollo_config import headers as APOLLO_HEADERS
 from helpers.apollo_rate_limiter import rate_limited_apollo_call
-from aiolimiter import AsyncLimiter
-
-#Apollo allows 200 requests per minute
-limiter = AsyncLimiter(max_rate=180, time_period=60)
 
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -43,11 +39,13 @@ async def no_rate_limit_org_search(
             response.raise_for_status()
 
             logger.info(f"Completed organization search for {company_name}")
-            return response.json()
+            result_json = response.json()
+            result_json["search_query"] = company_name
+            return result_json
         
         except Exception as e:
             logger.error(f"Couldnt perform organization search for {company_name}: {str(e)}")
-            return {"Error": str(e)}
+            return {"Error": str(e), "search_query": company_name}
 
     elif organization_ids:
         logger.info(f"Performing organization search for organization ids: {organization_ids}...")
@@ -87,9 +85,9 @@ async def org_search(
         #raise ValueError("Pass one of company name or organization ids")
 
     if company_name:
-        return await rate_limited_apollo_call(no_rate_limit_org_search, client, company_name=company_name, api_url=api_url, headers=headers, limiter=limiter)
+        return await rate_limited_apollo_call(no_rate_limit_org_search, client, company_name=company_name, api_url=api_url, headers=headers)
     elif organization_ids:
-        return await rate_limited_apollo_call(no_rate_limit_org_search, client, organization_ids=organization_ids, api_url=api_url, headers=headers, limiter=limiter)
+        return await rate_limited_apollo_call(no_rate_limit_org_search, client, organization_ids=organization_ids, api_url=api_url, headers=headers)
         
 
 if __name__ == "__main__":

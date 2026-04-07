@@ -13,10 +13,11 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
 EMAIL_SEND_API = "https://api.sendgrid.com/v3/mail/send"
-EMAIL_FROM = "antony@adept-techno.co.ke" 
+EMAIL_FROM = "antony@adeptech.co.ke" 
 EMAIL_FROM_NAME = "Antony Ngatia"
-REPLY_TO_EMAIL = "antony@adept-techno.co.ke" 
+REPLY_TO_EMAIL = "antony@adeptech.co.ke" 
 REPLY_TO_NAME = "Antony Ngatia" 
+SERVER_URL = os.getenv("SERVER_URL")
 
 email_headers = {
     "Authorization": f"Bearer {SENDGRID_API_KEY}"
@@ -36,7 +37,7 @@ async def send_email(
     <hr style="border: 1px solid #ddd;">
     <p style="font-size: 12px; color: #666;">
         If you no longer wish to receive these emails, 
-        <a href="http://20.121.43.237:5000/unsubscribe?token={unsubscribe_token}">
+        <a href="{SERVER_URL}/unsubscribe?token={unsubscribe_token}">
             click here to unsubscribe
         </a>.
     </p>
@@ -74,28 +75,58 @@ async def send_email(
 
 
 if __name__ == "__main__":
+    import json
     from outreach_module.ai_email_generation import call_gemini_api
     async def main():
-        desc = "Darwin AI is a technology company that specializes in artificial intelligence solutions to enhance business processes, particularly in sales and marketing. The company focuses on data-driven creative testing and analytics, offering software that analyzes advertising creatives to identify effective design elements and messaging. This helps clients tailor their ads to specific audiences and continuously improve their creative strategies.\n\nIn 2023, Darwin AI introduced a dedicated AI platform for consultative sales in high-value B2C sectors such as real estate, automotive, education, and online courses. This platform efficiently filters leads and identifies customer needs, ensuring that only qualified prospects are passed to sales agents, which boosts sales efficiency and reduces costs for small and medium-sized businesses.\n\nDarwin AI's offerings include creative analytics and testing software, consultative sales AI solutions, and personalized tools for SMBs, all aimed at optimizing marketing effectiveness and sales processes. The company serves a range of clients looking to enhance their sales strategies through AI-driven insights."
-        fname = "Mark"
-        cname = "Adept"
-        ttype = "funding"
-        fround = "seed"
-        seq_no = 1
-        prompt = get_email_generation_prompt(desc, fname, cname, ttype, seq_no, fround)
-        result = await call_gemini_api(prompt)
+        company_description = """
+        Darwin AI is a technology company that specializes in artificial intelligence solutions to enhance business processes, 
+        particularly in sales and marketing. The company focuses on data-driven creative testing and analytics, offering software 
+        that analyzes advertising creatives to identify effective design elements and messaging. This helps clients tailor their ads 
+        to specific audiences and continuously improve their creative strategies.\n\nIn 2023, Darwin AI introduced a dedicated AI platform 
+        for consultative sales in high-value B2C sectors such as real estate, automotive, education, and online courses. This platform 
+        efficiently filters leads and identifies customer needs, ensuring that only qualified prospects are passed to sales agents, 
+        which boosts sales efficiency and reduces costs for small and medium-sized businesses.\n\nDarwin AI's offerings include 
+        creative analytics and testing software, consultative sales AI solutions, and personalized tools for SMBs, all aimed 
+        at optimizing marketing effectiveness and sales processes. The company serves a range of clients looking to enhance 
+        their sales strategies through AI-driven insights.
+        """
+        first_name = "Mark"
+        company_name = "Adept"
+        trigger_type = "funding"
+        funding_round = "seed"
+        sequence_number = 1
+        
+        prompt = get_email_generation_prompt(
+            company_description=company_description,
+            first_name = first_name,
+            company_name=company_name,
+            trigger_type=trigger_type,
+            sequence_number=sequence_number,
+            funding_round=funding_round
+        )
+        ai_response = await call_gemini_api(prompt)
 
         try:
-            response = await send_email(
-                email_to = 'm10mathenge@gmail.com',
-                subject= "Greetings",
-                content= "Hello",
-                unsubscribe_token = "e3a3c375-cde9-420b-9001-2b188cb2fac8"
-            )
-            print(response.status_code)
-            print(response.body)
-            print(response.headers)
+            text = ai_response.candidates[0].content.parts[0].text
+            email_json = json.loads(text)
+
+            subject = email_json["subject"]
+            content = email_json["content"]
+            print(content)
+
+            #response = await send_email(
+                #email_to = 'm10mathenge@gmail.com',
+                #subject= subject,
+                #content= content,
+                #unsubscribe_token = "e3a3c375-cde9-420b-9001-2b188cb2fac8"
+            #)
+            #print(response.status_code)
+            #print(response.body)
+            #print(response.headers)
         except Exception as e:
-            logger.exception("Couldn't send email: %s", str(e))
+            error_msg = f"Couldn't send email: {e}"
+            if hasattr(e, 'body'):
+                error_msg += f" | SendGrid Body: {e.body}"
+            logger.exception(error_msg)
     
     asyncio.run(main())

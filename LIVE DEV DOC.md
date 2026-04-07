@@ -206,10 +206,17 @@ This section is a to-do list for me as the programmer.
 
 
 + **Add to DB**
-+ ALTER TABLE mock_companies ADD COLUMN painpoints text[];
-+ ALTER TABLE mock_normalized_funding ADD COLUMN painpoints text[];
-+ ALTER TABLE mock_normalized_hiring ADD COLUMN painpoints text[];
++ ALTER TABLE companies ADD COLUMN painpoints text[];
++ ALTER TABLE normalized_funding ADD COLUMN painpoints text[];
++ ALTER TABLE normalized_hiring ADD COLUMN painpoints text[];
 + CREATE TYPE company_service AS ENUM ('ai/ml', 'software development international');
-+ ALTER TABLE mock_companies ADD COLUMN service company_service;
++ ALTER TABLE companies ADD COLUMN service company_service;
 
++ CREATE TABLE company_notes ( 
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    company_id INTEGER REFERENCES companies(id),
+    note TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 
++ Update .env file w/SERVER_URL=http://20.121.43.237:5000 (MAKE SURE THAT'S THE SERVER'S URL!!)

@@ -8,7 +8,7 @@ except ImportError:
     ConcurrentRotatingFileHandler = None
 from flask import Flask, jsonify, request, send_file, send_from_directory
 from flask_cors import CORS
-from services.db_service import fetch_emails_sent, unsubscribe_user, get_user_by_token
+from services.db_service import fetch_emails_sent, unsubscribe_user, get_user_by_token, add_company_note, delete_company_note
 from services.email_sending import *
 from services.sendgrid_webhook import *
 from services.export_to_excel import export_to_excel
@@ -213,32 +213,49 @@ async def get_sent_emails(company_id):
     async with asyncpg.create_pool(dsn=DB_URL) as pool:
         return await fetch_emails_sent(pool, int(company_id))
 
-@app.route('/unsubscribe', methods=['POST'])
+@app.route('/unsubscribe', methods=['GET', 'POST'])
 async def unsubscribe():
     """
     Handle email unsubscribe requests.
-    Expects JSON body with 'token' field.
+    Supports GET (from email links) and POST (from API/frontend).
     """
     try:
-        data = request.json
-        
-        if not data:
-            return jsonify({"success": False, "message": "No data provided"}), 400
-        
-        token = data.get('token')
+        # 1. Get token based on request method
+        if request.method == 'GET':
+            token = request.args.get('token')
+        else:
+            data = request.json
+            token = data.get('token') if data else None
         
         if not token:
+            if request.method == 'GET':
+                return "<h1>Error</h1><p>Unsubscribe token is missing.</p>", 400
             return jsonify({"success": False, "message": "Token is required"}), 400
         
+        # 2. Perform unsubscribe
         async with asyncpg.create_pool(dsn=DB_URL) as pool:
             success = await unsubscribe_user(pool, token)
             
             if success:
+                if request.method == 'GET':
+                    return """
+                        <div style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+                            <h1>Unsubscribed</h1>
+                            <p>You have been successfully unsubscribed from receiving outreach.</p>
+                        </div>
+                    """, 200
                 return jsonify({
                     "success": True, 
                     "message": "You have been successfully unsubscribed"
                 }), 200
             else:
+                if request.method == 'GET':
+                    return """
+                        <div style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+                            <h1>Error</h1>
+                            <p>Invalid or expired unsubscribe token.</p>
+                        </div>
+                    """, 404
                 return jsonify({
                     "success": False, 
                     "message": "Invalid or expired unsubscribe token"
@@ -246,10 +263,42 @@ async def unsubscribe():
                 
     except Exception as e:
         logger.error(f"Unsubscribe error: {str(e)}")
+        if request.method == 'GET':
+            return "<h1>Error</h1><p>An unexpected error occurred. Please try again later.</p>", 500
         return jsonify({
             "success": False, 
             "message": "An error occurred"
         }), 500
+
+@app.route('/save-note/<id>', methods=["POST"])
+async def save_note(id):
+    try:
+        data = request.json
+        if not data or 'note' not in data:
+            return jsonify({"Error": "No note content provided"}), 400
+        
+        note_text = data.get('note')
+        result = await add_company_note(int(id), note_text)
+        
+        if result:
+            return jsonify(result), 201
+        else:
+            return jsonify({"Error": "Failed to save note"}), 500
+    except Exception as e:
+        logger.error(f"Error saving note: {str(e)}")
+        return jsonify({"Error": "An unexpected error occurred", "details": str(e)}), 500
+
+@app.route('/delete-note/<note_id>', methods=["DELETE"])
+async def delete_note(note_id):
+    try:
+        success = await delete_company_note(note_id)
+        if success:
+            return jsonify({"Success": "Note deleted"}), 200
+        else:
+            return jsonify({"Error": "Failed to delete note"}), 500
+    except Exception as e:
+        logger.error(f"Error deleting note: {str(e)}")
+        return jsonify({"Error": "An unexpected error occurred", "details": str(e)}), 500
 
 
 if __name__ == "__main__":

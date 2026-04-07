@@ -1,4 +1,5 @@
 import { IPeople } from "./people.interface";
+import { INote } from "./note.interface";
 
 export interface ICompany {
   annual_revenue: string | null;
@@ -21,10 +22,11 @@ export interface ICompany {
   linkedin_url: string | null;
   market_cap: string | null;
   name: string;
-  notes: string | null;
+  notes: INote[];
   organization_headcount_six_month_growth: string | null;
   organization_headcount_twelve_month_growth: string | null;
-  people?: IPeople[];
+  painpoints: string[] | null;
+  people: IPeople[];
   phone: string | null;
   short_description: string | null;
   service: string | null;
