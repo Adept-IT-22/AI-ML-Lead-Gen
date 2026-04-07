@@ -56,7 +56,7 @@ app.logger.propagate = True #Use our configured logger
 CORS(app, resources={
     r"/*": {
         "origins": [
-            "http://20.121.43.237:5000",
+            "http://20.121.43.237",
         ],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
