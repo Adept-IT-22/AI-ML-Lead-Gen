@@ -60,7 +60,7 @@ CORS(app, resources={
         ],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
-        "support_credentials": True
+        "supports_credentials": True
     }
 })
 
