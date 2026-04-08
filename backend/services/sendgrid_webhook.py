@@ -80,26 +80,49 @@ async def update_contacted_status(events):
                         [(email["email"], email['status'], email['precedence']) for email in email_updates]
                     )
 
-                    # Update emails_sent with new statuses
+                    # Update emails_sent with new statuses, respecting precedence
+                    # (won't downgrade e.g. 'engaged' back to 'contacted' from a later 'open' event)
                     await conn.execute("""
                         UPDATE emails_sent e
                         SET status = t.status::contacted_status_enum
                         FROM tmp_email_status t
-                        WHERE e.recipient_id IN (
-                            SELECT id FROM people WHERE email = t.email
+                        JOIN people p ON LOWER(p.email) = LOWER(t.email)
+                        WHERE e.recipient_id = p.id
+                        AND t.precedence >= COALESCE(
+                            CASE e.status::text
+                                WHEN 'opted_out'  THEN 5
+                                WHEN 'engaged'    THEN 4
+                                WHEN 'contacted'  THEN 3
+                                WHEN 'pending'    THEN 2
+                                WHEN 'failed'     THEN 1
+                                ELSE 0
+                            END, 0
                         );
                     """
                     )
 
-                    # Update each person's contacted_status to the status of their latest email
+                    # Update each person's contacted_status, respecting precedence.
+                    # 'open' maps to 'contacted' (precedence 3) and is handled here.
                     await conn.execute("""
                         UPDATE people p
-                        SET 
+                        SET
                             contacted_status = t.status,
-                            times_contacted = times_contacted + 1
+                            times_contacted = times_contacted + CASE
+                                WHEN t.status IN ('contacted', 'engaged') THEN 1
+                                ELSE 0
+                            END
                         FROM tmp_email_status t
                         WHERE LOWER(p.email) = LOWER(t.email)
-                        AND t.status IN ('contacted', 'engaged')  -- only these events increment
+                        AND t.precedence >= COALESCE(
+                            CASE p.contacted_status::text
+                                WHEN 'opted_out'  THEN 5
+                                WHEN 'engaged'    THEN 4
+                                WHEN 'contacted'  THEN 3
+                                WHEN 'pending'    THEN 2
+                                WHEN 'failed'     THEN 1
+                                ELSE 0
+                            END, 0
+                        );
                     """)
 
 
