@@ -101,7 +101,7 @@ async def main():
 async def fetch_company_data():
     company_data = await fetch_companies()
     if not company_data:
-        return jsonify({"Error": "No company data found"}), 404
+        return jsonify({"Error": "No company data found", "Message": "Companies list is empty"}), 500
     return jsonify(company_data), 200
 
 #Database API for fetching people
@@ -109,7 +109,7 @@ async def fetch_company_data():
 async def fetch_people_data():
     people_data = await fetch_people()
     if not people_data:
-        return jsonify({"Error": "No company data found"}), 404
+        return jsonify({"Error": "No company data found", "Message": "Peoples list is empty"}), 500
     return jsonify(people_data), 200
 
 #Database API for fetching company details
@@ -117,7 +117,7 @@ async def fetch_people_data():
 async def fetch_company_details_data(id):
     company_details = await fetch_company_details(int(id))
     if not company_details:
-        return jsonify({'Error': 'No company details found'}), 404
+        return jsonify({'Error': 'No company details found', "Message": "Company details list is empty"}), 500
     return jsonify(company_details), 200
 
 #Receive phone numbers from Apollo's People Enrichment API
@@ -138,7 +138,7 @@ async def receive_user_phone_number():
 
     except Exception as e:
         logger.error(f"Failed to get phone number: {str(e)}")
-        return jsonify({"status": "error", "message": "Internal Server Error"})
+        return jsonify({"status": "error", "message": "Internal Server Error"}), 500
 
 #Sendgrid webhook to receive data about emails sent
 @app.route('/webhook', methods=["POST"])
