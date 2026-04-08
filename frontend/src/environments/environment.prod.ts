@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  API_URL: "http://lead-gen.adept-techno.co.ke",
+  API_URL: "https://lead-gen.adept-techno.co.ke",
 };

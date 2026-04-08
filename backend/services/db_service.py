@@ -213,10 +213,10 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
             ) AS notes,
             i.top_matches,
             i.interpretation
-        FROM mock_companies c
-        LEFT JOIN mock_people p ON c.apollo_id = p.organization_id
-        LEFT JOIN mock_icp_scores i ON c.id = i.company_id
-        LEFT JOIN mock_company_notes n ON c.id = n.company_id
+        FROM companies c
+        LEFT JOIN people p ON c.apollo_id = p.organization_id
+        LEFT JOIN icp_scores i ON c.id = i.company_id
+        LEFT JOIN company_notes n ON c.id = n.company_id
         WHERE c.id = $1
         GROUP BY c.id, i.top_matches, i.interpretation;
         """
@@ -540,7 +540,7 @@ async def get_painpoints(company_name: str, pool, data_source: str) -> List[str]
     """Retrieves pain points for a company from the specified data source table."""
     logger.info(f"Fetching painpoints for {company_name} from {data_source}")
     
-    table = "mock_normalized_hiring" if data_source == "hiring" else "mock_normalized_funding"
+    table = "normalized_hiring" if data_source == "hiring" else "normalized_funding"
     query = f"SELECT painpoints FROM {table} WHERE LOWER(company_name) = $1 LIMIT 1"
     
     try:
@@ -833,7 +833,7 @@ async def get_user_by_token(pool: asyncpg.Pool, token: str) -> Dict:
     logger.info(f"Fetching user by unsubscribe token...")
     query = """
         SELECT id, first_name, email, subscribed, unsubscribe_token
-        FROM mock_people
+        FROM people
         WHERE unsubscribe_token = $1
         LIMIT 1
     """
@@ -863,7 +863,7 @@ async def unsubscribe_user(pool: asyncpg.Pool, token: str) -> bool:
     logger.info(f"Attempting to unsubscribe user with token...")
     
     query = """
-        UPDATE mock_people
+        UPDATE people
         SET subscribed = FALSE,
             unsubscribed_at = NOW()
         WHERE unsubscribe_token = $1
