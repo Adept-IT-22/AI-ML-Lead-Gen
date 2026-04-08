@@ -1,4 +1,5 @@
 import asyncio
+import asyncpg
 import logging
 import os
 from logging.handlers import RotatingFileHandler
@@ -99,26 +100,36 @@ async def main():
 #TO BE CHANGED!!!!
 @app.route('/fetch-companies', methods=["GET"])
 async def fetch_company_data():
-    company_data = await fetch_companies()
-    if not company_data:
-        return jsonify({"Error": "No company data found", "Message": "Companies list is empty"}), 500
+    try:
+        company_data = await fetch_companies()
+    except Exception as e:
+        return jsonify({"Error": "Failed to fetch companies", "Message": str(e)}), 500
     return jsonify(company_data), 200
 
 #Database API for fetching people
 @app.route('/fetch-people', methods=["GET"])
 async def fetch_people_data():
-    people_data = await fetch_people()
-    if not people_data:
-        return jsonify({"Error": "No company data found", "Message": "Peoples list is empty"}), 500
+    try:
+        people_data = await fetch_people()
+    except Exception as e:
+        return jsonify({"Error": "Failed to fetch people", "Message": str(e)}), 500
     return jsonify(people_data), 200
 
 #Database API for fetching company details
 @app.route('/fetch-company-details/<id>', methods=["GET"])
 async def fetch_company_details_data(id):
-    company_details = await fetch_company_details(int(id))
-    if not company_details:
-        return jsonify({'Error': 'No company details found', "Message": "Company details list is empty"}), 500
-    return jsonify(company_details), 200
+    try:
+        company_id = int(id)
+    except (ValueError, TypeError):
+        return jsonify({'Error': 'Invalid company ID', 'Message': 'ID must be an integer'}), 400
+    try:
+        company_details = await fetch_company_details(company_id)
+        if not company_details:
+            return jsonify({'Error': 'No company details found', "Message": "Company details list is empty"}), 404
+        return jsonify(company_details), 200
+    except Exception as e:
+        logger.error(f"Error fetching company details for ID {id}: {str(e)}")
+        return jsonify({'Error': 'An unexpected error occurred', 'Message': str(e)}), 500
 
 #Receive phone numbers from Apollo's People Enrichment API
 #This method is dormant and not yet working.
@@ -132,9 +143,8 @@ async def receive_user_phone_number():
             logger.info(data)
 
             return jsonify({"status": "success", "message": "Phone number received"}), 200
-
         else:
-            return jsonify
+            return jsonify({"status": "error", "message": "No data received"}), 400
 
     except Exception as e:
         logger.error(f"Failed to get phone number: {str(e)}")
@@ -165,33 +175,43 @@ def sendgrid_events_webhook():
 #Endpoint to fetch events
 @app.route('/events', methods=["GET"])
 async def get_events():
-    async with asyncpg.create_pool(dsn=DB_URL) as pool:
-        try:
+    try:
+        async with asyncpg.create_pool(dsn=DB_URL) as pool:
             events = await fetch_events(pool)
-            return events
-        except Exception as e:
-            logger.error(f"Failed to fetch events: {str(e)}")
-            return []
+            return jsonify(events), 200
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error fetching events: {str(e)}")
+        return jsonify([]), 500
+    except Exception as e:
+        logger.error(f"Failed to fetch events: {str(e)}")
+        return jsonify([]), 500
 
 @app.route('/keywords', methods=["GET"])
 async def get_keywords():
-    async with asyncpg.create_pool(dsn=DB_URL) as pool:
-        async with pool.acquire() as conn:
-            query = "SELECT keywords FROM companies"
-            keyword_records = await conn.fetch(query)
-            keyword_list = [dict(keywords) for keywords in keyword_records]
-            return keyword_list
+    try:
+        async with asyncpg.create_pool(dsn=DB_URL) as pool:
+            async with pool.acquire() as conn:
+                query = "SELECT keywords FROM mock_companies"
+                keyword_records = await conn.fetch(query)
+                keyword_list = [dict(keywords) for keywords in keyword_records]
+                return jsonify(keyword_list), 200
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error fetching keywords: {str(e)}")
+        return jsonify({"Error": "Database error", "Message": str(e)}), 500
+    except Exception as e:
+        logger.error(f"Failed to fetch keywords: {str(e)}")
+        return jsonify({"Error": "An unexpected error occurred", "Message": str(e)}), 500
 
 @app.route('/export', methods=["GET"])
 async def export():
-    companies = await fetch_companies()
     try:
+        companies = await fetch_companies()
         exported_data = await export_to_excel(companies)
         if not exported_data:
             return jsonify({"Error": "No data to export"}), 400
         return send_file(exported_data, as_attachment=True)
     except Exception as e:
-        return jsonify({"Error":"An unexpected error occured", "details": {str(e)}}), 500
+        return jsonify({"Error":"An unexpected error occured", "details": str(e)}), 500
 
 @app.route('/import-leads', methods=['POST'])
 async def import_leads():
@@ -208,12 +228,24 @@ async def import_leads():
 
     except Exception as e:
         logger.error(f"Failed to import excdl file: {str(e)}")
-        return jsonify({"Error": "Failed to import file", "details": str(e)})
+        return jsonify({"Error": "Failed to import file", "details": str(e)}), 500
 
 @app.route('/view-sent-emails/<company_id>', methods=["GET"])
 async def get_sent_emails(company_id):
-    async with asyncpg.create_pool(dsn=DB_URL) as pool:
-        return await fetch_emails_sent(pool, int(company_id))
+    try:
+        cid = int(company_id)
+    except (ValueError, TypeError):
+        return jsonify({"Error": "Invalid company ID", "Message": "ID must be an integer"}), 400
+    try:
+        async with asyncpg.create_pool(dsn=DB_URL) as pool:
+            emails = await fetch_emails_sent(pool, cid)
+        return jsonify(emails), 200
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error fetching sent emails for company {company_id}: {str(e)}")
+        return jsonify({"Error": "Database error", "Message": str(e)}), 500
+    except Exception as e:
+        logger.error(f"Failed to fetch sent emails for company {company_id}: {str(e)}")
+        return jsonify({"Error": "An unexpected error occurred", "Message": str(e)}), 500
 
 @app.route('/unsubscribe', methods=['GET', 'POST'])
 async def unsubscribe():

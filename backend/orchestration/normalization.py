@@ -35,8 +35,8 @@ async def main(
         elif data_type == "hiring":
             normalized_data = await normalize_hiring_data(data)
         else:
-            logger.warning(f"Unknown data type: {data_type}")
-            return
+            logger.warning(f"Unknown data type: {data_type}. Skipping.")
+            continue
 
         # Step 2: Insert master (one row per dataset)
         for i, normalized_link in enumerate(normalized_data.get("link")):
