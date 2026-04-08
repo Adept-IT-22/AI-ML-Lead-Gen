@@ -83,18 +83,27 @@ async def fetch_companies() -> List[Dict[str, Any]]:
         if conn:
             try:
                 await conn.close()
-            except Exception:
-                logger.debug("Failed to close DB connection: %s", e)
+            except Exception as close_err:
+                logger.debug("Failed to close DB connection: %s", close_err)
         
 async def fetch_people_from_company(organization_id: str)->List[Dict[str, str]]:
     logger.info(f"Fetching people from org id {organization_id}...")
-    conn = await asyncpg.connect(dsn=DB_URL)
-    
-    people_query = "SELECT full_name, title, email, linkedin_url FROM people WHERE organization_id = $1"
-    people_results = await conn.fetch(people_query, organization_id)
-    logger.info(f"Done fetching people from org id {organization_id}")
-    await conn.close()
-    return [dict(record) for record in people_results]
+    conn = None
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL)
+        people_query = "SELECT full_name, title, email, linkedin_url FROM people WHERE organization_id = $1"
+        people_results = await conn.fetch(people_query, organization_id)
+        logger.info(f"Done fetching people from org id {organization_id}")
+        return [dict(record) for record in people_results]
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error fetching people from org {organization_id}: {str(e)}")
+        return []
+    except Exception as e:
+        logger.error(f"Unexpected error fetching people from org {organization_id}: {str(e)}")
+        return []
+    finally:
+        if conn:
+            await conn.close()
 
 
 async def store_email(
@@ -194,17 +203,16 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
             WHERE c.id = $1
             """
         results = await conn.fetch(query, id)
-        await conn.close()
 
-        if result:
-            # Convert asyncpg.Record to dict
-            d = dict(result)
+        if results:
+            # Convert the first asyncpg.Record to dict
+            d = dict(results)
             # Ensure JSON fields are parsed if they come back as strings
             for field in ['people', 'notes']:
                 if isinstance(d.get(field), str):
                     try:
                         d[field] = json.loads(d[field])
-                    except:
+                    except json.JSONDecodeError:
                         d[field] = []
             return d
         else:
@@ -264,7 +272,7 @@ async def store_to_db(
 
     except asyncpg.PostgresError as e:
         logger.error(f"Database error while storing {company_or_people} data: {str(e)}")
-        
+        return False
     except Exception as e:
         logger.error(f"Failed to store {company_or_people} data: {str(e)}")
         return False
@@ -471,10 +479,14 @@ async def change_company_contacted_status(apollo_id: str, pool):
         return 
 
 async def check_master_normalization(pool: asyncpg.pool):
-    async with pool.acquire() as conn:
-        query = "SELECT * FROM normalized_master"
-        results = await conn.execute(query)
-    return results
+    try:
+        async with pool.acquire() as conn:
+            query = "SELECT * FROM normalized_master"
+            results = await conn.fetch(query)
+        return [dict(r) for r in results]
+    except Exception as e:
+        logger.error(f"Failed to check master normalization: {str(e)}")
+        return []
 
 #Get company from normalization_hiring table and return hiring area
 async def get_hiring_area(company_name: str, pool) -> str:
@@ -563,7 +575,8 @@ async def return_companies_with_no_funding_details(pool: asyncpg.Pool)->List:
         logger.info("Done fetching companies")
         return companies
     except Exception as e:
-        logger.info(f"Failed fetching companies: {str(e)}") 
+        logger.error(f"Failed fetching companies: {str(e)}")
+        return []
 
 #Get link for funding, hiring, events source
 
@@ -618,8 +631,10 @@ async def fetch_keywords(pool):
             results = await conn.fetch(query)
             result_list = [dict(result) for result in results]
             logger.info(result_list)
+            return result_list
     except Exception as e:
         logger.error(f"Failed to fetch keywords: {str(e)}")
+        return []
 
 #Select all unscored companies
 
@@ -675,12 +690,17 @@ async def store_icp_score(pool, company_id, age_score, employee_count_score,
         top_matches = EXCLUDED.top_matches,
         interpretation = EXCLUDED.interpretation
     """
-    async with pool.acquire() as conn:
-        await conn.execute(query, company_id, age_score, employee_count_score,
-                        funding_stage_score, keyword_score, contactability_score,
-                        geography_score, total_score, category_breakdown_json, top_matches_json,
-                        interpretation)
-    logger.info("Data stored")
+    try:
+        async with pool.acquire() as conn:
+            await conn.execute(query, company_id, age_score, employee_count_score,
+                            funding_stage_score, keyword_score, contactability_score,
+                            geography_score, total_score, category_breakdown_json, top_matches_json,
+                            interpretation)
+        logger.info("ICP score stored for company_id %s", company_id)
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error storing ICP score for company_id {company_id}: {str(e)}")
+    except Exception as e:
+        logger.error(f"Failed to store ICP score for company_id {company_id}: {str(e)}")
     return
 
 #Store icp score in icp_score column in companies table. Changes status to mcp if score >= 70
@@ -699,10 +719,14 @@ async def update_company_icp_score(pool, company_id: int, total_score: float):
         WHERE id = $2
     """
 
-    async with pool.acquire() as conn:
-        await conn.execute(query, float(total_score), company_id)
-
-    logger.info("Company icp_score and status updated")
+    try:
+        async with pool.acquire() as conn:
+            await conn.execute(query, float(total_score), company_id)
+        logger.info("Company icp_score and status updated for company_id %s", company_id)
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error updating ICP score for company_id {company_id}: {str(e)}")
+    except Exception as e:
+        logger.error(f"Failed to update ICP score for company_id {company_id}: {str(e)}")
 
 
 async def fetch_people_by_ids(pool, ids: List[int]):
@@ -711,15 +735,20 @@ async def fetch_people_by_ids(pool, ids: List[int]):
 
     logger.info("Fetching people by ids...")
     query = "SELECT id, first_name, organization_id, email FROM people WHERE id = ANY($1::int[])"
-    async with pool.acquire() as conn:
-        results = await conn.fetch(query, ids)
-
-    return [dict(row) for row in results]
+    try:
+        async with pool.acquire() as conn:
+            results = await conn.fetch(query, ids)
+        return [dict(row) for row in results]
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error fetching people by ids: {str(e)}")
+        return []
+    except Exception as e:
+        logger.error(f"Failed to fetch people by ids: {str(e)}")
+        return []
 
 #CHANGED
 async def fetch_emails_sent(pool, company_id):
     logger.info("Fetching emails sent...")
-    query = "SELECT * FROM emails_sent WHERE company_id = $1"
     query = """
         SELECT
             e.subject, e.body, e.status, e.sent_at, 
@@ -730,10 +759,16 @@ async def fetch_emails_sent(pool, company_id):
             ON p.id = e.recipient_id
         WHERE e.company_id = $1; 
     """
-    async with pool.acquire() as conn:
-        emails = await conn.fetch(query, company_id)
-
-    return [dict(email) for email in emails]
+    try:
+        async with pool.acquire() as conn:
+            emails = await conn.fetch(query, company_id)
+        return [dict(email) for email in emails]
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error fetching sent emails for company {company_id}: {str(e)}")
+        return []
+    except Exception as e:
+        logger.error(f"Failed to fetch sent emails for company {company_id}: {str(e)}")
+        return []
 
 async def fetch_eligible_people(pool, organization_ids: List[str] = None)->List:
     if organization_ids == []:

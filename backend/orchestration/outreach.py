@@ -119,37 +119,55 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
         logger.error("Invalid LLM output for person_id=%s", person_id)
         return True
 
-    subject = email_json["subject"].format(
-        first_name=first_name,
-        company_name=company_name,
-        company_description=company_description,
-        hiring_area=hiring_area,
-        funding_round=funding_round,
-    )
 
-    content = email_json["content"].format(
-        first_name=first_name,
-        company_name=company_name,
-        company_description=company_description,
-        hiring_area=hiring_area,
-        funding_round=funding_round,
-    )
+    try:
+        subject = email_json["subject"].format(
+            first_name=first_name,
+            company_name=company_name,
+            company_description=company_description,
+            hiring_area=hiring_area,
+            funding_round=funding_round,
+        )
 
-    await send_email(
-        email_to=email,
-        subject=subject,
-        content=content,
-        unsubscribe_token=unsubscribe_token,
-    )
+        content = email_json["content"].format(
+            first_name=first_name,
+            company_name=company_name,
+            company_description=company_description,
+            hiring_area=hiring_area,
+            funding_round=funding_round,
+        )
+    except (KeyError, AttributeError) as e:
+        logger.error(
+            "Failed to format email template for person_id=%s: %s", person_id, e
+        )
+        return True
 
-    await store_email(
-        pool,
-        recipient_id=person_id,
-        company_id=company_id,
-        subject=subject,
-        body=content,
-        sequence_number=sequence_number,
-    )
+    try:
+        await send_email(
+            email_to=email,
+            subject=subject,
+            content=content,
+            unsubscribe_token=unsubscribe_token,
+        )
+    except Exception as e:
+        logger.error(
+            "SendGrid error for person_id=%s (email=%s): %s", person_id, email, e
+        )
+        return True
+
+    try:
+        await store_email(
+            pool,
+            recipient_id=person_id,
+            company_id=company_id,
+            subject=subject,
+            body=content,
+            sequence_number=sequence_number,
+        )
+    except Exception as e:
+        logger.error(
+            "Failed to store email record for person_id=%s: %s", person_id, e
+        )
 
     return True
 

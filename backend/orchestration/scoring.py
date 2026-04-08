@@ -59,7 +59,10 @@ async def main(pool: asyncpg.Pool):
     unscored_company_id_list = await company_is_unscored(pool)    
     company_ids = [c.get("id", "") for c in unscored_company_id_list]
     storing_tasks = [score_and_store(pool, c_id, semaphore) for c_id in company_ids]
-    await asyncio.gather(*storing_tasks)
+    results = await asyncio.gather(*storing_tasks, return_exceptions=True)
+    for company_id, result in zip(company_ids, results):
+        if isinstance(result, Exception):
+            logger.error(f"Scoring failed for company_id={company_id}: {result}")
 
     logger.info("ICP Scoring Done")
 
