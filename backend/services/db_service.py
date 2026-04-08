@@ -194,25 +194,44 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
         conn = await asyncpg.connect(dsn=DB_URL)
 
         query = """
-            SELECT c.*, p.full_name, p.title, p.email, p.linkedin_url, i.top_matches, i.interpretation
-            FROM companies c 
-            LEFT JOIN people p 
-            ON c.apollo_id = p.organization_id
-            LEFT JOIN icp_scores i
-            ON c.id = i.company_id
-            WHERE c.id = $1
-            """
-        results = await conn.fetch(query, id)
+        SELECT 
+            c.*,
+            COALESCE(
+                json_agg(DISTINCT jsonb_build_object(
+                    'full_name', p.full_name,
+                    'title', p.title,
+                    'email', p.email,
+                    'linkedin_url', p.linkedin_url
+                )) FILTER (WHERE p.id IS NOT NULL), '[]'::json
+            ) AS people,
+            COALESCE(
+                json_agg(DISTINCT jsonb_build_object(
+                    'id', n.id,
+                    'note', n.note,
+                    'created_at', n.created_at
+                )) FILTER (WHERE n.id IS NOT NULL), '[]'::json
+            ) AS notes,
+            i.top_matches,
+            i.interpretation
+        FROM mock_companies c
+        LEFT JOIN mock_people p ON c.apollo_id = p.organization_id
+        LEFT JOIN mock_icp_scores i ON c.id = i.company_id
+        LEFT JOIN mock_company_notes n ON c.id = n.company_id
+        WHERE c.id = $1
+        GROUP BY c.id, i.top_matches, i.interpretation;
+        """
 
-        if results:
-            # Convert the first asyncpg.Record to dict
-            d = dict(results)
+        result = await conn.fetchrow(query, id)
+
+        if result:
+            # Convert asyncpg.Record to dict
+            d = dict(result)
             # Ensure JSON fields are parsed if they come back as strings
             for field in ['people', 'notes']:
                 if isinstance(d.get(field), str):
                     try:
                         d[field] = json.loads(d[field])
-                    except json.JSONDecodeError:
+                    except:
                         d[field] = []
             return d
         else:
@@ -233,7 +252,6 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
                 pass
 
 #Fetch company by apollo id
-
 async def fetch_company_by_apollo_id(apollo_id: str)->Dict:
     logger.info(f"Fetching company with apollo ID {apollo_id}")
     query = "SELECT * FROM companies WHERE apollo_id = $1 LIMIT 1"
