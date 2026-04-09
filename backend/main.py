@@ -76,6 +76,10 @@ async def fetch_company_data():
         company_data = await fetch_companies()
     except Exception as e:
         return jsonify({"Error": "Failed to fetch companies", "Message": str(e)}), 500
+    try:
+        company_data = await fetch_companies()
+    except Exception as e:
+        return jsonify({"Error": "Failed to fetch companies", "Message": str(e)}), 500
     return jsonify(company_data), 200
 
 #Database API for fetching people
@@ -85,11 +89,27 @@ async def fetch_people_data():
         people_data = await fetch_people()
     except Exception as e:
         return jsonify({"Error": "Failed to fetch people", "Message": str(e)}), 500
+    try:
+        people_data = await fetch_people()
+    except Exception as e:
+        return jsonify({"Error": "Failed to fetch people", "Message": str(e)}), 500
     return jsonify(people_data), 200
 
 #Database API for fetching company details
 @app.route('/fetch-company-details/<id>', methods=["GET"])
 async def fetch_company_details_data(id):
+    try:
+        company_id = int(id)
+    except (ValueError, TypeError):
+        return jsonify({'Error': 'Invalid company ID', 'Message': 'ID must be an integer'}), 400
+    try:
+        company_details = await fetch_company_details(company_id)
+        if not company_details:
+            return jsonify({'Error': 'No company details found', "Message": "Company details list is empty"}), 404
+        return jsonify(company_details), 200
+    except Exception as e:
+        logger.error(f"Error fetching company details for ID {id}: {str(e)}")
+        return jsonify({'Error': 'An unexpected error occurred', 'Message': str(e)}), 500
     try:
         company_id = int(id)
     except (ValueError, TypeError):
@@ -115,6 +135,7 @@ async def receive_user_phone_number():
             logger.info(data)
             return jsonify({"status": "success", "message": "Phone number received"}), 200
         else:
+            return jsonify({"status": "error", "message": "No data received"}), 400
             return jsonify({"status": "error", "message": "No data received"}), 400
 
     except Exception as e:
@@ -177,11 +198,13 @@ async def get_keywords():
 async def export():
     try:
         companies = await fetch_companies()
+        companies = await fetch_companies()
         exported_data = await export_to_excel(companies)
         if not exported_data:
             return jsonify({"Error": "No data to export"}), 400
         return send_file(exported_data, as_attachment=True)
     except Exception as e:
+        return jsonify({"Error":"An unexpected error occured", "details": str(e)}), 500
         return jsonify({"Error":"An unexpected error occured", "details": str(e)}), 500
 
 @app.route('/import-leads', methods=['POST'])
@@ -200,9 +223,24 @@ async def import_leads():
     except Exception as e:
         logger.error(f"Failed to import excdl file: {str(e)}")
         return jsonify({"Error": "Failed to import file", "details": str(e)}), 500
+        return jsonify({"Error": "Failed to import file", "details": str(e)}), 500
 
 @app.route('/view-sent-emails/<company_id>', methods=["GET"])
 async def get_sent_emails(company_id):
+    try:
+        cid = int(company_id)
+    except (ValueError, TypeError):
+        return jsonify({"Error": "Invalid company ID", "Message": "ID must be an integer"}), 400
+    try:
+        async with asyncpg.create_pool(dsn=DB_URL) as pool:
+            emails = await fetch_emails_sent(pool, cid)
+        return jsonify(emails), 200
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error fetching sent emails for company {company_id}: {str(e)}")
+        return jsonify({"Error": "Database error", "Message": str(e)}), 500
+    except Exception as e:
+        logger.error(f"Failed to fetch sent emails for company {company_id}: {str(e)}")
+        return jsonify({"Error": "An unexpected error occurred", "Message": str(e)}), 500
     try:
         cid = int(company_id)
     except (ValueError, TypeError):
