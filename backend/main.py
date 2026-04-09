@@ -126,7 +126,7 @@ async def receive_user_phone_number():
 
 #Sendgrid webhook to receive data about emails sent
 @app.route('/webhook', methods=["POST"])
-def sendgrid_events_webhook():
+async def sendgrid_events_webhook():
     logger.info("Fetching webhook event data...")
 
     events = request.json
@@ -134,7 +134,7 @@ def sendgrid_events_webhook():
         return jsonify({"Error": "No events received in request body"}), 400
 
     try:
-        asyncio.run(update_contacted_status(events))
+        await update_contacted_status(events)
         logger.info("Successfully processed webhook events")
         return jsonify({"Success": "Done fetching webhook event data"}), 200
 
