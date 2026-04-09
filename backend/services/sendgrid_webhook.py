@@ -41,8 +41,8 @@ async def update_contacted_status(events):
     async with aiofiles.open("sendgrid_webhooks", "a") as file:
         await file.write(json.dumps(events, indent=2))
     
-    # Build a list of emails to their new status and precedence
-    email_updates = []
+    # Build a map of emails to deduplicate and store their highest precedence status
+    email_updates_map = {}
     for event in events:
         logger.info(f"Event is: {event}")
         email = event.get("email")
@@ -50,12 +50,15 @@ async def update_contacted_status(events):
         update_info = EVENT_STATUS_MAP.get(sg_event)
         
         if email and update_info:
-            email_updates.append({
-                "email": email,
-                "status": update_info["status"],
-                "precedence": update_info["precedence"]
-            })
+            current_best = email_updates_map.get(email)
+            if not current_best or update_info["precedence"] > current_best["precedence"]:
+                email_updates_map[email] = {
+                    "email": email,
+                    "status": update_info["status"],
+                    "precedence": update_info["precedence"]
+                }
 
+    email_updates = list(email_updates_map.values())
     if not email_updates:
         logger.info("No valid email events to process.")
         return
