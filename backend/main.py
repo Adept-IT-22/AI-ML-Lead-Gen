@@ -1,12 +1,7 @@
 import asyncio
 import asyncpg
-import logging
 import os
-from logging.handlers import RotatingFileHandler
-try:
-    from concurrent_log_handler import ConcurrentRotatingFileHandler
-except ImportError:
-    ConcurrentRotatingFileHandler = None
+from config.logging_config import setup_logging
 from flask import Flask, jsonify, request, send_file, send_from_directory
 from flask_cors import CORS
 from services.db_service import fetch_emails_sent, unsubscribe_user, get_user_by_token, add_company_note, delete_company_note
@@ -18,29 +13,7 @@ from orchestration.main import main as orchestration_main
 
 #==============================APP SETUP====================================
 # Configure logging before creating Flask app
-# File handler
-if ConcurrentRotatingFileHandler:
-    file_handler = ConcurrentRotatingFileHandler(
-        "main_log.log",
-        maxBytes=10000000,  # 10MB
-        backupCount=5,
-        encoding="utf-8"
-        # use_gzip=True # Optional using gzip compression
-    )
-else:
-    file_handler = RotatingFileHandler(
-        "main_log.log",
-        maxBytes=10000000,  # 10MB
-        backupCount=5,
-        encoding="utf-8"
-    )
-file_handler.setFormatter(
-    logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-)
-
-root_logger = logging.getLogger()
-root_logger.setLevel(logging.INFO)
-root_logger.addHandler(file_handler)
+setup_logging()
 
 #The Database in use
 DB_URL = os.getenv("PROD_DATABASE_URL")
@@ -66,7 +39,6 @@ CORS(app, resources={
         "supports_credentials": True
     }
 })
-
 #=================================APIs=======================================
 
 # ============================================================================

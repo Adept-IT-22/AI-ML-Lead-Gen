@@ -85,6 +85,8 @@ async def fetch_companies() -> List[Dict[str, Any]]:
                 await conn.close()
             except Exception as close_err:
                 logger.debug("Failed to close DB connection: %s", close_err)
+            except Exception as close_err:
+                logger.debug("Failed to close DB connection: %s", close_err)
         
 async def fetch_people_from_company(organization_id: str)->List[Dict[str, str]]:
     logger.info(f"Fetching people from org id {organization_id}...")
@@ -290,6 +292,7 @@ async def store_to_db(
 
     except asyncpg.PostgresError as e:
         logger.error(f"Database error while storing {company_or_people} data: {str(e)}")
+        return False
         return False
     except Exception as e:
         logger.error(f"Failed to store {company_or_people} data: {str(e)}")
@@ -595,6 +598,8 @@ async def return_companies_with_no_funding_details(pool: asyncpg.Pool)->List:
     except Exception as e:
         logger.error(f"Failed fetching companies: {str(e)}")
         return []
+        logger.error(f"Failed fetching companies: {str(e)}")
+        return []
 
 #Get link for funding, hiring, events source
 
@@ -650,8 +655,10 @@ async def fetch_keywords(pool):
             result_list = [dict(result) for result in results]
             logger.info(result_list)
             return result_list
+            return result_list
     except Exception as e:
         logger.error(f"Failed to fetch keywords: {str(e)}")
+        return []
         return []
 
 #Select all unscored companies
@@ -719,6 +726,17 @@ async def store_icp_score(pool, company_id, age_score, employee_count_score,
         logger.error(f"Database error storing ICP score for company_id {company_id}: {str(e)}")
     except Exception as e:
         logger.error(f"Failed to store ICP score for company_id {company_id}: {str(e)}")
+    try:
+        async with pool.acquire() as conn:
+            await conn.execute(query, company_id, age_score, employee_count_score,
+                            funding_stage_score, keyword_score, contactability_score,
+                            geography_score, total_score, category_breakdown_json, top_matches_json,
+                            interpretation)
+        logger.info("ICP score stored for company_id %s", company_id)
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error storing ICP score for company_id {company_id}: {str(e)}")
+    except Exception as e:
+        logger.error(f"Failed to store ICP score for company_id {company_id}: {str(e)}")
     return
 
 #Store icp score in icp_score column in companies table. Changes status to mcp if score >= 70
@@ -737,6 +755,14 @@ async def update_company_icp_score(pool, company_id: int, total_score: float):
         WHERE id = $2
     """
 
+    try:
+        async with pool.acquire() as conn:
+            await conn.execute(query, float(total_score), company_id)
+        logger.info("Company icp_score and status updated for company_id %s", company_id)
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error updating ICP score for company_id {company_id}: {str(e)}")
+    except Exception as e:
+        logger.error(f"Failed to update ICP score for company_id {company_id}: {str(e)}")
     try:
         async with pool.acquire() as conn:
             await conn.execute(query, float(total_score), company_id)
@@ -777,6 +803,16 @@ async def fetch_emails_sent(pool, company_id):
             ON p.id = e.recipient_id
         WHERE e.company_id = $1; 
     """
+    try:
+        async with pool.acquire() as conn:
+            emails = await conn.fetch(query, company_id)
+        return [dict(email) for email in emails]
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error fetching sent emails for company {company_id}: {str(e)}")
+        return []
+    except Exception as e:
+        logger.error(f"Failed to fetch sent emails for company {company_id}: {str(e)}")
+        return []
     try:
         async with pool.acquire() as conn:
             emails = await conn.fetch(query, company_id)
