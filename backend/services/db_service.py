@@ -295,7 +295,6 @@ async def store_to_db(
     except asyncpg.PostgresError as e:
         logger.error(f"Database error while storing {company_or_people} data: {str(e)}")
         return False
-        return False
     except Exception as e:
         logger.error(f"Failed to store {company_or_people} data: {str(e)}")
         return False
