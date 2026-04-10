@@ -95,6 +95,9 @@ export class LeadsTableComponent implements OnInit {
   }
 
   hasEmail(row: any): boolean {
+    if (typeof row.email === 'string' && row.email.trim().length > 0) {
+      return true;
+    }
     const people = row.people ?? [];
     return people.some((p: any) =>
       typeof p.email === 'string' && p.email.trim().length > 0
