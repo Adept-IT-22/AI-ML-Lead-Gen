@@ -2,6 +2,7 @@ import asyncio
 import asyncpg
 import os
 from config.logging_config import setup_logging
+import logging
 from flask import Flask, jsonify, request, send_file, send_from_directory
 from flask_cors import CORS
 from services.db_service import fetch_emails_sent, unsubscribe_user, get_user_by_token, add_company_note, delete_company_note
@@ -16,6 +17,7 @@ from utils.find_missing_people import find_missing_people
 #==============================APP SETUP====================================
 # Configure logging before creating Flask app
 setup_logging()
+logger = logging.getLogger(__name__)
 
 #The Database in use
 DB_URL = os.getenv("PROD_DATABASE_URL")
