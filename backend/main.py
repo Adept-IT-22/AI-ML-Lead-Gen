@@ -10,6 +10,8 @@ from services.sendgrid_webhook import *
 from services.export_to_excel import export_to_excel
 from import_excel.import_excel import main as import_excel_main
 from orchestration.main import main as orchestration_main 
+import httpx
+from utils.find_missing_people import find_missing_people
 
 #==============================APP SETUP====================================
 # Configure logging before creating Flask app
@@ -60,6 +62,18 @@ def debug():
         "cwd": os.getcwd(),
         "index_exists": os.path.exists(os.path.join(app.static_folder, "index.html"))
     }
+
+@app.route('/find-missing-people', methods=["POST"])
+async def find_missing_people():
+    logger.info("Manual trigger: Discover and enrich missing people...")
+    try:
+        async with asyncpg.create_pool(dsn=DB_URL) as pool:
+            async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
+                await find_missing_people(pool, client)
+        return jsonify({"Success": "Discover people pipeline complete"}), 200
+    except Exception as e:
+        logger.error(f"Failed to discover people: {str(e)}")
+        return jsonify({"Error": "An unexpected error occurred", "Message": str(e)}), 500
 
 @app.route('/run', methods=["GET", "POST"])
 async def main():

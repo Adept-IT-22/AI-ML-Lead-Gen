@@ -26,9 +26,15 @@ async def no_rate_limit_people_search(
     org_domains = [od for od in org_domains if od]
 
     payload = {
-        "person_titles": ["ceo", "sales", "founder"],
+        "person_titles": [
+        "ceo", "founder", "co-founder", "president", "owner", "partner",
+        "cto", "chief product officer", "vp of engineering", "head of engineering", 
+        "director of engineering", "vp of sales", "head of sales", "vp of marketing", "head of marketing",
+        "vp of operations", "head of operations", "chief technological officer",
+        "head of ai", "head of machine learning", "head of data science"
+        ],
         "include_similar_titles": True,
-        "person_seniorities": ["owner", "founder", "c_suite", "partner", "vp", "head", "director", "manager"],
+        "person_seniorities": ["owner", "founder", "c_suite", "partner", "vp", "head", "director", "manager", "senior"],
         "contact_email_status": ["verified", "unverified", "likely_to_engage"],
         "organization_ids": org_ids,
         "q_organization_domains_list": org_domains,
@@ -75,8 +81,11 @@ if __name__ == "__main__":
         async with httpx.AsyncClient(timeout=10.0) as client:
             results = await people_search(
                 client=client, 
-                org_ids=["5f50a22da4560d00e3eddf31"], 
-                org_domains=["nvidia.com"])
+                #org_ids=["5f50a22da4560d00e3eddf31"], 
+                #org_domains=["nvidia.com"]
+                org_ids = ["673106decb4dd60001ad5a7e"],
+                org_domains=["smartsylvan.de"]
+            )
             logger.info(f"People search results are: \n{results}")
 
         duration = time.perf_counter() - start_time
