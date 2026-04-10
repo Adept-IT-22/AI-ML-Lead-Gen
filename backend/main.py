@@ -304,7 +304,50 @@ async def delete_note(note_id):
     except Exception as e:
         logger.error(f"Error deleting note: {str(e)}")
         return jsonify({"Error": "An unexpected error occurred", "details": str(e)}), 500
+import ast
 
+@app.route('/recover-logs', methods=["GET"])
+async def recover_logs():
+    log_data = """
+2026-04-09 07:48:48,679 - root - INFO - Event is: {'email': 'asiri@lucidya.com', 'event': 'delivered', 'ip': '167.89.10.203', 'response': '250 2.0.0 OK DMARC:Quarantine 1775720874 d75a77b69052e-50db15a5c4csi63646231cf.119 - gsmtp', 'sg_event_id': 'ZGVsaXZlcmVkLTAtNTU4NzQ3NTctRXNiLW9EVFVSdFdEN3FST2VSY3BHZy0w', 'sg_message_id': 'Esb-oDTURtWD7qROeRcpGg.recvd-86b77d8cc7-8d6gn-1-69D759AA-14.0', 'smtp-id': '<Esb-oDTURtWD7qROeRcpGg@geopod-ismtpd-51>', 'timestamp': 1775720875, 'tls': 1}
+2026-04-09 07:48:48,679 - root - INFO - Event is: {'email': 'asiri@lucidya.com', 'event': 'processed', 'send_at': 0, 'sg_event_id': 'cHJvY2Vzc2VkLTU1ODc0NzU3LUVzYi1vRFRVUnRXRDdxUk9lUmNwR2ctMA', 'sg_message_id': 'Esb-oDTURtWD7qROeRcpGg.recvd-86b77d8cc7-8d6gn-1-69D759AA-14.0', 'smtp-id': '<Esb-oDTURtWD7qROeRcpGg@geopod-ismtpd-51>', 'timestamp': 1775720874}
+2026-04-09 07:48:50,370 - root - INFO - Event is: {'email': 'sasha@unitary.ai', 'event': 'processed', 'send_at': 0, 'sg_event_id': 'cHJvY2Vzc2VkLTU1ODc0NzU3LVNkNHJJQWdWUi1Hem1HcUhNcUFJMlEtMA', 'sg_message_id': 'Sd4rIAgVR-GzmGqHMqAI2Q.recvd-6748d45558-hfbl6-1-69D759BC-20.0', 'smtp-id': '<Sd4rIAgVR-GzmGqHMqAI2Q@geopod-ismtpd-100>', 'timestamp': 1775720892}
+2026-04-09 07:48:53,197 - root - INFO - Event is: {'email': 'malte@luxurypresence.com', 'event': 'delivered', 'ip': '149.72.70.15', 'response': '250 2.0.0 OK DMARC:Quarantine 1775720916 d75a77b69052e-50d4b89ad0asi258665711cf.203 - gsmtp', 'sg_event_id': 'ZGVsaXZlcmVkLTAtNTU4NzQ3NTctTnU5VWdqNkVRTnlTR1ZVVWVzeVE0Zy0w', 'sg_message_id': 'Nu9Ugj6EQNySGVUUesyQ4g.recvd-59f49dd4cf-5hp8d-1-69D759D3-13.0', 'smtp-id': '<Nu9Ugj6EQNySGVUUesyQ4g@geopod-ismtpd-33>', 'timestamp': 1775720916, 'tls': 1}
+2026-04-09 07:48:53,197 - root - INFO - Event is: {'email': 'malte@luxurypresence.com', 'event': 'processed', 'send_at': 0, 'sg_event_id': 'cHJvY2Vzc2VkLTU1ODc0NzU3LU51OVVnajZFUU55U0dWVVVlc3lRNGctMA', 'sg_message_id': 'Nu9Ugj6EQNySGVUUesyQ4g.recvd-59f49dd4cf-5hp8d-1-69D759D3-13.0', 'smtp-id': '<Nu9Ugj6EQNySGVUUesyQ4g@geopod-ismtpd-33>', 'timestamp': 1775720916}
+2026-04-09 07:48:54,824 - root - INFO - Event is: {'email': 'krishna@sima.ai', 'event': 'delivered', 'ip': '149.72.70.187', 'response': '250 2.0.0 OK DMARC:Quarantine 1775720930 41be03b00d2f7-c76c662ca89si40884645a12.377 - gsmtp', 'sg_event_id': 'ZGVsaXZlcmVkLTAtNTU4NzQ3NTctQnF6MVBBNV9STVd1V3hZa1pUcmw1Zy0w', 'sg_message_id': 'Bqz1PA5_RMWuWxYkZTrl5g.recvd-6748d45558-dr5xl-1-69D759E0-7.0', 'smtp-id': '<Bqz1PA5_RMWuWxYkZTrl5g@geopod-ismtpd-114>', 'timestamp': 1775720930, 'tls': 1}
+2026-04-09 07:48:54,824 - root - INFO - Event is: {'email': 'krishna@sima.ai', 'event': 'processed', 'send_at': 0, 'sg_event_id': 'cHJvY2Vzc2VkLTU1ODc0NzU3LUJxejFQQTVfUk1XdVd4WWtaVHJsNWctMA', 'sg_message_id': 'Bqz1PA5_RMWuWxYkZTrl5g.recvd-6748d45558-dr5xl-1-69D759E0-7.0', 'smtp-id': '<Bqz1PA5_RMWuWxYkZTrl5g@geopod-ismtpd-114>', 'timestamp': 1775720928}
+2026-04-09 07:48:57,359 - root - INFO - Event is: {'email': 'shourya@ramain.ai', 'event': 'delivered', 'ip': '159.183.225.35', 'response': '250 2.0.0 OK DMARC:Quarantine 1775720882 6a1803df08f44-8a59381128bsi275407676d6.12 - gsmtp', 'sg_event_id': 'ZGVsaXZlcmVkLTAtNTU4NzQ3NTctanFvVVBBUENSbnFNSHplZzQwX0Zody0w', 'sg_message_id': 'jqoUPAPCRnqMHzeg40_Fhw.recvd-59f49dd4cf-nhx6w-1-69D759B0-34.0', 'smtp-id': '<jqoUPAPCRnqMHzeg40_Fhw@geopod-ismtpd-10>', 'timestamp': 1775720882, 'tls': 1}
+2026-04-09 07:48:57,359 - root - INFO - Event is: {'email': 'shourya@ramain.ai', 'event': 'processed', 'send_at': 0, 'sg_event_id': 'cHJvY2Vzc2VkLTU1ODc0NzU3LWpxb1VQQVBDUm5xTUh6ZWc0MF9GaHctMA', 'sg_message_id': 'jqoUPAPCRnqMHzeg40_Fhw.recvd-59f49dd4cf-nhx6w-1-69D759B0-34.0', 'smtp-id': '<jqoUPAPCRnqMHzeg40_Fhw@geopod-ismtpd-10>', 'timestamp': 1775720880}
+2026-04-09 07:48:58,229 - root - INFO - Event is: {'email': 'alex@amilabs.xyz', 'event': 'delivered', 'ip': '149.72.70.15', 'response': '250 2.0.0 OK DMARC:Quarantine 1775720887 af79cd13be357-8d2a8451cdesi2407114485a.204 - gsmtp', 'sg_event_id': 'ZGVsaXZlcmVkLTAtNTU4NzQ3NTctQVZzcWxyMndTX3EtNXFzUElZSUdVdy0w', 'sg_message_id': 'AVsqlr2wS_q-5qsPIYIGUw.recvd-59f49dd4cf-7mfwv-1-69D759B6-23.0', 'smtp-id': '<AVsqlr2wS_q-5qsPIYIGUw@geopod-ismtpd-76>', 'timestamp': 1775720887, 'tls': 1}
+2026-04-09 07:48:58,229 - root - INFO - Event is: {'email': 'alex@amilabs.xyz', 'event': 'processed', 'send_at': 0, 'sg_event_id': 'cHJvY2Vzc2VkLTU1ODc0NzU3LUFWc3FscjJ3U19xLTVxc1BJWUlHVXctMA', 'sg_message_id': 'AVsqlr2wS_q-5qsPIYIGUw.recvd-59f49dd4cf-7mfwv-1-69D759B6-23.0', 'smtp-id': '<AVsqlr2wS_q-5qsPIYIGUw@geopod-ismtpd-76>', 'timestamp': 1775720886}
+2026-04-09 07:49:02,581 - root - INFO - Event is: {'email': 'sasha@unitary.ai', 'event': 'delivered', 'ip': '149.72.70.187', 'response': '250 2.0.0 OK DMARC:Quarantine 1775720894 d2e1a72fcca58-82d129a68a4si35101882b3a.6 - gsmtp', 'sg_event_id': 'ZGVsaXZlcmVkLTAtNTU4NzQ3NTctU2Q0cklBZ1ZSLUd6bUdxSE1xQUkyUS0w', 'sg_message_id': 'Sd4rIAgVR-GzmGqHMqAI2Q.recvd-6748d45558-hfbl6-1-69D759BC-20.0', 'smtp-id': '<Sd4rIAgVR-GzmGqHMqAI2Q@geopod-ismtpd-100>', 'timestamp': 1775720894, 'tls': 1}
+2026-04-09 07:49:04,043 - root - INFO - Event is: {'email': 'hd@datatheorem.com', 'event': 'delivered', 'ip': '159.183.225.35', 'response': '250 2.6.0 <PGkxzom6QCqkH2h1GY71LQ@geopod-ismtpd-58> [InternalId=253677948398315, Hostname=BY5PR08MB6247.namprd08.prod.outlook.com] 27762 bytes in 0.217, 124.570 KB/sec Queued mail for delivery', 'sg_event_id': 'ZGVsaXZlcmVkLTAtNTU4NzQ3NTctUEdreHpvbTZRQ3FrSDJoMUdZNzFMUS0w', 'sg_message_id': 'PGkxzom6QCqkH2h1GY71LQ.recvd-86b77d8cc7-4rflb-1-69D759C2-14.0', 'smtp-id': '<PGkxzom6QCqkH2h1GY71LQ@geopod-ismtpd-58>', 'timestamp': 1775720902, 'tls': 1}
+2026-04-09 07:49:04,043 - root - INFO - Event is: {'email': 'hd@datatheorem.com', 'event': 'processed', 'send_at': 0, 'sg_event_id': 'cHJvY2Vzc2VkLTU1ODc0NzU3LVBHa3h6b202UUNxa0gyaDFHWTcxTFEtMA', 'sg_message_id': 'PGkxzom6QCqkH2h1GY71LQ.recvd-86b77d8cc7-4rflb-1-69D759C2-14.0', 'smtp-id': '<PGkxzom6QCqkH2h1GY71LQ@geopod-ismtpd-58>', 'timestamp': 1775720898}
+2026-04-09 07:49:12,452 - root - INFO - Event is: {'email': 'ahmed.achchak@qevlar.com', 'event': 'delivered', 'ip': '149.72.70.15', 'response': '250 2.0.0 OK DMARC:Quarantine 1775720906 98e67ed59e1d1-35e351a81bcsi5467987a91.17 - gsmtp', 'sg_event_id': 'ZGVsaXZlcmVkLTAtNTU4NzQ3NTctdTlFa2JvbnJSaWFJU3A1Qkh2ODlEZy0w', 'sg_message_id': 'u9EkbonrRiaISp5BHv89Dg.recvd-canary-cfb76cc7f-bnqzl-1-69D759C8-11.0', 'smtp-id': '<u9EkbonrRiaISp5BHv89Dg@geopod-ismtpd-57>', 'timestamp': 1775720906, 'tls': 1}
+2026-04-09 07:49:12,452 - root - INFO - Event is: {'email': 'ahmed.achchak@qevlar.com', 'event': 'processed', 'send_at': 0, 'sg_event_id': 'cHJvY2Vzc2VkLTU1ODc0NzU3LXU5RWtib25yUmlhSVNwNUJIdjg5RGctMA', 'sg_message_id': 'u9EkbonrRiaISp5BHv89Dg.recvd-canary-cfb76cc7f-bnqzl-1-69D759C8-11.0', 'smtp-id': '<u9EkbonrRiaISp5BHv89Dg@geopod-ismtpd-57>', 'timestamp': 1775720904}
+2026-04-09 07:49:12,751 - root - INFO - Event is: {'email': 'copple@supabase.com', 'event': 'delivered', 'ip': '149.72.70.187', 'response': '250 2.0.0 OK DMARC:Quarantine 1775720910 d75a77b69052e-50d4b317baesi327582881cf.114 - gsmtp', 'sg_event_id': 'ZGVsaXZlcmVkLTAtNTU4NzQ3NTctdFlnRk5wVGlRODI1QjVlR2dwUEIydy0w', 'sg_message_id': 'tYgFNpTiQ825B5eGgpPB2w.recvd-86b77d8cc7-kp7hj-1-69D759CE-7.0', 'smtp-id': '<tYgFNpTiQ825B5eGgpPB2w@geopod-ismtpd-16>', 'timestamp': 1775720910, 'tls': 1}
+2026-04-09 07:49:12,751 - root - INFO - Event is: {'email': 'copple@supabase.com', 'event': 'processed', 'send_at': 0, 'sg_event_id': 'cHJvY2Vzc2VkLTU1ODc0NzU3LXRZZ0ZOcFRpUTgyNUI1ZUdncFBCMnctMA', 'sg_message_id': 'tYgFNpTiQ825B5eGgpPB2w.recvd-86b77d8cc7-kp7hj-1-69D759CE-7.0', 'smtp-id': '<tYgFNpTiQ825B5eGgpPB2w@geopod-ismtpd-16>', 'timestamp': 1775720910}
+2026-04-09 07:49:37,701 - root - INFO - Event is: {'email': 'philip@starcloud.com', 'event': 'delivered', 'ip': '159.183.225.35', 'response': '250 2.0.0 OK DMARC:Quarantine 1775720924 6a1803df08f44-8a598e6a782si318869006d6.658 - gsmtp', 'sg_event_id': 'ZGVsaXZlcmVkLTAtNTU4NzQ3NTctRXphaGlTTmRUTktTTVN2Ulh3dk0zdy0w', 'sg_message_id': 'EzahiSNdTNKSMSvRXwvM3w.recvd-59f49dd4cf-nhx6w-1-69D759DA-2.0', 'smtp-id': '<EzahiSNdTNKSMSvRXwvM3w@geopod-ismtpd-14>', 'timestamp': 1775720924, 'tls': 1}
+"""
+    events = []
+    for line in log_data.strip().split("\n"):
+        if "Event is: {" in line:
+            dict_str = line.split("Event is: ")[1]
+            try:
+                event_dict = ast.literal_eval(dict_str)
+                events.append(event_dict)
+            except Exception as e:
+                logger.error(f"Failed to parse line: {e}")
+
+    if events:
+        logger.info(f"Found {len(events)} events to process.")
+        try:
+            await update_contacted_status(events)
+            return jsonify({"success": f"Successfully processed {len(events)} missed events"}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    else:
+        return jsonify({"message": "No events parsed"}), 400
 
 if __name__ == "__main__":
     logger.info("Application running....")
