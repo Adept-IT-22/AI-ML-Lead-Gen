@@ -18,8 +18,8 @@ async def get_uncontacted_companies_without_people(pool: asyncpg.Pool) -> List[a
     logger.info("Fetching uncontacted companies with no people...")
     query = """
     SELECT c.apollo_id AS org_id, c.website_url AS org_domain
-    FROM mock_companies c
-    LEFT JOIN mock_people p ON c.apollo_id = p.organization_id
+    FROM companies c
+    LEFT JOIN people p ON c.apollo_id = p.organization_id
     WHERE p.id IS NULL AND c.contacted_status = 'uncontacted';
     """
     try:
