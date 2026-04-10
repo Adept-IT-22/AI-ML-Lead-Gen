@@ -64,8 +64,8 @@ def debug():
         "index_exists": os.path.exists(os.path.join(app.static_folder, "index.html"))
     }
 
-@app.route('/find-missing-people', methods=["POST"])
-async def find_missing_people():
+@app.route('/find-missing-people', methods=["GET", "POST"])
+async def get_missing_people():
     logger.info("Manual trigger: Discover and enrich missing people...")
     try:
         async with asyncpg.create_pool(dsn=DB_URL) as pool:
