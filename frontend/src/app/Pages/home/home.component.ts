@@ -207,11 +207,12 @@ export class HomeComponent implements OnInit {
         }
 
         if (key === 'email_found') {
+          const hasDirectEmail = typeof lead['email'] === 'string' && lead['email'].trim().length > 0;
           const people = lead.people ?? [];
 
-          const hasEmail = people.some(p =>
+          const hasEmail = hasDirectEmail || people.some(p =>
             typeof p.email === 'string' && p.email.trim().length > 0
-          )
+          );
 
           if (value == 'Email Found') return hasEmail;
           if (value == 'No Email') return !hasEmail;
