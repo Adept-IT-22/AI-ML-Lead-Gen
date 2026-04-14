@@ -82,7 +82,7 @@ async def run_ingestion_modules()->Dict:
         #("python_org", python_org_main()),
         #("working_nomads", working_nomads_main()),
         #("remotive", remotive_main()),
-        #("we_work_remotely", we_work_remotely_main()),
+        ("we_work_remotely", we_work_remotely_main()),
         #("startup_daily_net", startup_daily_net_main()),
         #("nodesk", nodesk_main()),
         #("arc_dev", arc_dev_main()),
