@@ -91,6 +91,10 @@ async def company_storage(pool: asyncpg.Pool, all_normalized_data: List, searche
                     normalized_names = normalized_company_info.get("company_name", [])
                     found_match = False
                     for idx, normalized_name in enumerate(normalized_names):
+                        # skip empty strings to avoid false-positive matches (matches everything)
+                        if not normalized_name or not str(normalized_name).strip():
+                            continue
+
                         if normalized_name.lower() in company_name.lower() or company_name.lower() in normalized_name.lower():
                             company_data_source = normalized_company_info.get("type")
                             
