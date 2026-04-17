@@ -20,11 +20,11 @@ DB_URL = os.getenv("MOCK_DATABASE_URL")
 EVENT_STATUS_MAP = {
     "processed": {"status": "pending", "precedence": 2},
     "delivered": {"status": "contacted", "precedence": 3},
-    "open": {"status": "contacted", "precedence": 3},
-    "click": {"status": "engaged", "precedence": 4},
+    "open": {"status": "opened", "precedence": 4},
+    "click": {"status": "engaged", "precedence": 5},
     "bounce": {"status": "failed", "precedence": 1},
     "spamreport": {"status": "failed", "precedence": 1},
-    "unsubscribe": {"status": "opted_out", "precedence": 5}, # A terminal status
+    "unsubscribe": {"status": "opted_out", "precedence": 7}, # A terminal status
     "dropped": {"status": "failed", "precedence": 1},
     "deferred": {"status": "pending", "precedence": 2},
 }
@@ -93,8 +93,10 @@ async def update_contacted_status(events):
                         WHERE e.recipient_id = p.id
                         AND t.precedence >= COALESCE(
                             CASE e.status::text
-                                WHEN 'opted_out'  THEN 5
-                                WHEN 'engaged'    THEN 4
+                                WHEN 'opted_out'  THEN 7
+                                WHEN 'replied'    THEN 6
+                                WHEN 'engaged'    THEN 5
+                                WHEN 'opened'     THEN 4
                                 WHEN 'contacted'  THEN 3
                                 WHEN 'pending'    THEN 2
                                 WHEN 'failed'     THEN 1
@@ -111,15 +113,17 @@ async def update_contacted_status(events):
                         SET
                             contacted_status = t.status,
                             times_contacted = times_contacted + CASE
-                                WHEN t.status IN ('contacted', 'engaged') THEN 1
+                                WHEN t.status IN ('contacted', 'opened', 'engaged') THEN 1
                                 ELSE 0
                             END
                         FROM tmp_email_status t
                         WHERE LOWER(p.email) = LOWER(t.email)
                         AND t.precedence >= COALESCE(
                             CASE p.contacted_status::text
-                                WHEN 'opted_out'  THEN 5
-                                WHEN 'engaged'    THEN 4
+                                WHEN 'opted_out'  THEN 7
+                                WHEN 'replied'    THEN 6
+                                WHEN 'engaged'    THEN 5
+                                WHEN 'opened'     THEN 4
                                 WHEN 'contacted'  THEN 3
                                 WHEN 'pending'    THEN 2
                                 WHEN 'failed'     THEN 1
@@ -133,7 +137,7 @@ async def update_contacted_status(events):
                     org_ids = await conn.fetch("""
                         SELECT DISTINCT organization_id
                         FROM people
-                        WHERE contacted_status IN ('contacted','engaged','pending','failed','opted_out')
+                        WHERE contacted_status IN ('contacted','opened','engaged','pending','failed','opted_out')
                     """)
                     org_id_list = [record["organization_id"] for record in org_ids]
 
@@ -145,8 +149,10 @@ async def update_contacted_status(events):
                                     organization_id,
                                     MAX(
                                         CASE contacted_status
-                                            WHEN 'opted_out' THEN 5
-                                            WHEN 'engaged' THEN 4
+                                            WHEN 'opted_out' THEN 7
+                                            WHEN 'replied' THEN 6
+                                            WHEN 'engaged' THEN 5
+                                            WHEN 'opened' THEN 4
                                             WHEN 'contacted' THEN 3
                                             WHEN 'pending' THEN 2
                                             WHEN 'failed' THEN 1
@@ -159,8 +165,10 @@ async def update_contacted_status(events):
                             )
                             UPDATE companies c
                             SET contacted_status = CASE cns.max_precedence
-                                WHEN 5 THEN 'opted_out'::contacted_status_enum
-                                WHEN 4 THEN 'engaged'::contacted_status_enum
+                                WHEN 7 THEN 'opted_out'::contacted_status_enum
+                                WHEN 6 THEN 'replied'::contacted_status_enum
+                                WHEN 5 THEN 'engaged'::contacted_status_enum
+                                WHEN 4 THEN 'opened'::contacted_status_enum
                                 WHEN 3 THEN 'contacted'::contacted_status_enum
                                 WHEN 2 THEN 'pending'::contacted_status_enum
                                 WHEN 1 THEN 'failed'::contacted_status_enum

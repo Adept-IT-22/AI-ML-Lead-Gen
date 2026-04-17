@@ -28,49 +28,41 @@ export class EngagementComponent implements AfterViewInit {
           label: 'Leads',
           data: [220, 200, 100, 50, 12],
           backgroundColor: '#3b82f6'
-        
         }]
       },
-
-      
       options: {
         indexAxis: 'y',
         responsive: true,
-        plugins: { legend: { display: false, labels: { color: 'yellow' } }  },
+        plugins: { legend: { display: false } },
         scales: {
-      x: { ticks: { color: 'white' }, grid: { color: 'rgba(233,31,31,0.1)' } },
-      y: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } }
-    }
+          x: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+          y: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+        }
       }
     });
   }
 
- private renderBreakdown() {
-  const ctx = document.getElementById('breakdownChart') as HTMLCanvasElement;
-  if (!ctx) return;
+  private renderBreakdown() {
+    const ctx = document.getElementById('breakdownChart') as HTMLCanvasElement;
+    if (!ctx) return;
 
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Clicked', 'Replied', 'Unsubscribed'],
-      datasets: [{
-        data: [50, 12, 8],
-        backgroundColor: ['#22c55e', '#facc15', '#ef4444']
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: { color: 'yellow' }
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Clicked', 'Replied', 'Unsubscribed'],
+        datasets: [{
+          data: [50, 12, 8],
+          backgroundColor: ['#22c55e', '#facc15', '#ef4444']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom', labels: { color: 'yellow' } }
         }
       }
-      // ❌ Removed scales (not needed for doughnut)
-    }
-  });
-}
-
+    });
+  }
 
   private renderActivity() {
     const ctx = document.getElementById('activityChart') as HTMLCanvasElement;
@@ -91,11 +83,11 @@ export class EngagementComponent implements AfterViewInit {
       },
       options: {
         responsive: true,
-        plugins: { legend: { display: false , labels: { color: 'yellow' }} }, 
+        plugins: { legend: { display: false } }, 
         scales: {
-      x: { ticks: { color: 'white' }, grid: { color: 'rgba(233,31,31,0.1)' } },
-      y: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } }
-    }
+          x: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+          y: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+        }
       }
     });
   }

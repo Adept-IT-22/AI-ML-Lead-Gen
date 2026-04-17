@@ -28,6 +28,7 @@ export interface ICompany {
   painpoints: string[] | null;
   people: IPeople[];
   phone: string | null;
+  positive_reply: boolean | null;
   short_description: string | null;
   service: string | null;
   source_link: string | null;
