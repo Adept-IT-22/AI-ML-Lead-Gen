@@ -1,204 +1,225 @@
-// analytics.component.ts
-import { Component, OnInit } from '@angular/core';
-import { ChartOptions, ChartData } from 'chart.js';
-import { NgChartsModule } from 'ng2-charts';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { CommonModule } from '@angular/common'; // Moved to top
+import { Chart, registerables } from 'chart.js';
 import { CompaniesService } from '../../@shared/Services/companies.service';
-import { ICompany } from '../../Libs/interfaces/company.interface';
+import { NgChartsModule } from 'ng2-charts';
+
+// Register Chart.js components
+Chart.register(...registerables);
 
 @Component({
   standalone: true,
-  imports: [NgChartsModule],
+  imports: [CommonModule, NgChartsModule],
   selector: 'app-analytics',
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss']
 })
-export class AnalyticsComponent implements OnInit {
-  leadsData: ICompany[] = [];
+export class AnalyticsComponent implements OnInit, OnDestroy {
 
-  // ✅ Chart Data
-  sourceChartData!: ChartData<'bar'>;
-  statusChartData!: ChartData<'pie'>;
-  icpChartData!: ChartData<'pie'>;
-  timeChartData!: ChartData<'line'>;
-  conversionChartData!: ChartData<'bar'>;
+  private companiesService = inject(CompaniesService);
+  public metrics: any = null;
+  private charts: Chart[] = [];
 
-  // ✅ Summaries
-  sourceSummary = '';
-  statusSummary = '';
-  icpSummary = '';
-  timeSummary = '';
-  conversionSummary = '';
-
-  // ✅ Status mapping with precedence
-  private readonly EVENT_STATUS_MAP: Record<string, { status: string, precedence: number }> = {
-    processed:   { status: 'pending',    precedence: 2 },
-    delivered:   { status: 'contacted',  precedence: 3 },
-    open:        { status: 'contacted',  precedence: 3 },
-    click:       { status: 'engaged',    precedence: 4 },
-    bounce:      { status: 'failed',     precedence: 1 },
-    spamreport:  { status: 'failed',     precedence: 1 },
-    unsubscribe: { status: 'opted_out',  precedence: 5 },
-    dropped:     { status: 'failed',     precedence: 1 },
-    deferred:    { status: 'pending',    precedence: 2 },
-
-    // Normalized statuses (in case DB already stores them)
-    pending:     { status: 'pending',    precedence: 2 },
-    contacted:   { status: 'contacted',  precedence: 3 },
-    engaged:     { status: 'engaged',    precedence: 4 },
-    failed:      { status: 'failed',     precedence: 1 },
-    opted_out:   { status: 'opted_out',  precedence: 5 },
-  };
-
-  // ✅ Fixed status colors
-  private readonly STATUS_COLORS: Record<string, string> = {
-    pending: '#ffcc00',
-    contacted: '#33ccff',
-    engaged: '#00cc66',
-    failed: '#ff3333',
-    opted_out: '#9900cc',
-    N_A: '#999999'
-  };
-
-  // ✅ Chart Options
-  barOptions: ChartOptions<'bar'> = {
-    responsive: true,
-    plugins: { legend: { labels: { color: 'white' } } },
-    scales: {
-      x: { ticks: { color: 'yellow' }, grid: { color: 'rgba(233,31,31,0.1)' } },
-      y: { ticks: { color: 'yellow' }, grid: { color: 'rgba(255,255,255,0.1)' } }
-    }
-  };
-
-  pieOptions: ChartOptions<'pie'> = {
-    responsive: true,
-    plugins: { legend: { labels: { color: 'white' } } }
-  };
-
-  lineOptions: ChartOptions<'line'> = {
-    responsive: true,
-    plugins: { legend: { labels: { color: 'white' } } },
-    scales: {
-      x: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } },
-      y: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } }
-    }
-  };
-
-  constructor(private companiesService: CompaniesService) {}
-
-  ngOnInit() {
-    this.loadCompanies();
+  ngOnInit(): void {
+    this.loadMetrics();
   }
 
-  private loadCompanies() {
-    this.companiesService.fetch_companies().subscribe({
+  ngOnDestroy(): void {
+    this.charts.forEach(chart => chart.destroy());
+    this.charts = [];
+  }
+
+  loadMetrics() {
+    this.companiesService.fetchEngagementMetrics().subscribe({
       next: (data) => {
-        console.log('Companies fetched: ', data);
-        this.leadsData = data;
-        this.buildCharts();
+        this.metrics = data;
+        // Small delay to ensure DOM is ready for charts
+        setTimeout(() => this.renderAllCharts(), 100);
       },
-      error: (err) => console.error('Error fetching companies', err)
+      error: (err) => console.error('Failed to load metrics', err)
     });
   }
 
-  private buildCharts() {
-    // 🔹 Leads by Source → BAR
-    const sourceCounts: Record<string, number> = {};
-    this.leadsData.forEach(l => {
-      sourceCounts[l.company_data_source || 'Unknown'] = (sourceCounts[l.company_data_source || 'Unknown'] || 0) + 1;
-    });
-    this.sourceChartData = {
-      labels: Object.keys(sourceCounts),
-      datasets: [{
-        data: Object.values(sourceCounts),
-        backgroundColor: ['#ffcc00', '#33ccff', '#ff6666']
-      }]
-    };
-    this.sourceSummary = `Top source: ${this.getTopKey(sourceCounts)} (${Math.max(...Object.values(sourceCounts))} leads).`;
+  private renderAllCharts() {
+    // Destroy existing charts to prevent memory leaks/re-rendering issues
+    this.charts.forEach(chart => chart.destroy());
+    this.charts = [];
 
-    // 🔹 Leads by Status → PIE (with precedence)
-    const statusCounts: Record<string, number> = {};
-    this.leadsData.forEach(l => {
-      const raw = (l.contacted_status || '').toLowerCase();
-      const mapped = this.EVENT_STATUS_MAP[raw];
-      const status = mapped ? mapped.status : 'Not-contacted ';
-      statusCounts[status] = (statusCounts[status] || 0) + 1;
-    });
-    this.statusChartData = {
-      labels: Object.keys(statusCounts),
-      datasets: [{
-        data: Object.values(statusCounts),
-        backgroundColor: Object.keys(statusCounts).map(s => this.STATUS_COLORS[s] || '#999999')
-      }]
-    };
-    this.statusSummary = `Most leads are "${this.getTopKey(statusCounts)}" (${Math.max(...Object.values(statusCounts))}).`;
-
-    // 🔹 ICP Score Buckets → PIE
-    const icpBuckets = { '0-25': 0, '25-50': 0, '50-75': 0, '75-100': 0 };
-    this.leadsData.forEach(l => {
-      const score = parseFloat(l.icp_score as any);
-      if (!isNaN(score)) {
-        if (score < 25) icpBuckets['0-25']++;
-        else if (score < 50) icpBuckets['25-50']++;
-        else if (score < 75) icpBuckets['50-75']++;
-        else icpBuckets['75-100']++;
-      }
-    });
-    this.icpChartData = {
-      labels: Object.keys(icpBuckets),
-      datasets: [{
-        data: Object.values(icpBuckets),
-        backgroundColor: ['#0099ff', '#33cc33', '#ffcc00', '#ff3333']
-      }]
-    };
-    this.icpSummary = `Most companies fall in the "${this.getTopKey(icpBuckets)}" ICP range.`;
-
-    // 🔹 Leads Over Time → LINE
-    const monthCounts: Record<string, number> = {};
-    this.leadsData.forEach(l => {
-      if (l.created_at) {
-        const date = new Date(l.created_at);
-        const month = date.toLocaleString('default', { month: 'short', year: 'numeric' });
-        monthCounts[month] = (monthCounts[month] || 0) + 1;
-      }
-    });
-    this.timeChartData = {
-      labels: Object.keys(monthCounts),
-      datasets: [{
-        data: Object.values(monthCounts),
-        borderColor: '#00ccff',
-        backgroundColor: 'rgba(0,204,255,0.3)',
-        fill: true
-      }]
-    };
-    if (Object.keys(monthCounts).length > 0) {
-      this.timeSummary = `Peak leads were in ${this.getTopKey(monthCounts)} (${Math.max(...Object.values(monthCounts))} leads).`;
-    }
-
-    // 🔹 Conversion Rate Analysis → BAR
-    const totalLeads = this.leadsData.length;
-    const mqls = this.leadsData.filter(l => l.status === 'MQL').length;
-    const sqls = this.leadsData.filter(l => l.status === 'SQL').length;
-    const emailsSent = 22; // TODO: replace with actual service value
-    const opened = 0;      // TODO: replace with actual service value
-
-    this.conversionChartData = {
-      labels: ['Total Leads', 'MQLs', 'SQLs', 'Emails Sent', 'Opened'],
-      datasets: [{
-        data: [totalLeads, mqls, sqls, emailsSent, opened],
-        backgroundColor: ['#00ccff', '#ffcc00', '#33cc33', '#ff9900', '#ff3333']
-      }]
-    };
-
-    const mqlRate = totalLeads ? ((mqls / totalLeads) * 100).toFixed(1) : '0';
-    const sqlRate = mqls ? ((sqls / mqls) * 100).toFixed(1) : '0';
-    const openRate = emailsSent ? ((opened / emailsSent) * 100).toFixed(1) : '0';
-    this.conversionSummary =
-      `MQL Conversion: ${mqlRate}% | SQL Conversion: ${sqlRate}% | Email Open Rate: ${openRate}%`;
+    this.renderFunnel();
+    this.renderBreakdown();
+    this.renderServiceTraction();
+    this.renderICPDistribution();
+    this.renderSizeMetrics();
   }
 
-  private getTopKey(obj: Record<string, number>): string {
-    return Object.keys(obj).length
-      ? Object.entries(obj).reduce((a, b) => (a[1] > b[1] ? a : b))[0]
-      : 'N/A';
+  private renderFunnel() {
+    const ctx = document.getElementById('funnelChart') as HTMLCanvasElement;
+    if (!ctx || !this.metrics?.lifecycle) return;
+
+    const data = this.metrics.lifecycle;
+    const labels = ['uncontacted', 'contacted', 'opened', 'engaged', 'replied'];
+    const values = labels.map(l => data[l] || 0);
+
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels.map(l => l.toUpperCase()),
+        datasets: [{
+          label: 'Leads',
+          data: values,
+          backgroundColor: [
+            '#64748b', // UNCONTACTED
+            '#3b82f6', // CONTACTED
+            '#a855f7', // OPENED
+            '#22c55e', // ENGAGED
+            '#facc15'  // REPLIED
+          ]
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: { 
+          legend: { display: false },
+          title: { display: false }
+        },
+        scales: {
+          x: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+          y: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+        }
+      }
+    });
+    this.charts.push(chart);
+  }
+
+  private renderBreakdown() {
+    const ctx = document.getElementById('breakdownChart') as HTMLCanvasElement;
+    if (!ctx || !this.metrics?.outreach_kpis) return;
+
+    const kpis = this.metrics.outreach_kpis;
+    const chart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Opened', 'Clicked', 'Replied'],
+        datasets: [{
+          data: [kpis.opened || 0, kpis.clicked || 0, kpis.replied || 0],
+          backgroundColor: ['#3b82f6', '#22c55e', '#facc15']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom', labels: { color: 'yellow' } }
+        }
+      }
+    });
+    this.charts.push(chart);
+  }
+
+  private renderServiceTraction() {
+    const ctx = document.getElementById('serviceTractionChart') as HTMLCanvasElement;
+    if (!ctx || !this.metrics?.service_traction) return;
+
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: this.metrics.service_traction.map((s: any) => s.service),
+        datasets: [
+          {
+            label: 'Total Leads',
+            data: this.metrics.service_traction.map((s: any) => s.count),
+            backgroundColor: 'rgba(59, 130, 246, 0.5)'
+          },
+          {
+            label: 'Replies',
+            data: this.metrics.service_traction.map((s: any) => s.replies),
+            backgroundColor: '#facc15'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: 'white' } } },
+        scales: {
+          x: { ticks: { color: 'white' } },
+          y: { ticks: { color: 'white' } }
+        }
+      }
+    });
+    this.charts.push(chart);
+  }
+
+  private renderICPDistribution() {
+    const ctx = document.getElementById('icpDistChart') as HTMLCanvasElement;
+    if (!ctx || !this.metrics?.icp_score_distribution) return;
+
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: this.metrics.icp_score_distribution.map((s: any) => `Score ${s.score}`),
+        datasets: [{
+          label: 'Number of Companies',
+          data: this.metrics.icp_score_distribution.map((s: any) => s.count),
+          backgroundColor: [
+            'rgba(239, 68, 68, 0.8)',  // Score 1
+            'rgba(249, 115, 22, 0.8)', // Score 2
+            'rgba(234, 179, 8, 0.8)',  // Score 3
+            'rgba(34, 197, 94, 0.8)',  // Score 4
+            'rgba(59, 130, 246, 0.8)'  // Score 5
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { 
+          legend: { display: false } 
+        },
+        scales: {
+          x: { 
+            ticks: { color: 'white' },
+            grid: { display: false }
+          },
+          y: { 
+            beginAtZero: true,
+            ticks: { color: 'white' },
+            grid: { color: 'rgba(255,255,255,0.1)' }
+          }
+        }
+      }
+    });
+    this.charts.push(chart);
+  }
+
+  private renderSizeMetrics() {
+    const ctx = document.getElementById('sizeMetricsChart') as HTMLCanvasElement;
+    if (!ctx || !this.metrics?.size_metrics) return;
+
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: this.metrics.size_metrics.map((s: any) => s.size_range),
+        datasets: [{
+          label: 'Response Rate (%)',
+          data: this.metrics.size_metrics.map((s: any) => (s.replies / s.total) * 100),
+          borderColor: '#facc15',
+          tension: 0.4,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: 'white' } },
+          y: { 
+            ticks: { color: 'white' },
+            beginAtZero: true,
+            max: 100
+          }
+        }
+      }
+    });
+    this.charts.push(chart);
   }
 }

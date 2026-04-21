@@ -1093,23 +1093,148 @@ async def delete_company_note(note_id: str) -> bool:
             await conn.close()
         return False
 
+async def mark_lead_replied(company_id: int, is_replied: bool) -> bool:
+    """Updates the contacted_status of a company to 'replied' or its previous state."""
+    logger.info(f"Marking company {company_id} replied: {is_replied}")
+    conn = None
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL)
+        if is_replied:
+            query = "UPDATE mock_companies SET contacted_status = 'replied', updated_at = NOW() WHERE id = $1"
+        else:
+            # Fallback to 'engaged' if unmarking replied, or whoever the highest status person says.
+            # For simplicity, we'll set it to 'engaged' if it was replied.
+            query = "UPDATE mock_companies SET contacted_status = 'engaged', updated_at = NOW() WHERE id = $1"
+        
+        await conn.execute(query, company_id)
+        
+        # Also update the people in that company
+        # We find the organization_id first
+        org_id_query = "SELECT apollo_id FROM mock_companies WHERE id = $1"
+        org_id = await conn.fetchval(org_id_query, company_id)
+        if org_id:
+            if is_replied:
+                await conn.execute("UPDATE mock_people SET contacted_status = 'replied', updated_at = NOW() WHERE organization_id = $1", org_id)
+            else:
+                await conn.execute("UPDATE mock_people SET contacted_status = 'engaged', updated_at = NOW() WHERE organization_id = $1", org_id)
+
+        await conn.close()
+        return True
+    except Exception as e:
+        logger.error(f"Failed to mark lead replied: {str(e)}")
+        if conn: await conn.close()
+        return False
+
+async def mark_lead_positive(company_id: int, is_positive: bool) -> bool:
+    """Updates the positive_reply flag for a company. If positive is true, also marks as replied."""
+    logger.info(f"Marking company {company_id} positive: {is_positive}")
+    conn = None
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL)
+        if is_positive:
+            query = "UPDATE mock_companies SET positive_reply = $1, contacted_status = 'replied', updated_at = NOW() WHERE id = $2"
+        else:
+            query = "UPDATE mock_companies SET positive_reply = $1, updated_at = NOW() WHERE id = $2"
+        
+        await conn.execute(query, is_positive, company_id)
+
+        # If positive, also update people
+        if is_positive:
+            org_id = await conn.fetchval("SELECT apollo_id FROM mock_companies WHERE id = $1", company_id)
+            if org_id:
+                await conn.execute("UPDATE mock_people SET contacted_status = 'replied', updated_at = NOW() WHERE organization_id = $1", org_id)
+
+        await conn.close()
+        return True
+    except Exception as e:
+        logger.error(f"Failed to mark lead positive: {str(e)}")
+        if conn: await conn.close()
+        return False
+
+async def fetch_engagement_metrics() -> Dict[str, Any]:
+    """Fetches all aggregated metrics for the engagement dashboard."""
+    logger.info("Fetching engagement metrics...")
+    conn = None
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL)
+        
+        # 1. ICP Score Distribution
+        icp_query = "SELECT icp_score as score, COUNT(*) as count FROM mock_companies WHERE icp_score IS NOT NULL GROUP BY icp_score ORDER BY icp_score"
+        icp_rows = await conn.fetch(icp_query)
+        icp_dist = [dict(r) for r in icp_rows]
+
+        # 2. Outreach KPIs
+        outreach_query = """
+        SELECT 
+            COUNT(*) as total_sent,
+            COUNT(*) FILTER (WHERE contacted_status IN ('opened', 'engaged', 'replied')) as opened,
+            COUNT(*) FILTER (WHERE contacted_status IN ('engaged', 'replied')) as clicked,
+            COUNT(*) FILTER (WHERE contacted_status = 'replied') as replied,
+            COUNT(*) FILTER (WHERE positive_reply = TRUE) as positive_replies,
+            COUNT(*) FILTER (WHERE contacted_status = 'opted_out') as unsubscribed,
+            COUNT(*) FILTER (WHERE contacted_status = 'failed') as bounced
+        FROM mock_companies 
+        WHERE contacted_status NOT IN ('uncontacted', 'pending', 'requested')
+        """
+        outreach_row = await conn.fetchrow(outreach_query)
+        outreach_kpis = dict(outreach_row) if outreach_row else {}
+
+        # 3. Lead Lifecycle Funnel
+        lifecycle_query = """
+        SELECT contacted_status as stage, COUNT(*) as count 
+        FROM mock_companies 
+        GROUP BY contacted_status
+        """
+        lifecycle_rows = await conn.fetch(lifecycle_query)
+        lifecycle = {r['stage']: r['count'] for r in lifecycle_rows}
+
+        # 4. Service Traction
+        service_query = """
+        SELECT service, COUNT(*) as count, 
+               COUNT(*) FILTER (WHERE contacted_status = 'replied') as replies
+        FROM mock_companies 
+        WHERE service IS NOT NULL 
+        GROUP BY service
+        """
+        service_rows = await conn.fetch(service_query)
+        service_traction = [dict(r) for r in service_rows]
+
+        # 5. Response Rate by Company Size
+        size_query = """
+        SELECT 
+            CASE 
+                WHEN estimated_num_employees < 10 THEN '1-10'
+                WHEN estimated_num_employees < 50 THEN '11-50'
+                WHEN estimated_num_employees < 200 THEN '51-200'
+                ELSE '200+'
+            END as size_range,
+            COUNT(*) as total,
+            COUNT(*) FILTER (WHERE contacted_status = 'replied') as replies
+        FROM mock_companies
+        WHERE estimated_num_employees IS NOT NULL
+        GROUP BY size_range
+        """
+        size_rows = await conn.fetch(size_query)
+        size_metrics = [dict(r) for r in size_rows]
+
+        await conn.close()
+        return {
+            "icp_score_distribution": icp_dist,
+            "outreach_kpis": outreach_kpis,
+            "lifecycle": lifecycle,
+            "service_traction": service_traction,
+            "size_metrics": size_metrics
+        }
+    except Exception as e:
+        logger.error(f"Failed to fetch engagement metrics: {str(e)}")
+        if conn: await conn.close()
+        return {}
+
 if __name__ == "__main__":
     async def main():
         logger.info(f"THE DB URL IS: {DB_URL}")
-        #funding_data_to_store = [
-            #"NeuroTech AI",                                    # company_name
-            #["Alice Johnson", "Bob Smith"],                    # decision_makers
-            #["CEO", "CTO"],                                    # decision_makers_position
-            #"Series A",                                        # funding_round
-            #5000000,                                           # amount_raised
-            #"US Dollars",                                      # currency
-            #["Sequoia Capital", "Andreessen Horowitz"],        # investor_companies
-            #["Jane Doe", "Michael Chan"]                       # investor_people
-        #]
-
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
-        #x = await fetch_company_details(160)
-        #x = await fetch_company_by_apollo_id("671cebecf4941a02b6460f53")
-            x = await get_hiring_area("14.ai", pool)
+            # x = await get_hiring_area("14.ai", pool)
+            pass
 
     asyncio.run(main())

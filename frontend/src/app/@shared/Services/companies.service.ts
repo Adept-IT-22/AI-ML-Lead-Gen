@@ -50,6 +50,21 @@ export class CompaniesService {
     return this.http.get<IEmail>(`${this.backend_url}/view-sent-emails/${company_id}`);
   }
 
+  // ✅ Mark lead as replied
+  markReplied(id: number, replied: boolean): Observable<any> {
+    return this.http.post(`${this.backend_url}/mark-replied/${id}`, { replied });
+  }
+
+  // ✅ Mark lead as positive reply
+  markPositive(id: number, positive: boolean): Observable<any> {
+    return this.http.post(`${this.backend_url}/mark-positive/${id}`, { positive });
+  }
+
+  // ✅ Fetch engagement metrics for dashboard
+  fetchEngagementMetrics(): Observable<any> {
+    return this.http.get(`${this.backend_url}/engagement-metrics`);
+  }
+
   // ✅ Mapper function to structure company into sections
   mapCompanyToSections(company: ICompany): CompanySection[] {
     return [

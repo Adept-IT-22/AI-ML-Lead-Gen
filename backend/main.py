@@ -5,7 +5,7 @@ from config.logging_config import setup_logging
 import logging
 from flask import Flask, jsonify, request, send_file, send_from_directory
 from flask_cors import CORS
-from services.db_service import fetch_emails_sent, unsubscribe_user, get_user_by_token, add_company_note, delete_company_note
+from services.db_service import fetch_emails_sent, unsubscribe_user, get_user_by_token, add_company_note, delete_company_note, fetch_companies, fetch_people, fetch_company_details, fetch_events, mark_lead_replied, mark_lead_positive, fetch_engagement_metrics
 from services.email_sending import *
 from services.sendgrid_webhook import *
 from services.export_to_excel import export_to_excel
@@ -308,6 +308,43 @@ async def save_note(id):
             return jsonify({"Error": "Failed to save note"}), 500
     except Exception as e:
         logger.error(f"Error saving note: {str(e)}")
+        return jsonify({"Error": "An unexpected error occurred", "details": str(e)}), 500
+
+@app.route('/engagement-metrics', methods=["GET"])
+async def get_engagement_metrics():
+    try:
+        metrics = await fetch_engagement_metrics()
+        return jsonify(metrics), 200
+    except Exception as e:
+        logger.error(f"Failed to fetch engagement metrics: {str(e)}")
+        return jsonify({"Error": "Failed to fetch metrics", "Message": str(e)}), 500
+
+@app.route('/mark-replied/<id>', methods=["POST"])
+async def mark_replied(id):
+    try:
+        data = request.json
+        is_replied = data.get('replied', True)
+        success = await mark_lead_replied(int(id), is_replied)
+        if success:
+            return jsonify({"Success": "Marked as replied"}), 200
+        else:
+            return jsonify({"Error": "Failed to mark as replied"}), 500
+    except Exception as e:
+        logger.error(f"Error marking as replied: {str(e)}")
+        return jsonify({"Error": "An unexpected error occurred", "details": str(e)}), 500
+
+@app.route('/mark-positive/<id>', methods=["POST"])
+async def mark_positive(id):
+    try:
+        data = request.json
+        is_positive = data.get('positive', True)
+        success = await mark_lead_positive(int(id), is_positive)
+        if success:
+            return jsonify({"Success": "Marked as positive"}), 200
+        else:
+            return jsonify({"Error": "Failed to mark as positive"}), 500
+    except Exception as e:
+        logger.error(f"Error marking as positive: {str(e)}")
         return jsonify({"Error": "An unexpected error occurred", "details": str(e)}), 500
 
 @app.route('/delete-note/<note_id>', methods=["DELETE"])
