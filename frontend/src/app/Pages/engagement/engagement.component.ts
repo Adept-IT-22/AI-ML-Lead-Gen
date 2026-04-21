@@ -1,14 +1,18 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-engagement',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './engagement.component.html',
   styleUrls: ['./engagement.component.scss']
 })
-export class EngagementComponent implements AfterViewInit {
+export class EngagementComponent implements AfterViewInit, OnDestroy {
+  private charts: Chart[] = [];
 
   ngAfterViewInit(): void {
     this.renderFunnel();
@@ -16,11 +20,16 @@ export class EngagementComponent implements AfterViewInit {
     this.renderActivity();
   }
 
+  ngOnDestroy(): void {
+    this.charts.forEach(chart => chart.destroy());
+    this.charts = [];
+  }
+
   private renderFunnel() {
     const ctx = document.getElementById('funnelChart') as HTMLCanvasElement;
     if (!ctx) return;
 
-    new Chart(ctx, {
+    const chart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: ['Sent', 'Delivered', 'Opened', 'Clicked', 'Replied'],
@@ -40,13 +49,14 @@ export class EngagementComponent implements AfterViewInit {
         }
       }
     });
+    this.charts.push(chart);
   }
 
   private renderBreakdown() {
     const ctx = document.getElementById('breakdownChart') as HTMLCanvasElement;
     if (!ctx) return;
 
-    new Chart(ctx, {
+    const chart = new Chart(ctx, {
       type: 'doughnut',
       data: {
         labels: ['Clicked', 'Replied', 'Unsubscribed'],
@@ -62,13 +72,14 @@ export class EngagementComponent implements AfterViewInit {
         }
       }
     });
+    this.charts.push(chart);
   }
 
   private renderActivity() {
     const ctx = document.getElementById('activityChart') as HTMLCanvasElement;
     if (!ctx) return;
 
-    new Chart(ctx, {
+    const chart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: ['Sept 10', 'Sept 12', 'Sept 14', 'Sept 16', 'Sept 18', 'Sept 20'],
@@ -90,5 +101,6 @@ export class EngagementComponent implements AfterViewInit {
         }
       }
     });
+    this.charts.push(chart);
   }
 }

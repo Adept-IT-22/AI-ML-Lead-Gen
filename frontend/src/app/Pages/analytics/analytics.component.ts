@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Moved to top
 import { Chart, registerables } from 'chart.js';
 import { CompaniesService } from '../../@shared/Services/companies.service';
@@ -14,7 +14,7 @@ Chart.register(...registerables);
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss']
 })
-export class AnalyticsComponent implements OnInit {
+export class AnalyticsComponent implements OnInit, OnDestroy {
 
   private companiesService = inject(CompaniesService);
   public metrics: any = null;
@@ -22,6 +22,11 @@ export class AnalyticsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadMetrics();
+  }
+
+  ngOnDestroy(): void {
+    this.charts.forEach(chart => chart.destroy());
+    this.charts = [];
   }
 
   loadMetrics() {

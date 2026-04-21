@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit {
   leadData: ICompany[] = [];
   filteredLeads: ICompany[] = [];
   loading = true;
+  statsVisible: any[] = [];
 
   constructor(private companiesService: CompaniesService) { }
 
@@ -32,6 +33,7 @@ export class HomeComponent implements OnInit {
           return dateB - dateA;
         });
         this.filteredLeads = [...this.leadData];
+        this.calculateStats();
         this.loading = false;
       },
       error: (err) => {
@@ -42,7 +44,7 @@ export class HomeComponent implements OnInit {
   }
 
   /** === SMART STATS WITH WEEKLY PROGRESS === **/
-  get statsWithProgress() {
+  calculateStats() {
     const total = this.filteredLeads.length;
     const today = new Date();
 
@@ -110,7 +112,7 @@ export class HomeComponent implements OnInit {
       return isNaN(change) ? 0 : change;
     };
 
-    return [
+    this.statsVisible = [
       {
         data: total.toString(),
         title: 'TOTAL LEADS',
@@ -221,6 +223,7 @@ export class HomeComponent implements OnInit {
         return true;
       })
     );
+    this.calculateStats();
   }
 
   /** === LEAD TABLE CONFIG === **/
