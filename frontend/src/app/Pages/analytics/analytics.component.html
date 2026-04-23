@@ -1,53 +1,76 @@
-<div class="summary-bar">
-    <div class="metric-card">
-      <h3>Total Leads:118</h3>
+<div class="analytics-container" *ngIf="metrics">
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-label">TOTAL SENT</div>
+      <div class="kpi-value">{{ metrics?.outreach_kpis?.total_sent || 0 }}</div>
     </div>
-    <div class="metric-card">
-      <h3>Conversion Rate:0%</h3>
+    <div class="kpi-card">
+      <div class="kpi-label">OPEN RATE</div>
+      <div class="kpi-value">
+        {{ metrics?.outreach_kpis?.total_sent ? (metrics.outreach_kpis.opened / metrics.outreach_kpis.total_sent * 100).toFixed(1) : '0.0' }}%
+      </div>
     </div>
-    <div class="metric-card">
-      <h3>Contacted:45%</h3>
+    <div class="kpi-card">
+      <div class="kpi-label">CLICK RATE</div>
+      <div class="kpi-value">
+        {{ metrics?.outreach_kpis?.total_sent ? (metrics.outreach_kpis.clicked / metrics.outreach_kpis.total_sent * 100).toFixed(1) : '0.0' }}%
+      </div>
     </div>
-    <div class="metric-card">
-      <h3>Open Rate:35%</h3>
+    <div class="kpi-card">
+      <div class="kpi-label">REPLY RATE</div>
+      <div class="kpi-value" style="color: var(--color-yellow)">
+        {{ metrics?.outreach_kpis?.total_sent ? (metrics.outreach_kpis.replied / metrics.outreach_kpis.total_sent * 100).toFixed(1) : '0.0' }}%
+      </div>
+    </div>
+    <div class="kpi-card positive">
+      <div class="kpi-label">POSITIVE REPLIES</div>
+      <div class="kpi-value">{{ metrics?.outreach_kpis?.positive_replies || 0 }}</div>
     </div>
   </div>
-<div class="analytics-container grid grid-cols-1 md:grid-cols-2 gap-6 p-6 text-white">
-  <!-- 🚀 Summary Metrics Bar -->
-  
-  <!-- 🔹 Leads by Source (BAR) -->
-  <div class="chart-card bg-gray-900 p-4 rounded-2xl shadow">
-    <h2 class="text-lg font-semibold mb-3 text-blue-400">Leads by Source</h2>
-    <canvas baseChart [data]="sourceChartData" [options]="barOptions" [type]="'bar'"></canvas>
-    <p class="mt-3 text-sm text-gray-300">{{ sourceSummary }}</p>
-  </div>
 
-  <!-- 🔹 Leads by Status (PIE) -->
-  <div class="chart-card bg-gray-900 p-4 rounded-2xl shadow">
-    <h2 class="text-lg font-semibold mb-3 text-blue-400">Leads by Status</h2>
-    <canvas baseChart [data]="statusChartData" [options]="pieOptions" [type]="'pie'"></canvas>
-    <p class="mt-3 text-sm text-gray-300">{{ statusSummary }}</p>
-  </div>
+  <div class="dashboard-grid">
+    <!-- Row 1 -->
+    <div class="chart-card">
+      <h3>Lifecycle Funnel</h3>
+      <div class="chart-container">
+        <canvas id="funnelChart"></canvas>
+      </div>
+    </div>
 
-  <!-- 🔹 ICP Score Distribution (PIE) -->
-  <div class="chart-card bg-gray-900 p-4 rounded-2xl shadow">
-    <h2 class="text-lg font-semibold mb-3 text-blue-400">ICP Score Distribution</h2>
-    <canvas baseChart [data]="icpChartData" [options]="pieOptions" [type]="'pie'"></canvas>
-    <p class="mt-3 text-sm text-gray-300">{{ icpSummary }}</p>
-  </div>
+    <div class="chart-card">
+      <h3>Engagement Breakdown</h3>
+      <div class="chart-container">
+        <canvas id="breakdownChart"></canvas>
+      </div>
+    </div>
 
-  <!-- 🔹 Leads Over Time (LINE) -->
-  <div class="chart-card bg-gray-900 p-4 rounded-2xl shadow col-span-1 md:col-span-2">
-    <h2 class="text-lg font-semibold mb-3 text-blue-400">Leads Over Time</h2>
-    <canvas baseChart [data]="timeChartData" [options]="lineOptions" [type]="'line'"></canvas>
-    <p class="mt-3 text-sm text-gray-300">{{ timeSummary }}</p>
-  </div>
+    <!-- Row 2 -->
+    <div class="chart-card">
+      <h3>ICP Score Distribution</h3>
+      <div class="chart-container">
+        <canvas id="icpDistChart"></canvas>
+      </div>
+    </div>
 
-  <!-- 🔹 Conversion Rate Analysis (BAR) -->
-  <div class="chart-card bg-gray-900 p-4 rounded-2xl shadow col-span-1 md:col-span-2">
-    <h2 class="text-lg font-semibold mb-3 text-blue-400">Conversion Rate Analysis</h2>
-    <canvas baseChart [data]="conversionChartData" [options]="barOptions" [type]="'bar'"></canvas>
-    <p class="mt-3 text-sm text-gray-300">{{ conversionSummary }}</p>
-  </div>
+    <div class="chart-card">
+      <h3>Response Rate by Company Size</h3>
+      <div class="chart-container">
+        <canvas id="sizeMetricsChart"></canvas>
+      </div>
+    </div>
 
+    <!-- Row 3 -->
+    <div class="chart-card full-width">
+      <h3>Service Traction (Replies per Service)</h3>
+      <div class="chart-container tall">
+        <canvas id="serviceTractionChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="loading-state" *ngIf="!metrics">
+  <div class="spinner"></div>
+  <p>Loading Lead Generation Analytics...</p>
 </div>

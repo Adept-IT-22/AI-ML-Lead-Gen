@@ -34,6 +34,7 @@ export class LeadsTableComponent implements OnInit {
   selectedOption: string = '';
   selectedRow: any = null;
   searchTerm: string = '';
+  activeActionRow: number | null = null;
 
   //Reference to hidden file input
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
@@ -151,4 +152,35 @@ export class LeadsTableComponent implements OnInit {
     input.value = '';
   }
 
+  // ✅ Toggle Replied status
+  toggleReplied(row: any) {
+    const newStatus = row.contacted_status !== 'replied';
+    this.companiesService.markReplied(row.id, newStatus).subscribe({
+      next: () => {
+        row.contacted_status = newStatus ? 'replied' : 'engaged';
+        console.log('Replied status updated');
+      },
+      error: (err) => console.error('Failed to update replied status', err)
+    });
+  }
+
+  // ✅ Toggle Positive Response
+  togglePositive(row: any) {
+    const newPositive = !row.positive_reply;
+    this.companiesService.markPositive(row.id, newPositive).subscribe({
+      next: () => {
+        row.positive_reply = newPositive;
+        if (newPositive) {
+          row.contacted_status = 'replied';
+        }
+        console.log('Positive reply status updated');
+      },
+      error: (err) => console.error('Failed to update positive status', err)
+    });
+  }
+
+  // ✅ Toggle Action Menu
+  toggleActionMenu(index: number) {
+    this.activeActionRow = this.activeActionRow === index ? null : index;
+  }
 }

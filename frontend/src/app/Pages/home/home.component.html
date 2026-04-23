@@ -2,7 +2,7 @@
   <!-- Data Cards -->
   <div class="data-cards">
     <app-data-card
-      *ngFor="let stat of statsWithProgress"
+      *ngFor="let stat of statsVisible"
       [title]="stat.title"
       [data]="stat.data"
       [color]="stat.color"
