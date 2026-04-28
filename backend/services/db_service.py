@@ -843,8 +843,8 @@ async def company_is_unscored(pool)->List[Dict[str, int]]:
 #Store icp score in icp_scores table
 async def store_icp_score(pool, company_id, age_score, employee_count_score,
                         funding_stage_score, keyword_score, contactability_score,
-                        geography_score, total_score, category_breakdown, top_matches,
-                        interpretation):
+                        geography_score, industry_score, total_score, category_breakdown,
+                        top_matches, interpretation):
     category_breakdown = convert_sets(category_breakdown)
     category_breakdown_json = json.dumps(category_breakdown, indent=2)
     top_matches_json = json.dumps(top_matches, indent=2)
@@ -853,10 +853,10 @@ async def store_icp_score(pool, company_id, age_score, employee_count_score,
     query = """
     INSERT INTO mock_icp_scores (
         company_id, age_score, employee_count_score, funding_stage_score, keyword_score,
-        contactability_score, geography_score, total_score, category_breakdown, top_matches,
-        interpretation
+        contactability_score, geography_score, industry_score, total_score, category_breakdown,
+        top_matches, interpretation
     ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
     )
     ON CONFLICT (company_id)
     DO UPDATE SET
@@ -866,6 +866,7 @@ async def store_icp_score(pool, company_id, age_score, employee_count_score,
         keyword_score = EXCLUDED.keyword_score,
         contactability_score = EXCLUDED.contactability_score,
         geography_score = EXCLUDED.geography_score,
+        industry_score = EXCLUDED.industry_score,
         total_score = EXCLUDED.total_score,
         category_breakdown = EXCLUDED.category_breakdown,
         top_matches = EXCLUDED.top_matches,
@@ -875,8 +876,8 @@ async def store_icp_score(pool, company_id, age_score, employee_count_score,
         async with pool.acquire() as conn:
             await conn.execute(query, company_id, age_score, employee_count_score,
                             funding_stage_score, keyword_score, contactability_score,
-                            geography_score, total_score, category_breakdown_json, top_matches_json,
-                            interpretation)
+                            geography_score, industry_score, total_score,
+                            category_breakdown_json, top_matches_json, interpretation)
         logger.info("ICP score stored for company_id %s", company_id)
     except asyncpg.PostgresError as e:
         logger.error(f"Database error storing ICP score for company_id {company_id}: {str(e)}")
