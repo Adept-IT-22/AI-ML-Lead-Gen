@@ -25,11 +25,12 @@ async def score_and_store(pool, company_id, semaphore):
         org_people = company_details.get("people", [])
         org_linkedin = company_details.get("linkedin_url", "")
         org_country = company_details.get("country", "")
+        org_industry = company_details.get("industries", [])
 
         #Calculate total score
         scorer = ICPScorer(icp, org_name, org_founded_year, org_employee_count,
-                        org_funding_stage, org_keywords, org_people, org_linkedin,
-                        org_country)
+                        org_funding_stage, org_keywords, org_people,
+                        linkedin=org_linkedin, country=org_country, industry=org_industry)
         await scorer.log_scoring_start(org_name)
         scoring_data = await scorer.calculate_total_score()
 
@@ -37,6 +38,7 @@ async def score_and_store(pool, company_id, semaphore):
         age_score = scoring_data.get("age_score", None)
         employee_count_score = scoring_data.get("employee_count_score", None)
         funding_stage_score = scoring_data.get("funding_stage_score", None)
+        industry_score = scoring_data.get("industry_score", None)
         final_keywords_score = scoring_data.get("final_keywords_score", None)
         contactability_score = scoring_data.get("contactability_score", None)
         geography_score = scoring_data.get("geography_score", None)
@@ -47,8 +49,8 @@ async def score_and_store(pool, company_id, semaphore):
         
         await store_icp_score(pool, company_id, age_score, employee_count_score,
                             funding_stage_score, final_keywords_score, contactability_score,
-                            geography_score, round(final_score, 1), category_breakdown, top_matches,
-                            interpretation)
+                            geography_score, industry_score, round(final_score, 1), category_breakdown,
+                            top_matches, interpretation)
         await update_company_icp_score(pool, company_id, round(final_score, 1))
 
 async def main(pool: asyncpg.Pool):
@@ -68,4 +70,13 @@ async def main(pool: asyncpg.Pool):
 
 
 if __name__ and "__main__":
-    pass
+    import os
+    from dotenv import load_dotenv
+    load_dotenv()
+    DB_URL = os.getenv("MOCK_DATABASE_URL")
+    semaphore = asyncio.Semaphore(10)
+    async def run():
+        async with asyncpg.create_pool(dsn=DB_URL) as pool:
+            await score_and_store(pool, 468, semaphore)
+
+    asyncio.run(run())
