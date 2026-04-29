@@ -69,7 +69,7 @@ async def main(pool: asyncpg.Pool):
     logger.info("ICP Scoring Done")
 
 
-if __name__ and "__main__":
+if __name__ == "__main__":
     import os
     from dotenv import load_dotenv
     load_dotenv()
