@@ -60,14 +60,6 @@ async def delete_company_note(note_id: str) -> bool:
             await conn.close()
         return False
 
-load_dotenv(verbose=True, override=True)
-
-
-DB_URL = os.getenv("MOCK_DATABASE_URL")
-
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
 async def initialize_db():
     try:
         conn = await asyncpg.connect(dsn=DB_URL)
