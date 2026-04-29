@@ -13,10 +13,52 @@ from utils.set_conversion import convert_sets
 
 load_dotenv(verbose=True, override=True)
 
-DB_URL = os.getenv("PROD_DATABASE_URL")
+
+DB_URL = os.getenv("MOCK_DATABASE_URL")
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+async def add_company_note(company_id: int, note_text: str) -> Dict[str, Any]:
+    """Adds a new note for a company."""
+    logger.info(f"Adding note for company ID {company_id}")
+    query = """
+    INSERT INTO mock_company_notes (id, company_id, note)
+    VALUES ($1, $2, $3)
+    RETURNING id, company_id, note, created_at
+    """
+    note_id = str(uuid.uuid4())
+    
+    conn = None
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL)
+        result = await conn.fetchrow(query, note_id, company_id, note_text)
+        await conn.close()
+        if result:
+            return dict(result)
+        return {}
+    except Exception as e:
+        logger.error(f"Failed to add note: {str(e)}")
+        if conn:
+            await conn.close()
+        return {}
+
+async def delete_company_note(note_id: str) -> bool:
+    """Deletes a note by its ID."""
+    logger.info(f"Deleting note {note_id}")
+    query = "DELETE FROM mock_company_notes WHERE id = $1"
+    
+    conn = None
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL)
+        await conn.execute(query, note_id)
+        await conn.close()
+        return True
+    except Exception as e:
+        logger.error(f"Failed to delete note {note_id}: {str(e)}")
+        if conn:
+            await conn.close()
+        return False
 
 async def initialize_db():
     try:
@@ -27,6 +69,103 @@ async def initialize_db():
         logger.error("Connection not made!")
 
 #Fetches all companies from the database
+
+async def fetch_companies_temporary():
+    logger.info("Fetch companies from DB temporary")
+    conn = None
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL)
+        company_query = """
+        SELECT 
+            c.*, 
+            p.full_name, p.title, p.email, p.linkedin_url,
+            i.top_matches, i.interpretation
+        FROM 
+            mock_companies c 
+        LEFT JOIN 
+            mock_people p ON c.apollo_id = p.organization_id
+        LEFT JOIN
+            mock_icp_scores i ON c.id = i.company_id
+        WHERE 
+            c.name <> 'ICARUS Sports' 
+        AND EXISTS (
+            SELECT 1
+            FROM mock_emails_sent es
+            JOIN mock_people p2 ON es.recipient_id = p2.id
+            WHERE p2.organization_id = c.apollo_id
+        );
+        
+        """
+        results = await conn.fetch(company_query)
+        
+        # 3. Close connection immediately after fetching data
+        await conn.close()
+        
+        # 4. CONSOLIDATION LOGIC: Re-structure the flat 99 rows into 62 nested objects
+        companies_map: Dict[str, Dict[str, Any]] = {}
+
+        for record in results:
+            # Convert asyncpg.Record to dict for easier manipulation
+            record_dict = dict(record)
+            company_apollo_id = record_dict.get("apollo_id")
+
+            if company_apollo_id is None:
+                # Skip records if the primary company ID is somehow missing
+                continue
+
+            # --- CONSOLIDATE COMPANY DATA ---
+            if company_apollo_id not in companies_map:
+                # A. First time seeing this company: Initialize the master object
+                company_data = record_dict.copy()
+                company_data["people"] = []
+
+                # Also, add the companies alignment to our services.
+                company_data["top_matches"] = record_dict.get('top_matches')
+                company_data["interpretation"] = record_dict.get('interpretation')
+                
+                # Clean up the root object by removing the scattered people data
+                del company_data["full_name"]
+                del company_data["title"]
+                del company_data["email"]
+                del company_data["linkedin_url"]
+                
+                companies_map[company_apollo_id] = company_data
+            
+            # Get the reference to the master company object
+            master_company = companies_map[company_apollo_id]
+
+            # --- CONSOLIDATE PEOPLE DATA ---
+            # The 'full_name' field is NULL if the LEFT JOIN found no matching person.
+            if record_dict["full_name"]:
+                person = {
+                    "full_name": record_dict["full_name"],
+                    "title": record_dict["title"],
+                    "email": record_dict["email"],
+                    "linkedin_url": record_dict["linkedin_url"]
+                }
+                if person not in master_company.get('people'):
+                    master_company["people"].append(person)
+
+        # Convert the dictionary values (the 62 unique company objects) back to a list
+        final_all_companies = list(companies_map.values())
+        logger.info(f"Done fetching and consolidating {len(final_all_companies)} companies.")
+        return final_all_companies
+
+    except asyncpg.PostgresError as e:
+        logger.error(f"Database error while trying to fetch companies: {str(e)}")
+        return []
+    except Exception as e:
+        logger.error(f"An unexpected error occurred: {str(e)}")
+        return []
+    finally:
+        if conn:
+            # Ensure connection is closed even if an error occurs during fetch
+            try:
+                await conn.close()
+            except Exception:
+                pass # Ignore close errors
+
+
 async def fetch_companies() -> List[Dict[str, Any]]:
     """
     Fetches all companies and their associated people in a single query (Eager Loading)
@@ -43,16 +182,29 @@ async def fetch_companies() -> List[Dict[str, Any]]:
 
         company_query = """
         SELECT 
-            c.*, 
-            p.full_name, p.title, p.email, p.linkedin_url,
-            i.top_matches, i.interpretation
-        FROM 
-            companies c 
-        LEFT JOIN 
-            people p ON c.apollo_id = p.organization_id
-
-        LEFT JOIN
-            icp_scores i ON c.id = i.company_id;
+            c.*,
+            COALESCE(
+                json_agg(DISTINCT jsonb_build_object(
+                    'full_name', p.full_name,
+                    'title', p.title,
+                    'email', p.email,
+                    'linkedin_url', p.linkedin_url
+                )) FILTER (WHERE p.id IS NOT NULL), '[]'::json
+            ) AS people,
+            COALESCE(
+                json_agg(DISTINCT jsonb_build_object(
+                    'id', n.id,
+                    'note', n.note,
+                    'created_at', n.created_at
+                )) FILTER (WHERE n.id IS NOT NULL), '[]'::json
+            ) AS notes,
+            i.top_matches,
+            i.interpretation
+        FROM mock_companies c
+        LEFT JOIN mock_people p ON c.apollo_id = p.organization_id
+        LEFT JOIN mock_icp_scores i ON c.id = i.company_id
+        LEFT JOIN mock_company_notes n ON c.id = n.company_id
+        GROUP BY c.id, i.top_matches, i.interpretation;
         """
 
         results = await conn.fetch(company_query)
@@ -85,17 +237,13 @@ async def fetch_companies() -> List[Dict[str, Any]]:
                 await conn.close()
             except Exception as close_err:
                 logger.debug("Failed to close DB connection: %s", close_err)
-            except Exception as close_err:
-                logger.debug("Failed to close DB connection: %s", close_err)
-            except Exception as close_err:
-                logger.debug("Failed to close DB connection: %s", close_err)
         
 async def fetch_people_from_company(organization_id: str)->List[Dict[str, str]]:
     logger.info(f"Fetching people from org id {organization_id}...")
     conn = None
     try:
         conn = await asyncpg.connect(dsn=DB_URL)
-        people_query = "SELECT full_name, title, email, linkedin_url FROM people WHERE organization_id = $1"
+        people_query = "SELECT full_name, title, email, linkedin_url FROM mock_people WHERE organization_id = $1"
         people_results = await conn.fetch(people_query, organization_id)
         logger.info(f"Done fetching people from org id {organization_id}")
         return [dict(record) for record in people_results]
@@ -121,19 +269,19 @@ async def store_email(
     logger.info("Storing email...")
     try:
         query_insert_email = """
-            INSERT INTO emails_sent 
+            INSERT INTO mock_emails_sent 
             (recipient_id, company_id, subject, body, sequence_number)
             VALUES ($1, $2, $3, $4, $5)
             """
 
         query_update_company = """
-                UPDATE companies
+                UPDATE mock_companies
                 SET contacted_status = 'pending'
                 WHERE id = $1
             """
 
         query_update_person = """
-                UPDATE people
+                UPDATE mock_people
                 SET contacted_status = 'pending'
                 WHERE id = $1
             """
@@ -152,7 +300,7 @@ async def fetch_people()->List[Dict[str, Any]]:
     logger.info("Fetching people from DB...")
     try:
         conn = await asyncpg.connect(dsn=DB_URL) 
-        query = "SELECT * FROM people"
+        query = "SELECT * FROM mock_people"
         results = await conn.fetch(query)
         await conn.close()
         json_serializable_results = [dict(record) for record in results]
@@ -170,7 +318,7 @@ async def fetch_people()->List[Dict[str, Any]]:
 
 async def fetch_uncontacted_people(pool: asyncpg.Pool)->List:
     logger.info("Fetching uncontacted people from DB...")
-    query = "SELECT id, first_name, organization_id, email FROM people WHERE contacted_status = 'uncontacted' AND email IS NOT NULL AND email <> '' ORDER BY id LIMIT 10"
+    query = "SELECT id, first_name, organization_id, email FROM mock_people WHERE contacted_status = 'uncontacted' AND email IS NOT NULL AND email <> '' ORDER BY id LIMIT 10"
 
     try: 
         async with pool.acquire() as conn:
@@ -217,15 +365,17 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
             ) AS notes,
             i.top_matches,
             i.interpretation
-        FROM companies c
-        LEFT JOIN people p ON c.apollo_id = p.organization_id
-        LEFT JOIN icp_scores i ON c.id = i.company_id
-        LEFT JOIN company_notes n ON c.id = n.company_id
+        FROM mock_companies c
+        LEFT JOIN mock_people p ON c.apollo_id = p.organization_id
+        LEFT JOIN mock_icp_scores i ON c.id = i.company_id
+        LEFT JOIN mock_company_notes n ON c.id = n.company_id
         WHERE c.id = $1
         GROUP BY c.id, i.top_matches, i.interpretation;
         """
 
         result = await conn.fetchrow(query, id)
+
+        await conn.close()
 
         if result:
             # Convert asyncpg.Record to dict
@@ -256,9 +406,10 @@ async def fetch_company_details(id: int) -> Dict[str, any]:
                 pass
 
 #Fetch company by apollo id
+
 async def fetch_company_by_apollo_id(apollo_id: str)->Dict:
     logger.info(f"Fetching company with apollo ID {apollo_id}")
-    query = "SELECT * FROM companies WHERE apollo_id = $1 LIMIT 1"
+    query = "SELECT * FROM mock_companies WHERE apollo_id = $1 LIMIT 1"
 
     try:
         async with asyncpg.create_pool(dsn=DB_URL, min_size=1, max_size=10) as pool:
@@ -303,7 +454,7 @@ async def store_to_db(
 
 async def is_company_in_db(company_name: str)->bool:
     logger.info(f"Checking if {company_name} is in DB")
-    query = f"SELECT 1 FROM companies WHERE LOWER(name) = LOWER($1) LIMIT 1"
+    query = f"SELECT 1 FROM mock_companies WHERE LOWER(name) = LOWER($1) LIMIT 1"
 
     try:
         #Create a connection pool to avoid creating repeated tcp connections
@@ -329,7 +480,7 @@ async def is_company_in_db(company_name: str)->bool:
 
 async def is_company_id_in_db(company_apollo_id: str)->bool:
     logger.info(f"Checking if {company_apollo_id} is in DB")
-    query = f"SELECT 1 FROM companies WHERE apollo_id = $1 LIMIT 1"
+    query = f"SELECT 1 FROM mock_companies WHERE apollo_id = $1 LIMIT 1"
 
     try:
         #Create a connection pool to avoid creating repeated tcp connections
@@ -355,7 +506,7 @@ async def is_company_id_in_db(company_apollo_id: str)->bool:
 
 async def is_person_in_db(apollo_id: str)->bool:
     logger.info(f"Checking if {apollo_id} is in DB")
-    query = f"SELECT 1 FROM people WHERE apollo_id = $1 LIMIT 1"
+    query = f"SELECT 1 FROM mock_people WHERE apollo_id = $1 LIMIT 1"
 
     try:
         #Create a connection pool to avoid creating repeated tcp connections
@@ -446,7 +597,7 @@ async def store_in_normalized_master(normalized_master_data_to_store: List[any],
 async def is_data_in_db(pool: asyncpg.pool, company_or_event_link: str = None)->bool:
 
     logger.info(f"Checking if {company_or_event_link} exists in normalized_master table")
-    query = f"SELECT 1 FROM normalized_master WHERE link = $1 LIMIT 1"
+    query = f"SELECT 1 FROM mock_normalized_master WHERE link = $1 LIMIT 1"
 
     try:
         async with pool.acquire() as conn:
@@ -469,7 +620,7 @@ async def is_data_in_db(pool: asyncpg.pool, company_or_event_link: str = None)->
 #Change person contacted_status from uncontacted to contacted
 async def change_person_contacted_status(apollo_id: str, pool):
     logger.info(f"Changing {apollo_id}'s contacted status...")
-    query = "UPDATE people SET contacted_status = 'contacted' WHERE apollo_id = $1 RETURNING organization_id"
+    query = "UPDATE mock_people SET contacted_status = 'contacted' WHERE apollo_id = $1 RETURNING organization_id"
 
     try:
         async with pool.acquire() as conn:
@@ -489,7 +640,7 @@ async def change_person_contacted_status(apollo_id: str, pool):
 #Change company contacted_status from uncontacted to contacted
 async def change_company_contacted_status(apollo_id: str, pool):
     logger.info(f"Changing company {apollo_id}'s contacted status...")
-    query = "UPDATE companies SET contacted_status = 'contacted' WHERE apollo_id = $1"
+    query = "UPDATE mock_companies SET contacted_status = 'contacted' WHERE apollo_id = $1"
 
     try:
         async with pool.acquire() as conn:
@@ -503,7 +654,7 @@ async def change_company_contacted_status(apollo_id: str, pool):
 async def check_master_normalization(pool: asyncpg.pool):
     try:
         async with pool.acquire() as conn:
-            query = "SELECT * FROM normalized_master"
+            query = "SELECT * FROM mock_normalized_master"
             results = await conn.fetch(query)
         return [dict(r) for r in results]
     except Exception as e:
@@ -517,7 +668,7 @@ async def get_hiring_area(company_name: str, pool) -> str:
     try:
         query = """
         SELECT job_roles
-        FROM normalized_hiring
+        FROM mock_normalized_hiring
         WHERE LOWER(company_name) = $1
         LIMIT 1
         """
@@ -544,7 +695,7 @@ async def get_painpoints(company_name: str, pool, data_source: str) -> List[str]
     """Retrieves pain points for a company from the specified data source table."""
     logger.info(f"Fetching painpoints for {company_name} from {data_source}")
     
-    table = "normalized_hiring" if data_source == "hiring" else "normalized_funding"
+    table = "mock_normalized_hiring" if data_source == "hiring" else "mock_normalized_funding"
     query = f"SELECT painpoints FROM {table} WHERE LOWER(company_name) = $1 LIMIT 1"
     
     try:
@@ -563,7 +714,7 @@ async def get_painpoints(company_name: str, pool, data_source: str) -> List[str]
 
 async def fetch_funding_details(pool: asyncpg.Pool, company_name: str)->Dict:
     logger.info(f"Fetching funding details for {company_name}")
-    query = "SELECT funding_round, amount_raised, currency FROM normalized_funding WHERE LOWER(company_name) = $1"
+    query = "SELECT funding_round, amount_raised, currency FROM mock_normalized_funding WHERE LOWER(company_name) = $1"
 
     try:
         async with pool.acquire() as conn:
@@ -584,7 +735,7 @@ async def fetch_funding_details(pool: asyncpg.Pool, company_name: str)->Dict:
 #Get companies with no funding details
 async def return_companies_with_no_funding_details(pool: asyncpg.Pool)->List:
     logger.info("Fetching companies with null funding details")
-    query = "SELECT name FROM companies WHERE latest_funding_round IS NULL AND latest_funding_amount IS NULL AND latest_funding_currency IS NULL"
+    query = "SELECT name FROM mock_companies WHERE latest_funding_round IS NULL AND latest_funding_amount IS NULL AND latest_funding_currency IS NULL"
     companies = []
 
     try:
@@ -597,8 +748,6 @@ async def return_companies_with_no_funding_details(pool: asyncpg.Pool)->List:
         logger.info("Done fetching companies")
         return companies
     except Exception as e:
-        logger.error(f"Failed fetching companies: {str(e)}")
-        return []
         logger.error(f"Failed fetching companies: {str(e)}")
         return []
 
@@ -628,8 +777,8 @@ async def fetch_events(pool: asyncpg.Pool)->List[Dict[str, str]]:
     logger.info("Fetching events from database")
     query = """
             SELECT m.id, m.source, m.link, e.event_summary
-            FROM normalized_master m
-            LEFT JOIN normalized_events e ON m.id = e.master_id
+            FROM mock_normalized_master m
+            LEFT JOIN mock_normalized_events e ON m.id = e.master_id
             WHERE m.type = 'event';
             """
     try: 
@@ -649,17 +798,15 @@ async def fetch_events(pool: asyncpg.Pool)->List[Dict[str, str]]:
 
 #Fetch company keywords
 async def fetch_keywords(pool):
-    query = "SELECT keywords FROM companies"
+    query = "SELECT keywords FROM mock_companies"
     try:
         async with pool.acquire() as conn:
             results = await conn.fetch(query)
             result_list = [dict(result) for result in results]
             logger.info(result_list)
             return result_list
-            return result_list
     except Exception as e:
         logger.error(f"Failed to fetch keywords: {str(e)}")
-        return []
         return []
 
 #Select all unscored companies
@@ -668,7 +815,7 @@ async def company_is_unscored(pool)->List[Dict[str, int]]:
     logger.info("Fetching all unscored companies...")
     
     
-    query = "SELECT id FROM companies WHERE icp_score IS NULL"
+    query = "SELECT id FROM mock_companies WHERE icp_score IS NULL"
 
     try:
         async with pool.acquire() as conn:
@@ -696,7 +843,7 @@ async def store_icp_score(pool, company_id, age_score, employee_count_score,
     logger.info(f"Storing ICP scores for company_id {company_id}...")
     
     query = """
-    INSERT INTO icp_scores (
+    INSERT INTO mock_icp_scores (
         company_id, age_score, employee_count_score, funding_stage_score, keyword_score,
         contactability_score, geography_score, industry_score, total_score, category_breakdown,
         top_matches, interpretation
@@ -737,7 +884,7 @@ async def update_company_icp_score(pool, company_id: int, total_score: float):
 
     # Update both icp_score and status (conditionally)
     query = """
-        UPDATE companies
+        UPDATE mock_companies
         SET icp_score = CAST($1 AS numeric(4,1)),
             status = CASE
                         WHEN $1 > 69 THEN 'mql'
@@ -754,14 +901,6 @@ async def update_company_icp_score(pool, company_id: int, total_score: float):
         logger.error(f"Database error updating ICP score for company_id {company_id}: {str(e)}")
     except Exception as e:
         logger.error(f"Failed to update ICP score for company_id {company_id}: {str(e)}")
-    try:
-        async with pool.acquire() as conn:
-            await conn.execute(query, float(total_score), company_id)
-        logger.info("Company icp_score and status updated for company_id %s", company_id)
-    except asyncpg.PostgresError as e:
-        logger.error(f"Database error updating ICP score for company_id {company_id}: {str(e)}")
-    except Exception as e:
-        logger.error(f"Failed to update ICP score for company_id {company_id}: {str(e)}")
 
 
 async def fetch_people_by_ids(pool, ids: List[int]):
@@ -769,7 +908,7 @@ async def fetch_people_by_ids(pool, ids: List[int]):
         return []
 
     logger.info("Fetching people by ids...")
-    query = "SELECT id, first_name, organization_id, email FROM people WHERE id = ANY($1::int[])"
+    query = "SELECT id, first_name, organization_id, email FROM mock_people WHERE id = ANY($1::int[])"
     try:
         async with pool.acquire() as conn:
             results = await conn.fetch(query, ids)
@@ -781,7 +920,7 @@ async def fetch_people_by_ids(pool, ids: List[int]):
         logger.error(f"Failed to fetch people by ids: {str(e)}")
         return []
 
-#CHANGED
+
 async def fetch_emails_sent(pool, company_id):
     logger.info("Fetching emails sent...")
     query = """
@@ -789,21 +928,11 @@ async def fetch_emails_sent(pool, company_id):
             e.subject, e.body, e.status, e.sent_at, 
             p.first_name,
             p.last_name
-        FROM emails_sent e
-        JOIN people p
+        FROM mock_emails_sent e
+        JOIN mock_people p
             ON p.id = e.recipient_id
         WHERE e.company_id = $1; 
     """
-    try:
-        async with pool.acquire() as conn:
-            emails = await conn.fetch(query, company_id)
-        return [dict(email) for email in emails]
-    except asyncpg.PostgresError as e:
-        logger.error(f"Database error fetching sent emails for company {company_id}: {str(e)}")
-        return []
-    except Exception as e:
-        logger.error(f"Failed to fetch sent emails for company {company_id}: {str(e)}")
-        return []
     try:
         async with pool.acquire() as conn:
             emails = await conn.fetch(query, company_id)
@@ -823,7 +952,7 @@ async def fetch_eligible_people(pool, organization_ids: List[str] = None)->List:
         SELECT 
             *
         FROM 
-            people
+            mock_people
         WHERE
             subscribed = TRUE
         AND has_replied = FALSE
@@ -860,7 +989,7 @@ async def get_user_by_token(pool: asyncpg.Pool, token: str) -> Dict:
     logger.info(f"Fetching user by unsubscribe token...")
     query = """
         SELECT id, first_name, email, subscribed, unsubscribe_token
-        FROM people
+        FROM mock_people
         WHERE unsubscribe_token = $1
         LIMIT 1
     """
@@ -890,7 +1019,7 @@ async def unsubscribe_user(pool: asyncpg.Pool, token: str) -> bool:
     logger.info(f"Attempting to unsubscribe user with token...")
     
     query = """
-        UPDATE people
+        UPDATE mock_people
         SET subscribed = FALSE,
             unsubscribed_at = NOW()
         WHERE unsubscribe_token = $1
@@ -964,23 +1093,23 @@ async def mark_lead_replied(company_id: int, is_replied: bool) -> bool:
     try:
         conn = await asyncpg.connect(dsn=DB_URL)
         if is_replied:
-            query = "UPDATE companies SET contacted_status = 'replied', updated_at = NOW() WHERE id = $1"
+            query = "UPDATE mock_companies SET contacted_status = 'replied', updated_at = NOW() WHERE id = $1"
         else:
             # Fallback to 'engaged' if unmarking replied, or whoever the highest status person says.
             # For simplicity, we'll set it to 'engaged' if it was replied.
-            query = "UPDATE companies SET contacted_status = 'engaged', updated_at = NOW() WHERE id = $1"
+            query = "UPDATE mock_companies SET contacted_status = 'engaged', updated_at = NOW() WHERE id = $1"
         
         await conn.execute(query, company_id)
         
         # Also update the people in that company
         # We find the organization_id first
-        org_id_query = "SELECT apollo_id FROM companies WHERE id = $1"
+        org_id_query = "SELECT apollo_id FROM mock_companies WHERE id = $1"
         org_id = await conn.fetchval(org_id_query, company_id)
         if org_id:
             if is_replied:
-                await conn.execute("UPDATE people SET contacted_status = 'replied', updated_at = NOW() WHERE organization_id = $1", org_id)
+                await conn.execute("UPDATE mock_people SET contacted_status = 'replied', updated_at = NOW() WHERE organization_id = $1", org_id)
             else:
-                await conn.execute("UPDATE people SET contacted_status = 'engaged', updated_at = NOW() WHERE organization_id = $1", org_id)
+                await conn.execute("UPDATE mock_people SET contacted_status = 'engaged', updated_at = NOW() WHERE organization_id = $1", org_id)
 
         await conn.close()
         return True
@@ -996,17 +1125,17 @@ async def mark_lead_positive(company_id: int, is_positive: bool) -> bool:
     try:
         conn = await asyncpg.connect(dsn=DB_URL)
         if is_positive:
-            query = "UPDATE companies SET positive_reply = $1, contacted_status = 'replied', updated_at = NOW() WHERE id = $2"
+            query = "UPDATE mock_companies SET positive_reply = $1, contacted_status = 'replied', updated_at = NOW() WHERE id = $2"
         else:
-            query = "UPDATE companies SET positive_reply = $1, updated_at = NOW() WHERE id = $2"
+            query = "UPDATE mock_companies SET positive_reply = $1, updated_at = NOW() WHERE id = $2"
         
         await conn.execute(query, is_positive, company_id)
 
         # If positive, also update people
         if is_positive:
-            org_id = await conn.fetchval("SELECT apollo_id FROM companies WHERE id = $1", company_id)
+            org_id = await conn.fetchval("SELECT apollo_id FROM mock_companies WHERE id = $1", company_id)
             if org_id:
-                await conn.execute("UPDATE people SET contacted_status = 'replied', updated_at = NOW() WHERE organization_id = $1", org_id)
+                await conn.execute("UPDATE mock_people SET contacted_status = 'replied', updated_at = NOW() WHERE organization_id = $1", org_id)
 
         await conn.close()
         return True
@@ -1023,7 +1152,7 @@ async def fetch_engagement_metrics() -> Dict[str, Any]:
         conn = await asyncpg.connect(dsn=DB_URL)
         
         # 1. ICP Score Distribution
-        icp_query = "SELECT icp_score as score, COUNT(*) as count FROM companies WHERE icp_score IS NOT NULL GROUP BY icp_score ORDER BY icp_score"
+        icp_query = "SELECT icp_score as score, COUNT(*) as count FROM mock_companies WHERE icp_score IS NOT NULL GROUP BY icp_score ORDER BY icp_score"
         icp_rows = await conn.fetch(icp_query)
         icp_dist = [dict(r) for r in icp_rows]
 
@@ -1037,7 +1166,7 @@ async def fetch_engagement_metrics() -> Dict[str, Any]:
             COUNT(*) FILTER (WHERE positive_reply = TRUE) as positive_replies,
             COUNT(*) FILTER (WHERE contacted_status = 'opted_out') as unsubscribed,
             COUNT(*) FILTER (WHERE contacted_status = 'failed') as bounced
-        FROM companies 
+        FROM mock_companies 
         WHERE contacted_status NOT IN ('uncontacted', 'pending', 'requested')
         """
         outreach_row = await conn.fetchrow(outreach_query)
@@ -1046,7 +1175,7 @@ async def fetch_engagement_metrics() -> Dict[str, Any]:
         # 3. Lead Lifecycle Funnel
         lifecycle_query = """
         SELECT contacted_status as stage, COUNT(*) as count 
-        FROM companies 
+        FROM mock_companies 
         GROUP BY contacted_status
         """
         lifecycle_rows = await conn.fetch(lifecycle_query)
@@ -1056,7 +1185,7 @@ async def fetch_engagement_metrics() -> Dict[str, Any]:
         service_query = """
         SELECT service, COUNT(*) as count, 
                COUNT(*) FILTER (WHERE contacted_status = 'replied') as replies
-        FROM companies 
+        FROM mock_companies 
         WHERE service IS NOT NULL 
         GROUP BY service
         """
@@ -1074,7 +1203,7 @@ async def fetch_engagement_metrics() -> Dict[str, Any]:
             END as size_range,
             COUNT(*) as total,
             COUNT(*) FILTER (WHERE contacted_status = 'replied') as replies
-        FROM companies
+        FROM mock_companies
         WHERE estimated_num_employees IS NOT NULL
         GROUP BY size_range
         """
