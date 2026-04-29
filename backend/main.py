@@ -11,6 +11,7 @@ from services.sendgrid_webhook import *
 from services.export_to_excel import export_to_excel
 from import_excel.import_excel import main as import_excel_main
 from orchestration.main import main as orchestration_main 
+from orchestration.scoring import score_and_store
 import httpx
 from utils.find_missing_people import find_missing_people
 
@@ -84,6 +85,24 @@ async def main():
         return jsonify({"success": "Main function done"}), 200
     except Exception as e:
         return jsonify({"Error": "An unexpected error occured", "Message": str(e) }), 500
+
+@app.route('/rescore-all', methods=["POST"])
+async def rescore_all():
+    logger.info("Manual trigger: Re-scoring all companies...")
+    try:
+        companies = await fetch_companies()
+        if not companies:
+            return jsonify({"Message": "No companies found to score"}), 200
+        
+        async with asyncpg.create_pool(dsn=DB_URL) as pool:
+            semaphore = asyncio.Semaphore(10)
+            tasks = [score_and_store(pool, c.get("id"), semaphore) for c in companies]
+            await asyncio.gather(*tasks)
+            
+        return jsonify({"Success": f"Re-scored {len(companies)} companies"}), 200
+    except Exception as e:
+        logger.error(f"Failed to re-score companies: {str(e)}")
+        return jsonify({"Error": "An unexpected error occurred", "Message": str(e)}), 500
 
 #Database API for fetching companies
 @app.route('/fetch-companies', methods=["GET"])
