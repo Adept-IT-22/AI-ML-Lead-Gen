@@ -24,14 +24,15 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let row of filteredData; let i = index">
+        <tr *ngFor="let row of filteredData; let i = index" [ngClass]="{'active-row': activeActionRow === i}">
           <td>{{i+1}}</td>
           <td *ngFor="let column of columns">
             <ng-container *ngIf="column.header !== 'Action'; else actionButtons">
-              <span
-                *ngIf="column.key === 'status' || column.key === 'company_data_source' || column.key === 'contacted_status'; else normalText">
-                {{row[column.key] | titlecase }}
-              </span>
+                <span
+                  *ngIf="column.key === 'status' || column.key === 'company_data_source' || column.key === 'contacted_status'; else normalText"
+                  [ngClass]="'status-badge ' + (row[column.key] || '').toLowerCase()">
+                  {{row[column.key] | titlecase }}
+                </span>
               <ng-template #normalText>
                 <span *ngIf="column.key === 'industries'; else regularText">
                   {{row[column.key]?.[0] | titlecase}}
@@ -49,8 +50,21 @@
                   [routerLink]="['/company', row.id]" (click)="onView(row)">
                 </app-button>
 
-                <app-button [buttonText]="'ACTION'" [icon]="'more_vert'" [iconPosition]="'left'">
-                </app-button>
+                <div class="action-menu-container">
+                  <app-button [buttonText]="'ACTION'" [icon]="'more_vert'" [iconPosition]="'left'"
+                    (click)="toggleActionMenu(i)">
+                  </app-button>
+                  <div class="action-menu" *ngIf="activeActionRow === i">
+                    <div class="menu-item" (click)="toggleReplied(row); toggleActionMenu(i)">
+                      <input type="checkbox" [checked]="row.contacted_status === 'replied'">
+                      <span>Mark as Replied</span>
+                    </div>
+                    <div class="menu-item" (click)="togglePositive(row); toggleActionMenu(i)">
+                      <input type="checkbox" [checked]="row.positive_reply">
+                      <span>Mark as Positive</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </ng-template>
           </td>

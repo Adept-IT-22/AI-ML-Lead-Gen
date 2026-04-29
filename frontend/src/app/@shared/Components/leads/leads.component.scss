@@ -46,6 +46,11 @@
 
       tbody tr{
         width: 100%;
+        position: relative; /* Create stacking context for z-index */
+      }
+
+      tbody tr.active-row {
+        z-index: 50; /* Ensure active row is above others but below header */
       }
 
       tbody tr:hover{
@@ -93,7 +98,59 @@ thead tr th{
 .action-buttons{
   display: flex;
   gap: 10px;
-  
+  align-items: center;
+}
+
+.action-menu-container {
+  position: relative;
+  display: inline-block;
+  z-index: 5; /* Ensure it's above other cell content */
+}
+
+.action-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 10000; /* Extremely high to clear all table rows */
+  background-color: var(--color-black);
+  border: 1px solid var(--color-yellow);
+  border-radius: 4px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6); /* Deeper shadow for depth */
+  min-width: 180px;
+  margin-top: 4px;
+  padding: 8px 0;
+  animation: fadeIn 0.15s ease-out;
+
+  .menu-item {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(250, 204, 21, 0.1);
+    }
+
+    input[type="checkbox"] {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--color-yellow);
+    }
+
+    span {
+      white-space: nowrap;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .lead-table-header{
@@ -103,6 +160,25 @@ thead tr th{
   padding: 10px;  
 }
 
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  display: inline-block;
+
+  &.replied { background: #22c55e; color: black; }
+  &.engaged { background: #3b82f6; color: white; }
+  &.opened { background: #a855f7; color: white; } /* Purple for opened */
+  &.contacted { background: #64748b; color: white; }
+  &.pending { background: #facc15; color: black; }
+  &.failed { background: #ef4444; color: white; }
+  &.opted_out { background: #4b5563; color: white; }
+}
 
 .no-email-tag {
   background-color: var(--color-red);
