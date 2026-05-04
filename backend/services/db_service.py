@@ -26,7 +26,67 @@ async def initialize_db():
     except Exception as e:
         logger.error("Connection not made!")
 
-#Fetches all companies from the database
+##Fetches all companies from the database
+#async def fetch_companies() -> List[Dict[str, Any]]:
+    #"""
+    #Fetches all companies and their associated people in a single query (Eager Loading)
+    #and correctly consolidates the denormalized join results into a nested structure.
+    #"""
+    #"""
+    #Fetch all companies with associated people and notes in a single, scalable query.
+    #Uses JSON aggregation in Postgres to return one row per company.
+    #"""
+    #logger.info("Fetching companies from DB...")
+    #conn = None
+    #try:
+        #conn = await asyncpg.connect(dsn=DB_URL)
+
+        #company_query = """
+        #SELECT 
+            #c.*, 
+            #p.full_name, p.title, p.email, p.linkedin_url,
+            #i.top_matches, i.interpretation
+        #FROM 
+            #companies c 
+        #LEFT JOIN 
+            #people p ON c.apollo_id = p.organization_id
+
+        #LEFT JOIN
+            #icp_scores i ON c.id = i.company_id;
+        #"""
+
+        #results = await conn.fetch(company_query)
+
+        ## Convert asyncpg.Record -> dict for each company
+        #companies = []
+        #for r in results:
+            #d = dict(r)
+            ## Ensure JSON fields are parsed if they come back as strings
+            #for field in ['people', 'notes']:
+                #if isinstance(d.get(field), str):
+                    #try:
+                        #d[field] = json.loads(d[field])
+                    #except json.JSONDecodeError:
+                        #d[field] = []
+            #companies.append(d)
+
+        #logger.info(f"Done fetching and consolidating {len(companies)} companies.")
+        #return companies
+
+    #except asyncpg.PostgresError as e:
+        #logger.error(f"Database error while trying to fetch companies: {str(e)}")
+        #return []
+    #except Exception as e:
+        #logger.error(f"An unexpected error occurred: {str(e)}")
+        #return []
+    #finally:
+        #if conn:
+            #try:
+                #await conn.close()
+            #except Exception as close_err:
+                #logger.debug("Failed to close DB connection: %s", close_err)
+
+
 async def fetch_companies() -> List[Dict[str, Any]]:
     """
     Fetches all companies and their associated people in a single query (Eager Loading)
@@ -43,16 +103,29 @@ async def fetch_companies() -> List[Dict[str, Any]]:
 
         company_query = """
         SELECT 
-            c.*, 
-            p.full_name, p.title, p.email, p.linkedin_url,
-            i.top_matches, i.interpretation
-        FROM 
-            companies c 
-        LEFT JOIN 
-            people p ON c.apollo_id = p.organization_id
-
-        LEFT JOIN
-            icp_scores i ON c.id = i.company_id;
+            c.*,
+            COALESCE(
+                json_agg(DISTINCT jsonb_build_object(
+                    'full_name', p.full_name,
+                    'title', p.title,
+                    'email', p.email,
+                    'linkedin_url', p.linkedin_url
+                )) FILTER (WHERE p.id IS NOT NULL), '[]'::json
+            ) AS people,
+            COALESCE(
+                json_agg(DISTINCT jsonb_build_object(
+                    'id', n.id,
+                    'note', n.note,
+                    'created_at', n.created_at
+                )) FILTER (WHERE n.id IS NOT NULL), '[]'::json
+            ) AS notes,
+            i.top_matches,
+            i.interpretation
+        FROM companies c
+        LEFT JOIN people p ON c.apollo_id = p.organization_id
+        LEFT JOIN icp_scores i ON c.id = i.company_id
+        LEFT JOIN company_notes n ON c.id = n.company_id
+        GROUP BY c.id, i.top_matches, i.interpretation;
         """
 
         results = await conn.fetch(company_query)
