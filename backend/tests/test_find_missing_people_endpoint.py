@@ -64,6 +64,8 @@ def test_find_missing_people_endpoint(client):
         mock_search.assert_called_once()
         mock_enrich.assert_called_once_with(mock_search_results, mock_httpx_client)
         mock_storage.assert_called_once_with(mock_search_results, mock_enrich_results)
-        mock_outreach.assert_called_once_with(mock_pool, organization_ids=["6759c21b09c8d401b1040a37"])
+        
+        # Outreach should NOT be called now (decoupled)
+        mock_outreach.assert_not_called()
 
         print("\n[OK] End-to-end test for /find-missing-people passed!")

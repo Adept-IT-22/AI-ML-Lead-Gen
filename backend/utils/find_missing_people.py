@@ -91,9 +91,9 @@ async def find_missing_people(pool: asyncpg.Pool, client: httpx.AsyncClient):
     # 4. Store
     await persist_discovered_contacts(discovery_results)
     
-    # 5. Outreach
-    org_ids = [row["org_id"] for row in db_results if row["org_id"]]
-    await trigger_outreach_for_orgs(pool, org_ids)
+    # 5. Outreach triggered manually via separate process
+    # org_ids = [row["org_id"] for row in db_results if row["org_id"]]
+    # await trigger_outreach_for_orgs(pool, org_ids)
     
     logger.info("Finished processing missing people pipeline.")
 
@@ -102,10 +102,10 @@ if __name__ == "__main__":
     DB_URL = os.getenv("MOCK_DATABASE_URL")
 
     async def main():
-        print("Starting full pipeline to discover, enrich, and outreach to missing leads...")
+        print("Starting pipeline to discover and enrich missing leads...")
         async with asyncpg.create_pool(dsn=DB_URL) as pool:
             async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
                 await find_missing_people(pool, client)
-        print("Pipeline execution complete.")
+        print("Discovery execution complete.")
                 
     asyncio.run(main())

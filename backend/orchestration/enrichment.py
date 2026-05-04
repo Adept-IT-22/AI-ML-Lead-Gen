@@ -155,23 +155,38 @@ async def search_for_people(bulk_enriched_orgs: List, client: httpx.AsyncClient)
         logger.error("Single org enrichemnt failed. Empty input from bulk org enrichment")
         return []
 
-    #Get org ids
-    org_ids = []
-    org_domains = []
+    # Use a semaphore to control concurrency (e.g., 20 parallel requests at a time)
+    # The rate_limited_apollo_call helper will further ensure we stay within 200 calls/min.
+    semaphore = asyncio.Semaphore(20)
+
+    async def search_single_org(org_id, org_domain):
+        async with semaphore:
+            if not org_id and not org_domain:
+                return []
+            result = await people_search(client=client, org_ids=[org_id], org_domains=[org_domain])
+            return result.get("people", [])
+
+    tasks = []
     for bulk_enriched_org_list in bulk_enriched_orgs:
         for orgs in bulk_enriched_org_list:
-            org_data = orgs.get("organizations") #returns a list of dicts
+            org_data = orgs.get("organizations")
             for each_org in org_data:
-                org_id = each_org.get("id")
-                org_ids.append(org_id)
-                org_domain = each_org.get("primary_domain")
-                org_domains.append(org_domain)
+                tasks.append(search_single_org(each_org.get("id"), each_org.get("primary_domain")))
     
-    searched_people = await people_search(client=client, org_ids=org_ids, org_domains=org_domains)
+    logger.info(f"Dispatching {len(tasks)} individual people search tasks...")
+    search_results = await asyncio.gather(*tasks)
+    
+    # Flatten all results into a single list
+    all_people = []
+    for people_list in search_results:
+        all_people.extend(people_list)
+
+    searched_people = {"people": all_people}
 
     async with aiofiles.open("people_search.txt", "w") as people_search_file:
         await people_search_file.write(json.dumps(searched_people, indent=2))
 
+    logger.info(f"People search complete. Found {len(all_people)} total people across all companies.")
     return searched_people
 
     # ============People Enrichment=============
