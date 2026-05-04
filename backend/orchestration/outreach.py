@@ -31,12 +31,9 @@ RETRY_LIMIT_PER_DAY = 500
 
 async def fetch_people_for_discovery(
     pool,
-    organization_ids: List[str],
+    organization_ids: Optional[List[str]] = None,
 ) -> List[Dict[str, Any]]:
-    if not organization_ids:
-        return []
-
-    logger.info("Fetching discovery people (org-scoped)")
+    logger.info(f"Fetching discovery people (scoped to {len(organization_ids) if organization_ids else 'ALL'} orgs)")
     return await fetch_eligible_people(pool, organization_ids=organization_ids)
 
 
@@ -274,7 +271,7 @@ async def main(
 
     discovery_people = await fetch_people_for_discovery(
         pool,
-        organization_ids or [],
+        organization_ids,
     )
 
     #retry_people = await fetch_people_for_retry(

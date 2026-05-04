@@ -91,8 +91,9 @@ async def main():
 async def trigger_outreach():
     logger.info("Manual trigger: Starting outreach...")
     try:
+        org_ids = None
         async with asyncpg.create_pool(dsn=DB_URL) as pool:
-            await outreach_main(pool)
+            await outreach_main(pool, organization_ids=org_ids)
         return jsonify({"Success": "Outreach pipeline complete"}), 200
     except Exception as e:
         logger.error(f"Failed to run outreach: {str(e)}")
