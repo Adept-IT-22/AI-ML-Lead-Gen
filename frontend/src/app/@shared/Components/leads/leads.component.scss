@@ -28,9 +28,14 @@
         border-left: none;
         border-right: none;
         text-align: left;
-        width: 100%;
         position: sticky;
       }
+
+      /* Minimize specific columns */
+      th:nth-child(1), td:nth-child(1) { width: 80px; text-align: center; } /* ID */
+      th:nth-child(3), td:nth-child(3) { width: 100px; } /* Status */
+      th:nth-child(5), td:nth-child(5) { width: 80px; }  /* ICP Score */
+      th:nth-child(6), td:nth-child(6) { width: 100px; } /* Source */
 
       th {
         background-color: var(--color-black);
