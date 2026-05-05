@@ -172,7 +172,7 @@ async def receive_user_phone_number():
 
 #Sendgrid webhook to receive data about emails sent
 @app.route('/webhook', methods=["POST"])
-async def sendgrid_events_webhook():
+def sendgrid_events_webhook(): # Removed 'async'
     logger.info("Fetching webhook event data...")
 
     events = request.json
@@ -180,16 +180,20 @@ async def sendgrid_events_webhook():
         return jsonify({"Error": "No events received in request body"}), 400
 
     try:
-        await update_contacted_status(events)
-        logger.info("Successfully processed webhook events")
-        return jsonify({"Success": "Done fetching webhook event data"}), 200
-
-    except asyncpg.PostgresError as e:
-        logger.error(f"Database error during webhook processing: {str(e)}")
-        return jsonify({"error": "Database update failed", "details": str(e)}), 500
+        # Get the running loop and schedule the update in the background
+        # This allows the webhook to return 200 OK immediately and prevents loop collisions
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            loop.create_task(update_contacted_status(events))
+        else:
+            # Fallback if no loop is running (unlikely during active orchestration)
+            asyncio.run(update_contacted_status(events))
+            
+        logger.info("Webhook event data accepted for processing")
+        return jsonify({"Success": "Accepted"}), 200
 
     except Exception as e:
-        logger.error(f"An unexpected error occurred: {str(e)}")
+        logger.error(f"Failed to accept webhook data: {str(e)}")
         return jsonify({"Error": "An unexpected error occurred", "details": str(e)}), 500
 
 #Endpoint to fetch events

@@ -20,5 +20,6 @@ export class ButtonComponent {
   @Input() buttonStyleClass: string = '';
   @Input() routerLink?: any[] | string;  // ✅ make routerLink work directly
   @Input() buttonLink: string = ''; // for external links
+  @Input() disabled: boolean = false;
   @Output() clicked = new EventEmitter<Event>();
 }
