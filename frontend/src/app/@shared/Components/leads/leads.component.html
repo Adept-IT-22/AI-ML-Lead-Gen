@@ -38,7 +38,12 @@
                   {{row[column.key]?.[0] | titlecase}}
                 </span>
                 <ng-template #regularText>
-                  {{(row)[column.key]}}
+                  <ng-container *ngIf="column.key === 'updated_at'; else defaultVal">
+                    {{ row[column.key] | date:'mediumDate' }}
+                  </ng-container>
+                  <ng-template #defaultVal>
+                    {{(row)[column.key]}}
+                  </ng-template>
                   <span *ngIf="column.key === 'name' && !hasEmail(row)" class="no-email-tag">no email</span>
                 </ng-template>
               </ng-template>
