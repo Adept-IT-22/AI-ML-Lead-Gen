@@ -6,12 +6,11 @@ import { FilterComponent } from '../../@shared/Components/filter/filter.componen
 import { NgFor } from '@angular/common';
 import { CompaniesService } from '../../@shared/Services/companies.service';
 import { ICompany } from '../../Libs/interfaces/company.interface';
-import { NavbarComponent } from '../../@shared/Components/navbar/navbar.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [DataCardComponent, DataFeedComponent, FilterComponent, NgFor, LeadsTableComponent],
+  imports: [DataCardComponent, FilterComponent, NgFor, LeadsTableComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })

@@ -29,8 +29,11 @@ export class LeadsTableComponent implements OnInit {
   @Input() selectOptions: string[] = [];
   @Input() filters: { [key: string]: string } = {};
   @Input() fullTable: boolean = false;
+  @Input() paginate: boolean = false;
+  @Input() pageSize: number = 20;
 
   filteredData: any[] = [];
+  currentPage: number = 1;
   selectedOption: string = '';
   selectedRow: any = null;
   searchTerm: string = '';
@@ -81,6 +84,29 @@ export class LeadsTableComponent implements OnInit {
         );
       return matchesFilters && matchesSearch;
     });
+    this.currentPage = 1; // Reset to first page on filter/search change
+  }
+
+  get paginatedData() {
+    if (!this.paginate) return this.filteredData;
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.filteredData.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredData.length / this.pageSize);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
   }
 
   onView(row: any) {
