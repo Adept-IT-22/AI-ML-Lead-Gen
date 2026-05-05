@@ -24,8 +24,8 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let row of filteredData; let i = index" [ngClass]="{'active-row': activeActionRow === i}">
-          <td>{{i+1}}</td>
+        <tr *ngFor="let row of paginatedData; let i = index" [ngClass]="{'active-row': activeActionRow === i}">
+          <td>{{(currentPage - 1) * pageSize + i + 1}}</td>
           <td *ngFor="let column of columns">
             <ng-container *ngIf="column.header !== 'Action'; else actionButtons">
                 <span
@@ -38,7 +38,12 @@
                   {{row[column.key]?.[0] | titlecase}}
                 </span>
                 <ng-template #regularText>
-                  {{(row)[column.key]}}
+                  <ng-container *ngIf="column.key === 'updated_at'; else defaultVal">
+                    {{ row[column.key] | date:'mediumDate' }}
+                  </ng-container>
+                  <ng-template #defaultVal>
+                    {{(row)[column.key]}}
+                  </ng-template>
                   <span *ngIf="column.key === 'name' && !hasEmail(row)" class="no-email-tag">no email</span>
                 </ng-template>
               </ng-template>
@@ -71,6 +76,30 @@
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <!-- ✅ Pagination Controls -->
+  <div class="pagination-controls" *ngIf="paginate && totalPages > 1">
+    <app-button 
+      [buttonText]="'PREVIOUS'" 
+      [icon]="'chevron_left'" 
+      [iconPosition]="'left'"
+      [disabled]="currentPage === 1"
+      (click)="prevPage()">
+    </app-button>
+    
+    <span class="page-info">
+      Page <strong>{{ currentPage }}</strong> of <strong>{{ totalPages }}</strong>
+      <small>({{ filteredData.length }} leads total)</small>
+    </span>
+
+    <app-button 
+      [buttonText]="'NEXT'" 
+      [icon]="'chevron_right'" 
+      [iconPosition]="'right'"
+      [disabled]="currentPage === totalPages"
+      (click)="nextPage()">
+    </app-button>
   </div>
 </div>
 

@@ -7,7 +7,7 @@
 }
 
 .lead-table.preview {
-  max-height: 400px; /* only in preview (home) */
+  //max-height: 400px; /* only in preview (home) */
   overflow-y: auto;
 }
 
@@ -28,9 +28,17 @@
         border-left: none;
         border-right: none;
         text-align: left;
-        width: 100%;
         position: sticky;
       }
+
+      /* Minimize specific columns */
+      th:nth-child(1), td:nth-child(1) { width: 80px; text-align: center; } /* ID */
+      th:nth-child(2), td:nth-child(2) { width: 200px; } /* Company Name */
+      th:nth-child(3), td:nth-child(3) { width: 100px; } /* Status */
+      th:nth-child(5), td:nth-child(5) { width: 80px; }  /* ICP Score */
+      th:nth-child(6), td:nth-child(6) { width: 100px; } /* Source */
+      th:nth-child(7), td:nth-child(7) { width: 300px; } /* Source */
+      th:nth-child(9), td:nth-child(9) { width: 120px; } /* Contact Status */
 
       th {
         background-color: var(--color-black);
@@ -192,4 +200,44 @@ thead tr th{
   vertical-align: middle;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  .page-info {
+    font-size: 0.9rem;
+    color: #ccc;
+    text-align: center;
+
+    strong {
+      color: #1fedc3;
+    }
+
+    small {
+      display: block;
+      color: #666;
+      margin-top: 2px;
+    }
+  }
+
+  // Make app-button look consistent in pagination
+  ::ng-deep app-button button {
+    padding: 8px 16px !important;
+    min-width: 120px;
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      filter: grayscale(1);
+    }
+  }
 }

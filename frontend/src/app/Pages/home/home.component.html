@@ -29,11 +29,14 @@
       [columns]="leadColumns"
       [data]="filteredLeads"
       [fullTable]="false"
+      [paginate]="true"
+      [pageSize]="20"
       [buttons]="['View', 'Update']">
     </app-leads>
   </div>
 
   <!-- Relevant News Feed -->
+  <!--
   <div class="data-feed">
     <app-data-feed
       [title]="'RELEVANT NEWS FEED'"
@@ -45,4 +48,5 @@
       [data]="activity_feed">
     </app-data-feed>
   </div>
+-->
 </div>
