@@ -109,66 +109,97 @@ _Insert database used here_
 
 + **Graph DB**: _To Be Determined_
 
-### Scoring Logic
-+ Scoring will allow us to categorize leads based on how closely they match our ICP. Below is the criteria to be used:
-+ Scoring is done on a 0–100 scale with 0 being terrible and 100 being perfect.
-+ Keywords are specifically scored based on their alignment to the tasks
-we currently offer. Lower level tasks e.g. data labeling, curation, verification and higher level tasks e.g. knowledge management, security and compliance etc, are both ranked. The result is anlayzed based on:
+#### Scoring Logic
 
-|                              | High Higher-Level Score                                      | Low Higher-Level Score                                                                 |
-|------------------------------|-------------------------------------------------------------|---------------------------------------------------------------------------------------|
-| **High Lower-Level Score**    | Strategic Partner: An ideal customer today that is also a good fit for future products. | Perfect Fit: An immediate, high-value lead that aligns directly with your current offerings. |
-| **Low Lower-Level Score**     | Market Watch: A company you should monitor. They are building complex systems, but not with your foundational approach. | Not a Fit: This company is likely too early-stage or focused on problems outside of your expertise. |
++ Scoring categorises leads based on how closely they match our ICP on a **0–100 scale** (0 = no fit, 100 = perfect fit).
++ The score is a **weighted average of all available dimensions**. If data for a dimension is missing, that dimension is **excluded** from the calculation — it is never assigned a default value, preventing incomplete data from distorting the result.
 
-+ Below is the scoring criteria:
+#### Dimension Weights
 
-    ### Tier 1 Criteria
+| Dimension      | Weight | Rationale |
+|----------------|--------|-----------|
+| Geography      | 30%    | Determines outsourcing culture and strategic market priority |
+| Funding Stage  | 20%    | Indicates available budget and likelihood of outsourcing |
+| Employee Count | 15%    | Smaller teams are more dependent on external partners |
+| Company Age    | 15%    | Younger companies are more flexible and outsourcing-ready |
+| Industry       | 15%    | Some sectors naturally rely more on outsourcing |
+| Keywords       | 5%     | Early indicators of outsourcing or distributed work behaviour |
 
-    **1. Geography (20%)**
+#### 1. Geography (30%)
 
-    Europe / North America → 100
+| Tier | Countries | Score |
+|------|-----------|-------|
+| Primary Markets | United Kingdom, Ireland, Netherlands, Germany | 100 |
+| Eastern European Wedge | Albania, Bulgaria, Romania, Poland, Croatia, Czech Republic, Hungary, Slovakia, Slovenia, Estonia, Latvia, Lithuania, Bosnia & Herzegovina, Kosovo, Montenegro, North Macedonia, Serbia, Ukraine, Denmark, Norway, Finland, Sweden | 85 |
+| North America | United States, Canada | 60 |
+| Rest of Western Europe | All other European countries | 50 |
+| Outside Target Regions | All other regions | 0 |
 
-    Elsewhere → 0.
+Eastern Europe is a critical bridge market — Western Europe outsources to Eastern Europe, which subcontracts further to lower-cost regions. This makes it both a direct client source and a channel into larger Western European deals.
 
-    **2. Keywords Match (30%)**
+#### 2. Funding Stage (20%)
 
-    Strong match → 100 
+| Stage | Score | Interpretation |
+|-------|-------|----------------|
+| Series A | 100 | Strong budget + high outsourcing likelihood |
+| Seed | 90 | Actively scaling; frequently outsource |
+| Pre-seed | 50 | Early stage; mixed outsourcing behaviour |
+| Grant-funded | 40 | Budget exists but constrained |
+| Bootstrapped | 30 | Cost-sensitive; lower outsourcing probability |
+| Series B | 10 | More likely to build internal teams |
 
-    Medium match → 60 
+#### 3. Employee Count (15%)
 
-    Weak match → 20 
+| Employees | Score | Interpretation |
+|-----------|-------|----------------|
+| 6–15 | 100 | Ideal outsourcing sweet spot |
+| 1–5 | 80 | Very early-stage; high dependency on external help |
+| 16–20 | 70 | Still lean and outsourcing-friendly |
+| 21–50 | 40 | Increasing internal capability |
+| 51–100 | 20 | Mostly internalised operations |
+| 100+ | 0 | Outside target ICP |
 
-    ### Tier 2 Criteria
+#### 4. Company Age (15%)
 
-    **3. Age (15%)**
+| Age | Score | Interpretation |
+|-----|-------|----------------|
+| 0–2 years | 100 | Highly flexible, actively building vendors |
+| 3–5 years | 70 | Growth stage; still open to outsourcing |
+| 6–10 years | 50 | Established but selective |
+| 11–20 years | 30 | Mature; existing vendor lock-in likely |
+| 20+ years | 0 | Low priority |
 
-   Ideal: founded ≤ 1 year ago → 100 points
+#### 5. Industry (15%)
 
-    Scale down linearly to 0 at >10 years.
+| Tier | Industries | Score |
+|------|------------|-------|
+| Tier 1 | Fintech, E-commerce, SaaS, Information Technology | 100 |
+| Tier 2 | Healthtech, Marketplaces, Insurtech | 70 |
+| Tier 3 | Education, Government, Manufacturing | 30 |
+| Unclassified | Any other industry | 0 |
 
-    e.g. 1 year → 100, 2 years → 80, 5 years → 60, 8 years → 40, 10 years → 20
+#### 6. Keywords (5%)
 
-    **4. Employee Count (15%)**
+A lightweight signal layer detecting early signs of outsourcing readiness.
 
-    Ideal: ≤ 5 employees → 100 points
+| Signal Type | Score | Examples |
+|-------------|-------|---------|
+| Outsourcing intent | 100 | outsource, vendor, agency, contract |
+| Remote/distributed work | 70 | remote team, distributed team, async |
+| Generic tech language | 30 | general business or software terminology |
 
-    Scale down to 0 at >100
+#### How to Read the Final Score
 
-    5 employees → 100, 10 → 80, 20 → 60, 40 → 40, 80 → 20, 100 → 10.
+Leads with a score of **60+** are classified as an **MQL (Marketing Qualified Lead)** and prioritised for outreach.
 
-    **5. Funding Stage (10%)**
+#### Coming Next — Outsourcing Likelihood Signals (Behaviour-Based Layer)
 
-    This is binary. If the stage is there, 100. If not, 50.
+The next phase will move the system from static company profiling to behavioural prediction. Planned signals:
 
-    **6. Contactability (10%)**
-
-    Email - 100
-
-    Linkedin - 80
-
-    **Final Score**
-
-    Score = 0.15(Age) + 0.15(Employees) + 0.1(Funding Stage) + 0.3(Keywords) + 0.1(Contactability) + 0.2(Geography)
++ **Job Posting Analysis** — detecting companies hiring for roles typically outsourced (e.g. QA, data entry, dev support)
++ **Team Structure Signals** — identifying companies without internal engineering or operations depth
++ **External Platform Usage** — detecting usage of Upwork, Fiverr, or similar outsourcing platforms
++ **Funding Recency** — prioritising companies that have recently raised capital and are under growth pressure
         
 ### Commit Message Format
 
