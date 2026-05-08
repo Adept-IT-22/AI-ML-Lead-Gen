@@ -78,19 +78,24 @@ async def get_missing_people():
 @app.route('/run', methods=["GET", "POST"])
 async def main():
     try:
-        await orchestration_main()
+        # Run the pipeline in the background
+        app.add_background_task(orchestration_main)
         return jsonify({"success": "Main function done"}), 200
     except Exception as e:
         return jsonify({"Error": "An unexpected error occured", "Message": str(e) }), 500
+
+# Feeder function for /outreach
+async def outreach_task(org_ids):
+        async with asyncpg.create_pool(dsn=DB_URL) as pool:
+            await outreach_main(pool, organization_ids=org_ids)
 
 @app.route('/outreach', methods=["POST"])
 async def trigger_outreach():
     logger.info("Manual trigger: Starting outreach...")
     try:
         org_ids = None
-        async with asyncpg.create_pool(dsn=DB_URL) as pool:
-            await outreach_main(pool, organization_ids=org_ids)
-        return jsonify({"Success": "Outreach pipeline complete"}), 200
+        app.add_background_task(outreach_task, org_ids=org_ids)
+        return jsonify({"Success": "Outreach pipeline complete"}), 202
     except Exception as e:
         logger.error(f"Failed to run outreach: {str(e)}")
         return jsonify({"Error": str(e)}), 500
