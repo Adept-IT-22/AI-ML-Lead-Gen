@@ -3,8 +3,8 @@ import asyncpg
 import os
 from config.logging_config import setup_logging
 import logging
-from flask import Flask, jsonify, request, send_file, send_from_directory
-from flask_cors import CORS
+from quart import Quart, jsonify, request, send_file, send_from_directory
+from quart_cors import cors
 from services.db_service import fetch_emails_sent, unsubscribe_user, get_user_by_token, add_company_note, delete_company_note, fetch_companies, fetch_people, fetch_company_details, fetch_events, mark_lead_replied, mark_lead_positive, fetch_engagement_metrics
 from services.email_sending import *
 from services.sendgrid_webhook import *
@@ -17,33 +17,30 @@ import httpx
 from utils.find_missing_people import find_missing_people
 
 #==============================APP SETUP====================================
-# Configure logging before creating Flask app
+# Configure logging before creating quart app
 setup_logging()
 logger = logging.getLogger(__name__)
 
 #The Database in use
 DB_URL = os.getenv("MOCK_DATABASE_URL")
 
-#Create Flask App
-app = Flask(__name__, static_folder="static", static_url_path="")
+#Create quart App
+app = Quart(__name__, static_folder="static", static_url_path="")
 app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SECURE=False,
     SESSION_COOKIE_SAMESITE="Strict",
 )
-app.logger.handlers = [] #Remove Flask's default logging
+app.logger.handlers = [] #Remove quart's default logging
 app.logger.propagate = True #Use our configured logger
-CORS(app, resources={
-    r"/*": {
-        "origins": [
-            "http://localhost:4200",
-            "http://192.168.1.250"
-        ],
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True
-    }
-})
+app = cors(
+    app,
+    allow_origin=["http://localhost:4200", "http://192.168.1.250"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+    allow_credentials=True
+)
+
 #=================================APIs=======================================
 
 # ============================================================================
