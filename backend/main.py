@@ -100,6 +100,7 @@ async def trigger_outreach():
         logger.error(f"Failed to run outreach: {str(e)}")
         return jsonify({"Error": str(e)}), 500
 
+# For when the scoring algorithm changes
 @app.route('/rescore-all', methods=["POST"])
 async def rescore_all():
     logger.info("Manual trigger: Re-scoring all companies...")
