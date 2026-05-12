@@ -385,8 +385,8 @@ async def fetch_siliconangle_data() -> Dict[str, List[str]]:
             
             extraction_tasks = [extract_and_filter_paragraphs(client, article['url'], semaphore) for article in recent_articles]
             
-            for coroutine in asyncio.as_completed(extraction_tasks):
-                url, paragraphs, title = await coroutine
+            for extraction_coro in asyncio.as_completed(extraction_tasks):
+                url, paragraphs, title = await extraction_coro
                 if paragraphs and title:
                     # Check if content is AI funding related
                     content_text = '\n'.join(paragraphs)
