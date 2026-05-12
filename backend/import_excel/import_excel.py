@@ -17,7 +17,7 @@ from helpers.painpoints_and_service import get_painpoints_and_service
 
 #Set up DB_URL
 load_dotenv(override=True)
-DB_URL = os.getenv("MOCK_DATABASE_URL")
+DB_URL = os.getenv("PROD_DATABASE_URL")
 
 #Set up logger
 logger = logging.getLogger()

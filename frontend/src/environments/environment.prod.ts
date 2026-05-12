@@ -1,3 +1,4 @@
 export const environment = {
-  API_URL: 'http://192.168.1.54:5000'
+  production: true,
+  API_URL: "https://lead-gen.adept-techno.co.ke",
 };

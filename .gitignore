@@ -31,6 +31,7 @@ mock_lead_gen_db.sql
 build/
 develop-eggs/
 dist/
+dist.zip
 downloads/
 eggs/
 .eggs/
