@@ -1,6 +1,6 @@
 import logging
 import asyncio
-from typing import Dict
+from typing import Dict, Any, List
 from helpers.helpers import wrap
 from ingestion_module.funding.finsmes.fetch import main as finsmes_main
 from ingestion_module.funding.tech_eu.fetch import main as tech_eu_main
@@ -50,7 +50,7 @@ logging.basicConfig(level=logging.INFO)
 
 async def run_ingestion_modules()->Dict:
     #Each coroutine and it's name
-    coroutines = [
+    coroutines: list[tuple[str, Any]] = [
         #("finsmes", finsmes_main()),
         #("tech_eu", tech_eu_main()),
         #("techcrunch", techcrunch_main()),
@@ -101,7 +101,17 @@ async def run_ingestion_modules()->Dict:
     
     #Process the coroutines as they complete
     completed_tasks = await asyncio.gather(*tasks, return_exceptions=True)
-    for name, result in completed_tasks:
+    for task_result in completed_tasks:
+        if isinstance(task_result, (Exception, BaseException)):
+            logger.error(f"A task failed catastrophically: {task_result}")
+            continue
+        
+        # We expect a tuple (name, result) from wrap
+        if not isinstance(task_result, tuple) or len(task_result) != 2:
+            logger.error(f"Unexpected task result format: {task_result}")
+            continue
+
+        name, result = task_result
         if isinstance(result, Exception):
             logger.error(f"Task '{name}' failed: {result}")
         else:

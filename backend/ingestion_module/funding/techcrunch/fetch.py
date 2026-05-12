@@ -41,23 +41,28 @@ async def traverse_sitemap(client:httpx.AsyncClient, url: str)->Dict[str, List[A
         }
 
 
-        article_data = {
+        article_data: Dict[str, List[Any]] = {
             "link": [],
             "title": [],
             "article_date": []
         }
 
-        for url in root.findall('ns:url', namespaces):
-            article_link = url.find('ns:loc', namespaces).text
+        for url_node in root.findall('ns:url', namespaces):
+            loc_node = url_node.find('ns:loc', namespaces)
+            if loc_node is None or loc_node.text is None:
+                continue
+            article_link = loc_node.text
 
             if article_link is not None and ("ai-" in article_link and ("funding" in article_link or "-raises" in article_link or "-closes" in article_link or "-nets" in article_link or "-secures" in article_link)):
                 article_data["link"].append(article_link)
 
-                article_date_and_time = url.find('news:news/news:publication_date', namespaces).text
+                pub_date_node = url_node.find('news:news/news:publication_date', namespaces)
+                article_date_and_time = pub_date_node.text if pub_date_node is not None else None
                 article_date = article_date_and_time.split("T")[0] if article_date_and_time is not None else None
                 article_data["article_date"].append(article_date if article_date is not None else "")
 
-                article_title = url.find('news:news/news:title', namespaces).text
+                title_node = url_node.find('news:news/news:title', namespaces)
+                article_title = title_node.text if title_node is not None else ""
                 article_data["title"].append(article_title if article_title is not None else "")
 
         logger.info("Sitemap traversal done")
@@ -76,7 +81,7 @@ async def get_paragraphs(client: httpx.AsyncClient, urls: List[str])->Dict[str, 
     logger.info("Getting paragraphs from urls...")
     logger.info(f"The URLs are: {urls}")
 
-    url_paragraph_dict = {"urls": [], "paragraphs": []}
+    url_paragraph_dict: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
 
     if not urls:
         logger.error("Urls not found")
@@ -85,7 +90,7 @@ async def get_paragraphs(client: httpx.AsyncClient, urls: List[str])->Dict[str, 
     try:
         tasks = [extract_paragraph(client, url) for url in urls]
 
-        async for task in asyncio.as_completed(tasks):
+        for task in asyncio.as_completed(tasks):
             url, paragraphs = await task
             url_paragraph_dict["urls"].append(url if url is not None else "")
             url_paragraph_dict["paragraphs"].append('\n'.join(paragraphs) if paragraphs is not None else "")
@@ -118,7 +123,7 @@ async def extract_paragraph(client: httpx.AsyncClient, url: str)->tuple[str, Lis
         logger.error(f"Failed fetching paragraph from {url}: {str(e)}")
         return url, []
 
-async def main():
+async def main() -> Dict[str, Any]:
     start_time = time.perf_counter()
     async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
         #Get article title, link and date
@@ -158,7 +163,7 @@ async def main():
     duration = time.perf_counter() - start_time
     logger.info(f"Techcrunch ran for {duration:.2f} seconds")
 
-    return llm_results
+    return llm_results if llm_results is not None else copy.deepcopy(funding_data_dict)
 
 if __name__ == "__main__":
     asyncio.run(main())

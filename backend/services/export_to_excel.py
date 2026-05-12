@@ -1,6 +1,6 @@
 from utils.set_conversion import convert_sets
 from openpyxl import Workbook
-from typing import Dict, List
+from typing import Dict, List, Any
 import logging
 import datetime
 
@@ -19,7 +19,7 @@ def make_excel_safe(value):
         return value.replace(tzinfo=None)
     return value
 
-async def export_to_excel(lead_data: List[Dict[str, any]], filename="Lead Gen Leads.xlsx"):
+async def export_to_excel(lead_data: List[Dict[str, Any]], filename="Lead Gen Leads.xlsx"):
     logger.info("Export to excel...")
     #Create Excel Workbook
     lead_data = convert_sets(lead_data)

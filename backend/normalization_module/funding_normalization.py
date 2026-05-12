@@ -1,5 +1,14 @@
-from utils.data_normalization import *
-from utils.data_structures.news_data_structure import *
+from utils.data_normalization import (
+    normalize_url,
+    normalize_date,
+    normalize_city,
+    normalize_country,
+    normalize_company_decision_makers,
+    normalize_amount_raised,
+    normalize_currency,
+    normalize_tags
+)
+from utils.data_structures.news_data_structure import fetched_funding_data
 from typing import Dict, List, Any
 import logging
 import asyncio

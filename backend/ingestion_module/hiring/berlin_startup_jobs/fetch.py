@@ -5,7 +5,7 @@ import logging
 import httpx
 import asyncio
 import copy
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 from ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction
@@ -62,7 +62,7 @@ def parse_rss(xml_content: str) -> List[Dict[str, Any]]:
         
     return jobs
 
-async def main() -> Optional[Dict[str, Any]]:
+async def main() -> Dict[str, Any]:
     """Main function to fetch and process Berlin Startup Jobs."""
     logger.info("Starting Berlin Startup Jobs hiring ingestion...")
     
@@ -76,11 +76,13 @@ async def main() -> Optional[Dict[str, Any]]:
     # Filter for software development jobs
     relevant_jobs = []
     for job in raw_jobs:
-        title = job.get("title", "") 
-        if "sales" in title.lower():
-            continue
-        if any(role in job.get("title").lower() for role in desirable_roles):
-            relevant_jobs.append(job)
+        title = job.get("title")
+        if title:
+            title_lower = title.lower()
+            if "sales" in title_lower:
+                continue
+            if any(role in title_lower for role in desirable_roles):
+                relevant_jobs.append(job)
             
     logger.info(f"Filtered to {len(relevant_jobs)} relevant software development jobs")
 

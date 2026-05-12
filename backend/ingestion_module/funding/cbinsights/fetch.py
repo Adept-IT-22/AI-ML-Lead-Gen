@@ -8,7 +8,7 @@ import logging
 import cloudscraper
 from datetime import datetime
 from lxml import etree, html
-from typing import Dict, List
+from typing import Dict, List, Any
 from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
 from utils.data_structures.news_data_structure import fetched_funding_data as funding_data_dict
 
@@ -196,10 +196,10 @@ async def fetch_cbinsights_data() -> Dict[str, List[str]]:
         
         # Extract paragraphs from each article
         semaphore = asyncio.Semaphore(MAX_CONNECTIONS)
-        results = {"urls": [], "paragraphs": []}
-        tasks = [extract_paragraphs(client, url, semaphore) for url in all_article_links]
+        results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
+        extraction_tasks = [extract_paragraphs(client, url, semaphore) for url in all_article_links]
         
-        for coroutine in asyncio.as_completed(tasks):
+        for coroutine in asyncio.as_completed(extraction_tasks):
             url, paragraphs = await coroutine
             if paragraphs:
                 results["urls"].append(url)
@@ -261,7 +261,7 @@ async def extract_paragraphs(client: cloudscraper.CloudScraper, url: str, semaph
         
         return url, []
 
-async def main():
+async def main() -> Dict[str, Any]:
     start_time = time.perf_counter()
     links_and_paragraphs = await fetch_cbinsights_data()
     
@@ -295,7 +295,7 @@ async def main():
     duration = time.perf_counter() - start_time
     logger.info(f"CB Insights took {duration:.2f} seconds")
     
-    return llm_results
+    return llm_results if llm_results is not None else copy.deepcopy(funding_data_dict)
 
 if __name__ == "__main__":
     asyncio.run(main())

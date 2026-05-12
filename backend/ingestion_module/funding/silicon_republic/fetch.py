@@ -9,7 +9,7 @@ import cloudscraper
 from lxml import etree, html
 from aiolimiter import AsyncLimiter
 from lxml.etree import XMLSyntaxError
-from typing import Dict, List
+from typing import Dict, List, Any
 from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
 from utils.data_structures.news_data_structure import fetched_funding_data as funding_data_dict
 
@@ -54,7 +54,7 @@ async def fetch_silicon_republic_data() -> Dict[str, List[str]]:
         "n": "http://www.google.com/schemas/sitemap-news/0.9"
     }
 
-    results = {"urls": [], "paragraphs": []}
+    results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
     child_sitemap_urls_to_process = []
     article_links = []
 
@@ -151,13 +151,13 @@ async def extract_paragraphs(client: cloudscraper.CloudScraper, url: str)->tuple
 
     return url, []
 
-async def main():
+async def main() -> Dict[str, Any]:
     start_time = time.perf_counter()
     links_and_paragraphs = await fetch_silicon_republic_data()
 
     if not (links_and_paragraphs and links_and_paragraphs.get("urls")):
         logger.info("No articles found to process for AI extraction.")
-        return None
+        return copy.deepcopy(funding_data_dict)
 
     try:
         result = await finalize_ai_extraction(links_and_paragraphs=links_and_paragraphs)
@@ -167,7 +167,7 @@ async def main():
 
     if not result:
         logger.warning("AI extraction for siliconrepublic.com returned no data. No logging will happen")
-        return None
+        return copy.deepcopy(funding_data_dict)
 
     llm_results = copy.deepcopy(funding_data_dict)
     for key, value_list in result.items():

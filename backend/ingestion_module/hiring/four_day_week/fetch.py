@@ -5,7 +5,7 @@ import logging
 import httpx
 import asyncio
 import copy
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 from ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction

@@ -1,3 +1,4 @@
+import asyncio
 import logging
 logger = logging.getLogger()
 from services.db_service import *

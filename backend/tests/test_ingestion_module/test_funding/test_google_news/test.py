@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 # Mock the AI extraction module before importing fetch to avoid loading Google AI model
 from unittest.mock import MagicMock
 sys.modules['ingestion_module.ai_extraction.extract_funding_content'] = MagicMock()
-sys.modules['ingestion_module.ai_extraction.extract_funding_content'].finalize_ai_extraction = MagicMock()
+sys.modules['ingestion_module.ai_extraction.extract_funding_content'].finalize_ai_extraction = MagicMock()  # type: ignore
 
 from ingestion_module.funding.google_news import fetch as fetch_mod
 

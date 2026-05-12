@@ -1,5 +1,7 @@
-from utils.data_normalization import *
-from utils.data_structures.events_data_structure import *
+from utils.data_normalization import (
+    normalize_url, normalize_date, normalize_country, normalize_city, str_to_bool, normalize_tags
+)
+from utils.data_structures.events_data_structure import EventData, fetched_event_data
 from typing import Dict, List, Any
 from dateutil.parser import parse
 import logging
