@@ -7,7 +7,7 @@ import asyncio
 import copy
 from datetime import datetime
 from typing import List, Dict, Any, Optional
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 from ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction
 from utils.data_structures.hiring_data_structure import fetched_hiring_data
 from utils.software_dev_keywords import software_dev_keywords

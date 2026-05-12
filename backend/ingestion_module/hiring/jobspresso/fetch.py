@@ -9,7 +9,7 @@ import logging
 import httpx
 import asyncio
 import copy
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 from utils.job_roles import desirable_roles
