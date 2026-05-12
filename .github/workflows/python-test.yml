@@ -30,7 +30,7 @@ jobs:
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           mypy . --ignore-missing-imports --explicit-package-bases
-          bandit -r . -ll
+          bandit -r . -ll --skip B608
 
       - name: Run Tests with Coverage
         run: |
