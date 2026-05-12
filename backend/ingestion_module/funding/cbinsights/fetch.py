@@ -196,7 +196,7 @@ async def fetch_cbinsights_data() -> Dict[str, List[str]]:
         
         # Extract paragraphs from each article
         semaphore = asyncio.Semaphore(MAX_CONNECTIONS)
-        results = {"urls": [], "paragraphs": []}
+        results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
         tasks = [extract_paragraphs(client, url, semaphore) for url in all_article_links]
         
         for coroutine in asyncio.as_completed(tasks):
@@ -261,7 +261,7 @@ async def extract_paragraphs(client: cloudscraper.CloudScraper, url: str, semaph
         
         return url, []
 
-async def main():
+async def main() -> Dict[str, Any]:
     start_time = time.perf_counter()
     links_and_paragraphs = await fetch_cbinsights_data()
     
@@ -295,7 +295,7 @@ async def main():
     duration = time.perf_counter() - start_time
     logger.info(f"CB Insights took {duration:.2f} seconds")
     
-    return llm_results
+    return llm_results if llm_results is not None else copy.deepcopy(funding_data_dict)
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -67,14 +67,14 @@ def parse_rss(xml_content: str) -> List[Dict[str, Any]]:
         
     return jobs
 
-async def main() -> Optional[Dict[str, Any]]:
+async def main() -> Dict[str, Any]:
     """Main function to fetch and process We Work Remotely jobs."""
     logger.info("Starting We Work Remotely hiring ingestion...")
     
     xml_content = await fetch_jobs_rss()
     if not xml_content:
         logger.warning("No content from We Work Remotely")
-        return None
+        return copy.deepcopy(fetched_hiring_data)
 
     raw_jobs = parse_rss(xml_content)
     logger.info(f"Fetched {len(raw_jobs)} jobs from We Work Remotely")
@@ -90,7 +90,7 @@ async def main() -> Optional[Dict[str, Any]]:
     logger.info(f"Filtered out {len(raw_jobs) - len(relevant_jobs)} non-sware jobs. {len(relevant_jobs)} left")
     
     # Prepare for AI extraction
-    ids_urls_titles = {
+    ids_urls_titles: Dict[str, List[str]] = {
         "ids": [],
         "urls": [],
         "titles": []

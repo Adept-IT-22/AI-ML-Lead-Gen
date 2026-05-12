@@ -85,9 +85,11 @@ def is_within_last_one_month(date_str: Optional[str]) -> bool:
         
         if not article_date:
             # Try to extract just the date part
-            date_part = normalized_date.split('T')[0] if 'T' in normalized_date else normalized_date.split('+')[0].split('-')[:3]
-            if isinstance(date_part, list):
-                date_part = '-'.join(date_part)
+            date_parts = normalized_date.split('T')[0] if 'T' in normalized_date else normalized_date.split('+')[0].split('-')[:3]
+            if isinstance(date_parts, list):
+                date_part = '-'.join(date_parts)
+            else:
+                date_part = date_parts
             try:
                 article_date = datetime.strptime(date_part, "%Y-%m-%d")
             except ValueError:
@@ -378,7 +380,7 @@ async def fetch_siliconangle_data() -> Dict[str, List[str]]:
             logger.info(f"Found {len(recent_articles)} articles from last 2 months")
             
             # Step 5: Extract content and filter by AI funding keywords
-            results = {"urls": [], "paragraphs": []}
+            results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
             semaphore = asyncio.Semaphore(MAX_CONNECTIONS)
             
             tasks = [extract_and_filter_paragraphs(client, article['url'], semaphore) for article in recent_articles]
@@ -403,7 +405,7 @@ async def fetch_siliconangle_data() -> Dict[str, List[str]]:
     
     return {"urls": [], "paragraphs": []}
 
-async def main():
+async def main() -> Dict[str, Any]:
     start_time = time.perf_counter()
     
     links_and_paragraphs = await fetch_siliconangle_data()

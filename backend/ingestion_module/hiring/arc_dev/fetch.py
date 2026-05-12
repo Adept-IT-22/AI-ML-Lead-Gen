@@ -74,11 +74,6 @@ async def fetch_job_details(client: httpx.AsyncClient, url: str) -> Optional[Dic
         desc_match = re.search(r'<main[^>]*>(.*?)</main>', html, re.IGNORECASE | re.DOTALL)
         if desc_match:
             description = re.sub('<[^<]+?>', '', desc_match.group(1)).strip()
-        else:
-            # Fallback for structured content
-            chunk = html.find('<div id="job-description"')
-            if chunk != -1:
-                description = re.sub('<[^<]+?>', '', html[chunk:chunk+5000]).strip()
         
         return {
             "id": job_id,
@@ -92,7 +87,7 @@ async def fetch_job_details(client: httpx.AsyncClient, url: str) -> Optional[Dic
         logger.error(f"Error scraping Arc.dev job {url}: {e}")
         return None
 
-async def main() -> Optional[Dict[str, Any]]:
+async def main() -> Dict[str, Any]:
     """Main function for Arc.dev ingestion."""
     logger.info("Starting Arc.dev hiring ingestion...")
     
@@ -126,7 +121,7 @@ async def main() -> Optional[Dict[str, Any]]:
             return copy.deepcopy(fetched_hiring_data)
 
         # AI Extraction
-        ids_urls_titles = {
+        ids_urls_titles: Dict[str, List[str]] = {
             "ids": [job["id"] for job in processed_jobs],
             "urls": [job["url"] for job in processed_jobs],
             "titles": [f"{job['title']} at {job['company']}. Description: {job['description'][:1000]}" for job in processed_jobs]
@@ -150,14 +145,15 @@ async def main() -> Optional[Dict[str, Any]]:
             llm_results["company_name"].append(job["company"])
             llm_results["article_date"].append(job["date"])
             llm_results["article_id"].append(job["id"])
-    # Merge AI
-    if extracted_data:
-        for key, value_list in extracted_data.items():
-            if key in llm_results and isinstance(value_list, list) and len(value_list) == len(processed_jobs):
-                llm_results[key] = value_list
 
-        logger.info(f"Arc.dev ingestion completed. Extracted {len(llm_results['title'])} jobs.")
-        return llm_results
+        # Merge AI
+        if extracted_data:
+            for key, value_list in extracted_data.items():
+                if key in llm_results and isinstance(value_list, list) and len(value_list) == len(processed_jobs):
+                    llm_results[key] = value_list
+
+    logger.info(f"Arc.dev ingestion completed. Extracted {len(llm_results['title'])} jobs.")
+    return llm_results
 
 if __name__ == "__main__":
     asyncio.run(main())

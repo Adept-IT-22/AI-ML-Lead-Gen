@@ -19,7 +19,7 @@ The function below fetches jobs from hackernews.They
 come back as IDs which we'll have to send another request 
 to get the data for.
 """
-async def fetch_hackernews_jobs(client: httpx.AsyncClient, url: str)->List:
+async def fetch_hackernews_jobs(client: httpx.AsyncClient, url: str) -> List[Any]:
     logger.info("Fetching jobs form hackernews...")
     try:
         response = await client.get(f"{url}jobstories.json")
@@ -29,39 +29,43 @@ async def fetch_hackernews_jobs(client: httpx.AsyncClient, url: str)->List:
 
     except Exception as e:
         logger.error(f"Couldn't fetch jobs from hackernews: {str(e)}")
+        return []
 
 #==============GET ALL JOB DETAILS==================
-async def get_all_job_details(client: httpx.AsyncClient, ids: List, url: str)->List[Dict]:
+async def get_all_job_details(client: httpx.AsyncClient, ids: List[Any], url: str) -> List[Dict[str, Any]]:
     logger.info("Getting all jobs...")
     try:
         tasks = [get_individual_job_details(client, id, url) for id in ids]
         all_jobs = []
         for job in asyncio.as_completed(tasks):
             unwrapped_job = await job
-            all_jobs.append(unwrapped_job)
+            if unwrapped_job:
+                all_jobs.append(unwrapped_job)
         logger.info("Done getting all jobs' details")
         return all_jobs
 
     except Exception as e:
         logger.error(f"Failed to get all jobs: {str(e)}")
+        return []
         
 #===========GET INDIVIDUAL JOB DETAILS===============
-async def get_individual_job_details(client: httpx.AsyncClient, id: int, url: str)->Dict[str, Union[str, int]]:
+async def get_individual_job_details(client: httpx.AsyncClient, id: int, url: str) -> Optional[Dict[str, Any]]:
     logger.info("Fetching individual job details...")
     try:
         response = await client.get(f"{url}item/{id}.json?print=pretty")
         logger.info("Done fetching individual job details")
-        data = response.json()
+        data: Dict[str, Any] = response.json()
         return data
         
     except Exception as e:
         logger.error(f"Couldn't fetch individual job details: {str(e)}")
+        return None
 
 #==========CONVERT LIST OF DICTS INTO DICT OF LISTS===================
-def dict_of_lists(all_jobs: List[Dict])->Dict[str, List[Any]]:
+def dict_of_lists(all_jobs: List[Dict[str, Any]]) -> Dict[str, Any]:
     logger.info("Converting a list of dictionaries into a dictionary of lists")
 
-    all_jobs_well_arranged = {
+    all_jobs_well_arranged: Dict[str, Any] = {
         "type": "hiring",
         "by": [],
         "id": [],
@@ -81,7 +85,7 @@ def dict_of_lists(all_jobs: List[Dict])->Dict[str, List[Any]]:
 
     return all_jobs_well_arranged
 
-async def main():
+async def main() -> Dict[str, Any]:
     start_time = time.perf_counter()
     async with httpx.AsyncClient() as client:
         job_ids = await fetch_hackernews_jobs(url=URL, client=client)
@@ -89,10 +93,10 @@ async def main():
         jobs_arranged_and_filtered = dict_of_lists(all_jobs=job_details)
 
         #extract id, url and title only from all arranged jobs
-        ids_urls_titles = {}
-        ids_urls_titles["ids"] = jobs_arranged_and_filtered.get("id", "")
-        ids_urls_titles["urls"] = jobs_arranged_and_filtered.get("url", "")
-        ids_urls_titles["titles"] = jobs_arranged_and_filtered.get("title", "")
+        ids_urls_titles: Dict[str, Any] = {}
+        ids_urls_titles["ids"] = jobs_arranged_and_filtered.get("id", [])
+        ids_urls_titles["urls"] = jobs_arranged_and_filtered.get("url", [])
+        ids_urls_titles["titles"] = jobs_arranged_and_filtered.get("title", [])
         
         #feed to llm
         try:
