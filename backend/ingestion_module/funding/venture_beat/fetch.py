@@ -58,7 +58,7 @@ async def fetch_venture_beat_data() -> Dict[str, List[str]]:
         "n": "http://www.google.com/schemas/sitemap-news/0.9"
     }
 
-    results = {"urls": [], "paragraphs": []}
+    results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
     article_links = []
 
     AI_KEYWORDS_REGEX = compile_keywords_regex(AI_KEYWORDS)
@@ -148,7 +148,7 @@ async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, Li
     return url, []
 
 
-async def main():
+async def main() -> Dict[str, Any]:
     start_time = time.perf_counter()
     links_and_paragraphs = await fetch_venture_beat_data()
 
@@ -182,7 +182,7 @@ async def main():
     duration = time.perf_counter() - start_time
     logger.info(f"Venture_beat took {duration:.2f} seconds")
 
-    return llm_results
+    return llm_results if llm_results is not None else copy.deepcopy(funding_data_dict)
 
 if __name__ == "__main__":
     asyncio.run(main())

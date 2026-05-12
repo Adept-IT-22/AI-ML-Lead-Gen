@@ -123,7 +123,7 @@ async def get_paragraphs(client: cloudscraper.CloudScraper, urls: list, semaphor
         return {"urls": [], "paragraphs": []}
     
     try:
-        results = {"urls": [], "paragraphs": []}
+        results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
         tasks = [extract_paragraphs(client, url, semaphore) for url in urls]                
         
         """
@@ -142,7 +142,7 @@ async def get_paragraphs(client: cloudscraper.CloudScraper, urls: list, semaphor
     except Exception as e:
         logger.error("Failed getting paragraphs from urls")
     
-    return {"": [""]}
+    return {"urls": [], "paragraphs": []}
             
 #Function that does the actual extraction
 async def extract_paragraphs(client: cloudscraper.CloudScraper, url: str, semaphore)->tuple[str, list[str]]:
@@ -223,7 +223,7 @@ async def main() -> Dict[str, Any]:
         duration = time.perf_counter() - current_time
         logger.info(f"Finsmes ran for {duration:.2f} seconds")
     
-    return llm_results
+    return llm_results if llm_results else copy.deepcopy(funding_fetched_data)
 
 if __name__ == "__main__":
     asyncio.run(main())

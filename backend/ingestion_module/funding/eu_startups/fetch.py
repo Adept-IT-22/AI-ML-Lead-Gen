@@ -58,7 +58,7 @@ async def fetch_eu_startups_data() -> Dict[str, List[str]]:
         "n": "http://www.google.com/schemas/sitemap-news/0.9"
     }
     
-    results = {"urls": [], "paragraphs": []}
+    results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
     final_links: dict[str, datetime.datetime] = {}
 
     headers = {
@@ -161,7 +161,7 @@ async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, Li
 
     return url, []
 
-async def main():
+async def main() -> Dict[str, Any]:
     start_time = time.perf_counter()
     links_and_paragraphs = await fetch_eu_startups_data()
 

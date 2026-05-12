@@ -364,9 +364,9 @@ async def fetch_techfundingnews_data() -> Dict[str, List[str]]:
             results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
             semaphore = asyncio.Semaphore(MAX_CONNECTIONS)
             
-            tasks = [extract_and_filter_paragraphs(client, article['url'], semaphore) for article in recent_articles]
+            extraction_tasks = [extract_and_filter_paragraphs(client, article['url'], semaphore) for article in recent_articles]
             
-            for coroutine in asyncio.as_completed(tasks):
+            for coroutine in asyncio.as_completed(extraction_tasks):
                 url, paragraphs, title = await coroutine
                 if paragraphs and title:
                     # Store URL and paragraphs - they are paired by index

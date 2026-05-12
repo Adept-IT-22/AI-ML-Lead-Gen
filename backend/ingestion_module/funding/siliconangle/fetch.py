@@ -240,7 +240,7 @@ async def extract_and_filter_paragraphs(client: httpx.AsyncClient, url: str, sem
             
             # Extract paragraphs - try multiple selectors
             # Priority order: single-post-content first (primary structure), then fallbacks
-            paragraphs = []
+            paragraphs: List[str] = []
             
             # Method 1: Extract from single-post-content div (primary structure for Silicon Angle)
             # This is the main content structure: <div class="single-post-content"> with <p> tags
@@ -383,9 +383,9 @@ async def fetch_siliconangle_data() -> Dict[str, List[str]]:
             results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
             semaphore = asyncio.Semaphore(MAX_CONNECTIONS)
             
-            tasks = [extract_and_filter_paragraphs(client, article['url'], semaphore) for article in recent_articles]
+            extraction_tasks = [extract_and_filter_paragraphs(client, article['url'], semaphore) for article in recent_articles]
             
-            for coroutine in asyncio.as_completed(tasks):
+            for coroutine in asyncio.as_completed(extraction_tasks):
                 url, paragraphs, title = await coroutine
                 if paragraphs and title:
                     # Check if content is AI funding related

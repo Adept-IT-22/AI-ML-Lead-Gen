@@ -57,7 +57,7 @@ async def fetch_smart_company_data() -> Dict[str, List[str]]:
         "n": "http://www.google.com/schemas/sitemap-news/0.9"
     }
 
-    results = {"urls": [], "paragraphs": []}
+    results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
     article_links = []
 
     AI_KEYWORDS_REGEX = compile_keywords_regex(AI_KEYWORDS)
@@ -163,13 +163,13 @@ async def extract_paragraphs(client: cloudscraper.CloudScraper, url: str)->tuple
 
     return url, []
 
-async def main():
+async def main() -> Dict[str, Any]:
     start_time = time.perf_counter()
     links_and_paragraphs = await fetch_smart_company_data()
 
     if not (links_and_paragraphs and links_and_paragraphs.get("urls")):
         logger.info("No articles found from smartcompany to process for AI extraction.")
-        return None
+        return copy.deepcopy(funding_data_dict)
 
     try:
         result = await finalize_ai_extraction(links_and_paragraphs=links_and_paragraphs)
@@ -179,7 +179,7 @@ async def main():
 
     if not result:
         logger.warning("AI extraction for smartcompany returned no data. No logging will happen")
-        return None
+        return copy.deepcopy(funding_data_dict)
 
     llm_results = copy.deepcopy(funding_data_dict)
     for key, value_list in result.items():

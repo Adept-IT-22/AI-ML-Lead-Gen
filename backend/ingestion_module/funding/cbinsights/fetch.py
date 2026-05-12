@@ -197,9 +197,9 @@ async def fetch_cbinsights_data() -> Dict[str, List[str]]:
         # Extract paragraphs from each article
         semaphore = asyncio.Semaphore(MAX_CONNECTIONS)
         results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
-        tasks = [extract_paragraphs(client, url, semaphore) for url in all_article_links]
+        extraction_tasks = [extract_paragraphs(client, url, semaphore) for url in all_article_links]
         
-        for coroutine in asyncio.as_completed(tasks):
+        for coroutine in asyncio.as_completed(extraction_tasks):
             url, paragraphs = await coroutine
             if paragraphs:
                 results["urls"].append(url)

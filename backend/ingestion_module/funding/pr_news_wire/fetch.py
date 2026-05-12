@@ -63,7 +63,7 @@ async def fetch_prnewswire_data() -> Dict[str, List[str]]:
     }
 
     sub_sitemap_urls = []
-    results = {"urls": [], "paragraphs": []}
+    results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
     article_links = []
 
     AI_KEYWORDS_REGEX = compile_keywords_regex(AI_KEYWORDS)
@@ -161,7 +161,7 @@ async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, Li
 
     return url, []
 
-async def main():
+async def main() -> Dict[str, Any]:
     start_time = time.perf_counter()
     links_and_paragraphs = await fetch_prnewswire_data()
     async with limiter:

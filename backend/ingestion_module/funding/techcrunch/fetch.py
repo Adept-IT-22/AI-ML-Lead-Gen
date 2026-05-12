@@ -41,7 +41,7 @@ async def traverse_sitemap(client:httpx.AsyncClient, url: str)->Dict[str, List[A
         }
 
 
-        article_data = {
+        article_data: Dict[str, List[Any]] = {
             "link": [],
             "title": [],
             "article_date": []
@@ -90,7 +90,7 @@ async def get_paragraphs(client: httpx.AsyncClient, urls: List[str])->Dict[str, 
     try:
         tasks = [extract_paragraph(client, url) for url in urls]
 
-        async for task in asyncio.as_completed(tasks):
+        for task in asyncio.as_completed(tasks):
             url, paragraphs = await task
             url_paragraph_dict["urls"].append(url if url is not None else "")
             url_paragraph_dict["paragraphs"].append('\n'.join(paragraphs) if paragraphs is not None else "")
