@@ -5,7 +5,7 @@ import httpx
 import re
 import logging
 import copy
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from datetime import datetime
 from utils.job_roles import desirable_roles
 

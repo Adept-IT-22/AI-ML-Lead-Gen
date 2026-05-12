@@ -7,7 +7,8 @@ from services.db_service import (
     store_in_normalized_master,
     store_in_normalized_events,
     store_in_normalized_funding,
-    store_in_normalized_hiring
+    store_in_normalized_hiring,
+    DB_URL
 )
 from normalization_module.event_normalization import normalize_event_data
 from normalization_module.funding_normalization import normalize_funding_data

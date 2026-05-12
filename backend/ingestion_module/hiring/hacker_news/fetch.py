@@ -4,7 +4,7 @@ import time
 import httpx
 import asyncio
 import logging
-from typing import List, Dict, Union, Any
+from typing import List, Dict, Union, Any, Optional
 from ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction
 from utils.data_structures.hiring_data_structure import fetched_hiring_data as hiring_fetched_data
 from utils.software_dev_keywords import software_dev_keywords

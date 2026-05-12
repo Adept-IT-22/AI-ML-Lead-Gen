@@ -11,7 +11,7 @@ import aiofiles
 import cloudscraper
 from dotenv import load_dotenv
 from lxml import etree, html
-from typing import Dict, List
+from typing import Dict, List, Any
 from services.request_headers import get_header
 from services.db_service import is_data_in_db
 from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction

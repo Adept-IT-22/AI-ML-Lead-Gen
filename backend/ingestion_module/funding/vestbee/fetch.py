@@ -9,7 +9,7 @@ import cloudscraper
 import dateparser
 from lxml import etree, html
 from aiolimiter import AsyncLimiter
-from typing import Dict, List
+from typing import Dict, List, Any
 from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
 from utils.data_structures.news_data_structure import fetched_funding_data as funding_data_dict
 

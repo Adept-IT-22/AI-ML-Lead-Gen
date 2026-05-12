@@ -9,7 +9,7 @@ import httpx
 import cloudscraper
 from datetime import datetime, timedelta
 from lxml import etree, html
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
 from utils.data_structures.news_data_structure import fetched_funding_data as funding_data_dict
 
