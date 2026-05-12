@@ -7,6 +7,9 @@ from normalization_module.event_normalization import normalize_event_data
 from normalization_module.funding_normalization import normalize_funding_data
 from normalization_module.hiring_normalization import normalize_hiring_data
 
+import asyncpg
+from typing import Dict
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
@@ -15,7 +18,7 @@ async def main(
         ingestion_to_normalization_queue: asyncio.Queue, 
         normalization_to_enrichment_queue: asyncio.Queue,
         normalization_to_storage_queue: asyncio.Queue
-        )->asyncio.Queue: 
+        )->Dict[str, asyncio.Queue]: 
 
     logger.info("Normalizing ingested data....")
     all_normalized_data = []

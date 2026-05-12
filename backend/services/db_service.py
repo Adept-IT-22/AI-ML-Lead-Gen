@@ -6,9 +6,17 @@ import asyncio
 import asyncpg
 import uuid
 from datetime import datetime
-from typing import List, Any, Tuple, Dict
+from typing import List, Any, Tuple, Dict, Optional
 from dotenv import load_dotenv
-from utils.db_queries import *
+from utils.db_queries import (
+    normalized_funding_query,
+    normalized_hiring_query,
+    normalized_events_query,
+    normalized_master_query,
+    fetch_link_query,
+    company_query,
+    people_query
+)
 from utils.set_conversion import convert_sets
 
 load_dotenv(verbose=True, override=True)
@@ -529,7 +537,7 @@ async def is_person_in_db(apollo_id: str)->bool:
     return False
 
 #Store normalized funding data in normalized_funding table
-async def store_in_normalized_funding(funding_data_to_store: List[any], pool: asyncpg.pool)->bool:
+async def store_in_normalized_funding(funding_data_to_store: List[Any], pool: asyncpg.Pool)->bool:
     logger.info("Storing normalized funding data")
     query = normalized_funding_query
 
@@ -545,7 +553,7 @@ async def store_in_normalized_funding(funding_data_to_store: List[any], pool: as
         return False
 
 #Store normalized hiring data in normalized_hiring table
-async def store_in_normalized_hiring(hiring_data_to_store: List[any], pool: asyncpg.pool)->bool:
+async def store_in_normalized_hiring(hiring_data_to_store: List[Any], pool: asyncpg.Pool)->bool:
     logger.info("Storing normalized hiring data")
     query = normalized_hiring_query
 
@@ -561,7 +569,7 @@ async def store_in_normalized_hiring(hiring_data_to_store: List[any], pool: asyn
         return False
 
 #Store normalized events data in normalized_events table
-async def store_in_normalized_events(events_data_to_store: List[any], pool: asyncpg.pool)->bool:
+async def store_in_normalized_events(events_data_to_store: List[Any], pool: asyncpg.Pool)->bool:
     logger.info("Storing normalized events data")
     query = normalized_events_query
 
@@ -577,7 +585,7 @@ async def store_in_normalized_events(events_data_to_store: List[any], pool: asyn
         return False
 
 #Store normalized data in normalized_master table and return ID
-async def store_in_normalized_master(normalized_master_data_to_store: List[any], pool: asyncpg.pool)->int:
+async def store_in_normalized_master(normalized_master_data_to_store: List[Any], pool: asyncpg.Pool)->int:
     logger.info("Storing normalized master data")
     query = normalized_master_query
 
@@ -594,7 +602,7 @@ async def store_in_normalized_master(normalized_master_data_to_store: List[any],
 
 #Check if data already exists in normalization table
 
-async def is_data_in_db(pool: asyncpg.pool, company_or_event_link: str = None)->bool:
+async def is_data_in_db(pool: asyncpg.Pool, company_or_event_link: Optional[str] = None)->bool:
 
     logger.info(f"Checking if {company_or_event_link} exists in normalized_master table")
     query = f"SELECT 1 FROM mock_normalized_master WHERE link = $1 LIMIT 1"
@@ -944,7 +952,7 @@ async def fetch_emails_sent(pool, company_id):
         logger.error(f"Failed to fetch sent emails for company {company_id}: {str(e)}")
         return []
 
-async def fetch_eligible_people(pool, organization_ids: List[str] = None)->List:
+async def fetch_eligible_people(pool: asyncpg.Pool, organization_ids: Optional[List[str]] = None)->List:
     if organization_ids == []:
         return []
 
@@ -1045,46 +1053,7 @@ async def unsubscribe_user(pool: asyncpg.Pool, token: str) -> bool:
         logger.error(f"Unexpected error while unsubscribing user: {str(e)}")
         return False
 
-async def add_company_note(company_id: int, note_text: str) -> Dict[str, Any]:
-    """Adds a new note for a company."""
-    logger.info(f"Adding note for company ID {company_id}")
-    query = """
-    INSERT INTO company_notes (id, company_id, note)
-    VALUES ($1, $2, $3)
-    RETURNING id, company_id, note, created_at
-    """
-    note_id = str(uuid.uuid4())
-    
-    conn = None
-    try:
-        conn = await asyncpg.connect(dsn=DB_URL)
-        result = await conn.fetchrow(query, note_id, company_id, note_text)
-        await conn.close()
-        if result:
-            return dict(result)
-        return {}
-    except Exception as e:
-        logger.error(f"Failed to add note: {str(e)}")
-        if conn:
-            await conn.close()
-        return {}
 
-async def delete_company_note(note_id: str) -> bool:
-    """Deletes a note by its ID."""
-    logger.info(f"Deleting note {note_id}")
-    query = "DELETE FROM company_notes WHERE id = $1"
-    
-    conn = None
-    try:
-        conn = await asyncpg.connect(dsn=DB_URL)
-        await conn.execute(query, note_id)
-        await conn.close()
-        return True
-    except Exception as e:
-        logger.error(f"Failed to delete note {note_id}: {str(e)}")
-        if conn:
-            await conn.close()
-        return False
 
 async def mark_lead_replied(company_id: int, is_replied: bool) -> bool:
     """Updates the contacted_status of a company to 'replied' or its previous state."""

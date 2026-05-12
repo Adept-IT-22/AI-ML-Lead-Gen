@@ -83,7 +83,7 @@ class ICPScorer:
                 return score
         return 0
 
-    async def calculate_total_score(self) -> Dict[str, str | int]:
+    async def calculate_total_score(self) -> Dict[str, Any]:
         age_score = await self.score_age(self.founded_year)
         employee_count_score = await self.score_employee_count(self.employee_count)
         funding_stage_score = await self.score_funding_stage(self.funding_stage)

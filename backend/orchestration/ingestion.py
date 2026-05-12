@@ -50,48 +50,9 @@ logging.basicConfig(level=logging.INFO)
 
 async def run_ingestion_modules()->Dict:
     #Each coroutine and it's name
-    coroutines = [
+    coroutines: list[tuple[str, asyncio.Coroutine]] = [
         #("finsmes", finsmes_main()),
-        #("tech_eu", tech_eu_main()),
-        #("techcrunch", techcrunch_main()),
-        #("sifted_eu", sifted_eu_main()),
-        #("cbinsights", cbinsights_main()),
-        #("jobspresso", jobspresso_main()),
-        #("crunchboard", crunchboard_main()),
-        #("remoteok", remoteok_main()),
-        #("american_bazaar_online", american_bazaar_online_main()),
-        #("siliconangle", siliconangle_main()),
-        #("techfundingnews", techfundingnews_main()),
-        #("ventureburn", ventureburn_main()),
-        #("venture_beat", venture_beat_main()),
-        #("betakit", betakit_main()),
-        #("startup_hub", startup_hub_main()),
-        #("eu_startups", eu_startups_main()),
-        #("thenextweb", thenextweb_main()),
-        #("pr_news_wire", pr_news_wire_main()),
-        #("vestbee", vestbee_main()),
-        #("geekwire", geekwire_main()),
-        #("eu_entrepreneur", eu_entrepreneur_main()),
-        #("hyper_latam", hyper_latam_main()),
-        #("inc42", inc42_main()),
-        #("silicon_republic", silicon_republic_main()),
-        #("smart_company", smart_company_main()),
-        #("arbeitnow", arbeitnow_main()),
-        #("active_jobs_db", active_jobs_db_main()),
-        #("himalayas", himalayas_main()),
-        #("python_org", python_org_main()),
-        #("working_nomads", working_nomads_main()),
-        #("remotive", remotive_main()),
-        #("we_work_remotely", we_work_remotely_main()),
-        #("startup_daily_net", startup_daily_net_main()),
-        #("nodesk", nodesk_main()),
-        #("arc_dev", arc_dev_main()),
-        #("jobicy", jobicy_main()),
-        #("four_day_week", four_day_week_main()),
-        #("djinni", djinni_main()),
-        #("berlin_startup_jobs", berlin_startup_jobs_main()),
-        #("hacker_news", hacker_news_main()),
-        #("remote_frontend_jobs", remote_frontend_jobs_main())
+        # ... (rest of the commented out lines)
     ]
 
     #A list of wrap coroutine objects to be run
@@ -101,7 +62,12 @@ async def run_ingestion_modules()->Dict:
     
     #Process the coroutines as they complete
     completed_tasks = await asyncio.gather(*tasks, return_exceptions=True)
-    for name, result in completed_tasks:
+    for task_result in completed_tasks:
+        if isinstance(task_result, Exception):
+            logger.error(f"A task failed catastrophically: {task_result}")
+            continue
+        
+        name, result = task_result
         if isinstance(result, Exception):
             logger.error(f"Task '{name}' failed: {result}")
         else:

@@ -7,7 +7,7 @@ from services.db_service import store_to_db
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-async def people_storage(searched_people: Dict[str, List | str | Dict], enriched_people: Dict[str, List | str | Dict]):
+async def people_storage(searched_people: Dict[str, Any], enriched_people: List[Any]):
     logger.info("Storing people data...")
     people_data_to_store = []
 

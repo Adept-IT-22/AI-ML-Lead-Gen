@@ -2,7 +2,9 @@ import os
 import logging
 from dotenv import load_dotenv
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import *
+from sendgrid.helpers.mail import (
+    Mail, ReplyTo, From, TrackingSettings, ClickTracking, OpenTracking
+)
 import asyncio
 from services.db_service import *
 from utils.prompts.email_generation_prompt import get_email_generation_prompt

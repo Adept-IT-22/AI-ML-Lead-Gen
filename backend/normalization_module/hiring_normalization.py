@@ -1,5 +1,13 @@
-from utils.data_normalization import *
-from utils.data_structures.hiring_data_structure import *
+from utils.data_normalization import (
+    fetched_hiring_data,
+    normalize_url,
+    normalize_date,
+    normalize_city,
+    normalize_country,
+    normalize_company_decision_makers,
+    normalize_tags,
+)
+from utils.data_structures.hiring_data_structure import HiringData, fetched_hiring_data
 from typing import Dict, List, Any
 import logging
 import copy
