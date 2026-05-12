@@ -19,7 +19,7 @@ def str_to_bool(string: str)->bool:
         elif string.lower() in ("false", "no"):
             return False
         else:
-            return None
+            return False
 
 def normalize_country(country: str) -> str:
     if not country:

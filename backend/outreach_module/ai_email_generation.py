@@ -43,7 +43,7 @@ semaphore = None  # Lazy initialized
 
 RATE_LIMIT_SECONDS = 6
 gemini_lock = None  # Lazy initialized
-last_call = 0
+last_call: float = 0.0
 
 # -------------------------------------------------------------------
 # Auth Helper

@@ -43,7 +43,7 @@ semaphore = None  # Lazy initialized
 
 RATE_LIMIT_SECONDS = 6
 gemini_lock = None  # Lazy initialized
-last_call = 0
+last_call: float = 0.0
 
 # -------------------------------------------------------------------
 # Auth helper
@@ -148,7 +148,7 @@ def split_into_batches(ids_urls_titles: Dict[str, List[str]], batch_size: int) -
 async def process_hiring_data_batch(batch: Dict[str, List[Union[str, int]]]) -> Dict[str, List[Any]]:
     logger.info("AI hiring information extraction starting...")
 
-    return_data = {
+    return_data: Dict[str, Any] = {
         "type": "hiring",
         "source": [], "article_id": [], "title": [], "link": [],
         "article_date": [], "company_name": [], "city": [], "country": [],
@@ -156,7 +156,7 @@ async def process_hiring_data_batch(batch: Dict[str, List[Union[str, int]]]) -> 
     }
 
     try:
-        id_to_data_map: Dict[int, Dict[str, Any]] = {}
+        id_to_data_map: Dict[Union[str, int], Dict[str, Any]] = {}
         combined_input = ""
 
         for article_id, url, title in zip(batch["ids"], batch["urls"], batch["titles"]):

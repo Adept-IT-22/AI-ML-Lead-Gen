@@ -22,10 +22,10 @@ Get the <a> and <p> tags. Feed the info to the LLM. Retrieve
 info based on data structure in utils/data_structures.
 """
 
-async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str, List[Any]]:
+async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str) -> Dict[str, Any]:
     logger.info("Fetching Eventbrite events....")
     logger.info(f"The url is : {url}")
-    event_data = {
+    event_data: Dict[str, Any] = {
         "type": "event",
         "source": "Eventbrite",
         "title": [],
@@ -77,7 +77,7 @@ async def fetch_eventbrite_events(client: httpx.AsyncClient, url: str)->Dict[str
         logger.error(f"Error fetching eventbrite events: {str(e)}")
         return event_data
 
-async def main():
+async def main() -> Dict[str, Any]:
     async with httpx.AsyncClient() as client:
         return await fetch_eventbrite_events(client, SEARCH_URL)
 

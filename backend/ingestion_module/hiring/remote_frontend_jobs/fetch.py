@@ -5,7 +5,7 @@ import logging
 import httpx
 import asyncio
 import copy
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 from ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction
@@ -56,7 +56,7 @@ async def fetch_job_details(client: httpx.AsyncClient, job: Dict[str, Any]) -> D
 
     return job
 
-async def main() -> Optional[Dict[str, Any]]:
+async def main() -> Dict[str, Any]:
     """Main function to fetch and process Remote Frontend Jobs."""
     logger.info("Starting Remote Frontend Jobs ingestion...")
     
@@ -73,16 +73,21 @@ async def main() -> Optional[Dict[str, Any]]:
             urls = []
             
             for url_tag in root.findall('sitemap:url', ns):
-                loc = url_tag.find('sitemap:loc', ns).text
-                lastmod = url_tag.find('sitemap:lastmod', ns).text if url_tag.find('sitemap:lastmod', ns) is not None else ""
+                loc_elem = url_tag.find('sitemap:loc', ns)
+                if loc_elem is None or not loc_elem.text:
+                    continue
+                loc_val: str = loc_elem.text
                 
                 # Filter out static pages
-                if loc.strip('/').endswith("remote-frontend-jobs") or loc == "https://www.remotefrontendjobs.com":
+                if loc_val.strip('/').endswith("remote-frontend-jobs") or loc_val == "https://www.remotefrontendjobs.com":
                     continue
-                if loc.endswith("-jobs"): # Category pages
+                if loc_val.endswith("-jobs"): # Category pages
                     continue
-                    
-                urls.append({"url": loc, "lastmod": lastmod})
+                
+                lastmod_elem = url_tag.find('sitemap:lastmod', ns)
+                lastmod_val: str = lastmod_elem.text if lastmod_elem is not None and lastmod_elem.text else ""
+                
+                urls.append({"url": loc_val, "lastmod": lastmod_val})
                 
             # Sort by lastmod descending
             urls.sort(key=lambda x: x["lastmod"], reverse=True)

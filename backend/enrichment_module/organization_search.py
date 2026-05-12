@@ -72,6 +72,8 @@ async def no_rate_limit_org_search(
         except Exception as e:
             logger.error(f"Couldnt perform organization search: {str(e)}")
             return {"Error": str(e)}
+    
+    return {}
 
 async def org_search(
         client: httpx.AsyncClient, 
@@ -89,6 +91,7 @@ async def org_search(
     elif organization_ids:
         return await rate_limited_apollo_call(no_rate_limit_org_search, client, organization_ids=organization_ids, api_url=api_url, headers=headers)
         
+    return {}
 
 if __name__ == "__main__":
     async def main():

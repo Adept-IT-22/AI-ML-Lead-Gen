@@ -9,7 +9,7 @@ import httpx
 import cloudscraper
 from datetime import datetime, timedelta
 from lxml import etree, html
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
 from utils.data_structures.news_data_structure import fetched_funding_data as funding_data_dict
 
@@ -81,9 +81,11 @@ def is_within_last_two_months(date_str: Optional[str]) -> bool:
         
         if not article_date:
             # Try to extract just the date part
-            date_part = normalized_date.split('T')[0] if 'T' in normalized_date else normalized_date.split('+')[0].split('-')[:3]
-            if isinstance(date_part, list):
-                date_part = '-'.join(date_part)
+            date_parts = normalized_date.split('T')[0] if 'T' in normalized_date else normalized_date.split('+')[0].split('-')[:3]
+            if isinstance(date_parts, list):
+                date_part = '-'.join(date_parts)
+            else:
+                date_part = date_parts
             try:
                 article_date = datetime.strptime(date_part, "%Y-%m-%d")
             except ValueError:
@@ -343,7 +345,7 @@ async def fetch_ventureburn_data() -> Dict[str, List[str]]:
             
             # Step 3: Extract content and filter by AI funding keywords
             logger.info(f"Starting to fetch content from {len(recent_articles)} articles...")
-            results = {"urls": [], "paragraphs": []}
+            results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
             semaphore = asyncio.Semaphore(MAX_CONNECTIONS)
             
             tasks = [extract_and_filter_paragraphs(client, article['url'], semaphore) for article in recent_articles]
@@ -381,7 +383,7 @@ async def fetch_ventureburn_data() -> Dict[str, List[str]]:
         logger.error(f"Error fetching VentureBurn data: {str(e)}")
         return {"urls": [], "paragraphs": []}
 
-async def main():
+async def main() -> Dict[str, Any]:
     start_time = time.perf_counter()
     
     try:

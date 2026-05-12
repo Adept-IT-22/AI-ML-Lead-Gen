@@ -25,7 +25,7 @@ async def fetch_from_normalization_to_enrichment_queue(normalization_to_enrichme
 
     # =======Organization Search to Get Org Website=========
 
-async def organization_search(data_to_enrich_list: List[Dict] | List[str], client: httpx.AsyncClient)->List[Dict[str, str | Dict | List]]:
+async def organization_search(data_to_enrich_list: List[Dict] | List[str], client: httpx.AsyncClient)->List[Any]:
     if not data_to_enrich_list:
         logger.error("Org search failed. Normalization to enrichment queue was empty")
         return []
@@ -131,7 +131,7 @@ async def single_organization_enrichment(bulk_enriched_orgs: List[List[Dict[str,
         single_enriched_orgs = []
         if not bulk_enriched_orgs:
             logger.error("No bulk enriched orgs")
-            return {"Error": "No bulk enriched orgs"}
+            return []
         for bulk_enriched_org_list in bulk_enriched_orgs:
             for org_dict in bulk_enriched_org_list:
                 for single_org in org_dict['organizations']:
@@ -149,11 +149,11 @@ async def single_organization_enrichment(bulk_enriched_orgs: List[List[Dict[str,
 
     # ========People Search========
 
-async def search_for_people(bulk_enriched_orgs: List, client: httpx.AsyncClient)->Dict[str, str | Dict | List]:
+async def search_for_people(bulk_enriched_orgs: List, client: httpx.AsyncClient)->Dict[str, Any]:
     logger.info("People Search started...")
     if not bulk_enriched_orgs:
         logger.error("Single org enrichemnt failed. Empty input from bulk org enrichment")
-        return []
+        return {}
 
     # Use a semaphore to control concurrency (e.g., 20 parallel requests at a time)
     # The rate_limited_apollo_call helper will further ensure we stay within 200 calls/min.
@@ -191,7 +191,7 @@ async def search_for_people(bulk_enriched_orgs: List, client: httpx.AsyncClient)
 
     # ============People Enrichment=============
 
-async def enrich_people(searched_people: List, client: httpx.AsyncClient)->Dict[str, str | Dict | List]:
+async def enrich_people(searched_people: Dict[str, Any], client: httpx.AsyncClient)->List[Any]:
     logger.info("People Enrichment started....")
     if not searched_people:
         logger.error("People enrichment failed. Empty input from people search")

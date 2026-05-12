@@ -8,7 +8,7 @@ import datetime
 import cloudscraper
 from lxml import etree, html
 from aiolimiter import AsyncLimiter
-from typing import Dict, List
+from typing import Dict, List, Any
 from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
 from utils.data_structures.news_data_structure import fetched_funding_data as funding_data_dict
 
@@ -43,7 +43,7 @@ async def fetch_with_cloudscraper(client: cloudscraper.CloudScraper, url: str):
 async def fetch_inc42_data() -> Dict[str, List[str]]:
     logger.info("Fetching data from Inc42...")
 
-    results = {"urls": [], "paragraphs": []}
+    results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
     final_article_urls = []
 
     AI_KEYWORDS_REGEX = compile_keywords_regex(AI_KEYWORDS)
@@ -123,7 +123,7 @@ async def extract_paragraphs(client: cloudscraper.CloudScraper, url: str)->tuple
         logger.exception(f"Failed to fetch paragraphs from {url}")
     return url, []
 
-async def main():
+async def main() -> Dict[str, Any]:
     start_time = time.perf_counter()
     async with limiter:
         links_and_paragraphs = await fetch_inc42_data()

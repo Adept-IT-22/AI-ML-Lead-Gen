@@ -14,7 +14,7 @@ import requests
 import cloudscraper
 from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Any, Optional, Set
-from xml.etree import ElementTree as ET
+from defusedxml import ElementTree as ET
 from html.parser import HTMLParser
 from ingestion_module.ai_extraction.extract_hiring_content import finalize_ai_extraction
 from utils.data_structures.hiring_data_structure import fetched_hiring_data as hiring_fetched_data

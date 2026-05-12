@@ -8,7 +8,7 @@ import httpx
 import asyncio
 import logging
 from lxml import etree, html
-from typing import Dict, List
+from typing import Dict, List, Any
 from ingestion_module.ai_extraction.extract_funding_content import finalize_ai_extraction
 from utils.data_structures.news_data_structure import fetched_funding_data as funding_data_dict
 logger = logging.getLogger()
@@ -42,7 +42,7 @@ async def fetch_tech_eu_data()->Dict[str, List[str]]:
                     article_links.append(article_link)
 
             #=========OPEN LINK TO GET PARAGRAPHS============
-            results = {"urls": [], "paragraphs": []}
+            results: Dict[str, List[str]] = {"urls": [], "paragraphs": []}
             tasks = [extract_paragraphs(client, url) for url in article_links]
 
             for coroutine in asyncio.as_completed(tasks):
@@ -78,7 +78,7 @@ async def extract_paragraphs(client: httpx.AsyncClient, url: str)->tuple[str, Li
     return url, []
 
 
-async def main():
+async def main() -> Dict[str, Any]:
     start_time = time.perf_counter()
     links_and_paragraphs = await fetch_tech_eu_data()
 
@@ -114,7 +114,7 @@ async def main():
 
 
     logger.info("RESUKTS: %r", llm_results)
-    return llm_results
+    return llm_results if llm_results is not None else copy.deepcopy(funding_data_dict)
 
 if __name__ == "__main__":
     asyncio.run(main())
