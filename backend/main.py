@@ -33,18 +33,13 @@ app.config.update(
 )
 app.logger.handlers = [] #Remove quart's default logging
 app.logger.propagate = True #Use our configured logger
-CORS(app, resources={
-    r"/*": {
-        "origins": [
-            "http://20.121.43.237",
-            "http://lead-gen.adept-techno.co.ke",
-            "https://lead-gen.adept-techno.co.ke"
-        ],
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True
-    }
-})
+app = cors(
+    app,
+    allow_origin=["http://20.121.43.237", "http://lead-gen.adept-techno.co.ke", "https://lead-gen.adept-techno.co.ke"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+    allow_credentials=True
+)
 #=================================APIs=======================================
 
 # ============================================================================
