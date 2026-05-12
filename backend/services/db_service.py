@@ -335,7 +335,7 @@ async def fetch_uncontacted_people(pool: asyncpg.Pool)->List:
         return []
 
 #Fetch company by ID
-async def fetch_company_details(id: int) -> Dict[str, any]:
+async def fetch_company_details(id: int) -> Dict[str, Any]:
     """
     Fetch a single company by ID with its associated people and notes,
     using JSON aggregation to return one row per company.
