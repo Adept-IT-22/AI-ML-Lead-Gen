@@ -9,7 +9,7 @@ import cloudscraper
 from lxml import etree, html
 from aiolimiter import AsyncLimiter
 from lxml.etree import XMLSyntaxError
-from typing import Dict, List
+from typing import Dict, List, Any
 
 import sys
 import os
