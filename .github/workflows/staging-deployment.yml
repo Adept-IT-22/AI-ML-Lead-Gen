@@ -15,8 +15,12 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/ai-ml-lead-gen
+  IMAGE_NAME: ${{ github.actor }}/ai-ml-lead-gen
 
+permissions:
+  contents: read
+  packages: write
+  
 jobs:
   # ============================================================
   # 1. BUILD & PUSH DOCKER IMAGE (tagged with commit SHA)
