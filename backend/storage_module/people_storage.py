@@ -1,6 +1,6 @@
 import logging
 import asyncio
-from typing import Dict, List
+from typing import Dict, List, Any
 from utils.db_queries import people_query
 from services.db_service import store_to_db
 
