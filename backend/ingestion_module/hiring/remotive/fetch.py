@@ -32,14 +32,14 @@ async def fetch_jobs() -> Dict[str, Any]:
             logger.error(f"Error fetching Remotive jobs: {str(e)}")
             return {}
 
-async def main() -> Optional[Dict[str, Any]]:
+async def main() -> Dict[str, Any]:
     """Main function to fetch and process Remotive jobs."""
     logger.info("Starting Remotive hiring ingestion...")
     
     data = await fetch_jobs()
     if not data or "jobs" not in data:
         logger.warning("No jobs found from Remotive")
-        return None
+        return copy.deepcopy(fetched_hiring_data)
 
     raw_jobs = data["jobs"]
     logger.info(f"Fetched {len(raw_jobs)} jobs from Remotive")
@@ -56,7 +56,7 @@ async def main() -> Optional[Dict[str, Any]]:
     logger.info(f"Filtered out {len(raw_jobs) - len(relevant_jobs)} non-sware jobs. {len(relevant_jobs)} left")
     
     # Prepare for AI extraction
-    ids_urls_titles = {
+    ids_urls_titles: Dict[str, List[str]] = {
         "ids": [],
         "urls": [],
         "titles": []

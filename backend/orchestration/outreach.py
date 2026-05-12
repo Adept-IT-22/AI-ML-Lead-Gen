@@ -176,12 +176,12 @@ async def process_person(person: Dict[str, Any], pool) -> bool:
 async def process_people(
     people: List[Dict[str, Any]],
     pool,
-) -> List[Dict[str, str | int]]:
+) -> List[Dict[str, Any]]:
     if not people:
         logger.info("No eligible people found")
         return []
 
-    unfound_people: List[Dict[str, str | int]] = []
+    unfound_people: List[Dict[str, Any]] = []
 
     for person in people:
         org_id = person.get("organization_id")
@@ -210,7 +210,7 @@ async def process_people(
 # ---------------------------------------------------------
 
 async def resolve_missing_companies(
-    unfound_people: List[Dict[str, str | int]],
+    unfound_people: List[Dict[str, Any]],
     pool,
 ):
     if not unfound_people:
@@ -231,7 +231,7 @@ async def resolve_missing_companies(
 
 
 async def retry_unfound_people(
-    unfound_people: List[Dict[str, str | int]],
+    unfound_people: List[Dict[str, Any]],
     pool,
 ):
     if not unfound_people:

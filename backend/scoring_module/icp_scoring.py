@@ -1,6 +1,6 @@
 import logging
 import asyncio
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 from datetime import date
 from utils.icp import icp, weights
 from utils.ai_keywords import marking_scheme_keywords
@@ -83,7 +83,7 @@ class ICPScorer:
                 return score
         return 0
 
-    async def calculate_total_score(self) -> Dict[str, str | int]:
+    async def calculate_total_score(self) -> Dict[str, Any]:
         age_score = await self.score_age(self.founded_year)
         employee_count_score = await self.score_employee_count(self.employee_count)
         funding_stage_score = await self.score_funding_stage(self.funding_stage)

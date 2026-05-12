@@ -43,7 +43,7 @@ semaphore = None  # Lazy initialized
 
 RATE_LIMIT_SECONDS = 6
 gemini_lock = None  # Lazy initialized
-last_call = 0
+last_call: float = 0.0
 
 # -------------------------------------------------------------------
 # Auth helper
@@ -153,7 +153,7 @@ def split_into_batches(links_and_paragraphs: Dict[str, List[str]], batch_size: i
 # -------------------------------------------------------------------
 async def process_articles_batch(batch: Dict[str, List[Any]]) -> Dict[str, List[Any]]:
     logger.info("AI funding extraction starting...")
-    return_data = {
+    return_data: Dict[str, Any] = {
         "type": "funding",
         "title": [], "link": [], "article_date": [], "company_name": [],
         "city": [], "country": [], "company_decision_makers": [],

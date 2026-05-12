@@ -142,7 +142,10 @@ def create_normalized_data(file):
 
 # ========ENRICH, SCORE, STORE, OUTREACH==========
 
-async def main(file):
+async def main(file=None):
+    if file is None:
+        logger.error("No file provided to import_excel.main")
+        return
     ORGANIZATION_SEARCH_URL = "https://api.apollo.io/api/v1/organizations/search"
     from config.apollo_config import headers as APOLLO_HEADERS
     import aiofiles

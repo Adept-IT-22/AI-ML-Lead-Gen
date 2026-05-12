@@ -8,6 +8,7 @@ from orchestration.normalization import main as normalization_main
 from orchestration.enrichment import main as enrichment_main
 from orchestration.storage import main as storage_main
 from orchestration.scoring import main as scoring_main
+from orchestration.outreach import main as outreach_main
 
 load_dotenv(override=True)
 DB_URL = os.getenv("PROD_DATABASE_URL")
@@ -53,8 +54,13 @@ async def main():
         await scoring_main(
             pool
         )
+
+        await outreach_main(
+            pool,
+            organization_ids=org_ids
+        )
         
-        logger.info("Pipeline complete. Outreach can now be triggered separately.")
+        logger.info("Pipeline complete!")
         
 
 # FOR TESTING PURPOSES ONLY
