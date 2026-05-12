@@ -69,7 +69,7 @@ def parse_rss(xml_content: str) -> List[Dict[str, Any]]:
         
     return jobs
 
-async def main() -> Optional[Dict[str, Any]]:
+async def main() -> Dict[str, Any]:
     """Main function to fetch and process Python.org jobs."""
     logger.info("Starting Python.org hiring ingestion...")
     
@@ -83,7 +83,8 @@ async def main() -> Optional[Dict[str, Any]]:
     # Filter for software development jobs (though Python.org is already targeted)
     relevant_jobs = []
     for job in raw_jobs:
-        if any(role in job.get("title").lower() for role in desirable_roles):
+        title = job.get("title")
+        if title and any(role in title.lower() for role in desirable_roles):
             relevant_jobs.append(job)
             
     logger.info(f"Filtered to {len(relevant_jobs)} relevant software development jobs")

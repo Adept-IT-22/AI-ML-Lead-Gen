@@ -1,5 +1,4 @@
 from utils.data_normalization import (
-    fetched_hiring_data,
     normalize_url,
     normalize_date,
     normalize_city,

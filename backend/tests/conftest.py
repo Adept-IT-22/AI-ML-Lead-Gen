@@ -10,7 +10,7 @@ load_dotenv()
 DB_URL = os.getenv("MOCK_DATABASE_URL")
 
 # Fix Windows event loop policy to avoid asyncpg loop issues
-if os.name == "nt":
+if os.name == "nt" and hasattr(asyncio, "WindowsSelectorEventLoopPolicy"):
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 # Use pytest-asyncio marker globally

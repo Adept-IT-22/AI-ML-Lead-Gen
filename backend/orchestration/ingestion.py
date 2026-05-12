@@ -50,7 +50,7 @@ logging.basicConfig(level=logging.INFO)
 
 async def run_ingestion_modules()->Dict:
     #Each coroutine and it's name
-    coroutines: list[tuple[str, asyncio.Coroutine]] = [
+    coroutines: list[tuple[str, Any]] = [
         #("finsmes", finsmes_main()),
         # ... (rest of the commented out lines)
     ]
@@ -63,10 +63,15 @@ async def run_ingestion_modules()->Dict:
     #Process the coroutines as they complete
     completed_tasks = await asyncio.gather(*tasks, return_exceptions=True)
     for task_result in completed_tasks:
-        if isinstance(task_result, Exception):
+        if isinstance(task_result, (Exception, BaseException)):
             logger.error(f"A task failed catastrophically: {task_result}")
             continue
         
+        # We expect a tuple (name, result) from wrap
+        if not isinstance(task_result, tuple) or len(task_result) != 2:
+            logger.error(f"Unexpected task result format: {task_result}")
+            continue
+
         name, result = task_result
         if isinstance(result, Exception):
             logger.error(f"Task '{name}' failed: {result}")

@@ -8,7 +8,7 @@ from tenacity import retry, wait_exponential, stop_after_attempt, RetryCallState
 MAX_CALLS = 200         # Max requests per minute
 WINDOW_SECONDS = 60     # 1 minute window
 lock = asyncio.Lock()   # Protect deque for concurrency
-call_timestamps = deque()
+call_timestamps: deque[float] = deque()
 logger = logging.getLogger(__name__)
 
 # --- Rate limit error detection ---

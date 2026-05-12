@@ -40,7 +40,7 @@ async def fetch_sitemap_urls(client: httpx.AsyncClient) -> List[str]:
         logger.error(f"Error fetching Jobspresso sitemap: {e}")
         return []
 
-async def fetch_job_details(client: httpx.AsyncClient, url: str) -> Dict[str, Any]:
+async def fetch_job_details(client: httpx.AsyncClient, url: str) -> Optional[Dict[str, Any]]:
     """Fetch individual job page and extract data."""
     try:
         headers = {"User-Agent": "Mozilla/5.0"}
@@ -102,7 +102,7 @@ async def fetch_job_details(client: httpx.AsyncClient, url: str) -> Dict[str, An
         logger.error(f"Error scraping job {url}: {e}")
         return None
 
-async def main() -> Optional[Dict[str, Any]]:
+async def main() -> Dict[str, Any]:
     """Main function to fetch and process Jobspresso jobs."""
     logger.info("Starting Jobspresso ingestion (Sitemap Scrape)...")
     

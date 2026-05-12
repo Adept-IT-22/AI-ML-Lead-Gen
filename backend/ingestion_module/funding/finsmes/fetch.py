@@ -50,33 +50,33 @@ async def fetch_sync(client: cloudscraper.CloudScraper, url: str):
     """Run blocking cloudscraper.get in a thread."""
     return await asyncio.to_thread(client.get, url)
 
-async def find_newest_sitemap(client: cloudscraper.CloudScraper, url: str)->str:
+async def find_newest_sitemap(client: cloudscraper.CloudScraper, url: str) -> str:
     logger.info("Fetching latest sitemap...")
 
-    #Regex to search for posts only
+    # Regex to search for posts only
     pattern = re.compile(r'-post-(\d+)\.xml')
     
     try:
-        #Fetching 
+        # Fetching 
         response = await fetch_sync(client, url)
         response.raise_for_status()
 
-        #Parse XML
-        root = etree.fromstring(response.content) #type: ignore
+        # Parse XML
+        root = etree.fromstring(response.content) # type: ignore
 
-        #Sitemap URLs
+        # Sitemap URLs
         sitemap_urls = root.xpath("//sitemap:loc/text()", namespaces=namespace)
 
-        #Return the latest url
+        # Return the latest url
         highest_number = -1
         latest_sitemap = ""
 
-        for url in sitemap_urls:
-            if(match := pattern.search(url)):
+        for s_url in sitemap_urls:
+            if(match := pattern.search(s_url)):
                 current_number = int(match.group(1))
                 if current_number > highest_number:
                     highest_number = current_number
-                    latest_sitemap = url
+                    latest_sitemap = s_url
 
         logger.info(f"Latest sitemap: {latest_sitemap}")
         logger.info("Fetching latest sitemap done")
@@ -84,7 +84,7 @@ async def find_newest_sitemap(client: cloudscraper.CloudScraper, url: str)->str:
 
     except Exception as e:
         logger.error(f"Error fetching/parsing {url}: {str(e)}")
-        return
+        return ""
 
 #Extract all ai funding article links from the latest sitemap
 async def fetch_ai_funding_article_links(client: cloudscraper.CloudScraper, url: str)->list:
@@ -96,13 +96,15 @@ async def fetch_ai_funding_article_links(client: cloudscraper.CloudScraper, url:
 
         root = etree.fromstring(response.content) #type: ignore         
 
-        #===========PARSE THE DATA================
+        # ===========PARSE THE DATA================
         ai_funding_articles = []
-        urls = root.findall("sitemap:url", namespace)
-        for url in urls:
-            article_link = url.find("sitemap:loc", namespace).text
-            if "-ai-" in article_link and ("funding" in article_link or "raises" in article_link or "-closes" in article_link or "-nets" in article_link or "-secures" in article_link):
-                ai_funding_articles.append(article_link)
+        urls = root.findall("sitemap:url", namespaces=namespace)
+        for url_elem in urls:
+            loc_elem = url_elem.find("sitemap:loc", namespaces=namespace)
+            if loc_elem is not None and loc_elem.text:
+                article_link = loc_elem.text
+                if "-ai-" in article_link and ("funding" in article_link or "raises" in article_link or "-closes" in article_link or "-nets" in article_link or "-secures" in article_link):
+                    ai_funding_articles.append(article_link)
 
         logger.info("Feching AI specific urls done")
         return list(set(ai_funding_articles))
@@ -167,7 +169,7 @@ async def extract_paragraphs(client: cloudscraper.CloudScraper, url: str, semaph
         return url, []
 
 
-async def main()->Dict[str, List[str]]: #Allows us to run the code asynchronously to avoid blocking
+async def main() -> Dict[str, Any]:
     logger.info("Fetching from FinSMEs...")
 
     llm_results = {}

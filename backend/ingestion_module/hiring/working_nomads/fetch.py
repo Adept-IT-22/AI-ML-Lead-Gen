@@ -41,7 +41,7 @@ async def fetch_sitemap_urls(client: httpx.AsyncClient) -> List[str]:
         logger.error(f"Error fetching sitemap from {SITEMAP_URL}: {e}")
         return []
 
-async def fetch_job_details(client: httpx.AsyncClient, url: str) -> Dict[str, Any]:
+async def fetch_job_details(client: httpx.AsyncClient, url: str) -> Optional[Dict[str, Any]]:
     """Fetches an individual job page and extracts title, company, and description."""
     try:
         headers = {
@@ -102,7 +102,7 @@ async def fetch_job_details(client: httpx.AsyncClient, url: str) -> Dict[str, An
         logger.error(f"Error fetching job details for {url}: {e}")
         return None
 
-async def main():
+async def main() -> Dict[str, Any]:
     """Main execution flow for Working Nomads fetcher."""
     async with httpx.AsyncClient() as client:
         logger.info("Fetching Working Nomads sitemap...")

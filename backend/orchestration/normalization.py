@@ -2,7 +2,13 @@ import json
 import aiofiles
 import asyncio
 import logging
-from services.db_service import *
+from services.db_service import (
+    is_data_in_db,
+    store_in_normalized_master,
+    store_in_normalized_events,
+    store_in_normalized_funding,
+    store_in_normalized_hiring
+)
 from normalization_module.event_normalization import normalize_event_data
 from normalization_module.funding_normalization import normalize_funding_data
 from normalization_module.hiring_normalization import normalize_hiring_data
