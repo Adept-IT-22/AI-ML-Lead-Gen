@@ -51,7 +51,7 @@ logging.basicConfig(level=logging.INFO)
 async def run_ingestion_modules()->Dict:
     #Each coroutine and it's name
     coroutines: list[tuple[str, Any]] = [
-        #("finsmes", finsmes_main()),
+        ("finsmes", finsmes_main()),
         ("tech_eu", tech_eu_main()),
         ("techcrunch", techcrunch_main()),
         ("sifted_eu", sifted_eu_main()),
