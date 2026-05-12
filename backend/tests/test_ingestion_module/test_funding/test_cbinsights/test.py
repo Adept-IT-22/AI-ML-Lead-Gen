@@ -45,13 +45,13 @@ async def mock_extract_paragraphs(client, url):
     return url, paragraphs
 
 mock_fetch_module = types.ModuleType('fetch')
-mock_fetch_module.fetch_cbinsights_data = mock_fetch_cbinsights_data
-mock_fetch_module.extract_paragraphs = mock_extract_paragraphs
-mock_fetch_module.httpx = httpx
+mock_fetch_module.fetch_cbinsights_data = mock_fetch_cbinsights_data  # type: ignore
+mock_fetch_module.extract_paragraphs = mock_extract_paragraphs  # type: ignore
+mock_fetch_module.httpx = httpx  # type: ignore
 
 # Mock the package and module
 mock_package = types.ModuleType('cbinsights')
-mock_package.fetch = mock_fetch_module
+mock_package.fetch = mock_fetch_module  # type: ignore
 
 sys.modules['ingestion_module.funding.cbinsights'] = mock_package
 sys.modules['ingestion_module.funding.cbinsights.fetch'] = mock_fetch_module
