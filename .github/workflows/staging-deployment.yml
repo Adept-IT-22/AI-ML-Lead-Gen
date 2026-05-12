@@ -40,7 +40,7 @@ jobs:
       - name: Extract version from package.json
         id: pkg
         run: |
-          VERSION=$(node -p "require('./ui/package.json').version")
+          VERSION=$(node -p "require('./frontend/package.json').version")
           echo "version=v$VERSION" >> $GITHUB_OUTPUT
 
       - name: Compute short SHA
