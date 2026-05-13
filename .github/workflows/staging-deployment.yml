@@ -89,7 +89,7 @@ jobs:
 
       - name: Log in to GHCR
         run: |
-          echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
       - name: Pull image
         run: |
