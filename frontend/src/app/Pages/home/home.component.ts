@@ -85,7 +85,7 @@ export class HomeComponent implements OnInit {
       sql: leadsThisWeek.filter(l => l.status?.toLowerCase() === 'sql').length,
       emails: leadsThisWeek.filter(l => l.contacted_status?.toLowerCase() === 'contacted').length,
       opened: leadsThisWeek.filter(l => l.status?.toLowerCase() === 'converted').length,
-      disqualified: leadsThisWeek.filter(l => l.status?.toLowerCase() === 'disqualified').length
+      unsubscribed: leadsThisWeek.filter(l => l.status?.toLowerCase() === 'unsibscribed').length
     };
 
     // --- Counts last week ---
@@ -95,7 +95,7 @@ export class HomeComponent implements OnInit {
       sql: leadsLastWeek.filter(l => l.status?.toLowerCase() === 'sql').length,
       emails: leadsLastWeek.filter(l => l.contacted_status?.toLowerCase() === 'contacted').length,
       opened: leadsLastWeek.filter(l => l.status?.toLowerCase() === 'converted').length,
-      disqualified: leadsLastWeek.filter(l => l.status?.toLowerCase() === 'disqualified').length
+      unsubscribed: leadsLastWeek.filter(l => l.status?.toLowerCase() === 'unsubscribed').length
     };
 
     // --- Overall EMAILS ---
@@ -143,10 +143,10 @@ export class HomeComponent implements OnInit {
         progress: percentChange(countThis.opened, countLast.opened, total)
       },
       {
-        data: countThis.disqualified.toString(),
-        title: 'DISQUALIFIED',
+        data: countThis.unsubscribed.toString(),
+        title: 'UNSUBSCRIBED',
         color: '#e41f1f',
-        progress: percentChange(countThis.disqualified, countLast.disqualified, total)
+        progress: percentChange(countThis.unsubscribed, countLast.unsubscribed, total)
       }
     ];
   }
