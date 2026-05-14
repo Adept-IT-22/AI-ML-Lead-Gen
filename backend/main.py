@@ -153,31 +153,12 @@ async def fetch_company_details_data(id):
         logger.error(f"Error fetching company details for ID {id}: {str(e)}")
         return jsonify({'Error': 'An unexpected error occurred', 'Message': str(e)}), 500
 
-#Receive phone numbers from Apollo's People Enrichment API
-#This method is dormant and not yet working.
-@app.route('/apollo-phone-webhook', methods=["POST"])
-async def receive_user_phone_number():
-    logger.info("Receiving user phone number...")
-    try:
-        data = request.json
-        if data:
-            logger.info("Received phone number from Apollo webhook")
-            logger.info(data)
-
-            return jsonify({"status": "success", "message": "Phone number received"}), 200
-        else:
-            return jsonify({"status": "error", "message": "No data received"}), 400
-
-    except Exception as e:
-        logger.error(f"Failed to get phone number: {str(e)}")
-        return jsonify({"status": "error", "message": "Internal Server Error"}), 500
-
 #Sendgrid webhook to receive data about emails sent
 @app.route('/webhook', methods=["POST"])
-def sendgrid_events_webhook(): # Removed 'async'
+async def sendgrid_events_webhook():
     logger.info("Fetching webhook event data...")
 
-    events = request.json
+    events = await request.json
     if not events:
         return jsonify({"Error": "No events received in request body"}), 400
 
@@ -284,7 +265,7 @@ async def unsubscribe():
         if request.method == 'GET':
             token = request.args.get('token')
         else:
-            data = request.json
+            data = await request.json
             token = data.get('token') if data else None
         
         if not token:
@@ -333,7 +314,7 @@ async def unsubscribe():
 @app.route('/save-note/<id>', methods=["POST"])
 async def save_note(id):
     try:
-        data = request.json
+        data = await request.json
         if not data or 'note' not in data:
             return jsonify({"Error": "No note content provided"}), 400
         
@@ -360,7 +341,7 @@ async def get_engagement_metrics():
 @app.route('/mark-replied/<id>', methods=["POST"])
 async def mark_replied(id):
     try:
-        data = request.json
+        data = await request.json
         is_replied = data.get('replied', True)
         success = await mark_lead_replied(int(id), is_replied)
         if success:
@@ -374,7 +355,7 @@ async def mark_replied(id):
 @app.route('/mark-positive/<id>', methods=["POST"])
 async def mark_positive(id):
     try:
-        data = request.json
+        data = await request.json
         is_positive = data.get('positive', True)
         success = await mark_lead_positive(int(id), is_positive)
         if success:
