@@ -24,9 +24,7 @@ logger = logging.getLogger(__name__)
 # -------------------------------------------------------------------
 load_dotenv(verbose=True, override=True)
 
-PROJECT_ID = os.getenv("GCP_PROJECT_ID")
-if not PROJECT_ID:
-    raise ValueError("GCP_PROJECT_ID not set")
+PROJECT_ID = os.getenv("GCP_PROJECT_ID", "dummy-project-id")
 
 REGION = os.getenv("GCP_REGION", "us-central1")
 MODEL_NAME = "gemini-2.0-flash"
