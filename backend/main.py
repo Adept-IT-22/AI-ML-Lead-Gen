@@ -68,7 +68,7 @@ def debug():
 # HEALTH CHECK
 # =============================================================================
 health = HealthCheck()
-app.add_url_rule('/health', 'health', view_func=lambda: health.run())
+app.add_url_rule('health', 'health', view_func=lambda: health.run())
 
 
 @app.route('/find-missing-people', methods=["GET", "POST"])
