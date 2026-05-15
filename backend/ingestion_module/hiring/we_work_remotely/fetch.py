@@ -40,19 +40,10 @@ def parse_rss(xml_content: str) -> List[Dict[str, Any]]:
             
         for item in channel.findall("item"):
             title = item.findtext("title", "")
-            
-            #Skip non desirable jobs
-            if not any(role in title.lower() for role in desirable_roles):
-                continue
-
-            logger.info(" Title: %r", title)
             link = item.findtext("link", "")
             description = item.findtext("description", "")
             pub_date = item.findtext("pubDate", "")
             guid = item.findtext("guid", "")
-            
-            # WWR usually puts "Company: Title" in title, or just Title
-            # We can extract more info later or let AI do it.
             
             jobs.append({
                 "id": guid,

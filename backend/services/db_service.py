@@ -26,6 +26,47 @@ DB_URL = os.getenv("PROD_DATABASE_URL")
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+
+async def add_company_note(company_id: int, note_text: str) -> Dict[str, Any]:
+    """Adds a new note for a company."""
+    logger.info(f"Adding note for company ID {company_id}")
+    query = """
+    INSERT INTO company_notes (id, company_id, note)
+    VALUES ($1, $2, $3)
+    RETURNING id, company_id, note, created_at
+    """
+    note_id = str(uuid.uuid4())
+    
+    conn = None
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL)
+        result = await conn.fetchrow(query, note_id, company_id, note_text)
+        await conn.close()
+        if result:
+            return dict(result)
+        return {}
+    except Exception as e:
+        logger.error(f"Failed to add note: {str(e)}")
+        if conn:
+            await conn.close()
+        return {}
+
+async def delete_company_note(note_id: str) -> bool:
+    """Deletes a note by its ID."""
+    logger.info(f"Deleting note {note_id}")
+    query = "DELETE FROM company_notes WHERE id = $1"
+    
+    conn = None
+    try:
+        conn = await asyncpg.connect(dsn=DB_URL)
+        await conn.execute(query, note_id)
+        await conn.close()
+        return True
+    except Exception as e:
+        logger.error(f"Failed to delete note {note_id}: {str(e)}")
+        if conn:
+            await conn.close()
+        return False
 async def initialize_db():
     try:
         conn = await asyncpg.connect(dsn=DB_URL)

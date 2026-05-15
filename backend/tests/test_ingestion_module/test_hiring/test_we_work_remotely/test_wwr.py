@@ -93,7 +93,7 @@ async def test_main_keywords_filtering_success():
         return extracted_data
 
     with patch('ingestion_module.hiring.we_work_remotely.fetch.httpx.AsyncClient', return_value=mock_client):
-        with patch('ingestion_module.ai_extraction.extract_hiring_content.finalize_ai_extraction', side_effect=mock_finalize):
+        with patch('ingestion_module.hiring.we_work_remotely.fetch.finalize_ai_extraction', side_effect=mock_finalize):
             result = await fetch_mod.main()
             
             assert result is not None

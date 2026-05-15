@@ -3,7 +3,7 @@ import aiofiles
 import asyncio
 import logging
 from httpx import AsyncClient
-from typing import Dict, List
+from typing import Dict, List, Optional
 from config.apollo_config import headers as APOLLO_HEADERS
 from helpers.apollo_rate_limiter import rate_limited_apollo_call
 
@@ -21,7 +21,7 @@ async def no_rate_limit_people_enrichment(
       user_name: str,
       url: str = API_URL, 
       headers=APOLLO_HEADERS
-    )->Dict:
+    )->Optional[Dict]:
 
     logger.info(f"People enrichment starting for {user_name} ...")
 
@@ -46,7 +46,7 @@ async def no_rate_limit_people_enrichment(
 
     except Exception as e:
        logger.error(f"People enrichment failed: {str(e)}")
-       return {}
+       return None
 
 async def people_enrichment(
       client: AsyncClient, 
@@ -54,7 +54,7 @@ async def people_enrichment(
       user_name: str,
       url: str = API_URL, 
       headers=APOLLO_HEADERS
-    )->Dict:
+    )->Optional[Dict]:
 
       return await rate_limited_apollo_call(no_rate_limit_people_enrichment, client, user_id, user_name, url, headers)
 

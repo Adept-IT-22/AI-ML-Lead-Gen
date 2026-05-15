@@ -64,12 +64,14 @@ async def bulk_org_enrichment(
         company_websites: List[str], 
         api_url: str = BULK_ORG_ENRICHMENT_URL, 
         headers: Dict[str, str] = APOLLO_HEADERS
-    ) -> List[Dict[str, Any]]:
-    results = []
+    ) -> Dict[str, Any]:
+    all_results: List[Dict[str, Any]] = []
     for batch in batchify(company_websites, RATE_LIMIT):
         result = await rate_limited_apollo_call(org_enrichment, client, batch, api_url, headers)
-        results.append(result)
-    return results
+        if "Error" in result:
+            return result  # Propagate error immediately
+        all_results.extend(result.get("results", []))
+    return {"results": all_results}
 
 if __name__ == "__main__":
     async def main():

@@ -15,6 +15,7 @@ from orchestration.outreach import main as outreach_main
 from orchestration.scoring import score_and_store
 import httpx
 from utils.find_missing_people import find_missing_people
+from healthcheck import HealthCheck
 
 #==============================APP SETUP====================================
 # Configure logging before creating quart app
@@ -172,10 +173,10 @@ async def receive_user_phone_number():
 
 #Sendgrid webhook to receive data about emails sent
 @app.route('/webhook', methods=["POST"])
-def sendgrid_events_webhook(): # Removed 'async'
+async def sendgrid_events_webhook():
     logger.info("Fetching webhook event data...")
 
-    events = request.json
+    events = await request.json
     if not events:
         return jsonify({"Error": "No events received in request body"}), 400
 
@@ -282,7 +283,7 @@ async def unsubscribe():
         if request.method == 'GET':
             token = request.args.get('token')
         else:
-            data = request.json
+            data = await request.json
             token = data.get('token') if data else None
         
         if not token:
@@ -331,7 +332,7 @@ async def unsubscribe():
 @app.route('/save-note/<id>', methods=["POST"])
 async def save_note(id):
     try:
-        data = request.json
+        data = await request.json
         if not data or 'note' not in data:
             return jsonify({"Error": "No note content provided"}), 400
         
@@ -358,7 +359,7 @@ async def get_engagement_metrics():
 @app.route('/mark-replied/<id>', methods=["POST"])
 async def mark_replied(id):
     try:
-        data = request.json
+        data = await request.json
         is_replied = data.get('replied', True)
         success = await mark_lead_replied(int(id), is_replied)
         if success:
@@ -372,7 +373,7 @@ async def mark_replied(id):
 @app.route('/mark-positive/<id>', methods=["POST"])
 async def mark_positive(id):
     try:
-        data = request.json
+        data = await request.json
         is_positive = data.get('positive', True)
         success = await mark_lead_positive(int(id), is_positive)
         if success:

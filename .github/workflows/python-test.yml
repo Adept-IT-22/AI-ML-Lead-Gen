@@ -23,8 +23,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest pytest-cov mypy bandit
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install flake8 pytest pytest-cov mypy bandit pytest-asyncio asyncpg dotenv
+          if [ -f backend/requirements.txt ]; then pip install -r backend/requirements.txt; fi
 
       - name: Lint and Static Analysis
         run: |

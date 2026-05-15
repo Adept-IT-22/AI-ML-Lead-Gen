@@ -31,7 +31,7 @@ def normalize_country(country: str) -> str:
 
     try:
         match = pycountry.countries.search_fuzzy(query=country)
-        return match[0].name
+        return match[0].name # type: ignore
     except LookupError:
         return country.strip().title()
 

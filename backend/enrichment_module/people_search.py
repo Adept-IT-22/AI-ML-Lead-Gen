@@ -138,7 +138,7 @@ async def no_rate_limit_people_search(
 
     except Exception as e:
         logger.error(f"Couldn't perform people search: {str(e)}")
-        return {"error": str(e)}
+        return {"Error": str(e)}
 
 
 async def people_search(
