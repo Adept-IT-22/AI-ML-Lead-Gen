@@ -138,7 +138,7 @@ async def x(
         ingestion_to_normalization_queue: asyncio.Queue,
         normalization_to_enrichment_queue: asyncio.Queue,
 ) -> None:
-    normalization_to_storage_queue = asyncio.Queue()
+    normalization_to_storage_queue: asyncio.Queue = asyncio.Queue()
     await main(None, ingestion_to_normalization_queue, normalization_to_enrichment_queue, normalization_to_storage_queue)
 
 if __name__ == "__main__":
