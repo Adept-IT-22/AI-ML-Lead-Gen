@@ -151,7 +151,7 @@ async def fetch_companies_temporary() -> List[Dict[str, Any]]:
                     "email": record_dict["email"],
                     "linkedin_url": record_dict["linkedin_url"]
                 }
-                if person not in master_company.get('people'):
+                if person not in master_company.get('people', []):
                     master_company["people"].append(person)
 
         # Convert the dictionary values (the 62 unique company objects) back to a list
