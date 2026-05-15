@@ -57,4 +57,4 @@ async def test_main_orchestration():
         with patch("ingestion_module.hiring.berlin_startup_jobs.fetch.finalize_ai_extraction", return_value=mock_ai):
             results = await main()
             assert results["source"] == "Berlin Startup Jobs"
-            assert len(results["title"]) == 1
+            assert len(results["title"]) == 2
