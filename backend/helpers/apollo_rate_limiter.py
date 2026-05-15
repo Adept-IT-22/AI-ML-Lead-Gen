@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import time
 from collections import deque
 from typing import Callable, Any
 from tenacity import retry, wait_exponential, stop_after_attempt, RetryCallState, retry_if_exception
@@ -7,8 +8,10 @@ from tenacity import retry, wait_exponential, stop_after_attempt, RetryCallState
 # --- Configuration ---
 MAX_CALLS = 200         # Max requests per minute
 WINDOW_SECONDS = 60     # 1 minute window
+MIN_CALL_GAP_SECONDS = 0.4  # Minimum gap between consecutive calls
 lock = asyncio.Lock()   # Protect deque for concurrency
 call_timestamps: deque[float] = deque()
+last_call_time: float = 0.0
 logger = logging.getLogger(__name__)
 
 # --- Rate limit error detection ---
@@ -56,6 +59,13 @@ async def rate_limited_apollo_call(func: Callable, *args, **kwargs) -> Any:
     async with lock:
         now = asyncio.get_running_loop().time()
 
+        # Enforce minimum gap between consecutive calls
+        global last_call_time
+        elapsed_since_last = now - last_call_time
+        if elapsed_since_last < MIN_CALL_GAP_SECONDS:
+            await asyncio.sleep(MIN_CALL_GAP_SECONDS - elapsed_since_last)
+            now = asyncio.get_running_loop().time()
+
         # Remove timestamps outside the window
         while call_timestamps and now - call_timestamps[0] > WINDOW_SECONDS:
             call_timestamps.popleft()
@@ -71,6 +81,7 @@ async def rate_limited_apollo_call(func: Callable, *args, **kwargs) -> Any:
 
         # Record this call
         call_timestamps.append(now)
+        last_call_time = now
 
     # Execute the function with retry logic for 429s
     return await _execute_with_retry(func, *args, **kwargs)
