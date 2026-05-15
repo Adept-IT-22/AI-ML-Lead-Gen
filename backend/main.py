@@ -15,6 +15,7 @@ from orchestration.outreach import main as outreach_main
 from orchestration.scoring import score_and_store
 import httpx
 from utils.find_missing_people import find_missing_people
+from healthcheck import HealthCheck
 
 #==============================APP SETUP====================================
 # Configure logging before creating quart app
@@ -62,6 +63,13 @@ def debug():
         "cwd": os.getcwd(),
         "index_exists": os.path.exists(os.path.join(app.static_folder, "index.html"))
     }
+
+# =============================================================================
+# HEALTH CHECK
+# =============================================================================
+health = HealthCheck()
+app.add_url_rule('/health', 'health', view_func=lambda: health.run())
+
 
 @app.route('/find-missing-people', methods=["GET", "POST"])
 async def get_missing_people():
