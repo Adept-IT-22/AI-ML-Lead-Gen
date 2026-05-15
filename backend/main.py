@@ -63,6 +63,12 @@ def debug():
         "index_exists": os.path.exists(os.path.join(app.static_folder, "index.html"))
     }
 
+# =============================================================================
+# HEALTH CHECK
+# =============================================================================
+health = HealthCheck()
+app.add_url_rule('/health', 'health', view_func=lambda: health.run())
+
 @app.route('/find-missing-people', methods=["GET", "POST"])
 async def get_missing_people():
     logger.info("Manual trigger: Discover and enrich missing people...")
