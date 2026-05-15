@@ -85,7 +85,7 @@ export class HomeComponent implements OnInit {
       sql: leadsThisWeek.filter(l => l.status?.toLowerCase() === 'sql').length,
       emails: leadsThisWeek.filter(l => l.contacted_status?.toLowerCase() === 'contacted').length,
       opened: leadsThisWeek.filter(l => l.status?.toLowerCase() === 'converted').length,
-      unsubscribed: leadsThisWeek.filter(l => l.status?.toLowerCase() === 'unsibscribed').length
+      unsubscribed: leadsThisWeek.filter(l => l.status?.toLowerCase() === 'unsubscribed').length
     };
 
     // --- Counts last week ---
