@@ -1,6 +1,6 @@
 
 company_query = """
-        INSERT INTO mock_companies (apollo_id, name, website_url, linkedin_url,
+        INSERT INTO companies (apollo_id, name, website_url, linkedin_url,
                     phone, founded_year, market_cap, annual_revenue, industries,
                     estimated_num_employees, keywords, organization_headcount_six_month_growth,
                     organization_headcount_twelve_month_growth, city, state, country, short_description,
@@ -11,7 +11,7 @@ company_query = """
             """
 
 people_query = """
-                INSERT INTO mock_people (apollo_id, first_name, last_name, full_name,
+                INSERT INTO people (apollo_id, first_name, last_name, full_name,
                 linkedin_url, title, email_status, headline, organization_id,
                 seniority, departments, subdepartments, functions, email,
                 number, notes) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
@@ -21,7 +21,7 @@ people_query = """
 
 
 normalized_master_query = """
-        INSERT INTO mock_normalized_master (type, source, link, title, city, country, tags) 
+        INSERT INTO normalized_master (type, source, link, title, city, country, tags) 
                 VALUES ($1, $2, $3, $4, $5, $6, $7)
                 ON CONFLICT (link) DO NOTHING
                 RETURNING id
@@ -29,7 +29,7 @@ normalized_master_query = """
 
 
 normalized_funding_query = """
-        INSERT INTO mock_normalized_funding (master_id, company_name, company_decision_makers,
+        INSERT INTO normalized_funding (master_id, company_name, company_decision_makers,
                 company_decision_makers_position, funding_round, amount_raised,
                 currency, investor_companies, investor_people, painpoints) VALUES ($1, $2, $3,
                 $4, $5, $6, $7, $8, $9, $10)
@@ -37,36 +37,36 @@ normalized_funding_query = """
 
 
 normalized_hiring_query = """
-        INSERT INTO mock_normalized_hiring (master_id, company_name, company_decision_makers,
+        INSERT INTO normalized_hiring (master_id, company_name, company_decision_makers,
                 company_decision_makers_position, job_roles, hiring_reasons, painpoints)
                 VALUES ($1, $2, $3, $4, $5, $6, $7)
                 """ 
 
 
 normalized_events_query = """
-        INSERT INTO mock_normalized_events (master_id, event_id, event_summary, event_is_online,
+        INSERT INTO normalized_events (master_id, event_id, event_summary, event_is_online,
                 event_organizer_id) VALUES ($1, $2, $3, $4, $5)
                 """
 
 
 fetch_link_query = """
         SELECT nm.link
-        FROM mock_normalized_master nm
-        JOIN mock_normalized_funding nf ON nf.master_id = nm.id
+        FROM normalized_master nm
+        JOIN normalized_funding nf ON nf.master_id = nm.id
         WHERE LOWER(nf.company_name) = $1
 
         UNION
 
         SELECT nm.link
-        FROM mock_normalized_master nm
-        JOIN mock_normalized_hiring nh ON nh.master_id = nm.id
+        FROM normalized_master nm
+        JOIN normalized_hiring nh ON nh.master_id = nm.id
         WHERE LOWER(nh.company_name) = $1
 
         UNION
 
         SELECT nm.link
-        FROM mock_normalized_master nm
-        JOIN mock_normalized_events ne ON ne.master_id = nm.id
+        FROM normalized_master nm
+        JOIN normalized_events ne ON ne.master_id = nm.id
         WHERE LOWER(ne.company_name) = $1;
 
         """

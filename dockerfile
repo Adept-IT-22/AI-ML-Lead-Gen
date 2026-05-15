@@ -31,6 +31,6 @@ ENV FLASK_APP=main.py
 ENV FLASK_RUN_HOST=0.0.0.0
 ENV PYTHONPATH=/app
 
-EXPOSE 5050
+EXPOSE 5000
 
-CMD ["gunicorn", "--worker-class", "gevent", "--bind", "0.0.0.0:5050", "--timeout", "300", "main:app"]
+CMD ["gunicorn", "--worker-class", "gevent", "--bind", "0.0.0.0:5000", "--timeout", "300", "main:app"]
