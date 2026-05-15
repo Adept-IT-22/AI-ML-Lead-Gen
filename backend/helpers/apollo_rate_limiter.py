@@ -12,7 +12,7 @@ call_timestamps: deque[float] = deque()
 logger = logging.getLogger(__name__)
 
 # --- Rate limit error detection ---
-def is_rate_limit_error(exception: Exception) -> bool:
+def is_rate_limit_error(exception: BaseException) -> bool:
     """Check if the exception is an HTTP 429 Too Many Requests error."""
     from httpx import HTTPStatusError
     if isinstance(exception, HTTPStatusError):
@@ -30,7 +30,7 @@ def log_before_retry(retry_state: RetryCallState):
 def log_failure(retry_state: RetryCallState):
     logger.error(
         f"Apollo API failed after {retry_state.attempt_number} retries. "
-        f"Error: {retry_state.outcome.exception()}"
+        f"Error: {retry_state.outcome.exception() if retry_state.outcome else 'Unknown'}"
     )
     return None
 

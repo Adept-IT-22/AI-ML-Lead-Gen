@@ -3,7 +3,7 @@ import time
 import json
 import logging
 import asyncio
-from tenacity import retry, wait_exponential, stop_after_attempt, RetryCallState
+from tenacity import retry, wait_exponential, stop_after_attempt, RetryCallState, retry_if_exception
 from dotenv import load_dotenv
 from typing import List, Any, Dict
 
@@ -67,7 +67,7 @@ def log_after(retry_state: RetryCallState):
     logger.info(f"Attempt #{retry_state.attempt_number} done")
 
 def log_failure(retry_state: RetryCallState):
-    logger.error(f"Gemini API failed after retries. Last exception: {retry_state.outcome.exception()}")
+    logger.error(f"Gemini API failed after retries. Last exception: {retry_state.outcome.exception() if retry_state.outcome else 'Unknown'}")
     return ""
 
 # -------------------------------------------------------------------
@@ -76,7 +76,7 @@ def log_failure(retry_state: RetryCallState):
 @retry(
     wait=wait_exponential(multiplier=1, min=4, max=60),
     stop=stop_after_attempt(5),
-    retry=retry_if_resource_exhausted,
+    retry=retry_if_exception(retry_if_resource_exhausted),
     reraise=True,
     before=log_before_retry,
     after=log_after,

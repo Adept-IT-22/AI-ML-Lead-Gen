@@ -6,7 +6,7 @@ import time
 from typing import Optional, Dict, Any
 
 import httpx
-from tenacity import retry, wait_exponential, stop_after_attempt, RetryCallState
+from tenacity import retry, wait_exponential, stop_after_attempt, RetryCallState, retry_if_exception
 from dotenv import load_dotenv
 from google.auth import default
 from google.auth.transport.requests import Request
@@ -78,7 +78,7 @@ def log_failure(retry_state: RetryCallState):
 @retry(
     wait=wait_exponential(multiplier=1, min=4, max=60),
     stop=stop_after_attempt(5),
-    retry=retry_if_resource_exhausted,
+    retry=retry_if_exception(retry_if_resource_exhausted),
     reraise=True,
     before=log_before_retry,
     after=log_after,

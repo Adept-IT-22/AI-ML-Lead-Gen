@@ -78,7 +78,7 @@ async def initialize_db():
 
 #Fetches all companies from the database
 
-async def fetch_companies_temporary():
+async def fetch_companies_temporary() -> List[Dict[str, Any]]:
     logger.info("Fetch companies from DB temporary")
     conn = None
     try:
