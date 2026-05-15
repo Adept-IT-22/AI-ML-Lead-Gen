@@ -233,9 +233,9 @@ async def main(file=None):
             pool
         )
 
-        #await outreach_main(
-            #pool
-        #)
+        await outreach_main(
+            pool
+        )
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -1,9 +1,12 @@
 import asyncio
 import time
+import pytest
 from httpx import Response, HTTPStatusError, Request
 import logging
 import sys
 import os
+
+pytestmark = pytest.mark.asyncio
 
 # Add backend to path
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))

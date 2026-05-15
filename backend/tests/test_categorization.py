@@ -2,7 +2,10 @@ import sys
 import os
 import asyncio
 import logging
+import pytest
 from typing import List, Dict, Any
+
+pytestmark = pytest.mark.asyncio
 
 # Mock asyncpg Pool for testing without DB
 class MockPool:

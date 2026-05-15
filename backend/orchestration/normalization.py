@@ -133,6 +133,14 @@ async def main(
         "normalization_to_storage": normalization_to_storage_queue
     }
 
+# Alias used by tests (2-queue signature: no storage queue needed)
+async def x(
+        ingestion_to_normalization_queue: asyncio.Queue,
+        normalization_to_enrichment_queue: asyncio.Queue,
+) -> None:
+    normalization_to_storage_queue = asyncio.Queue()
+    await main(None, ingestion_to_normalization_queue, normalization_to_enrichment_queue, normalization_to_storage_queue)
+
 if __name__ == "__main__":
     async def demo():
         #Populate ingestion_to_normalization_queue

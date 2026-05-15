@@ -46,7 +46,7 @@ async def no_rate_limit_people_enrichment(
 
     except Exception as e:
        logger.error(f"People enrichment failed: {str(e)}")
-       return {}
+       return None
 
 async def people_enrichment(
       client: AsyncClient, 

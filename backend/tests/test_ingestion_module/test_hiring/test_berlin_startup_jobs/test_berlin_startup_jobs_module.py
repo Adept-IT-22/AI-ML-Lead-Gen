@@ -36,13 +36,13 @@ async def test_main_orchestration():
     <rss version="2.0">
         <channel>
             <item>
-                <title>Python Dev</title>
+                <title>Python Developer</title>
                 <link>https://berlinstartupjobs.com/job/1</link>
                 <description>Django.</description>
                 <pubDate>Thu, 09 Jan 2026 10:00:00 +0000</pubDate>
             </item>
             <item>
-                <title>Marketing Lead</title>
+                <title>Frontend Engineer</title>
                 <link>https://berlinstartupjobs.com/job/2</link>
                 <description>Growth.</description>
                 <pubDate>Thu, 09 Jan 2026 10:00:00 +0000</pubDate>
@@ -51,7 +51,7 @@ async def test_main_orchestration():
     </rss>
     """
     
-    mock_ai = {"company_name": ["Berlin Co"], "job_roles": [["Backend"]], "tags": [["Python"]]}
+    mock_ai = {"company_name": ["Berlin Co", "Another Co"], "job_roles": [["Backend"], ["Frontend"]], "tags": [["Python"], ["React"]]}
 
     with patch("ingestion_module.hiring.berlin_startup_jobs.fetch.fetch_rss_content", return_value=xml_content):
         with patch("ingestion_module.hiring.berlin_startup_jobs.fetch.finalize_ai_extraction", return_value=mock_ai):

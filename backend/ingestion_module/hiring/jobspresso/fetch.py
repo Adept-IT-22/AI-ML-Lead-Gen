@@ -62,10 +62,13 @@ async def fetch_job_details(client: httpx.AsyncClient, url: str) -> Optional[Dic
 
         # Company extraction
         company = "Unknown"
-        # 1. Try job-company class
+        # 1. Try job-company class (li)
         company_match = re.search(r'<li[^>]*class="job-company"[^>]*>.*?<a[^>]*>(.*?)</a>', html, re.IGNORECASE | re.DOTALL)
         if not company_match:
-             # 2. Try JSON-LD
+            # 2. Try div.company > strong
+            company_match = re.search(r'<div[^>]*class="[^"]*company[^"]*"[^>]*>.*?<strong[^>]*>(.*?)</strong>', html, re.IGNORECASE | re.DOTALL)
+        if not company_match:
+             # 3. Try JSON-LD
              company_match = re.search(r'"hiringOrganization":\s*{[^}]*"name":\s*"(.*?)"', html, re.IGNORECASE | re.DOTALL)
         
         if company_match:
