@@ -136,7 +136,7 @@ async def call_gemini_api(prompt: str) -> Optional[Any]:
             # We return a mock response object to maintain compatibility with outreach.py
             text = await _call_gemini_api_internal(prompt)
             
-            # Create a simple class to mimic the SDK response structure
+            # Create a simple class to mimic the SDK's response structure
             class MockResponse:
                 def __init__(self, text):
                     class Part:
